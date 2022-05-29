@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Bookshelf.Views.Main"
+             Title="Main"
+             Style="{StaticResource ContentPage}" >
+    <ContentPage.Resources>
+        <!--carditens-->
+        <Style x:Key="FrameCardItem" TargetType="Frame">
+            <Setter Property="BackgroundColor" Value="#607D8B"></Setter>
+            <Setter Property="BorderColor" Value="#607D8B"></Setter>
+            <Setter Property="HorizontalOptions" Value="Center"></Setter>
+            <Setter Property="Margin" Value="1"></Setter>
+        </Style>
+        <Style x:Key="GridCardItem" TargetType="Frame">
+            <Setter Property="VerticalOptions" Value="Start"></Setter>
+            <Setter Property="HorizontalOptions" Value="FillAndExpand"></Setter>
+            <Setter Property="Margin" Value="-10,-15,-10,-10"></Setter>
+        </Style>
+        <Style x:Key="LblQuantity" TargetType="Label">
+            <Setter Property="VerticalTextAlignment" Value="Center"></Setter>
+            <Setter Property="FontSize" Value="45"></Setter>
+            <Setter Property="FontAttributes" Value="Bold"></Setter>
+            <Setter Property="VerticalOptions" Value="CenterAndExpand"></Setter>
+            <Setter Property="TextColor" Value="Black"></Setter>
+            <Setter Property="HorizontalOptions" Value="StartAndExpand"></Setter>
+            <Setter Property="FontFamily" Value="Bold"></Setter>
+            <Setter Property="Padding" Value="0,10,0,0"></Setter>
+        </Style>
+        <Style x:Key="ImgIcon" TargetType="Image">
+            <Setter Property="HorizontalOptions" Value="Start"></Setter>
+            <Setter Property="VerticalOptions" Value="Center"></Setter>
+        </Style>
+        <Style x:Key="LblText" TargetType="Label">
+            <Setter Property="TextColor" Value="#2b3133"></Setter>
+            <Setter Property="VerticalOptions" Value="End"></Setter>
+            <Setter Property="VerticalTextAlignment" Value="End"></Setter>
+            <Setter Property="FontSize" Value="10"></Setter>
+            <Setter Property="FontFamily" Value="Regular"></Setter>
+        </Style>
+        <!--<Style x:Key="LblIconAngleRight" TargetType="Label">
+            <Setter Property="FontFamily" Value="FontAwesomeBold"></Setter>
+            <Setter Property="VerticalTextAlignment" Value="Center"></Setter>
+            <Setter Property="FontSize" Value="45"></Setter>
+            <Setter Property="TextColor" Value="Black"></Setter>
+            <Setter Property="HorizontalOptions" Value="End"></Setter>
+            <Setter Property="Text" Value="{x:Static local:Icons.AngleRight}"></Setter>
+        </Style>-->
+        <!--<Style x:Key="BtnIconAngleRight" TargetType="Button">
+            <Setter Property="FontFamily" Value="FontAwesomeBold"></Setter>
+            <Setter Property="VerticalOptions" Value="Center"></Setter>
+            <Setter Property="HorizontalOptions" Value="End"></Setter>
+            <Setter Property="TextColor" Value="#2b3133"></Setter>
+            <Setter Property="FontSize" Value="45"></Setter>
+            <Setter Property="Text" Value="{x:Static local:Icons.AngleRight}"></Setter>
+            <Setter Property="BackgroundColor" Value="Transparent"></Setter>
+        </Style>-->
+        <!--x-->
+        <Style x:Key="BtnExit" TargetType="Button">
+            <Setter Property="VerticalOptions" Value="Center"></Setter>
+            <Setter Property="HorizontalOptions" Value="Start"></Setter>
+            <Setter Property="BackgroundColor" Value="#7B96A3"></Setter>
+            <Setter Property="TextColor" Value="Black"></Setter>
+            <Setter Property="HeightRequest" Value="35"></Setter>
+            <Setter Property="CornerRadius" Value="5"></Setter>
+            <Setter Property="FontFamily" Value="Regular"></Setter>
+            <Setter Property="FontSize" Value="15"></Setter>
+        </Style>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout  VerticalOptions="Center"  >
+            <Frame Style="{ StaticResource MainFrame }" x:Name="FrmPrincipal">
+                <StackLayout Style="{StaticResource MainStackLayout}" >
+                    <Frame Style="{ StaticResource FrameCardItem }" >
+                        <StackLayout Style="{ StaticResource MainStackLayout }" >
+                            <Grid Style="{ StaticResource GridCardItem }">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer x:Name="TpGstRg_IllRead" />
+                                </Grid.GestureRecognizers>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="13"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="75" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="70" />
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding IllRead}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
+                                <Image Grid.Row="0" Grid.Column="0"  SemanticProperties.Description="Vou ler" HeightRequest="30"  Style="{ StaticResource ImgIcon }" Source="list_solid_50.png" />
+                                <Label Text="Vou ler" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
+                                <!--<Label Grid.Column="3" Grid.RowSpan="2" Style="{ StaticResource LblIconAngleRight }" />-->
+                            </Grid>
+                        </StackLayout>
+                    </Frame>
+
+                    <!--<Frame Style="{ StaticResource FrameCardItem }" >
+                        <StackLayout Style="{ StaticResource MainStackLayout }" >
+                            <Grid Style="{ StaticResource GridCardItem }">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer x:Name="TpGstRg_Reading"  />
+                                </Grid.GestureRecognizers>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="13"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width ="75" />
+                                    <ColumnDefinition Width ="*" />
+                                    <ColumnDefinition Width="70" />
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding Reading}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
+                                <Label Text="{x:Static local:Icons.Reading}" Grid.Row="0" Grid.Column="0" Style="{ StaticResource LblIcon }"   />
+                                <Label Text="Lendo" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
+                                <Label Grid.Column="3" Grid.RowSpan="2" Style="{ StaticResource LblIconAngleRight }" />
+                            </Grid>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Style="{ StaticResource FrameCardItem }" >
+                        <StackLayout Style="{ StaticResource MainStackLayout }" >
+                            <Grid Style="{ StaticResource GridCardItem }">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer x:Name="TpGstRg_Read" />
+                                </Grid.GestureRecognizers>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="13"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="75" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="70" />
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding Read}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
+                                <Label Text="{x:Static local:Icons.Check}" Grid.Row="0" Grid.Column="0" Style="{ StaticResource LblIcon }"   />
+                                <Label Text="Lidos" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
+                                <Label Grid.Column="3" Grid.RowSpan="2" Style="{ StaticResource LblIconAngleRight }" />
+                            </Grid>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Style="{ StaticResource FrameCardItem }" >
+                        <StackLayout Style="{ StaticResource MainStackLayout }" >
+                            <Grid Style="{ StaticResource GridCardItem }">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer x:Name="TpGstRg_Interrupted" />
+                                </Grid.GestureRecognizers>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="13"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="75" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="70" />
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding Interrupted}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
+                                <Label Text="{x:Static local:Icons.Stop}" Grid.Row="0" Grid.Column="0" Style="{ StaticResource LblIcon }"   />
+                                <Label Text="Suspensos" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
+                                <Label Grid.Column="3" Grid.RowSpan="2" Style="{ StaticResource LblIconAngleRight }" />
+                            </Grid>
+                        </StackLayout>
+                    </Frame>-->
+                </StackLayout>
+            </Frame>
+
+            <!--<Frame VerticalOptions="Start" BackgroundColor="#BDBDBD" HorizontalOptions="Start">
+                <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+                    <Grid HorizontalOptions="Center" VerticalOptions="Start">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height ="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition  Width ="5*" />
+                            <ColumnDefinition  Width ="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="BtnAcessa"  Text="Adicionar Livro" Grid.Row="0" Grid.Column="0" Style="{StaticResource MainBtn}"  FontSize="12">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="FontAwesomeBold" Color="White"  Glyph="{x:Static local:Icons.Book}" Size="12"></FontImageSource>
+                            </Button.ImageSource>
+                        </Button>
+                        <Button Text="Arquivo" Grid.Row="0" Grid.Column="1"  Style="{StaticResource MainBtn}" FontSize="12" >
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="FontAwesomeBold" Color="White"  Glyph="{x:Static local:Icons.Archive}" Size="12"></FontImageSource>
+                            </Button.ImageSource>
+                        </Button>
+                    </Grid>
+                    <Grid HorizontalOptions="FillAndExpand" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition  Width ="*" />
+                            <ColumnDefinition  Width ="30" />
+                            <ColumnDefinition  Width ="30" />
+                        </Grid.ColumnDefinitions>
+                        <Button Text="Sair"  Grid.Row="0" Grid.Column="0"  Style="{ StaticResource BtnExit}" FontSize="12" >
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="FontAwesomeBold" Color="Black"  Glyph="{x:Static local:Icons.SignOut}" Size="12"></FontImageSource>
+                            </Button.ImageSource>
+                        </Button>
+                        <Button HorizontalOptions="End" VerticalOptions="End" BackgroundColor="Transparent" IsVisible="true" Grid.Row="0" Grid.Column="1" FontSize="15">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="FontAwesomeBold" Color="{Binding IsConnected}" Glyph="{x:Static local:Icons.Connection}" Size="12"></FontImageSource>
+                            </Button.ImageSource>
+                        </Button>
+                        <Button HorizontalOptions="End" x:Name="btnSync" VerticalOptions="End" BackgroundColor="Transparent" IsVisible="true" Grid.Row="0" Grid.Column="2" FontSize="5"  >
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="FontAwesomeBold" Color="{Binding IsSync}" Glyph="{x:Static local:Icons.Sync}" Size="10"></FontImageSource>
+                            </Button.ImageSource>
+                        </Button>
+                    </Grid>
+                </StackLayout>
+            </Frame>-->
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

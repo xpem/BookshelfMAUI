@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Bookshelf.Views.Access"
+             Title="Bookshelf - Gerenciamento de livros"  
+             Style="{StaticResource ContentPage}" 
+             >
+    <ContentPage.Content>
+        <StackLayout  Style="{StaticResource MainStackLayout}">
+            <Frame Style="{StaticResource MainFrame}">
+                <StackLayout Orientation="Vertical"  >
+                    <Image
+                Source="book_solid.png"
+                SemanticProperties.Description="Bookshelf - Gerenciamento de livros"
+                HeightRequest="50"
+                HorizontalOptions="Center" />
+                    <Label Text="Email" Style="{StaticResource LblEntry}"></Label>
+                    <Entry x:Name="EntEmail" Text="Binding Email" HorizontalOptions="Start" Style="{StaticResource Entry}" />
+                    <Label Text="Senha" Style="{StaticResource LblEntry}" ></Label>
+                    <Entry x:Name="EntPassword" Text="Binding Password" Style="{StaticResource Entry}"
+                            IsPassword="True" HorizontalOptions="Start" WidthRequest="180" PlaceholderColor="Black" BackgroundColor="White" TextColor="Black" >
+                    </Entry>
+                    <Button x:Name="BtnSignIn" Text="Acessar" Margin="0,10,0,20" Style="{StaticResource MainBtn}"
+                            FontSize="20" ImageSource="right_to_bracket_solid_20_w.png" ContentLayout="Left, 20" Command="{Binding SignInCommand}"  />
+
+                    <Grid HorizontalOptions="FillAndExpand" WidthRequest="292">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition  Width ="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button  Text="Cadastrar" x:Name="BtnAddUser"
+                                 Grid.Row="0" Grid.Column="0" Command="{Binding InsertUserCommand}"
+                                 Style="{StaticResource BtnSecondary}" BackgroundColor="#2D4144" FontSize="15" ImageSource="user_plus_solid_15_w.png" ContentLayout="Left, 20" />
+                        <Button Text="Recuperar Senha" x:Name="BtnRecoverPassword"
+                                Grid.Row="1" Grid.Column="0"
+                                 Style="{StaticResource BtnSecondary}"  BackgroundColor="#2D4144" FontSize="15" ImageSource="unlock_solid_15_w.png" ContentLayout="Left, 20"/>
+                    </Grid>
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
