@@ -7,5 +7,7 @@
         Task<BookshelfModels.User.User?> SignInWithEmailAndPassword(string? email, string? password);
 
         Task<BookshelfModels.User.User?> CreateUser(string email, string password);
+
+        Task SendPasswordResetEmail(string email);
     }
 }

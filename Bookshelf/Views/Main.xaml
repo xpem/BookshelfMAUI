@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Bookshelf.Views.Main"
+             Title="Bookshelf - Gerenciamento de livros"  
              Style="{StaticResource ContentPage}" >
     <ContentPage.Resources>
         <!--carditens-->
@@ -29,6 +30,11 @@
             <Setter Property="HorizontalOptions" Value="Start"></Setter>
             <Setter Property="VerticalOptions" Value="Center"></Setter>
         </Style>
+        <Style x:Key="ImgAngleRight" TargetType="Image">
+            <Setter Property="HeightRequest" Value="55"></Setter>
+            <Setter Property="HorizontalOptions" Value="End"></Setter>
+            <Setter Property="Source" Value="angle_right_solid_50.png"></Setter>
+        </Style>
         <Style x:Key="LblText" TargetType="Label">
             <Setter Property="TextColor" Value="#2b3133"></Setter>
             <Setter Property="VerticalOptions" Value="End"></Setter>
@@ -36,24 +42,6 @@
             <Setter Property="FontSize" Value="10"></Setter>
             <Setter Property="FontFamily" Value="PlayfairDisplayRegular"></Setter>
         </Style>
-        <!--<Style x:Key="LblIconAngleRight" TargetType="Label">
-            <Setter Property="FontFamily" Value="FontAwesomeBold"></Setter>
-            <Setter Property="VerticalTextAlignment" Value="Center"></Setter>
-            <Setter Property="FontSize" Value="45"></Setter>
-            <Setter Property="TextColor" Value="Black"></Setter>
-            <Setter Property="HorizontalOptions" Value="End"></Setter>
-            <Setter Property="Text" Value="{x:Static local:Icons.AngleRight}"></Setter>
-        </Style>-->
-        <!--<Style x:Key="BtnIconAngleRight" TargetType="Button">
-            <Setter Property="FontFamily" Value="FontAwesomeBold"></Setter>
-            <Setter Property="VerticalOptions" Value="Center"></Setter>
-            <Setter Property="HorizontalOptions" Value="End"></Setter>
-            <Setter Property="TextColor" Value="#2b3133"></Setter>
-            <Setter Property="FontSize" Value="45"></Setter>
-            <Setter Property="Text" Value="{x:Static local:Icons.AngleRight}"></Setter>
-            <Setter Property="BackgroundColor" Value="Transparent"></Setter>
-        </Style>-->
-        <!--x-->
         <Style x:Key="BtnExit" TargetType="Button">
             <Setter Property="VerticalOptions" Value="Center"></Setter>
             <Setter Property="HorizontalOptions" Value="Start"></Setter>
@@ -66,7 +54,7 @@
         </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout  VerticalOptions="Center"  >
+        <StackLayout  VerticalOptions="Center" MaximumWidthRequest="500" >
             <Frame Style="{ StaticResource MainFrame }" x:Name="FrmPrincipal">
                 <StackLayout Style="{StaticResource MainStackLayout}" >
                     <Frame Style="{ StaticResource FrameCardItem }" >
@@ -85,14 +73,14 @@
                                     <ColumnDefinition Width="70" />
                                 </Grid.ColumnDefinitions>
                                 <Label Text="{Binding IllRead}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
-                                <Image Grid.Row="0" Grid.Column="0"  SemanticProperties.Description="Vou ler" HeightRequest="30"  Style="{ StaticResource ImgIcon }" Source="list_solid_50.png" />
+                                <Image Grid.Row="0" Grid.Column="0" SemanticProperties.Description="Vou ler" HeightRequest="30"  Style="{ StaticResource ImgIcon }" Source="list_solid_50.png" />
                                 <Label Text="Vou ler" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
+                                <Image Grid.Column="3" Grid.RowSpan="2" SemanticProperties.Description="Acessar lista de livros que vou ler" Style="{StaticResource ImgAngleRight}" />
                                 <!--<Label Grid.Column="3" Grid.RowSpan="2" Style="{ StaticResource LblIconAngleRight }" />-->
                             </Grid>
                         </StackLayout>
                     </Frame>
-
-                    <!--<Frame Style="{ StaticResource FrameCardItem }" >
+                    <Frame Style="{ StaticResource FrameCardItem }" >
                         <StackLayout Style="{ StaticResource MainStackLayout }" >
                             <Grid Style="{ StaticResource GridCardItem }">
                                 <Grid.GestureRecognizers>
@@ -108,9 +96,9 @@
                                     <ColumnDefinition Width="70" />
                                 </Grid.ColumnDefinitions>
                                 <Label Text="{Binding Reading}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
-                                <Label Text="{x:Static local:Icons.Reading}" Grid.Row="0" Grid.Column="0" Style="{ StaticResource LblIcon }"   />
+                                <Image Grid.Row="0" Grid.Column="0" SemanticProperties.Description="Lendo" HeightRequest="30"  Style="{ StaticResource ImgIcon }" Source="book_open_reader_solid_50.png" />
                                 <Label Text="Lendo" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
-                                <Label Grid.Column="3" Grid.RowSpan="2" Style="{ StaticResource LblIconAngleRight }" />
+                                <Image Grid.Column="3" Grid.RowSpan="2" SemanticProperties.Description="Acessar lista de livros que estou lendo" Style="{StaticResource ImgAngleRight}" />
                             </Grid>
                         </StackLayout>
                     </Frame>
@@ -157,7 +145,7 @@
                                 <Label Grid.Column="3" Grid.RowSpan="2" Style="{ StaticResource LblIconAngleRight }" />
                             </Grid>
                         </StackLayout>
-                    </Frame>-->
+                    </Frame>
                 </StackLayout>
             </Frame>
 
@@ -191,7 +179,7 @@
                             <ColumnDefinition  Width ="30" />
                             <ColumnDefinition  Width ="30" />
                         </Grid.ColumnDefinitions>
-                        <Button Text="Sair" Grid.Row="0" Grid.Column="0" Style="{ StaticResource BtnExit}" FontSize="12" ImageSource="right_from_bracket_solid_12.png" ContentLayout="Left, 10" />
+                        <Button Text="Sair" Grid.Row="0" Grid.Column="0" Style="{ StaticResource BtnExit}" FontSize="12" ImageSource="right_from_bracket_solid_12.png" Command="{Binding LogoutCommand}" ContentLayout="Left, 10" />
 
                         <!--<Button HorizontalOptions="End" VerticalOptions="End" BackgroundColor="Transparent" IsVisible="true" Grid.Row="0" Grid.Column="1" FontSize="15">
                             <Button.ImageSource>

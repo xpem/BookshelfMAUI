@@ -56,7 +56,7 @@ namespace Bookshelf.ViewModels
                                 }
                                 else
                                 {
-                                    await Application.Current.MainPage.DisplayAlert("Aviso", "Usuário/senha incorretos", null, "Ok");
+                                    await Application.Current.MainPage.DisplayAlert("Aviso", "Email/senha incorretos", null, "Ok");
                                 }
                                 BtnRegisterAccessEnabled = true;
                             }
@@ -72,15 +72,15 @@ namespace Bookshelf.ViewModels
                     }
                     else
                     {
-                        await Application.Current.MainPage.DisplayAlert("Aviso", "Insira seu nome e senha.", null, "Ok");
+                        await Application.Current.MainPage.DisplayAlert("Aviso", "Insira seu email e senha.", null, "Ok");
                     }
                 });
             }
         }
 
-        public ICommand CreateUserCommand => new Command((e) => { });//navigation.PushAsync(new InsertUser()); });
+        public ICommand CreateUserCommand => new Command(async (e) => { await navigation.NavigateToPage<CreateUser>(); });
 
-        public ICommand UpdatePasswordCommand => new Command((e) => { });//navigation.PushAsync(new UpdatePassword()); });
+        public ICommand UpdatePasswordCommand => new Command(async (e) => { await navigation.NavigateToPage<UpdatePassword>(); });
 
     }
 }

@@ -75,5 +75,14 @@ namespace BookshelfServices.User.AuthServices
                 }
             }
         }
+
+        public async Task SendPasswordResetEmail(string email)
+        {
+            try
+            {
+                await authProvider.SendPasswordResetEmailAsync(email);
+            }
+            catch (Exception ex) { throw ex; }
+        }
     }
 }

@@ -187,7 +187,6 @@ namespace BookshelfRepos.Books
             else return Convert.ToDateTime(lastUpdate);
         }
 
-
         /// <summary>
         /// Update or create local book with the newest version of the book in the server
         /// </summary>
@@ -200,6 +199,25 @@ namespace BookshelfRepos.Books
                 AddBook(book, userId);
             else if (book is not null && book.LastUpdate > lastUpdate)
                 UpdateBook(book, userId);
+        }
+
+        public async static Task<List<(Situation, int)>> GetBookshelfTotals(string userId)
+        {
+            SQLiteDB.OpenIfClosed();
+
+            List<(Situation, int)> booksTotalSituations = new();
+
+            SqliteDataReader response = await SQLiteDB.RunSqliteCommand("select situation,count(Situation) from BOOK where UserId = @UserId and (Inactive is null or Inactive = '0')  group by situation",
+                new List<SqliteParameter>() { new SqliteParameter("@UserId", userId) });
+
+            while (response.Read())
+            {
+                booksTotalSituations.Add(((Situation)response.GetInt32(0), response.GetInt32(1)));
+            }
+
+            SQLiteDB.CloseIfOpen();
+
+            return booksTotalSituations;
         }
     }
 }

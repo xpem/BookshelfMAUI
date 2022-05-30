@@ -104,7 +104,6 @@ namespace Bookshelf.ViewModels
                     }
                     else
                     {
-
                         bool res = await Application.Current.MainPage.DisplayAlert("Aviso", "Usuário cadastrado!", null, "Ok");
 
                         if (!res)

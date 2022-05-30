@@ -39,13 +39,50 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+		<MauiImage Update="Resources\Images\book_solid.svg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</MauiImage>
+		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</MauiImage>
+		<MauiImage Update="Resources\Images\list_solid_50.svg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</MauiImage>
+		<MauiImage Update="Resources\Images\right_from_bracket_solid_12.svg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</MauiImage>
+		<MauiImage Update="Resources\Images\right_to_bracket_solid_20_w.svg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</MauiImage>
+		<MauiImage Update="Resources\Images\unlock_solid_15_w.svg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</MauiImage>
+		<MauiImage Update="Resources\Images\user_plus_solid_15_w.svg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</MauiImage>
+		<MauiImage Update="Resources\Images\user_plus_solid_30.svg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</MauiImage>
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Bold.ttf" />
+	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Italic.ttf" />
+	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Medium.ttf" />
+	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Regular.ttf" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Bold.ttf" />
+	  <MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Italic.ttf" />
+	  <MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Medium.ttf" />
+	  <MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Regular.ttf" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -66,6 +103,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Main.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\UpdatePassword.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

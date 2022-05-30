@@ -9,11 +9,7 @@
         <StackLayout  Style="{StaticResource MainStackLayout}">
             <Frame Style="{StaticResource MainFrame}">
                 <StackLayout Orientation="Vertical"  >
-                    <Image
-                Source="book_solid.png"
-                SemanticProperties.Description="Bookshelf - Gerenciamento de livros"
-                HeightRequest="50"
-                HorizontalOptions="Center" />
+                    <Image Source="book_solid.png" SemanticProperties.Description="Bookshelf - Gerenciamento de livros" HeightRequest="50" HorizontalOptions="Center" />
                     <Label Text="Email" Style="{StaticResource LblEntry}"></Label>
                     <Entry x:Name="EntEmail" HorizontalOptions="Start" Style="{StaticResource Entry}"  Text="{Binding Email}" />
                     
