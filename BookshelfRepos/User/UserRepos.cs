@@ -4,36 +4,32 @@ namespace BookshelfRepos.User
 {
     public static class UserRepos
     {
-        //public void AddUserLocal(BookshelfModels.User.User user)
-        //{
-        //    OpenIfClosed();
+        public static void InsertUser(BookshelfModels.User.User user)
+        {
+            SQLiteDB.OpenIfClosed();
 
-        //    List<SqliteParameter> parameters = new List<SqliteParameter>()
-        //    {
-        //        new SqliteParameter("@TOKEN", user.Token), new SqliteParameter("@EMAIL", user.Email),
-        //        new SqliteParameter("@PASSWORD", user.Password), new SqliteParameter("@LASTUPDATE", DateTime.MinValue),
-        //    };
+            List<SqliteParameter> parameters = new()
+            {
+                new SqliteParameter("@TOKEN", user.Token), new SqliteParameter("@EMAIL", user.Email),
+                new SqliteParameter("@PASSWORD", user.Password), new SqliteParameter("@LASTUPDATE", DateTime.MinValue),
+            };
 
-        //    _ = RunSqliteCommand("insert into USER (TOKEN,EMAIL,PASSWORD,LASTUPDATE) values (@TOKEN,@EMAIL,@PASSWORD,@LASTUPDATE)", parameters);
+            _ = SQLiteDB.RunSqliteCommand("insert into USER (TOKEN,EMAIL,PASSWORD,LASTUPDATE) values (@TOKEN,@EMAIL,@PASSWORD,@LASTUPDATE)", parameters);
 
-        //    CloseIfOpen();
+            SQLiteDB.CloseIfOpen();
+        }
 
-        //    ExecuteSQLiteCommand("insert into USER (TOKEN,EMAIL,PASSWORD,LASTUPDATE) values (?,?,?,?)", new object[] { user.Token, user.Email, user.Password, DateTime.MinValue });
+        public async static void CleanUserDatabase()
+        {
+            SQLiteDB.OpenIfClosed();
 
+            //clean local database
+            await SQLiteDB.RunSqliteCommand("delete from USER");
+            await SQLiteDB.RunSqliteCommand("delete from BOOK");
+            await SQLiteDB.RunSqliteCommand("delete from BOOKRATING");
 
-        //}
-
-        //public async void DelUserLocal()
-        //{
-        //    OpenIfClosed();
-
-        //    //clean local database
-        //    await RunSqliteCommand("delete from USER");
-        //    await RunSqliteCommand("delete from BOOK");
-        //    await RunSqliteCommand("delete from BOOKRATING");
-
-        //    CloseIfOpen();
-        //}
+            SQLiteDB.CloseIfOpen();
+        }
 
         public static BookshelfModels.User.User? GetUser()
         {

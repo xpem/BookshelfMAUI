@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Bookshelf.Views.Main"
-             Title="Main"
              Style="{StaticResource ContentPage}" >
     <ContentPage.Resources>
         <!--carditens-->
@@ -20,11 +19,10 @@
         <Style x:Key="LblQuantity" TargetType="Label">
             <Setter Property="VerticalTextAlignment" Value="Center"></Setter>
             <Setter Property="FontSize" Value="45"></Setter>
-            <Setter Property="FontAttributes" Value="Bold"></Setter>
             <Setter Property="VerticalOptions" Value="CenterAndExpand"></Setter>
             <Setter Property="TextColor" Value="Black"></Setter>
             <Setter Property="HorizontalOptions" Value="StartAndExpand"></Setter>
-            <Setter Property="FontFamily" Value="Bold"></Setter>
+            <Setter Property="FontFamily" Value="PlayfairDisplayBold"></Setter>
             <Setter Property="Padding" Value="0,10,0,0"></Setter>
         </Style>
         <Style x:Key="ImgIcon" TargetType="Image">
@@ -36,7 +34,7 @@
             <Setter Property="VerticalOptions" Value="End"></Setter>
             <Setter Property="VerticalTextAlignment" Value="End"></Setter>
             <Setter Property="FontSize" Value="10"></Setter>
-            <Setter Property="FontFamily" Value="Regular"></Setter>
+            <Setter Property="FontFamily" Value="PlayfairDisplayRegular"></Setter>
         </Style>
         <!--<Style x:Key="LblIconAngleRight" TargetType="Label">
             <Setter Property="FontFamily" Value="FontAwesomeBold"></Setter>
@@ -63,7 +61,7 @@
             <Setter Property="TextColor" Value="Black"></Setter>
             <Setter Property="HeightRequest" Value="35"></Setter>
             <Setter Property="CornerRadius" Value="5"></Setter>
-            <Setter Property="FontFamily" Value="Regular"></Setter>
+            <Setter Property="FontFamily" Value="PlayfairDisplayRegular"></Setter>
             <Setter Property="FontSize" Value="15"></Setter>
         </Style>
     </ContentPage.Resources>
@@ -163,7 +161,7 @@
                 </StackLayout>
             </Frame>
 
-            <!--<Frame VerticalOptions="Start" BackgroundColor="#BDBDBD" HorizontalOptions="Start">
+            <Frame VerticalOptions="Start" BackgroundColor="#BDBDBD" HorizontalOptions="Start">
                 <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
                     <Grid HorizontalOptions="Center" VerticalOptions="Start">
                         <Grid.RowDefinitions>
@@ -173,7 +171,7 @@
                             <ColumnDefinition  Width ="5*" />
                             <ColumnDefinition  Width ="5*" />
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="BtnAcessa"  Text="Adicionar Livro" Grid.Row="0" Grid.Column="0" Style="{StaticResource MainBtn}"  FontSize="12">
+                        <!--<Button x:Name="BtnAcessa"  Text="Adicionar Livro" Grid.Row="0" Grid.Column="0" Style="{StaticResource MainBtn}"  FontSize="12">
                             <Button.ImageSource>
                                 <FontImageSource FontFamily="FontAwesomeBold" Color="White"  Glyph="{x:Static local:Icons.Book}" Size="12"></FontImageSource>
                             </Button.ImageSource>
@@ -182,7 +180,7 @@
                             <Button.ImageSource>
                                 <FontImageSource FontFamily="FontAwesomeBold" Color="White"  Glyph="{x:Static local:Icons.Archive}" Size="12"></FontImageSource>
                             </Button.ImageSource>
-                        </Button>
+                        </Button>-->
                     </Grid>
                     <Grid HorizontalOptions="FillAndExpand" >
                         <Grid.RowDefinitions>
@@ -193,12 +191,9 @@
                             <ColumnDefinition  Width ="30" />
                             <ColumnDefinition  Width ="30" />
                         </Grid.ColumnDefinitions>
-                        <Button Text="Sair"  Grid.Row="0" Grid.Column="0"  Style="{ StaticResource BtnExit}" FontSize="12" >
-                            <Button.ImageSource>
-                                <FontImageSource FontFamily="FontAwesomeBold" Color="Black"  Glyph="{x:Static local:Icons.SignOut}" Size="12"></FontImageSource>
-                            </Button.ImageSource>
-                        </Button>
-                        <Button HorizontalOptions="End" VerticalOptions="End" BackgroundColor="Transparent" IsVisible="true" Grid.Row="0" Grid.Column="1" FontSize="15">
+                        <Button Text="Sair" Grid.Row="0" Grid.Column="0" Style="{ StaticResource BtnExit}" FontSize="12" ImageSource="right_from_bracket_solid_12.png" ContentLayout="Left, 10" />
+
+                        <!--<Button HorizontalOptions="End" VerticalOptions="End" BackgroundColor="Transparent" IsVisible="true" Grid.Row="0" Grid.Column="1" FontSize="15">
                             <Button.ImageSource>
                                 <FontImageSource FontFamily="FontAwesomeBold" Color="{Binding IsConnected}" Glyph="{x:Static local:Icons.Connection}" Size="12"></FontImageSource>
                             </Button.ImageSource>
@@ -207,10 +202,10 @@
                             <Button.ImageSource>
                                 <FontImageSource FontFamily="FontAwesomeBold" Color="{Binding IsSync}" Glyph="{x:Static local:Icons.Sync}" Size="10"></FontImageSource>
                             </Button.ImageSource>
-                        </Button>
+                        </Button>-->
                     </Grid>
                 </StackLayout>
-            </Frame>-->
+            </Frame>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

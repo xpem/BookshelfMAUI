@@ -22,10 +22,6 @@ namespace BookshelfServices.Books.Sync
         {
             try
             {
-                //  BooksService booksService = new BooksService();
-                //LocalBooks localBooks = new LocalBooks();
-                //BBooks bBooks = new BBooks();
-
                 //todo - get user by signin email
                 BookshelfModels.User.User? user = userServices.GetUserLocal();
                 bool ContinuosProcess = true;

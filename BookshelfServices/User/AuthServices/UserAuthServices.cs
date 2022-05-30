@@ -51,5 +51,29 @@ namespace BookshelfServices.User.AuthServices
                 }
             }
         }
+
+        /// <summary>
+        /// Add a user in fb
+        /// </summary>
+        public async Task<BookshelfModels.User.User?> CreateUser(string email, string password)
+        {
+            try
+            {
+                var fbTokens = await authProvider.CreateUserWithEmailAndPasswordAsync(email, password);
+
+                return new BookshelfModels.User.User() { Token = fbTokens.FirebaseToken, Email = fbTokens.User.Email, Password = password, };
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("EMAIL_EXISTS"))
+                {
+                    return new BookshelfModels.User.User() { Error = ErrorType.EMAIL_EXISTS, };
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
     }
 }

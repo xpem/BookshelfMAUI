@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Bookshelf.Views.CreateUser"
+             Title="Cadastrar Usuário"            
+             Style="{StaticResource ContentPage}" >
+    <ContentPage.Content>
+        <StackLayout  VerticalOptions="Center"  >
+            <Frame Style="{ StaticResource MainFrame }">
+                <StackLayout Style="{StaticResource MainStackLayout}">
+
+                    <Image SemanticProperties.Description="Criar Usuário" HeightRequest="30"  Style="{ StaticResource ImgIcon }" Source="user_plus_solid_30.png" />
+
+                    <Label Text="Email" Style="{StaticResource LblEntry}" />
+                    <Entry Style="{StaticResource Entry}" x:Name="EntEmail" Text="{Binding Email}" MaxLength="150" Keyboard="Email"  />
+
+                    <Label Text="Senha" Style="{StaticResource LblEntry}" />
+                    <Entry IsPassword="True" Style="{StaticResource Entry}" x:Name="EntSenha" Text="{Binding Password}" MaxLength="25" />
+
+                    <Label Text="Confirmação da senha" Style="{StaticResource LblEntry}" />
+                    <Entry IsPassword="True" Style="{StaticResource Entry}"  x:Name="EntConfSenha"  Text="{Binding ConfirmPassword}" MaxLength="25"/>
+
+                    <!---->
+                    <Button x:Name="BtnCreateUser" Text="Cadastrar" Style="{StaticResource BtnPrincipal}" Command="{Binding CreateUserCommand}" IsEnabled="{Binding BtnCreateUserIsEnabled}"/>
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

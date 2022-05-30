@@ -62,6 +62,9 @@
 	  <MauiXaml Update="Views\Access.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\CreateUser.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\Main.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

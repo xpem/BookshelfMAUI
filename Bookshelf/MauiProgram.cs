@@ -36,8 +36,8 @@ public static class MauiProgram
         builder.Services.AddTransient<Access>();
         builder.Services.AddTransient<AccessVM>();
 
-        //builder.Services.AddTransient<InsertUser>();
-        //builder.Services.AddTransient<InsertUserVM>();
+        builder.Services.AddTransient<CreateUser>();
+        builder.Services.AddTransient<CreateUserVM>();
 
         //Services
         builder.Services.AddSingleton<INavigationServices, NavigationServices>();

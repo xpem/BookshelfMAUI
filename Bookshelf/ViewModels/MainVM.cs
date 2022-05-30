@@ -1,4 +1,6 @@
 ﻿using Bookshelf.Utils.Navigation;
+using Bookshelf.Views;
+using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
@@ -23,5 +25,18 @@ namespace Bookshelf.ViewModels
         {
             navigation = _navigation;
         }
+
+        public ICommand LogoutCommand => new Command(async (e) =>
+        {
+            bool resp = await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja sair e retornar a tela inicial?", "Sim", "Cancelar");
+
+            if (resp)
+            {
+                BookshelfServices.User.UserServices.CleanUserDatabase();
+                Application.Current.MainPage = new NavigationPage();
+                await navigation.NavigateToPage<Access>();
+            }
+        });
+
     }
 }
