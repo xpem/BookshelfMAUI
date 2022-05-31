@@ -72,6 +72,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Fonts\EBGaramond\EBGaramond-Bold.ttf" />
+	  <None Remove="Resources\Fonts\EBGaramond\EBGaramond-Italic.ttf" />
+	  <None Remove="Resources\Fonts\EBGaramond\EBGaramond-Medium.ttf" />
+	  <None Remove="Resources\Fonts\EBGaramond\EBGaramond-Regular.ttf" />
+	  <None Remove="Resources\Fonts\EBGaramond\EBGaramond-SemiBold.ttf" />
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Bold.ttf" />
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Italic.ttf" />
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Medium.ttf" />
@@ -79,10 +84,29 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-Bold.ttf">
+	    <CopyToOutputDirectory></CopyToOutputDirectory>
+	  </MauiFont>
+	  <MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-Italic.ttf">
+	    <CopyToOutputDirectory></CopyToOutputDirectory>
+	  </MauiFont>
+	  <MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-Medium.ttf">
+	    <CopyToOutputDirectory></CopyToOutputDirectory>
+	  </MauiFont>
+	  <MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-Regular.ttf">
+	    <CopyToOutputDirectory></CopyToOutputDirectory>
+	  </MauiFont>
+	  <MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-SemiBold.ttf">
+	    <CopyToOutputDirectory></CopyToOutputDirectory>
+	  </MauiFont>
 	  <MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Bold.ttf" />
 	  <MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Italic.ttf" />
 	  <MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Medium.ttf" />
 	  <MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Regular.ttf" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="CommunityToolkit.Maui" Version="1.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

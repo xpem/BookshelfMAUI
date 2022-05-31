@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookshelfServices.Books.Local
+namespace BookshelfServices.Books
 {
-    public class BooksServices
+    public class BooksServices : IBooksServices
     {
         public BookshelfModels.User.User? User { get; set; }
 
@@ -22,7 +22,7 @@ namespace BookshelfServices.Books.Local
 
             if (User?.Id != null)
             {
-                List<(Situation, int)> list = await localBooks.GetBookshelfTotals(User.Id);
+                List<(Situation, int)> list = await BookshelfRepos.Books.BooksRepos.GetBookshelfTotals(User.Id);
 
                 if (list.Count > 0)
                 {

@@ -1,5 +1,6 @@
 ﻿using Bookshelf.Utils.Navigation;
 using Bookshelf.Views;
+using BookshelfServices.Books;
 using BookshelfServices.Books.Sync;
 using System.Windows.Input;
 
@@ -38,10 +39,13 @@ namespace Bookshelf.ViewModels
         private bool frmMainIsEnabled;
 
         public bool FrmMainIsEnabled { get => frmMainIsEnabled; set { frmMainIsEnabled = value; OnPropertyChanged(); } }
-                
-        public MainVM(INavigationServices _navigation)
+
+        IBooksServices booksServices;
+
+        public MainVM(INavigationServices _navigation, IBooksServices _booksServices)
         {
-            navigation = _navigation;        
+            navigation = _navigation;
+            booksServices = _booksServices;
         }
 
         public ICommand LogoutCommand => new Command(async (e) =>
@@ -51,7 +55,7 @@ namespace Bookshelf.ViewModels
             if (resp)
             {
                 BookshelfServices.User.UserServices.CleanUserDatabase();
-               
+
                 Application.Current.MainPage = new NavigationPage();
                 await navigation.NavigateToPage<Access>();
             }
@@ -97,16 +101,30 @@ namespace Bookshelf.ViewModels
                 //in fisrt sync not finish yet, verify with one second interval
                 if (!firstSync)
                 { await Task.Delay(2000); }
-                //verify with ten seconds interval
+                //checks with ten seconds interval
                 else
                 { await Task.Delay(10000); }
             }
         }
 
+
+        public ICommand OnAppearingCommand => new Command((e) =>
+        {
+            IllRead = Reading = Read = Interrupted = "...";
+
+            if (!ChekingSync)
+            {
+                FrmMainOpacity = 0.7;
+                FrmMainIsEnabled = false;
+
+                _ = ChekSync();
+            }
+        });
+
         public async Task GetBookshelfTotals()
         {
             //
-            BookshelfModels.Books.Totals totals = await new BBooks().GetBookshelfTotals();
+            BookshelfModels.Books.Totals totals = await booksServices.GetBookshelfTotals();
             //
             if (totals.IllRead.ToString() != IllRead) { IllRead = totals.IllRead.ToString(); }
             if (totals.Reading.ToString() != Reading) { Reading = totals.Reading.ToString(); }

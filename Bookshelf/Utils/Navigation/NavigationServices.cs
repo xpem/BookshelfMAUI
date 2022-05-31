@@ -84,7 +84,6 @@ namespace Bookshelf.Utils.Navigation
             {
                 var toPage = ResolvePage<T>();
 
-
                 if (toPage is not null)
                 {
                     //Subscribe to the toPage's NavigatedTo event

@@ -403,14 +403,14 @@
         <Setter Property="PlaceholderColor" Value="#606060"></Setter>
         <Setter Property="WidthRequest" Value="250"></Setter>
         <Setter Property="TextColor" Value="Black"></Setter>
-        <Setter Property="FontFamily" Value="PlayfairDisplayRegular"></Setter>
+        <Setter Property="FontFamily" Value="EBGaramondSemibold"></Setter>
         <Setter Property="Margin" Value="0,5,0,0"></Setter>
         <Setter Property="HorizontalOptions" Value="Start"></Setter>
     </Style>
 
     <Style x:Key="LblEntry" TargetType="Label">
         <Setter Property="TextColor" Value="#4B4B4B"></Setter>
-        <Setter Property="FontFamily" Value="PlayfairDisplayRegular"></Setter>
+        <Setter Property="FontFamily" Value="EBGaramondRegular"></Setter>
         <Setter Property="HeightRequest" Value="18"></Setter>
         <Setter Property="Margin" Value="0,10,0,0"></Setter>
     </Style>
@@ -421,7 +421,7 @@
         <Setter Property="BackgroundColor" Value="#362624"></Setter>
         <Setter Property="TextColor" Value="#EDEDED"></Setter>
         <Setter Property="CornerRadius" Value="5"></Setter>
-        <Setter Property="FontFamily" Value="PlayfairDisplayBold"></Setter>
+        <Setter Property="FontFamily" Value="EBGaramondBold"></Setter>
         <Setter Property="FontSize" Value="20"></Setter>
     </Style>
 
@@ -431,7 +431,7 @@
         <Setter Property="BackgroundColor" Value="#5D4037"></Setter>
         <Setter Property="TextColor" Value="#EDEDED"></Setter>
         <Setter Property="CornerRadius" Value="5"></Setter>
-        <Setter Property="FontFamily" Value="PlayfairDisplayRegular"></Setter>
+        <Setter Property="FontFamily" Value="EBGaramondSemibold"></Setter>
     </Style>
 
 </ResourceDictionary>
