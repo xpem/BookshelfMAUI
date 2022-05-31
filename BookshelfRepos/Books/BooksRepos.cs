@@ -219,5 +219,73 @@ namespace BookshelfRepos.Books
 
             return booksTotalSituations;
         }
+
+        public async static Task<Book> GetBook(string userId, string bookKey)
+        {
+            try
+            {
+                SQLiteDB.OpenIfClosed();
+
+                List<SqliteParameter> parameters = new()
+                {
+                    //
+                    new SqliteParameter("@userId", userId),
+                    new SqliteParameter("@key", bookKey)
+                };
+
+
+                SqliteDataReader response = await SQLiteDB.RunSqliteCommand("select b.key,b.title,b.Authors,b.Year,b.Volume,b.Pages,b.Genre,b.LastUpdate,b.SubTitle,b.Isbn,br.Rate,b.situation,br.comment" +
+                    " from BOOK b inner join BOOKRATING br on br.BookKey = b.key where b.userId = @userId and b.Key = @key", parameters);
+
+                response.Read();
+
+                Book book = new()
+                {
+                    BookKey = response.GetWithNullableString(0),
+                    Title = response.GetWithNullableString(1),
+                    Authors = response.GetWithNullableString(2),
+                    Year = response.GetInt32(3),
+                    Volume = response.GetWithNullableString(4),
+                    Pages = response.GetInt32(5),
+                    Genre = response.GetWithNullableString(6),
+                    LastUpdate = Convert.ToDateTime(response.GetWithNullableString(7)),
+                    SubTitle = response.GetWithNullableString(8),
+                    Isbn = response.GetWithNullableString(9),
+                    Situation = (Situation)response.GetInt32(11),
+                    Rating = new Rating() { Rate = response.GetWithNullableInt(10), Comment = response.GetWithNullableString(12) }
+                };
+
+                SQLiteDB.CloseIfOpen();
+
+                return book;
+            }
+            catch (Exception ex) { throw ex; }
+        }
+
+        public async static Task<bool> GetBookByTitle(string userId, string bookTitle)
+        {
+            try
+            {
+                SQLiteDB.OpenIfClosed();
+
+                List<SqliteParameter> parameters = new()
+                {
+                    new SqliteParameter("@UserId", userId),
+                    new SqliteParameter("@title", bookTitle)
+                };
+
+                SqliteDataReader response = await SQLiteDB.RunSqliteCommand("select b.key from BOOK b where b.UserId = @UserId and b.title = @title" +
+                    " and b.inactive = 0", parameters);
+
+                bool Exists = response.Read();
+
+                SQLiteDB.CloseIfOpen();
+
+                return Exists;
+
+            }
+            catch (Exception ex) { throw ex; }
+        }
+
     }
 }

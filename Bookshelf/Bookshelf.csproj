@@ -81,6 +81,7 @@
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Italic.ttf" />
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Medium.ttf" />
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Regular.ttf" />
+	  <None Remove="Resources\Images\rotate_solid_15_green.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -121,6 +122,9 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Views\Access.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\CreateBook.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\CreateUser.xaml">

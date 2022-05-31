@@ -81,7 +81,6 @@
                                 <Image Grid.Row="0" Grid.Column="0" SemanticProperties.Description="Vou ler" HeightRequest="30" Style="{ StaticResource ImgIcon }" Source="list_solid_50.png" />
                                 <Label Text="Vou ler" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
                                 <Image Grid.Column="3" Grid.RowSpan="2" SemanticProperties.Description="Acessar lista de livros que vou ler" Style="{StaticResource ImgAngleRight}" />
-                                <!--<Label Grid.Column="3" Grid.RowSpan="2" Style="{ StaticResource LblIconAngleRight }" />-->
                             </Grid>
                         </StackLayout>
                     </Frame>
@@ -153,10 +152,9 @@
                     </Frame>
                 </StackLayout>
             </Frame>
-
-            <Frame VerticalOptions="Start" BackgroundColor="#BDBDBD" HorizontalOptions="Start">
-                <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
-                    <Grid HorizontalOptions="Center" VerticalOptions="Start">
+            <Frame BackgroundColor="#BDBDBD" HorizontalOptions="Start" VerticalOptions="Center">
+                <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" >
+                    <Grid HorizontalOptions="FillAndExpand" VerticalOptions="Start">
                         <Grid.RowDefinitions>
                             <RowDefinition Height ="*" />
                         </Grid.RowDefinitions>
@@ -164,18 +162,12 @@
                             <ColumnDefinition  Width ="5*" />
                             <ColumnDefinition  Width ="5*" />
                         </Grid.ColumnDefinitions>
-                        <!--<Button x:Name="BtnAcessa"  Text="Adicionar Livro" Grid.Row="0" Grid.Column="0" Style="{StaticResource MainBtn}"  FontSize="12">
-                            <Button.ImageSource>
-                                <FontImageSource FontFamily="FontAwesomeBold" Color="White"  Glyph="{x:Static local:Icons.Book}" Size="12"></FontImageSource>
-                            </Button.ImageSource>
-                        </Button>
-                        <Button Text="Arquivo" Grid.Row="0" Grid.Column="1"  Style="{StaticResource MainBtn}" FontSize="12" >
-                            <Button.ImageSource>
-                                <FontImageSource FontFamily="FontAwesomeBold" Color="White"  Glyph="{x:Static local:Icons.Archive}" Size="12"></FontImageSource>
-                            </Button.ImageSource>
-                        </Button>-->
+                        
+                        <Button x:Name="BtnAcessa" HorizontalOptions="FillAndExpand" Text="Adicionar Livro" Grid.Row="0" Grid.Column="0" Style="{StaticResource MainBtn}"  FontSize="15" ImageSource="book_solid_15_w.png" ContentLayout="Left, 10"/>
+
+                        <Button Text="Listar Todos" Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand"  Style="{StaticResource BtnSecondary}" FontSize="15" ImageSource="bars_staggered_solid_15_w.png" BackgroundColor="#2D4144" ContentLayout="Left, 10" />
                     </Grid>
-                    <Grid HorizontalOptions="FillAndExpand" >
+                    <Grid HorizontalOptions="FillAndExpand" Margin="0,5,0,0" >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
@@ -186,16 +178,8 @@
                         </Grid.ColumnDefinitions>
                         <Button Text="Sair" Grid.Row="0" Grid.Column="0" Style="{ StaticResource BtnExit}" FontSize="15" ImageSource="right_from_bracket_solid_12.png" Command="{Binding LogoutCommand}" ContentLayout="Left, 10" />
 
-                        <!--<Button HorizontalOptions="End" VerticalOptions="End" BackgroundColor="Transparent" IsVisible="true" Grid.Row="0" Grid.Column="1" FontSize="15">
-                            <Button.ImageSource>
-                                <FontImageSource FontFamily="FontAwesomeBold" Color="{Binding IsConnected}" Glyph="{x:Static local:Icons.Connection}" Size="12"></FontImageSource>
-                            </Button.ImageSource>
-                        </Button>
-                        <Button HorizontalOptions="End" x:Name="btnSync" VerticalOptions="End" BackgroundColor="Transparent" IsVisible="true" Grid.Row="0" Grid.Column="2" FontSize="5"  >
-                            <Button.ImageSource>
-                                <FontImageSource FontFamily="FontAwesomeBold" Color="{Binding IsSync}" Glyph="{x:Static local:Icons.Sync}" Size="10"></FontImageSource>
-                            </Button.ImageSource>
-                        </Button>-->
+                        <Image Grid.Row="0" Grid.Column="1" SemanticProperties.Description="Status da conexão" HeightRequest="10" Source="wifi_solid_15_red.png" IsVisible="{Binding ConnectedVisible}" VerticalOptions="End"/>
+                        <Image Grid.Row="0" Grid.Column="2" SemanticProperties.Description="Status da sincronização" HeightRequest="10" Source="{Binding ImgSync}" VerticalOptions="End"/>
                     </Grid>
                 </StackLayout>
             </Frame>

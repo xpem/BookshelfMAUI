@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Bookshelf.Views.CreateBook"
+             Title="Cadastrar Livro"
+             Style="{StaticResource ContentPage}" 
+             >
+    <ContentPage.Content>
+        <StackLayout  VerticalOptions="Center"  >
+            <Frame Style="{ StaticResource FramePrincipal }" >
+                <StackLayout Style="{StaticResource StackLayoutPrincipal}">
+                    <ScrollView>
+                        <StackLayout >
+                            <Image Source="book_solid.png" SemanticProperties.Description="Bookshelf - Gerenciamento de livros" HeightRequest="30" HorizontalOptions="Center" />
+                            <!---->
+                            <Label Text="Título" Style="{StaticResource LblEntries}"></Label>
+                            <Entry x:Name="EntTitle" MaximumWidthRequest="350" Text="{Binding Title}" Style="{StaticResource Entry}" HorizontalOptions="CenterAndExpand" MaxLength="400" />
+                            <!---->
+                            <Label Text="*Subtítulo" Style="{StaticResource LblEntries}"></Label>
+                            <Entry x:Name="EntSubTitle" MaximumWidthRequest="350" Text="{Binding SubTitle}" Style="{StaticResource Entry}" HorizontalOptions="CenterAndExpand" MaxLength="400" />
+                            <!---->
+                            <Grid HorizontalOptions="Center" MaximumHeightRequest="350">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width ="35*" />
+                                    <ColumnDefinition Width ="65*" />
+                                </Grid.ColumnDefinitions>
+                                <!---->
+                                <Frame VerticalOptions="Start" HorizontalOptions="Fill" Grid.Row="0" Grid.Column="0" Padding="0" BackgroundColor="Transparent">
+                                    <StackLayout Orientation="Vertical" VerticalOptions="Start" HorizontalOptions="FillAndExpand">
+                                        <Label Text="*Volume" Style="{StaticResource LblEntries}"></Label>
+                                        <Entry WidthRequest="90" Text="{Binding Volume}" HorizontalOptions="StartAndExpand" VerticalOptions="Start" x:Name="EntVol" Keyboard="Numeric" MaxLength="2" Style="{StaticResource Entry}"/>
+                                    </StackLayout>
+                                </Frame>
+                                <!---->
+                                <Frame VerticalOptions="Start" HorizontalOptions="FillAndExpand" Grid.Row="0" Grid.Column="1" Padding="0" BackgroundColor="Transparent">
+                                    <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
+                                        <Label Text="Ano" Style="{StaticResource LblEntries}"></Label>
+                                        <Entry Grid.Row="0" Grid.Column="1" WidthRequest="90" Text="{Binding Year}" HorizontalOptions="Start" x:Name="EntAno" MaxLength="4" Keyboard="Text" Style="{StaticResource Entry}" />
+                                    </StackLayout>
+                                </Frame>
+                                <!---->
+                                <Frame VerticalOptions="Start" HorizontalOptions="FillAndExpand" Grid.Row="1" Grid.ColumnSpan="2" Padding="0" BackgroundColor="Transparent">
+                                    <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+                                        <Label Text="Autor" Style="{StaticResource LblEntries}"></Label>
+                                        <Entry WidthRequest="250" Text="{Binding Authors}" HorizontalOptions="CenterAndExpand" x:Name="EntAutor" MaxLength="400"  Style="{StaticResource Entry}"/>
+                                    </StackLayout>
+                                </Frame>
+                                <Frame VerticalOptions="Start" HorizontalOptions="FillAndExpand" Grid.Row="2" Grid.Column="0" Padding="0" BackgroundColor="Transparent">
+                                    <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+                                        <Label Text="Páginas" Style="{StaticResource LblEntries}"></Label>
+                                        <Entry WidthRequest="90" Text="{Binding Pages}" HorizontalOptions="EndAndExpand" x:Name="EntPages" MaxLength="4" Keyboard="Numeric" Style="{StaticResource Entry}" />
+                                    </StackLayout>
+                                </Frame>
+                                <!---->
+                                <Frame VerticalOptions="Start" HorizontalOptions="FillAndExpand" Grid.Row="2" Grid.Column="1" Padding="0" BackgroundColor="Transparent">
+                                    <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+                                        <Label Text="Gênero" Style="{StaticResource LblEntries}"></Label>
+                                        <Entry WidthRequest="180" Keyboard="Numeric" Text="{Binding Genre}" HorizontalOptions="StartAndExpand" x:Name="EntGenrer" MaxLength="100" Style="{StaticResource Entry}" />
+                                    </StackLayout>
+                                </Frame>
+                                <!---->
+                            </Grid>
+
+                            <!---->
+                            <Frame VerticalOptions="Start" HorizontalOptions="FillAndExpand" Grid.Row="0" Grid.Column="1" Padding="0" BackgroundColor="Transparent">
+                                <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+                                    <Label Text="*Isbn" Style="{StaticResource LblEntries}"></Label>
+                                    <Entry WidthRequest="250" Text="{Binding Isbn}" HorizontalOptions="StartAndExpand" x:Name="EntIsbn" MaxLength="300" Style="{StaticResource Entry}" />
+                                </StackLayout>
+                            </Frame>
+
+                            <BoxView  HeightRequest="1" HorizontalOptions="FillAndExpand" BackgroundColor="Black" Color="Black"></BoxView>
+
+                            <Label Text="Situação" VerticalOptions="Fill" HorizontalOptions="Center" TextColor="Black" FontFamily="SemiBold" FontSize="20"/>
+
+                            <Picker x:Name="PkrSituation" 
+                            ItemsSource="{Binding StatusList}"
+                            SelectedIndex="{ Binding PkrStatusSelectedIndex }"
+                            HorizontalOptions="Center" VerticalOptions="Start" WidthRequest="250" Style="{StaticResource Entry}" FontSize="15"/>
+
+                            <Label  x:Name="LblRatingBar" 
+                            Text="{Binding Source={x:Reference RatingBar}, Path=SelectedStarValue, StringFormat='Avaliação pessoal: {0:F0} de 5'}" 
+                            TextColor="#5D4037" HorizontalTextAlignment="Center" Margin="0, 20, 0, 0"
+                            IsVisible="{Binding LblRatingBarIsVisible}"/>
+
+                            <!--<fRating:RatingBar x:Name="RatingBar" HorizontalOptions="Center" ImageWidth="30" SelectedStarValue="{ Binding Rate }"  IsVisible="{Binding RatingBarIsVisible}" ImageHeight="30" FlowDirection="LeftToRight" EmptyStarImage="emptystar.png" FillStarImage="fillstar.png" ></fRating:RatingBar>-->
+
+                            <!---->
+                            <Editor Placeholder="*Comentários" 
+                            Style="{StaticResource Entry}"
+                            WidthRequest="250" HeightRequest="100" MaxLength="200" HorizontalOptions="CenterAndExpand" Keyboard="Chat"
+                            Text="{ Binding Comment }"
+                            IsVisible="{Binding EdtCommentIsVisible}"                            
+                            />
+                        </StackLayout>
+                    </ScrollView>
+                    <!--BtnInsert book-->
+                    <Button Text="{Binding BtnInsertText}"
+                            Command="{Binding InsertBookCommand}"
+                            IsVisible="{Binding BtnInsertIsVisible}"
+                            IsEnabled="{Binding BtnInsertIsEnabled}"
+                            Style="{StaticResource BtnPrincipal}"
+                            />
+
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -5,11 +5,6 @@ using BookshelfModels.User;
 using BookshelfServices.Books.Sync;
 using BookshelfServices.User;
 using Plugin.Connectivity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
@@ -19,7 +14,7 @@ namespace Bookshelf.ViewModels
         IUserServices userService;
         IBooksSyncServices booksSyncServices;
 
-        public CreateUserVM(INavigationServices _navigation,IUserServices _userService, IBooksSyncServices _booksSyncServices)
+        public CreateUserVM(INavigationServices _navigation, IUserServices _userService, IBooksSyncServices _booksSyncServices)
         {
             navigation = _navigation;
             userService = _userService;

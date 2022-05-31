@@ -14,7 +14,7 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
-   
+
         var builder = MauiApp.CreateBuilder();
 
 
@@ -41,22 +41,25 @@ public static class MauiProgram
 
         #region Dependency injections
 
-        
+
         builder.Services.AddTransient<Main>();
         builder.Services.AddTransient<MainVM>();
-        
+
         builder.Services.AddTransient<Access>();
         builder.Services.AddTransient<AccessVM>();
-        
+
         builder.Services.AddTransient<CreateUser>();
         builder.Services.AddTransient<CreateUserVM>();
-        
+
         builder.Services.AddTransient<UpdatePassword>();
         builder.Services.AddTransient<UpdatePasswordVM>();
 
+        builder.Services.AddTransient<CreateBook>();
+        builder.Services.AddTransient<CreateBookVM>();
+
         //Services
         builder.Services.AddSingleton<INavigationServices, NavigationServices>();
-        
+
         builder.Services.AddScoped<IUserAuthServices, UserAuthServices>();
         builder.Services.AddScoped<IUserServices, UserServices>();
 

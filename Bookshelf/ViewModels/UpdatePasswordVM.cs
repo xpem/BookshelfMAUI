@@ -1,11 +1,6 @@
 ﻿using Bookshelf.Utils;
 using Bookshelf.Utils.Navigation;
 using BookshelfServices.User.AuthServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
@@ -30,7 +25,7 @@ namespace Bookshelf.ViewModels
             {
                 return new Command(async (e) =>
                 {
-                    if (!CheckInternet())
+                    if (!(Connectivity.NetworkAccess == NetworkAccess.Internet))
                     {
                         await Application.Current.MainPage.DisplayAlert("Aviso", "Sem conexão com a internet", null, "Ok");
                         return;

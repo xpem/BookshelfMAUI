@@ -1,7 +1,6 @@
 ﻿using Bookshelf.Utils.Navigation;
 using Bookshelf.Views;
 using BookshelfServices.Books;
-using BookshelfServices.Books.Sync;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
@@ -13,7 +12,7 @@ namespace Bookshelf.ViewModels
         /// </summary>
         private bool firstSync = false;
 
-        private string illRead, reading, read, interrupted, isSync, isConnected;
+        private string illRead, reading, read, interrupted, imgSync;
 
         public string IllRead { get => illRead; set { illRead = value; OnPropertyChanged(); } }
 
@@ -23,9 +22,7 @@ namespace Bookshelf.ViewModels
 
         public string Interrupted { get => interrupted; set { interrupted = value; OnPropertyChanged(); } }
 
-        public string IsSync { get => isSync; set { isSync = value; OnPropertyChanged(); } }
-
-        public string IsConnected { get => isConnected; set { isConnected = value; OnPropertyChanged(); } }
+        public string ImgSync { get => imgSync; set { if (value != imgSync) { imgSync = value; OnPropertyChanged(); } } }
 
         /// <summary>
         /// var that defines if the function that verify the synchronization is running  or not
@@ -36,11 +33,13 @@ namespace Bookshelf.ViewModels
 
         public double FrmMainOpacity { get => frmMainOpacity; set { frmMainOpacity = value; OnPropertyChanged(); } }
 
-        private bool frmMainIsEnabled;
+        private bool frmMainIsEnabled, connectedVisible;
 
         public bool FrmMainIsEnabled { get => frmMainIsEnabled; set { frmMainIsEnabled = value; OnPropertyChanged(); } }
 
-        IBooksServices booksServices;
+        public bool ConnectedVisible { get => connectedVisible; set { if (value != connectedVisible) { connectedVisible = value; OnPropertyChanged(); } } }
+
+        readonly IBooksServices booksServices;
 
         public MainVM(INavigationServices _navigation, IBooksServices _booksServices)
         {
@@ -70,23 +69,23 @@ namespace Bookshelf.ViewModels
 
             while (ChekingSync)
             {
-                if (!CheckInternet())
+                if (!(Connectivity.NetworkAccess == NetworkAccess.Internet))
                 {
-                    IsConnected = "#FF0000";
+                    connectedVisible = true;
                 }
                 else
                 {
-                    IsConnected = "#fff";
+                    connectedVisible = false;
 
                     if (BookshelfServices.Books.Sync.BooksSyncServices.Synchronizing)
                     {
-                        IsSync = "#008000";
+                        ImgSync = "rotate_solid_15_green.png";
                     }
                     else
                     {
                         await GetBookshelfTotals();
 
-                        IsSync = "#fff";
+                        ImgSync = "rotate_solid_15_w.png";
 
                         //after finish first sync, enable the grid for access
                         if (!firstSync)

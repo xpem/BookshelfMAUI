@@ -79,7 +79,7 @@ namespace BookshelfServices.Books.Sync
                     }
 
                     Synchronizing = false;
-                    //in a interval of thre minutes check updates
+                    //in a interval of three minutes check updates
                     await Task.Delay(180000);
                 }
             }
