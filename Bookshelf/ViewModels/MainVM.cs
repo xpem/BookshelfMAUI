@@ -106,7 +106,6 @@ namespace Bookshelf.ViewModels
             }
         }
 
-
         public ICommand OnAppearingCommand => new Command((e) =>
         {
             IllRead = Reading = Read = Interrupted = "...";
@@ -132,7 +131,7 @@ namespace Bookshelf.ViewModels
             //
         }
 
-
+        public ICommand CreateBookCommand => new Command(async (e) => await navigation.NavigateToPage<CreateBook>(null));
 
     }
 }

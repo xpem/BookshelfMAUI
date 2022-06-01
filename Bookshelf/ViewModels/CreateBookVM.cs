@@ -14,7 +14,7 @@ namespace Bookshelf.ViewModels
         //
         private bool IsUpdate = false;
 
-        private readonly string BookKey;
+        private string BookKey;
 
         private string title, subTitle, volume, authors, year, isbn, pages, genre, comment, situation, rate;
 
@@ -90,20 +90,17 @@ namespace Bookshelf.ViewModels
         /// </summary>
         public ICommand InsertBookCommand => new Command(async (e) => { await InsertBook(); });
 
-        IBooksServices booksServices;
+        readonly IBooksServices booksServices;
         #endregion
 
         #endregion
 
-
-
-        public CreateBookVM(INavigationServices _navigation, IBooksServices _booksServices, string bookKey)
+        public CreateBookVM(INavigationServices _navigation, IBooksServices _booksServices)
         {
             navigation = _navigation;
             booksServices = _booksServices;
 
             Rate = Situation = "0";
-            BookKey = bookKey;
             BtnInsertText = "Cadastrar";
             if (string.IsNullOrEmpty(BookKey))
             {
@@ -116,6 +113,14 @@ namespace Bookshelf.ViewModels
             {
                 _ = Task.Run(() => GetBook(BookKey));
             }
+        }
+
+        public override Task OnNavigatingTo(object parameter)
+        {
+            if (parameter is not null)
+                BookKey = parameter.ToString();
+
+            return base.OnNavigatingTo(parameter);
         }
 
         /// <summary>

@@ -23,13 +23,11 @@ namespace Bookshelf.Utils.Navigation
             }
         }
 
-        public NavigationServices(IServiceProvider services)
-            => _services = services;
+        public NavigationServices(IServiceProvider services)  => _services = services;
 
         private async void Page_NavigatedTo(object sender, NavigatedToEventArgs e) => await CallNavigatedTo(sender as Page);
 
-        private ViewModelBase GetPageViewModelBase(Page p)
-           => p?.BindingContext as ViewModelBase;
+        private ViewModelBase GetPageViewModelBase(Page p) => p?.BindingContext as ViewModelBase;
 
         private async void Page_NavigatedFrom(object sender, NavigatedFromEventArgs e)
         {
@@ -107,5 +105,7 @@ namespace Bookshelf.Utils.Navigation
             }
             catch (Exception ex) { throw ex; }
         }
+
+        public virtual Task OnNavigatingTo(object parameter) => Task.CompletedTask;
     }
 }

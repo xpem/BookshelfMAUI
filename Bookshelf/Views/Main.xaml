@@ -162,8 +162,9 @@
                             <ColumnDefinition  Width ="5*" />
                             <ColumnDefinition  Width ="5*" />
                         </Grid.ColumnDefinitions>
-                        
-                        <Button x:Name="BtnAcessa" HorizontalOptions="FillAndExpand" Text="Adicionar Livro" Grid.Row="0" Grid.Column="0" Style="{StaticResource MainBtn}"  FontSize="15" ImageSource="book_solid_15_w.png" ContentLayout="Left, 10"/>
+                        <Button HorizontalOptions="FillAndExpand" Text="Adicionar Livro" Grid.Row="0" Grid.Column="0" 
+                                Style="{StaticResource MainBtn}" Command="{Binding CreateBookCommand}" FontSize="15" 
+                                ImageSource="book_solid_15_w.png" ContentLayout="Left, 10" />
 
                         <Button Text="Listar Todos" Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand"  Style="{StaticResource BtnSecondary}" FontSize="15" ImageSource="bars_staggered_solid_15_w.png" BackgroundColor="#2D4144" ContentLayout="Left, 10" />
                     </Grid>
