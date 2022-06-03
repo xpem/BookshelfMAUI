@@ -102,5 +102,103 @@ namespace BookshelfServices.Books
             return ret;
 
         }
+
+        /// <summary>
+        /// Get books situations by status
+        /// </summary>
+        /// <param name="Situation"></param>
+        /// <returns></returns>
+        public async Task<List<UIBookItem>> GetBookSituationByStatus(int page, int Situation, string? textoBusca = null)
+        {
+            List<UIBookItem> listBooksItens = new();
+
+            if (User?.Id != null)
+            {
+                int pageSize = 10;
+
+                List<Book> list = (await BookshelfRepos.Books.BooksRepos.GetBookSituationByStatus(Situation, User.Id, textoBusca)).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+                string SubtitleAndVol;               
+
+                foreach (Book book in list)
+                {
+                    SubtitleAndVol = "";
+                    if (!string.IsNullOrEmpty(book.SubTitle))
+                    {
+                        SubtitleAndVol = book.SubTitle;
+                    }
+                    if (!string.IsNullOrEmpty(book.SubTitle) && !string.IsNullOrEmpty(book.Volume))
+                    {
+                        SubtitleAndVol += "; ";
+                    }
+                    if (!string.IsNullOrEmpty(book.Volume))
+                    {
+                        SubtitleAndVol += "Vol.: " + book.Volume;
+                    }
+
+                    UIBookItem bookItem = new()
+                    {
+                        Key = book.BookKey,
+                        Title = book.Title,
+                        AuthorsAndYear = book.Authors + "; Ano: " + book.Year,
+                        Pages = book.Pages.ToString(),
+                        SubtitleAndVol = SubtitleAndVol,
+                    };
+
+                    if ((Situation)Situation == BookshelfModels.Books.Situation.Read)
+                    {
+                        bookItem.Rate = book.Rating?.Rate > 0 ? string.Format("Avaliação pessoal: {0} de 5", book.Rating.Rate.ToString()) : "";
+                    }
+
+                    listBooksItens.Add(bookItem);
+                }
+            }
+
+            return listBooksItens;
+        }
+
+        public async void InactivateBook(string bookKey)
+        {
+            Book? book = await GetBook(bookKey);
+
+            if (book?.BookKey is not null && User?.Id is not null)
+            {
+                book.LastUpdate = DateTime.Now;
+                book.Inactive = true;
+
+                BookshelfRepos.Books.BooksRepos.InactivateBook(book.BookKey, User.Id, book.LastUpdate);
+
+                if (CrossConnectivity.Current.IsConnected)
+                {
+                    await booksApiServices.UpdateBook(book, User);
+                }
+            }
+        }
+
+        public async void UpdateBookSituation(string Key, Situation situation, int rate, string comment)
+        {
+            Book? book = await GetBook(Key);
+
+            if (book is not null && User?.Id is not null)
+            {
+                book.LastUpdate = DateTime.Now;
+                book.Situation = situation;
+
+                if(book.Rating is null)
+                {
+                    book.Rating = new();
+                }
+
+                book.Rating.Rate = rate;
+                book.Rating.Comment = comment;
+
+                BookshelfRepos.Books.BooksRepos.UpdateBook(book, User.Id);
+
+                if (CrossConnectivity.Current.IsConnected)
+                {
+                    _ = booksApiServices.UpdateBook(book, User);
+                }
+            }
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Bookshelf.Utils.Navigation;
+using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using BookshelfServices.Books;
+using Microsoft.Maui.Controls;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
@@ -27,7 +29,7 @@ namespace Bookshelf.ViewModels
         /// <summary>
         /// var that defines if the function that verify the synchronization is running  or not
         /// </summary>
-        private static bool ChekingSync { get; set; }
+        private bool ChekingSync { get; set; }
 
         private double frmMainOpacity;
 
@@ -56,7 +58,7 @@ namespace Bookshelf.ViewModels
                 BookshelfServices.User.UserServices.CleanUserDatabase();
 
                 Application.Current.MainPage = new NavigationPage();
-                await navigation.NavigateToPage<Access>();
+                await (Application.Current?.MainPage?.Navigation).PushAsync(navigation.ResolvePage<Access>(), true);
             }
         });
 
@@ -110,13 +112,11 @@ namespace Bookshelf.ViewModels
         {
             IllRead = Reading = Read = Interrupted = "...";
 
-            if (!ChekingSync)
-            {
-                FrmMainOpacity = 0.7;
-                FrmMainIsEnabled = false;
+            FrmMainOpacity = 0.7;
+            FrmMainIsEnabled = false;
 
-                _ = ChekSync();
-            }
+            _ = ChekSync();
+
         });
 
         public async Task GetBookshelfTotals()
@@ -131,7 +131,32 @@ namespace Bookshelf.ViewModels
             //
         }
 
-        public ICommand CreateBookCommand => new Command(async (e) => await navigation.NavigateToPage<CreateBook>(null));
+        public ICommand CreateBookCommand => new Command(async(e) => {            
+            Page page = navigation.ResolvePage<CreateBook>();
+            (page?.BindingContext as CreateBookVM).OnNavigatingTo("");
+            await (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
+            });
 
+        public ICommand ReadCommand => new Command(async (e) => { await CallBookList(3); });
+
+        public ICommand InterruptedCommand => new Command(async (e) => { await CallBookList(4); });
+
+        public ICommand ReadingCommand => new Command(async (e) => { await CallBookList(2); });
+
+        public ICommand IllReadCommand => new Command(async (e) => { await CallBookList(1); });
+
+        public ICommand ArchiveCommand => new Command(async (e) => { await CallBookList(0); });
+
+        private async Task CallBookList(int BookSituation)
+        {
+            //define the page
+            Page page = navigation.ResolvePage<BookList>();
+
+            //pass parameter
+            (page?.BindingContext as BookListVM).OnNavigatingTo(BookSituation);
+
+            //push ui
+            await (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Bookshelf.Utils;
 using Bookshelf.Utils.Navigation;
+using Bookshelf.ViewModels.Components;
 using BookshelfServices.User.AuthServices;
 using System.Windows.Input;
 

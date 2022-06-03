@@ -57,6 +57,12 @@ public static class MauiProgram
         builder.Services.AddTransient<CreateBook>();
         builder.Services.AddTransient<CreateBookVM>();
 
+        builder.Services.AddTransient<BookList>();
+        builder.Services.AddTransient<BookListVM>();
+
+        builder.Services.AddTransient<BookDetail>();
+        builder.Services.AddTransient<BookDetailVM>();
+
         //Services
         builder.Services.AddSingleton<INavigationServices, NavigationServices>();
 

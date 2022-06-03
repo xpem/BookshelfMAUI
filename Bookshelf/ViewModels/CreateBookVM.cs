@@ -1,12 +1,14 @@
 ﻿using Bookshelf.Utils.Navigation;
+using Bookshelf.ViewModels.Components;
 using BookshelfModels.Books;
 using BookshelfServices.Books;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class CreateBookVM : ViewModelBase
+    public class CreateBookVM : RatingBar
     {
 
         #region Properties
@@ -16,7 +18,7 @@ namespace Bookshelf.ViewModels
 
         private string BookKey;
 
-        private string title, subTitle, volume, authors, year, isbn, pages, genre, comment, situation, rate;
+        private string title, subTitle, volume, authors, year, isbn, pages, genre, comment, situation;
 
         public string Title { get => title; set { title = value; OnPropertyChanged(); } }
 
@@ -38,10 +40,7 @@ namespace Bookshelf.ViewModels
 
         public string Situation { get => situation; set { situation = value; OnPropertyChanged(); } }
 
-        public string Rate { get => rate; set { rate = value; OnPropertyChanged(); } }
-
         #endregion
-
 
         #region Ui properties
 
@@ -91,6 +90,7 @@ namespace Bookshelf.ViewModels
         public ICommand InsertBookCommand => new Command(async (e) => { await InsertBook(); });
 
         readonly IBooksServices booksServices;
+
         #endregion
 
         #endregion
@@ -98,10 +98,17 @@ namespace Bookshelf.ViewModels
         public CreateBookVM(INavigationServices _navigation, IBooksServices _booksServices)
         {
             navigation = _navigation;
-            booksServices = _booksServices;
+            booksServices = _booksServices;           
+        }
 
-            Rate = Situation = "0";
+        public void OnNavigatingTo(string bookKey)
+        {
+            BookKey = bookKey;
+
+            Rate = 0;
+            Situation = "0";
             BtnInsertText = "Cadastrar";
+
             if (string.IsNullOrEmpty(BookKey))
             {
                 pkrStatusSelectedIndex = 0;
@@ -113,14 +120,7 @@ namespace Bookshelf.ViewModels
             {
                 _ = Task.Run(() => GetBook(BookKey));
             }
-        }
 
-        public override Task OnNavigatingTo(object parameter)
-        {
-            if (parameter is not null)
-                BookKey = parameter.ToString();
-
-            return base.OnNavigatingTo(parameter);
         }
 
         /// <summary>
@@ -146,14 +146,16 @@ namespace Bookshelf.ViewModels
             if (book.Situation > 0)
             {
                 Situation = book.Situation.ToString();
-                Rate = book.Rating.Rate.ToString();
+                Rate = book.Rating.Rate.Value;
+                if (book.Rating.Rate.HasValue)
+                   BuildRatingBar(book.Rating.Rate.Value);
                 Comment = book.Rating.Comment;
             }
             else
             {
                 RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = BtnInsertIsVisible = false;
                 Situation = "0";
-                Rate = "";
+                Rate = null;
                 Comment = "";
             }
 

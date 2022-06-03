@@ -6,7 +6,7 @@ namespace BookshelfRepos
     public static class SQLiteDB
     {
 
-        private static readonly SqliteConnection db = new($"Filename={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Bookshelf.db")}");
+        private static readonly SqliteConnection db = new($"Filename={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Bookshelf2.db")}");
 
         /// <summary>
         /// version upgrade of a table force his recreation

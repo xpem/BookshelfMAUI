@@ -30,9 +30,7 @@ namespace BookshelfServices.Books.Sync
                 {
                     //User not logged
                     if (user == null)
-                    {
                         break;
-                    }
 
                     Synchronizing = true;
 

@@ -7,7 +7,8 @@ namespace Bookshelf;
 
 public partial class App : Application
 {
-    public App(INavigationServices navigationService, IUserServices userServices, IBooksSyncServices booksSyncServices)
+
+    public App(INavigationServices navigationServices,IUserServices userServices, IBooksSyncServices booksSyncServices)
     {
 
         BookshelfServices.BuildDbServices.BuildSQLiteDb();
@@ -19,13 +20,13 @@ public partial class App : Application
             Thread thread = new(booksSyncServices.SyncLocalDb) { IsBackground = true };
             thread.Start();
 
-            MainPage = new NavigationPage();
-            navigationService.NavigateToPage<Main>();
+            MainPage = new NavigationPage();    
+            _ = (Current?.MainPage?.Navigation).PushAsync(navigationServices.ResolvePage<Main>(), true);
         }
         else
         {
             MainPage = new NavigationPage();
-            navigationService.NavigateToPage<Access>();
+            _ = (Current?.MainPage?.Navigation).PushAsync(navigationServices.ResolvePage<Access>(), true);
         }
     }
 }

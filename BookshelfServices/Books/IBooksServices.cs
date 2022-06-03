@@ -13,5 +13,11 @@ namespace BookshelfServices.Books
         Task<string?> AddBook(Book book);
 
         Task<bool> VerifyBookbyTitle(string title);
+
+        Task<List<UIBookItem>> GetBookSituationByStatus(int page, int Situation, string? textoBusca);
+
+        void InactivateBook(string bookKey);
+
+        void UpdateBookSituation(string Key, Situation situation, int rate, string comment);
     }
 }

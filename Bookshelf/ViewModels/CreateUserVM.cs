@@ -1,5 +1,6 @@
 ﻿using Bookshelf.Utils;
 using Bookshelf.Utils.Navigation;
+using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using BookshelfModels.User;
 using BookshelfServices.Books.Sync;
@@ -11,8 +12,8 @@ namespace Bookshelf.ViewModels
 {
     public class CreateUserVM : ViewModelBase
     {
-        IUserServices userService;
-        IBooksSyncServices booksSyncServices;
+        readonly IUserServices userService;
+        readonly IBooksSyncServices booksSyncServices;
 
         public CreateUserVM(INavigationServices _navigation, IUserServices _userService, IBooksSyncServices _booksSyncServices)
         {
@@ -22,7 +23,6 @@ namespace Bookshelf.ViewModels
         }
 
         private string email, password, confirmPassword;
-
         private bool btnCreateUserIsEnabled = true;
 
         #region OnPropertyChangedVars
@@ -48,6 +48,7 @@ namespace Bookshelf.ViewModels
                 _ = Application.Current.MainPage.DisplayAlert("Aviso", "Digite um email válido", null, "Ok");
                 return false;
             }
+
             if (string.IsNullOrEmpty(Password))
             {
                 validInformation = false;
@@ -107,7 +108,7 @@ namespace Bookshelf.ViewModels
                             thread.Start();
 
                             Application.Current.MainPage = new NavigationPage();
-                            await navigation.NavigateToPage<Main>();
+                            _ = (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<Main>(), true);
                         }
                     }
                 }

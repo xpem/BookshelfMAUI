@@ -12,13 +12,13 @@
                     <!--<Image SemanticProperties.Description="Criar Usuário" HeightRequest="30" WidthRequest="50"  Style="{ StaticResource ImgIcon }" Source="user_plus_solid_30.png" />-->
 
                     <Label Text="Email" Style="{StaticResource LblEntry}" />
-                    <Entry Style="{StaticResource Entry}" x:Name="EntEmail" Text="{Binding Email}" MaxLength="150" Keyboard="Email"  />
+                    <Entry Style="{StaticResource Entry}" x:Name="EntEmail" Text="{Binding Email}" MaxLength="150" MaximumWidthRequest="350" MinimumWidthRequest="250" Keyboard="Email"  />
 
                     <Label Text="Senha" Style="{StaticResource LblEntry}" />
-                    <Entry IsPassword="True" Style="{StaticResource Entry}" x:Name="EntSenha" Text="{Binding Password}" MaxLength="25" />
+                    <Entry IsPassword="True" Style="{StaticResource Entry}" x:Name="EntSenha" Text="{Binding Password}" MaximumWidthRequest="250" MinimumWidthRequest="150" MaxLength="25" />
 
                     <Label Text="Confirmação da senha" Style="{StaticResource LblEntry}" />
-                    <Entry IsPassword="True" Style="{StaticResource Entry}"  x:Name="EntConfSenha"  Text="{Binding ConfirmPassword}" MaxLength="25"/>
+                    <Entry IsPassword="True" Style="{StaticResource Entry}"  x:Name="EntConfSenha"  Text="{Binding ConfirmPassword}"  MaximumWidthRequest="250" MinimumWidthRequest="150" MaxLength="25"/>
 
                     <!---->
                     <Button x:Name="BtnCreateUser" Text="Cadastrar" Style="{StaticResource MainBtn}" 

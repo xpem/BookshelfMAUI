@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Bookshelf.Views.BookList"
+              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:behaviors="clr-namespace:Bookshelf.Utils.Behaviors"
+             Title="{Binding PageTitle}" Style="{StaticResource ContentPage}">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+        EventName="Appearing"
+        Command="{Binding OnAppearingCommand}" />
+    </ContentPage.Behaviors>
+    <ContentPage.Content>
+        <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
+            <Frame Style="{ StaticResource MainFrame }" >
+                <StackLayout Style="{StaticResource MainStackLayout}" HorizontalOptions="FillAndExpand">
+                    <Entry Placeholder="Buscar por Título" Style="{StaticResource Entry}" TextTransform="Uppercase" HorizontalOptions="FillAndExpand"  Text="{Binding SearchTitle}" />
+                </StackLayout>
+            </Frame>
+            <Frame Style="{ StaticResource MainFrame }" VerticalOptions="FillAndExpand" >
+                <StackLayout VerticalOptions="StartAndExpand">
+                    <ListView x:Name="LstBooks"  HasUnevenRows="True" CachingStrategy="RecycleElement" 
+                              ItemsSource="{Binding BooksList}" SelectedItem="{Binding BookItem}">
+                        <ListView.Behaviors>
+                            <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
+                        </ListView.Behaviors>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Frame Margin="1" BorderColor="Gray" BackgroundColor="GhostWhite" CornerRadius="10">
+                                        <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" >
+                                            <Grid HorizontalOptions="FillAndExpand">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="30"/>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="25"/>
+                                                    <RowDefinition Height="20"/>
+                                                    <RowDefinition Height="20"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition  Width ="5*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Text="{Binding Title}" Grid.Row="0" Grid.Column="0" 
+                                                    VerticalTextAlignment="Start" MaxLines="1" LineBreakMode="TailTruncation" 
+                                                    FontSize="22" TextDecorations="Underline"
+                                                    FontFamily="Bold"
+                                                    TextColor="Black" VerticalOptions="StartAndExpand"  />
+                                                <Label  Text="{Binding SubtitleAndVol, StringFormat='{0}'}" Grid.Row="1" Grid.Column="0" 
+                                                    VerticalTextAlignment="Start" MaxLines="2" LineBreakMode="TailTruncation" 
+                                                    FontSize="18" FontFamily="Italic"
+                                                    TextColor="Black" VerticalOptions="StartAndExpand" />
+                                                <Label Text="{Binding AuthorsAndYear}"
+                                                       HorizontalTextAlignment="Start"
+                                                       VerticalTextAlignment="Start" Grid.Row="2" Grid.Column="0" 
+                                                       FontSize="15" LineBreakMode="TailTruncation" FontFamily="Italic" TextColor="Gray"/>
+                                                <Label Text="{Binding Pages, StringFormat='Páginas: {0:F0}'}" 
+                                                       HorizontalTextAlignment="Start"  VerticalTextAlignment="Start"
+                                                       Grid.Row="3" Grid.Column="0" FontSize="15" LineBreakMode="TailTruncation"
+                                                       FontFamily="Regular" TextColor="Black"/>
+                                                <Label Text="{Binding Rate}" HorizontalTextAlignment="Start"
+                                                       HorizontalOptions="Fill" Grid.Row="4" Grid.Column="0"  FontSize="15"
+                                                       FontAttributes="Italic" TextColor="Black" />
+                                            </Grid>
+                                        </StackLayout>
+                                    </Frame>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Footer>
+                            <Grid Padding="6" IsVisible="{Binding IsLoading}">
+                                <Grid.Triggers>
+                                    <Trigger TargetType="Grid" Property="IsVisible" Value="False">
+                                        <Setter Property="HeightRequest" Value="0" />
+                                    </Trigger>
+                                </Grid.Triggers>
+                                <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" 
+                                       Color="#2196F3" VerticalOptions="Center" 
+                                       HorizontalOptions="Center"/>
+                            </Grid>
+                        </ListView.Footer>
+                    </ListView>
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

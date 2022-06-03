@@ -1,4 +1,5 @@
 ﻿using Bookshelf.Utils.Navigation;
+using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using BookshelfServices.Books.Sync;
 using BookshelfServices.User;
@@ -10,14 +11,16 @@ namespace Bookshelf.ViewModels
     public class AccessVM : ViewModelBase
     {
 
-        private string email, password;
+        private string email, password, signInText;
 
         public string Email { get => email; set { email = value; OnPropertyChanged(); } }
         public string Password { get => password; set { password = value; OnPropertyChanged(); } }
 
-        private bool btnRegisterAccessEnabled;
+        public string SignInText { get => signInText; set { signInText = value; OnPropertyChanged(); } }
 
-        public bool BtnRegisterAccessEnabled { get => btnRegisterAccessEnabled; set { btnRegisterAccessEnabled = value; OnPropertyChanged(); } }
+        private bool btnSignEnabled;
+
+        public bool BtnSignEnabled { get => btnSignEnabled; set { btnSignEnabled = value; OnPropertyChanged(); } }
 
         readonly IUserServices userServices;
         readonly IBooksSyncServices booksSyncServices;
@@ -27,6 +30,7 @@ namespace Bookshelf.ViewModels
             navigation = _navigation;
             userServices = _userServices;
             booksSyncServices = _booksSyncServices;
+            SignInText = "Acessar";
         }
 
         public ICommand SignInCommand
@@ -41,7 +45,8 @@ namespace Bookshelf.ViewModels
                         {
                             if (Password.Length > 3)
                             {
-                                BtnRegisterAccessEnabled = false;
+                                SignInText = "Acessando...";
+                                BtnSignEnabled = false;
                                 bool resp = false;
 
                                 resp = await userServices.SignIn(Email, Password);
@@ -52,13 +57,13 @@ namespace Bookshelf.ViewModels
                                     thread.Start();
 
                                     Application.Current.MainPage = new NavigationPage();
-                                    await navigation.NavigateToPage<Main>();
+                                    _ = (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<Main>(), true);
                                 }
                                 else
                                 {
                                     await Application.Current.MainPage.DisplayAlert("Aviso", "Email/senha incorretos", null, "Ok");
                                 }
-                                BtnRegisterAccessEnabled = true;
+                                BtnSignEnabled = true;
                             }
                             else
                             {
@@ -78,9 +83,9 @@ namespace Bookshelf.ViewModels
             }
         }
 
-        public ICommand CreateUserCommand => new Command(async (e) => { await navigation.NavigateToPage<CreateUser>(); });
+        public ICommand CreateUserCommand => new Command(async (e) => { await (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<CreateUser>(), true); });
 
-        public ICommand UpdatePasswordCommand => new Command(async (e) => { await navigation.NavigateToPage<UpdatePassword>(); });
+        public ICommand UpdatePasswordCommand => new Command(async (e) => { await (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<UpdatePassword>(), true); });
 
     }
 }

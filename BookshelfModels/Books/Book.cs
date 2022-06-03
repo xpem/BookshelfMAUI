@@ -13,7 +13,7 @@
         public string? Genre { get; set; }
         public DateTime LastUpdate { get; set; }
         public Rating? Rating { get; set; }
-        public Situation Situation { get; set; }
+        public Situation? Situation { get; set; }
         public bool Inactive { get; set; }
     }
 

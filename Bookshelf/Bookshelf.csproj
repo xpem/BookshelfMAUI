@@ -118,10 +118,19 @@
 	  <Compile Update="Views\Access.xaml.cs">
 	    <DependentUpon>Access.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\BookDetail.xaml.cs">
+	    <DependentUpon>BookDetail.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <MauiXaml Update="Views\Access.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\BookDetail.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\BookList.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\CreateBook.xaml">

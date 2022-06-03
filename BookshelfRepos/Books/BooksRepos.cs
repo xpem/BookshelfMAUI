@@ -287,5 +287,88 @@ namespace BookshelfRepos.Books
             catch (Exception ex) { throw ex; }
         }
 
+        public static async Task<List<Book>> GetBookSituationByStatus(int Situation, string UserKey, string? textoBusca)
+        {
+            try
+            {
+                SQLiteDB.OpenIfClosed();
+
+                string command = "select b.key,b.title,b.Authors,b.Year,b.Volume,b.Pages,b.Genre,b.LastUpdate,b.SubTitle,br.Rate,br.Comment,b.Situation from BOOK b inner join BOOKRATING br on br.BookKey = b.key where b.UserId = @userId";
+
+                if (Situation > 0)
+                {
+                    command += " and b.situation = @situation";
+                }
+
+                if (!string.IsNullOrEmpty(textoBusca))
+                {
+                    command += " and b.title like @textoBusca";
+                }
+
+                command += " and (b.Inactive is null or b.Inactive = '0') order by LastUpdate desc";
+
+                List<SqliteParameter> parameters = new List<SqliteParameter>
+                {
+                    new SqliteParameter("@userId", UserKey)
+                };
+
+                if (Situation > 0)
+                {
+                    parameters.Add(new SqliteParameter("@situation", Situation));
+                }
+
+                if (!string.IsNullOrEmpty(textoBusca))
+                {
+                    parameters.Add(new SqliteParameter("@textoBusca", "%" + textoBusca + "%"));
+                }
+
+                SqliteDataReader response = await SQLiteDB.RunSqliteCommand(command, parameters);
+
+                List<Book> lista = new();
+
+                while (response.Read())
+                {
+                    lista.Add(new Book()
+                    {
+                        BookKey = response.GetWithNullableString(0),
+                        Title = response.GetWithNullableString(1),
+                        Authors = response.GetWithNullableString(2),
+                        Year = response.GetInt32(3),
+                        Volume = response.GetWithNullableString(4),
+                        Pages = response.GetInt32(5),
+                        Genre = response.GetWithNullableString(6),
+                        LastUpdate = Convert.ToDateTime(response.GetWithNullableString(7)),
+                        SubTitle = response.GetWithNullableString(8),
+                        Rating = new Rating { Rate = response.GetWithNullableInt(9), Comment = response.GetWithNullableString(10) },
+                        Situation = (BookshelfModels.Books.Situation?)response.GetWithNullableInt(11),
+                    });
+                }
+
+                SQLiteDB.CloseIfOpen();
+
+                return lista;
+            }
+            catch (Exception ex) { throw ex; }
+        }
+
+        /// <summary>
+        /// Inactivate a book in local batabase
+        /// </summary>
+        public static void InactivateBook(string bookKey, string userId, DateTime lastUpdate)
+        {
+            SQLiteDB.OpenIfClosed();
+
+            List<SqliteParameter> sqliteParameters = new()
+            {
+                new SqliteParameter("@Key", bookKey),
+                new SqliteParameter("@UserId", userId),
+                new SqliteParameter("@LastUpdate", lastUpdate)
+            };
+
+            _ = SQLiteDB.RunSqliteCommand("update BOOK set Inactive = '1',LastUpdate = @LastUpdate where KEY = @Key and UserId = @UserId",
+                 sqliteParameters);
+
+            SQLiteDB.CloseIfOpen();
+        }
     }
 }
