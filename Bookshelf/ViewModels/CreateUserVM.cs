@@ -5,15 +5,29 @@ using Bookshelf.Views;
 using BookshelfModels.User;
 using BookshelfServices.Books.Sync;
 using BookshelfServices.User;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Plugin.Connectivity;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class CreateUserVM : ViewModelBase
+    public partial class CreateUserVM : ViewModelBase
     {
         readonly IUserServices userService;
         readonly IBooksSyncServices booksSyncServices;
+
+        [ObservableProperty]
+        string email;
+
+        [ObservableProperty]
+        string password;
+
+        [ObservableProperty] 
+        string confirmPassword;
+
+        [ObservableProperty]
+        bool btnCreateUserIsEnabled = true;
 
         public CreateUserVM(INavigationServices _navigation, IUserServices _userService, IBooksSyncServices _booksSyncServices)
         {
@@ -21,19 +35,6 @@ namespace Bookshelf.ViewModels
             userService = _userService;
             booksSyncServices = _booksSyncServices;
         }
-
-        private string email, password, confirmPassword;
-        private bool btnCreateUserIsEnabled = true;
-
-        #region OnPropertyChangedVars
-        public string Email { get => email; set { email = value; OnPropertyChanged(); } }
-
-        public string Password { get => password; set { password = value; OnPropertyChanged(); } }
-
-        public string ConfirmPassword { get => confirmPassword; set { confirmPassword = value; OnPropertyChanged(); } }
-
-        public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { btnCreateUserIsEnabled = value; OnPropertyChanged(); } }
-        #endregion
 
         private bool VerifyFileds()
         {
@@ -74,7 +75,7 @@ namespace Bookshelf.ViewModels
             return validInformation;
         }
 
-        public ICommand CreateUserCommand => new Command(async (e) =>
+        public ICommand CreateUserCommand => new Command(async () =>
         {
             if (!CrossConnectivity.Current.IsConnected)
             {

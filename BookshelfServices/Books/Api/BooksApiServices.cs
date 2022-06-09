@@ -1,8 +1,10 @@
 ﻿using BookshelfModels.Books;
 using BookshelfServices.User;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Net.Http.Json;
+using System.Text.Json.Serialization;
 using System.Text;
+using System.Text.Json.Nodes;
+using System.Text.Json;
 
 namespace BookshelfServices.Books.Api
 {
@@ -21,7 +23,7 @@ namespace BookshelfServices.Books.Api
         /// </summary>
         /// <param name="book"></param>
         /// <returns>Key of book added</returns>
-        public async Task<(bool, string)> AddBook(Book book, BookshelfModels.User.User? user)
+        public async Task<(bool, string?)> AddBook(Book book, BookshelfModels.User.User? user)
         {
             try
             {
@@ -29,7 +31,7 @@ namespace BookshelfServices.Books.Api
 
                 while (forContinue < 2)
                 {
-                    var json = JsonConvert.SerializeObject(book);
+                    var json = JsonSerializer.Serialize(book);
                     var data = new StringContent(json, Encoding.UTF8, "application/json");
 
                     //to do - make a base to this
@@ -40,8 +42,10 @@ namespace BookshelfServices.Books.Api
 
                     if (response.IsSuccessStatusCode)
                     {
-                        JObject obj = JObject.Parse(result);
-                        return (true, (string)obj["BookKey"]);
+                        var obj = JsonNode.Parse(result);
+                        if (obj != null)
+                            return (true, obj["BookKey"]?.ToJsonString());
+                        else throw new Exception(result);
                     }
                     else
                     {
@@ -53,8 +57,10 @@ namespace BookshelfServices.Books.Api
                         }
                         else
                         {
-                            JObject obj = JObject.Parse(result);
-                            return (false, (string)obj["message"]);
+                            var obj = JsonNode.Parse(result);
+                            if (obj != null)
+                                return (false, obj["message"]?.ToJsonString());
+                            else throw new Exception(result);
                         }
                     }
                 }
@@ -68,7 +74,7 @@ namespace BookshelfServices.Books.Api
         /// Modify a book in fb bd
         /// </summary>
         /// <param name="book"></param>
-        public async Task<(bool, string)> UpdateBook(Book book, BookshelfModels.User.User? user)
+        public async Task<(bool, string?)> UpdateBook(Book book, BookshelfModels.User.User? user)
         {
             try
             {
@@ -76,7 +82,7 @@ namespace BookshelfServices.Books.Api
 
                 while (forContinue < 2)
                 {
-                    var json = JsonConvert.SerializeObject(book);
+                    var json = JsonSerializer.Serialize(book);
                     var data = new StringContent(json, Encoding.UTF8, "application/json");
 
                     httpClient = new HttpClient();
@@ -98,8 +104,10 @@ namespace BookshelfServices.Books.Api
                         }
                         else
                         {
-                            JObject obj = JObject.Parse(result);
-                            return (false, (string)obj["message"]);
+                            var obj = JsonNode.Parse(result);
+                            if (obj != null)
+                                return (false, obj["message"]?.ToJsonString());
+                            else throw new Exception(result);
                         }
                     }
                 }
@@ -123,16 +131,13 @@ namespace BookshelfServices.Books.Api
 
                 while (forContinue < 2)
                 {
-                    httpClient = new HttpClient();
+                    httpClient = new();
                     httpClient.DefaultRequestHeaders.Add("Authorization", user?.Token);
                     httpClient.DefaultRequestHeaders.Add("lastUpdate", user?.LastUpdate.ToString("yyyy-MM-ddThh:mm:ss"));
                     HttpResponseMessage response = await httpClient.GetAsync(ApiKeys.ApiUri + "/GetBooksByLastUpdate");
 
                     if (response.IsSuccessStatusCode)
-                    {
-                        string result = response.Content.ReadAsStringAsync().Result;
-                        return (JsonConvert.DeserializeObject<List<Book>>(result));
-                    }
+                        return await response.Content.ReadFromJsonAsync<List<Book>>();
                     else
                     {
                         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)

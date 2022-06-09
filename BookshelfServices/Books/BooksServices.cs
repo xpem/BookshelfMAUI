@@ -108,17 +108,23 @@ namespace BookshelfServices.Books
         /// </summary>
         /// <param name="Situation"></param>
         /// <returns></returns>
-        public async Task<List<UIBookItem>> GetBookSituationByStatus(int page, int Situation, string? textoBusca = null)
+        public async Task<(List<UIBookItem>, int total)> GetBookSituationByStatus(int page, int Situation, string? textoBusca = null)
         {
             List<UIBookItem> listBooksItens = new();
+            int total = 0;
 
             if (User?.Id != null)
             {
                 int pageSize = 10;
 
-                List<Book> list = (await BookshelfRepos.Books.BooksRepos.GetBookSituationByStatus(Situation, User.Id, textoBusca)).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+                List<Book> list = (await BookshelfRepos.Books.BooksRepos.GetBookSituationByStatus(Situation, User.Id, textoBusca));
 
-                string SubtitleAndVol;               
+                total = list.Count;
+
+                list = list.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+
+                string SubtitleAndVol;
 
                 foreach (Book book in list)
                 {
@@ -154,7 +160,7 @@ namespace BookshelfServices.Books
                 }
             }
 
-            return listBooksItens;
+            return (listBooksItens, total);
         }
 
         public async void InactivateBook(string bookKey)
@@ -184,7 +190,7 @@ namespace BookshelfServices.Books
                 book.LastUpdate = DateTime.Now;
                 book.Situation = situation;
 
-                if(book.Rating is null)
+                if (book.Rating is null)
                 {
                     book.Rating = new();
                 }

@@ -307,7 +307,7 @@ namespace BookshelfRepos.Books
 
                 command += " and (b.Inactive is null or b.Inactive = '0') order by LastUpdate desc";
 
-                List<SqliteParameter> parameters = new List<SqliteParameter>
+                List<SqliteParameter> parameters = new()
                 {
                     new SqliteParameter("@userId", UserKey)
                 };

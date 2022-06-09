@@ -2,15 +2,15 @@
 using Bookshelf.Utils.Navigation;
 using Bookshelf.ViewModels.Components;
 using BookshelfServices.User.AuthServices;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class UpdatePasswordVM : ViewModelBase
+    public partial class UpdatePasswordVM : ViewModelBase
     {
-        private string email;
-
-        public string Email { get => email; set { email = value; OnPropertyChanged(); } }
+        [ObservableProperty]
+        string email;
 
         readonly IUserAuthServices userAuthServices;
 
@@ -20,36 +20,32 @@ namespace Bookshelf.ViewModels
             userAuthServices = _userAuthServices;
         }
 
-        public ICommand UpdatePasswordCommand
+        [ICommand]
+        async Task UpdatePassword()
         {
-            get
+            if (!(Connectivity.NetworkAccess == NetworkAccess.Internet))
             {
-                return new Command(async (e) =>
-                {
-                    if (!(Connectivity.NetworkAccess == NetworkAccess.Internet))
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Aviso", "Sem conexão com a internet", null, "Ok");
-                        return;
-                    }
-                    if (string.IsNullOrEmpty(Email))
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Aviso", "Digite um email válido", null, "Ok");
-                        return;
-                    }
-                    else if (!Validations.ValidateEmail(Email))
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Aviso", "Digite um email válido", null, "Ok");
-                        return;
-                    }
-                    else
-                    {
-                        _ = userAuthServices.SendPasswordResetEmail(Email);
+                await Application.Current.MainPage.DisplayAlert("Aviso", "Sem conexão com a internet", null, "Ok");
+                return;
+            }
 
-                        await Application.Current.MainPage.DisplayAlert("Aviso", "Email de alteração de senha enviado!", null, "Ok");
+            if (string.IsNullOrEmpty(Email))
+            {
+                await Application.Current.MainPage.DisplayAlert("Aviso", "Digite um email válido", null, "Ok");
+                return;
+            }
+            else if (!Validations.ValidateEmail(Email))
+            {
+                await Application.Current.MainPage.DisplayAlert("Aviso", "Digite um email válido", null, "Ok");
+                return;
+            }
+            else
+            {
+                _ = userAuthServices.SendPasswordResetEmail(Email);
 
-                        _ = navigation.NavigateBack();
-                    }
-                });
+                await Application.Current.MainPage.DisplayAlert("Aviso", "Email de alteração de senha enviado!", null, "Ok");
+
+                _ = navigation.NavigateBack();
             }
         }
     }

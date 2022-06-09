@@ -9,13 +9,12 @@
 
     <!--Main StackLayout-->
     <Style x:Key="MainStackLayout" TargetType="StackLayout">
-        <Setter Property="Orientation" Value="Vertical"></Setter>
         <Setter Property="VerticalOptions" Value="FillAndExpand"></Setter>
     </Style>
 
 
     <Style x:Key="MainFrame" TargetType="Frame">
-        <Setter Property="HorizontalOptions" Value="FillAndExpand"></Setter>
+        <Setter Property="HorizontalOptions" Value="CenterAndExpand"></Setter>
         <Setter Property="BackgroundColor" Value="#BDBDBD"></Setter>
     </Style>
 

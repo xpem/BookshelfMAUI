@@ -25,14 +25,14 @@ namespace BookshelfRepos.BuildDb
         /// <summary>
         /// delete tables of old versions and recreate it
         /// </summary>
-        private static void UpdateSQLiteTablesByVersions()
+        private static async void UpdateSQLiteTablesByVersions()
         {
 
             _ = SQLiteDB.RunSqliteCommand("create table if not exists VERSIONSTABLES (Key integer, USER integer,BOOK integer);");
 
             VersionsDbTables versionsDbTables;
 
-            using (SqliteDataReader Retorno = Task.Run(async () => await SQLiteDB.RunSqliteCommand("select USER,BOOK from VERSIONSTABLES")).Result)
+            using (SqliteDataReader Retorno = await SQLiteDB.RunSqliteCommand("select USER,BOOK from VERSIONSTABLES"))
             {
                 _ = Retorno.Read();
 

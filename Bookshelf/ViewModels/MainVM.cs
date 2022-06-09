@@ -137,15 +137,15 @@ namespace Bookshelf.ViewModels
             await (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
             });
 
-        public ICommand ReadCommand => new Command(async (e) => { await CallBookList(3); });
+        public ICommand ReadCommand => new Command(async (e) => await CallBookList(3));
 
-        public ICommand InterruptedCommand => new Command(async (e) => { await CallBookList(4); });
+        public ICommand InterruptedCommand => new Command(async (e) =>  await CallBookList(4));
 
-        public ICommand ReadingCommand => new Command(async (e) => { await CallBookList(2); });
+        public ICommand ReadingCommand => new Command(async (e) => await CallBookList(2));
 
-        public ICommand IllReadCommand => new Command(async (e) => { await CallBookList(1); });
+        public ICommand IllReadCommand => new Command(async (e) => await CallBookList(1));
 
-        public ICommand ArchiveCommand => new Command(async (e) => { await CallBookList(0); });
+        public ICommand ArchiveCommand => new Command(async (e) => await CallBookList(0));
 
         private async Task CallBookList(int BookSituation)
         {

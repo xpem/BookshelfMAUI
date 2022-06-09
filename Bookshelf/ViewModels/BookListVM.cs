@@ -3,21 +3,20 @@ using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using BookshelfModels.Books;
 using BookshelfServices.Books;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class BookListVM : ViewModelBase
+    public partial class BookListVM : ViewModelBase
     {
 
         #region Vars
 
         readonly IBooksServices booksServices;
 
-        private ObservableCollection<UIBookItem> booksList;
-
-        public ObservableCollection<UIBookItem> BooksList { get => booksList; set { booksList = value; OnPropertyChanged(); } }
+        public ObservableCollection<UIBookItem> BooksList { get; } = new();
 
         private UIBookItem bookItem;
 
@@ -26,68 +25,68 @@ namespace Bookshelf.ViewModels
             get => bookItem;
             set
             {
-                bookItem = value;
-                if (bookItem != null)
+                if (bookItem != value)
                 {
-                    if (SituationIndex == -1)
+                    bookItem = value;
+                    if (bookItem is not null)
                     {
-                        //define the page
-                        Page page = navigation.ResolvePage<CreateBook>();
+                        if (SituationIndex == -1)
+                        {
+                            //define the page
+                            Page page = navigation.ResolvePage<CreateBook>();
 
-                        //pass parameter
-                        (page?.BindingContext as CreateBookVM).OnNavigatingTo(bookItem.Key);
+                            //pass parameter
+                            (page?.BindingContext as CreateBookVM).OnNavigatingTo(bookItem.Key);
 
-                        //push ui
-                        (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
+                            //push ui
+                            (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
+                        }
+                        else
+                        {
+                            //define the page
+                            Page page = navigation.ResolvePage<BookDetail>();
+
+                            //pass parameter
+                            (page?.BindingContext as BookDetailVM).OnNavigatingTo(bookItem.Key);
+
+                            //push ui
+                            (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
+                        }
+                        bookItem = null;
                     }
-                    else
-                    {
-                        //define the page
-                        Page page = navigation.ResolvePage<BookDetail>();
-
-                        //pass parameter
-                        (page?.BindingContext as BookDetailVM).OnNavigatingTo(bookItem.Key);
-
-                        //push ui
-                        (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
-                    }
-                    bookItem = null;
+                    SetProperty(ref bookItem, value);
                 }
-                OnPropertyChanged();
             }
         }
 
-        private string pageTitle, searchTitle;
+        [ObservableProperty]
+        string pageTitle;
 
-        public string PageTitle { get => pageTitle; set { pageTitle = value; OnPropertyChanged(); } }
+        [ObservableProperty]
+        int totalBooksItens;
+
+        private string searchTitle;
 
         public string SearchTitle
         {
-            get
-            {
-                return searchTitle;
-            }
+            get => searchTitle;
             set
             {
-                searchTitle = value;
-                SearchBookList();
-                OnPropertyChanged();
+                if (searchTitle != value)
+                {
+                    SearchBookList();                 
+                    SetProperty(ref searchTitle, value);
+                }
             }
         }
 
+        [ObservableProperty]
         private bool isLoading;
-        public bool IsLoading { get => isLoading; set { isLoading = value; OnPropertyChanged(); } }
 
         public int SituationIndex { get; set; }
 
+        public int CurrentPage { get; set; }
 
-        private int currentPage;
-
-        public int CurrentPage
-        {
-            get { return currentPage; }
-            set { currentPage = value; }
-        }
 
         #endregion
 
@@ -101,7 +100,9 @@ namespace Bookshelf.ViewModels
         {
             SituationIndex = _situationIndex;
 
-            BooksList = new ObservableCollection<BookshelfModels.Books.UIBookItem>();
+            if (BooksList.Count > 0)
+                BooksList.Clear();
+
             LoadBooks(1);
         }
 
@@ -119,11 +120,10 @@ namespace Bookshelf.ViewModels
 
         public ICommand OnAppearingCommand => new Command((e) =>
         {
-            BooksList = new ObservableCollection<UIBookItem>();
-            CurrentPage = 1;
-            LoadBooks(CurrentPage);
+            if (BooksList.Count > 0)
+                BooksList.Clear();            
+            LoadBooks(1);
         });
-
 
         /// <summary>
         /// Get books by status
@@ -137,7 +137,15 @@ namespace Bookshelf.ViewModels
             if (!string.IsNullOrEmpty(SearchTitle))
                 textoBusca = SearchTitle.ToUpper();
 
-            foreach (UIBookItem bookItem in await booksServices.GetBookSituationByStatus(pageNumber, SituationIndex, textoBusca))
+            string teste = "0";
+#if WINDOWS
+teste = "2";
+#endif
+            Console.WriteLine("teste: "+teste);
+
+            (var booksList, TotalBooksItens) = await booksServices.GetBookSituationByStatus(pageNumber, SituationIndex, textoBusca);
+
+            foreach (UIBookItem bookItem in booksList)
             {
                 BooksList.Add(bookItem);
             }
@@ -173,7 +181,9 @@ namespace Bookshelf.ViewModels
                         //
                         await Task.Delay(2000);
 
-                        BooksList = new ObservableCollection<UIBookItem>();
+                        if (BooksList.Count > 0)
+                            BooksList.Clear();
+
                         LoadBooks(1);
 
                         SearchingBookList = false;
