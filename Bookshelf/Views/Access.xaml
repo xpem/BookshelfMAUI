@@ -4,10 +4,13 @@
              x:Class="Bookshelf.Views.Access"
              Title="Bookshelf - Gerenciamento de livros"  
              NavigationPage.HasNavigationBar="False"
+             xmlns:vm="clr-namespace:Bookshelf.ViewModels"
+             x:DataType="vm:AccessVM"
              Style="{StaticResource ContentPage}" 
              >
+  
     <VerticalStackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="Center" MaximumWidthRequest="500">
-        <Frame Style="{StaticResource MainFrame}">
+        <Frame Style="{StaticResource MainFrame}" IsEnabled="{Binding IsNotBusy}">
             <VerticalStackLayout >
                 <Image Source="book_solid.png" SemanticProperties.Description="Bookshelf - Gerenciamento de livros" HeightRequest="50" HorizontalOptions="Center"  Aspect="AspectFit"/>
                 <Label Text="Email" Style="{StaticResource LblEntry}"></Label>
@@ -25,5 +28,6 @@
                                 Style="{StaticResource BtnSecondary}"  BackgroundColor="#2D4144" FontSize="15" ImageSource="unlock_solid_15_w.png" ContentLayout="Left, 20"/>
             </VerticalStackLayout>
         </Frame>
+        
     </VerticalStackLayout>
 </ContentPage>

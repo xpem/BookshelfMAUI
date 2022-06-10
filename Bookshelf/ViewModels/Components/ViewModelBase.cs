@@ -1,16 +1,20 @@
 ﻿using Bookshelf.Utils.Navigation;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Bookshelf.ViewModels.Components
 {
-    public partial class ViewModelBase : ObservableObject
+    public class ViewModelBase : BindableObject
     {
         protected INavigationServices navigation;
 
-        [ObservableProperty]
-        [AlsoNotifyChangeFor(nameof(IsNotBusy))]
+
         bool isBusy;
 
-        public bool IsNotBusy => isBusy;
+        public bool IsBusy
+        {
+            get => isBusy; set { if (isBusy!= value) { isBusy = value; OnPropertyChanged(); } }
+        }
+
+        public bool IsNotBusy => !isBusy;
+
     }
 }

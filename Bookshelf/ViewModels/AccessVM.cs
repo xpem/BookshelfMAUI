@@ -3,26 +3,29 @@ using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using BookshelfServices.Books.Sync;
 using BookshelfServices.User;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using Plugin.Connectivity;
+using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public partial class AccessVM : ViewModelBase
+    public class AccessVM : ViewModelBase
     {
 
-        [ObservableProperty]
         string email;
 
-        [ObservableProperty]
+        public string Email { get => email; set { if (email != value) { email = value; OnPropertyChanged(); } } }
+
         string password;
 
-        [ObservableProperty]
+        public string Password { get => password; set { if (password != value) { password = value; OnPropertyChanged(); } } }
+
         string signInText;
 
-        [ObservableProperty]
+        public string SignInText { get => signInText; set { if (signInText != value) { signInText = value; OnPropertyChanged(); } } }
+
         bool btnSignEnabled;
+
+        public bool BtnSignEnabled { get => btnSignEnabled; set { if (btnSignEnabled != value) { btnSignEnabled = value; OnPropertyChanged(); } } }
 
         readonly IUserServices userServices;
         readonly IBooksSyncServices booksSyncServices;
@@ -35,57 +38,56 @@ namespace Bookshelf.ViewModels
             SignInText = "Acessar";
         }
 
-        [ICommand]
-        async Task SignIn()
-        {
-            if (!string.IsNullOrEmpty(Email) && !string.IsNullOrEmpty(Password))
-            {
-                if (CrossConnectivity.Current.IsConnected)
-                {
-                    if (Password.Length > 3)
-                    {
-                        SignInText = "Acessando...";
-                        BtnSignEnabled = false;
-                        bool resp = false;
+        public ICommand SignInCommand => new Command(async () =>
+         {
+             IsBusy = true;
+             try
+             {
+                 if (!string.IsNullOrEmpty(Email) && !string.IsNullOrEmpty(Password))
+                 {
+                     if (CrossConnectivity.Current.IsConnected)
+                     {
+                         if (Password.Length > 3)
+                         {
+                             SignInText = "Acessando...";
+                             BtnSignEnabled = false;
+                             bool resp = false;
 
-                        resp = await userServices.SignIn(Email, Password);
+                             resp = await userServices.SignIn(Email, Password);
 
-                        if (resp)
-                        {
-                            Thread thread = new(booksSyncServices.SyncLocalDb) { IsBackground = true };
-                            thread.Start();
+                             if (resp)
+                             {
+                                 Thread thread = new(booksSyncServices.SyncLocalDb) { IsBackground = true };
+                                 thread.Start();
 
-                            Application.Current.MainPage = new NavigationPage();
-                            _ = (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<Main>(), true);
-                        }
-                        else
-                        {
-                            await Application.Current.MainPage.DisplayAlert("Aviso", "Email/senha incorretos", null, "Ok");
-                        }
-                        BtnSignEnabled = true;
-                        SignInText = "Acessar";
-                    }
-                    else
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Aviso", "Digite sua senha", null, "Ok");
-                    }
-                }
-                else
-                {
-                    await Application.Current.MainPage.DisplayAlert("Aviso", "É necessário ter acesso a internet para efetuar o primeiro acesso.", null, "Ok");
-                }
-            }
-            else
-            {
-                await Application.Current.MainPage.DisplayAlert("Aviso", "Insira seu email e senha.", null, "Ok");
-            }
-        }
+                                 Application.Current.MainPage = new NavigationPage();
+                                 _ = (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<Main>(), true);
+                             }
+                             else
+                                 await Application.Current.MainPage.DisplayAlert("Aviso", "Email/senha incorretos", null, "Ok");
 
-        [ICommand]
-        async Task CreateUser() => await (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<CreateUser>(), true);
+                             BtnSignEnabled = true;
+                             SignInText = "Acessar";
+                             IsBusy = false;
+                         }
+                         else
+                             await Application.Current.MainPage.DisplayAlert("Aviso", "Digite sua senha", null, "Ok");
 
-        [ICommand]
-        async Task UpdatePassword() => await (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<UpdatePassword>(), true);
+                     }
+                     else
+                         await Application.Current.MainPage.DisplayAlert("Aviso", "É necessário ter acesso a internet para efetuar o primeiro acesso.", null, "Ok");
+
+                 }
+                 else
+                     await Application.Current.MainPage.DisplayAlert("Aviso", "Insira seu email e senha.", null, "Ok");
+             }
+             catch { throw; }
+
+         });
+
+        public ICommand CreateUserCommand => new Command(async () => await (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<CreateUser>(), true));
+
+        public ICommand UpdatePasswordCommand => new Command(async () => await (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<UpdatePassword>(), true));
 
     }
 }

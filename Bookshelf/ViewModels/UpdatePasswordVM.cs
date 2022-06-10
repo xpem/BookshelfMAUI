@@ -2,15 +2,16 @@
 using Bookshelf.Utils.Navigation;
 using Bookshelf.ViewModels.Components;
 using BookshelfServices.User.AuthServices;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public partial class UpdatePasswordVM : ViewModelBase
+    public class UpdatePasswordVM : ViewModelBase
     {
-        [ObservableProperty]
+
         string email;
+
+        public string Email { get => email; set { if (email != value) { email = value; OnPropertyChanged(); } } }
 
         readonly IUserAuthServices userAuthServices;
 
@@ -20,8 +21,7 @@ namespace Bookshelf.ViewModels
             userAuthServices = _userAuthServices;
         }
 
-        [ICommand]
-        async Task UpdatePassword()
+        public ICommand UpdatePasswordCommand => new Command(async () =>
         {
             if (!(Connectivity.NetworkAccess == NetworkAccess.Internet))
             {
@@ -47,6 +47,6 @@ namespace Bookshelf.ViewModels
 
                 _ = navigation.NavigateBack();
             }
-        }
+        });
     }
 }

@@ -59,7 +59,7 @@ namespace BookshelfServices.Books
                 //
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    (bool res, string message) = await booksApiServices.UpdateBook(book, User);
+                    (bool res, string? message) = await booksApiServices.UpdateBook(book, User);
 
                     if (!res) { return message; }
                 }

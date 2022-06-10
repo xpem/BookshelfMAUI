@@ -5,8 +5,6 @@ using Bookshelf.Views;
 using BookshelfModels.User;
 using BookshelfServices.Books.Sync;
 using BookshelfServices.User;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using Plugin.Connectivity;
 using System.Windows.Input;
 
@@ -17,17 +15,25 @@ namespace Bookshelf.ViewModels
         readonly IUserServices userService;
         readonly IBooksSyncServices booksSyncServices;
 
-        [ObservableProperty]
         string email;
 
-        [ObservableProperty]
+        public string Email { get => email; set { if (email != value) { email = value; OnPropertyChanged(); } } }
+
         string password;
 
-        [ObservableProperty] 
+        public string Password { get => password; set { if (password != value) { password = value; OnPropertyChanged(); } } }
+
+
         string confirmPassword;
 
-        [ObservableProperty]
+        public string ConfirmPassword { get => confirmPassword; set { if (confirmPassword != value) { confirmPassword = value; OnPropertyChanged(); } } }
+
+
+
         bool btnCreateUserIsEnabled = true;
+
+        public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { btnCreateUserIsEnabled = value; OnPropertyChanged(); } } }
+
 
         public CreateUserVM(INavigationServices _navigation, IUserServices _userService, IBooksSyncServices _booksSyncServices)
         {

@@ -3,13 +3,12 @@ using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using BookshelfModels.Books;
 using BookshelfServices.Books;
-using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public partial class BookListVM : ViewModelBase
+    public class BookListVM : ViewModelBase
     {
 
         #region Vars
@@ -18,7 +17,7 @@ namespace Bookshelf.ViewModels
 
         public ObservableCollection<UIBookItem> BooksList { get; } = new();
 
-        private UIBookItem bookItem;
+        UIBookItem bookItem;
 
         public UIBookItem BookItem
         {
@@ -54,18 +53,27 @@ namespace Bookshelf.ViewModels
                         }
                         bookItem = null;
                     }
-                    SetProperty(ref bookItem, value);
+                    OnPropertyChanged();
                 }
             }
         }
 
-        [ObservableProperty]
+    
         string pageTitle;
 
-        [ObservableProperty]
+        public string PageTitle
+        {
+            get => pageTitle; set { if (pageTitle!=value) { pageTitle = value; OnPropertyChanged(); } }
+        }
+
         int totalBooksItens;
 
-        private string searchTitle;
+        public int TotalBooksItens
+        {
+            get => totalBooksItens; set { if (totalBooksItens != value) { totalBooksItens = value; OnPropertyChanged(); } }
+        }
+
+        string searchTitle;
 
         public string SearchTitle
         {
@@ -74,14 +82,12 @@ namespace Bookshelf.ViewModels
             {
                 if (searchTitle != value)
                 {
-                    SearchBookList();                 
-                    SetProperty(ref searchTitle, value);
+                    searchTitle = value;
+                    SearchBookList();
+                    OnPropertyChanged();
                 }
             }
         }
-
-        [ObservableProperty]
-        private bool isLoading;
 
         public int SituationIndex { get; set; }
 
@@ -121,7 +127,7 @@ namespace Bookshelf.ViewModels
         public ICommand OnAppearingCommand => new Command((e) =>
         {
             if (BooksList.Count > 0)
-                BooksList.Clear();            
+                BooksList.Clear();
             LoadBooks(1);
         });
 
@@ -131,17 +137,19 @@ namespace Bookshelf.ViewModels
         private async void LoadBooks(int pageNumber)
         {
             PageTitle = "Carregando lista...";
-            IsLoading = true;
+            IsBusy = true;
 
             string textoBusca = "";
             if (!string.IsNullOrEmpty(SearchTitle))
                 textoBusca = SearchTitle.ToUpper();
 
             string teste = "0";
+
+            //implementar meio de evitar a paginação do windows, até update que corriga o RemainingItemsThresholdReachedCommand para uwp
 #if WINDOWS
 teste = "2";
 #endif
-            Console.WriteLine("teste: "+teste);
+            Console.WriteLine("teste: " + teste);
 
             (var booksList, TotalBooksItens) = await booksServices.GetBookSituationByStatus(pageNumber, SituationIndex, textoBusca);
 
@@ -161,7 +169,7 @@ teste = "2";
                 case 4: PageTitle += " interrompidos"; break;
             }
 
-            IsLoading = false;
+            IsBusy = false;
         }
 
         /// <summary>
