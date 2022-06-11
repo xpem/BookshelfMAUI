@@ -13,7 +13,7 @@ namespace BookshelfServices.User
         }
 
         /// <summary>
-        /// get user in the db local
+        /// get user in the static var
         /// </summary>
         /// <returns></returns>
         public BookshelfModels.User.User? GetUserLocal() => UserRepos.GetUser();
@@ -22,9 +22,9 @@ namespace BookshelfServices.User
         {
             (BookshelfModels.User.User? userResponse, bool Success) = await userAuthServices.RefreshUserToken(user);
 
-            if (Success && user is not null)
+            if (Success && userResponse is not null)
             {
-                UserRepos.UpdateToken(user.Id, user.Token);
+                UserRepos.UpdateToken(userResponse.Id, userResponse.Token);
             }
 
             return userResponse;
@@ -38,23 +38,24 @@ namespace BookshelfServices.User
         /// <returns></returns>
         public async Task<bool> SignIn(string email, string password)
         {
-
-            BookshelfModels.User.User? user = await userAuthServices.SignInWithEmailAndPassword(email, password);
-
-            if (user is not null)
+            try
             {
-                if (user.Error != null)
+                BookshelfModels.User.User? user = await userAuthServices.SignInWithEmailAndPassword(email, password);
+
+                if (user is not null)
                 {
-                    return false;
+                    if (user.Error != null)
+                        return false;
+                    else
+                    {
+                        UserRepos.InsertUser(user);
+                        return true;
+                    }
                 }
                 else
-                {
-                    UserRepos.InsertUser(user);
-                    return true;
-                }
+                    return false;
             }
-            else
-                return false;
+            catch { throw; }
         }
 
         public async Task<BookshelfModels.User.User> InsertUser(string email, string password)

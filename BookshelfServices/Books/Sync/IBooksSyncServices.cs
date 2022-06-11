@@ -3,5 +3,6 @@
     public interface IBooksSyncServices
     {
         void SyncLocalDb();
+        void StartThread();
     }
 }

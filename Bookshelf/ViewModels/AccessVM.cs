@@ -57,8 +57,7 @@ namespace Bookshelf.ViewModels
 
                              if (resp)
                              {
-                                 Thread thread = new(booksSyncServices.SyncLocalDb) { IsBackground = true };
-                                 thread.Start();
+                                 booksSyncServices.StartThread();
 
                                  Application.Current.MainPage = new NavigationPage();
                                  _ = (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<Main>(), true);

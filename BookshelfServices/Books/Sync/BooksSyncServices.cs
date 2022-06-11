@@ -18,20 +18,42 @@ namespace BookshelfServices.Books.Sync
 
         public static bool Synchronizing { get; set; }
 
+        public static bool ThreadIsRunning { get; set; }
+
+
+        public void StartThread()
+        {
+            if (!ThreadIsRunning)
+            {
+                ThreadIsRunning = true;
+                Thread thread = new(SyncLocalDb) { IsBackground = true };
+                thread.Start();
+            }
+        }
+
+        public async void ContinuosSync()
+        {
+            try
+            {
+                while (ThreadIsRunning)
+                {
+                    SyncLocalDb();
+
+                    //delay of three minutes 
+                    await Task.Delay(180000);
+                }
+            }
+            catch (Exception ex) { throw ex; }
+        }
+
         public async void SyncLocalDb()
         {
             try
             {
-                //todo - get user by signin email
                 BookshelfModels.User.User? user = userServices.GetUserLocal();
-                bool ContinuosProcess = true;
 
-                while (ContinuosProcess)
+                if (user != null && !Synchronizing)
                 {
-                    //User not logged
-                    if (user == null)
-                        break;
-
                     Synchronizing = true;
 
                     if (CrossConnectivity.Current.IsConnected)
@@ -49,7 +71,7 @@ namespace BookshelfServices.Books.Sync
                                 //define the key has a null for register the book in firebase
                                 book.BookKey = null;
 
-                                (bool success, string res) = await booksApiServices.AddBook(book, user);
+                                (bool success, string? res) = await booksApiServices.AddBook(book, user);
 
                                 if (success)
                                 {
@@ -75,10 +97,7 @@ namespace BookshelfServices.Books.Sync
 
                         BookshelfRepos.User.UserRepos.UpdateUserLastUpdateLocal(user.Id, LastUptade);
                     }
-
                     Synchronizing = false;
-                    //in a interval of three minutes check updates
-                    await Task.Delay(180000);
                 }
             }
             catch (Exception ex) { throw ex; }

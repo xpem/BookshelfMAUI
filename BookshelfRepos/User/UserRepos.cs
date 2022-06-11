@@ -4,6 +4,7 @@ namespace BookshelfRepos.User
 {
     public static class UserRepos
     {
+
         public static void InsertUser(BookshelfModels.User.User user)
         {
             SQLiteDB.OpenIfClosed();

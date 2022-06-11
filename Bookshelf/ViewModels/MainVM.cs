@@ -2,6 +2,7 @@
 using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using BookshelfServices.Books;
+using BookshelfServices.Books.Sync;
 using Microsoft.Maui.Controls;
 using System.Windows.Input;
 
@@ -57,7 +58,9 @@ namespace Bookshelf.ViewModels
             {
                 BookshelfServices.User.UserServices.CleanUserDatabase();
 
-                Application.Current.MainPage = new NavigationPage();
+                //finalize sync thread process
+                BooksSyncServices.ThreadIsRunning = false;
+
                 await (Application.Current?.MainPage?.Navigation).PushAsync(navigation.ResolvePage<Access>(), true);
             }
         });
@@ -131,15 +134,16 @@ namespace Bookshelf.ViewModels
             //
         }
 
-        public ICommand CreateBookCommand => new Command(async(e) => {            
+        public ICommand CreateBookCommand => new Command(async (e) =>
+        {
             Page page = navigation.ResolvePage<CreateBook>();
             (page?.BindingContext as CreateBookVM).OnNavigatingTo("");
             await (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
-            });
+        });
 
         public ICommand ReadCommand => new Command(async (e) => await CallBookList(3));
 
-        public ICommand InterruptedCommand => new Command(async (e) =>  await CallBookList(4));
+        public ICommand InterruptedCommand => new Command(async (e) => await CallBookList(4));
 
         public ICommand ReadingCommand => new Command(async (e) => await CallBookList(2));
 

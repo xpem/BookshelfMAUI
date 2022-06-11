@@ -17,8 +17,7 @@ public partial class App : Application
 
         if (userServices.GetUserLocal() != null)
         {
-            Thread thread = new(booksSyncServices.SyncLocalDb) { IsBackground = true };
-            thread.Start();
+            booksSyncServices.StartThread();
 
             MainPage = new NavigationPage();    
             _ = (Current?.MainPage?.Navigation).PushAsync(navigationServices.ResolvePage<Main>(), true);
