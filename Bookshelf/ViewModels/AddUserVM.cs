@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public partial class CreateUserVM : ViewModelBase
+    public partial class AddUserVM : ViewModelBase
     {
         readonly IUserServices userService;
         readonly IBooksSyncServices booksSyncServices;
@@ -35,7 +35,7 @@ namespace Bookshelf.ViewModels
         public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { btnCreateUserIsEnabled = value; OnPropertyChanged(); } } }
 
 
-        public CreateUserVM(INavigationServices _navigation, IUserServices _userService, IBooksSyncServices _booksSyncServices)
+        public AddUserVM(INavigationServices _navigation, IUserServices _userService, IBooksSyncServices _booksSyncServices)
         {
             navigation = _navigation;
             userService = _userService;
@@ -81,7 +81,7 @@ namespace Bookshelf.ViewModels
             return validInformation;
         }
 
-        public ICommand CreateUserCommand => new Command(async () =>
+        public ICommand AddUserCommand => new Command(async () =>
         {
             if (!CrossConnectivity.Current.IsConnected)
             {
@@ -89,37 +89,31 @@ namespace Bookshelf.ViewModels
                 return;
             }
 
-            if (VerifyFileds())
-            {
-                BtnCreateUserIsEnabled = false;
+            //if (VerifyFileds())
+            //{
+            //    BtnCreateUserIsEnabled = false;
 
-                //
-                User user = await userService.InsertUser(email, password);
+            //    //
+            //    User user = await userService.InsertUser(email, password);
 
-                if (user != null)
-                {
-                    if (user.Error != null)
-                    {
-                        if (user.Error == ErrorType.EMAIL_EXISTS)
-                            await Application.Current.MainPage.DisplayAlert("Aviso", "Email já cadastrado!", null, "Ok");
-                        else
-                            await Application.Current.MainPage.DisplayAlert("Erro", "Não foi possível cadastrar o usuário!", null, "Ok");
-                    }
-                    else
-                    {
-                        bool res = await Application.Current.MainPage.DisplayAlert("Aviso", "Usuário cadastrado!", null, "Ok");
+            //    if (user != null)
+            //    {
+            //        if (user.Error != null)
+            //        {
+            //            if (user.Error == ErrorType.EMAIL_EXISTS)
+            //                await Application.Current.MainPage.DisplayAlert("Aviso", "Email já cadastrado!", null, "Ok");
+            //            else
+            //                await Application.Current.MainPage.DisplayAlert("Erro", "Não foi possível cadastrar o usuário!", null, "Ok");
+            //        }
+            //        else
+            //        {
+            //            bool res = await Application.Current.MainPage.DisplayAlert("Aviso", "Usuário cadastrado!", null, "Ok");
 
-                        if (!res)
-                        {
-                            Thread thread = new(booksSyncServices.SyncLocalDb) { IsBackground = true };
-                            thread.Start();
-
-                            Application.Current.MainPage = new NavigationPage();
-                            _ = (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<Main>(), true);
-                        }
-                    }
-                }
-            }
+            //            if (!res)
+                            await Shell.Current.GoToAsync("..");
+            //        }
+            //    }
+            //}
         });
     }
 }

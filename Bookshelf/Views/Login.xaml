@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Bookshelf.Views.Access"
+             x:Class="Bookshelf.Views.Login"
              Title="Bookshelf - Gerenciamento de livros"  
              NavigationPage.HasNavigationBar="False"
              xmlns:vm="clr-namespace:Bookshelf.ViewModels"
-             x:DataType="vm:AccessVM"
+             x:DataType="vm:LoginVM"
+             Shell.NavBarIsVisible="False"
              Style="{StaticResource ContentPage}" 
              >
   
@@ -22,10 +23,26 @@
                 <Button Text="{Binding SignInText}" Margin="0,10,0,20" Style="{StaticResource MainBtn}" 
                             FontSize="20" ImageSource="right_to_bracket_solid_20_w.png"  IsEnabled="{Binding BtnSignEnabled}"
                             ContentLayout="Left, 20" Command="{Binding SignInCommand}"  />
-                <Button Text="Cadastrar" x:Name="BtnAddUser" Command="{Binding CreateUserCommand}" Margin="0,0,0,5"
+                <HorizontalStackLayout>
+                    <Label Text="Não tem conta? " FontFamily="EBGaramondBold" TextColor="#4B4B4B" Margin="0,0,5,0"/>
+                    <Label Text="Criar Conta" HorizontalOptions="Start" FontFamily="EBGaramondBold" TextColor="#362624" TextDecorations="Underline" >
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CreateUserCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Margin="0,5,0,0">
+                    <Label Text="Esqueceu sua senha? " FontFamily="EBGaramondBold" TextColor="#4B4B4B" Margin="0,0,5,0"/>
+                    <Label Text="Recuperar Senha" FontFamily="EBGaramondBold" HorizontalOptions="End" TextColor="#362624" TextDecorations="Underline" >
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding UpdatePasswordCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                </HorizontalStackLayout>
+                <!--<Button Text="Cadastrar" x:Name="BtnAddUser" Command="{Binding CreateUserCommand}" Margin="0,0,0,5"
                                 Style="{StaticResource BtnSecondary}" BackgroundColor="#2D4144" FontSize="15" ImageSource="user_plus_solid_15_w.png" ContentLayout="Left, 20" />
                 <Button Text="Recuperar Senha" x:Name="BtnRecoverPassword" Command="{Binding UpdatePasswordCommand}"
-                                Style="{StaticResource BtnSecondary}"  BackgroundColor="#2D4144" FontSize="15" ImageSource="unlock_solid_15_w.png" ContentLayout="Left, 20"/>
+                                Style="{StaticResource BtnSecondary}"  BackgroundColor="#2D4144" FontSize="15" ImageSource="unlock_solid_15_w.png" ContentLayout="Left, 20"/>-->
             </VerticalStackLayout>
         </Frame>
         

@@ -10,20 +10,17 @@ namespace Bookshelf.ViewModels
 {
     public class MainVM : ViewModelBase
     {
-        /// <summary>
-        /// definie that the proccess of first sync has executed
-        /// </summary>
-        private bool firstSync = false;
+        private bool firstSyncIsRunnig = true;
 
         private string illRead, reading, read, interrupted, imgSync;
 
-        public string IllRead { get => illRead; set { illRead = value; OnPropertyChanged(); } }
+        public string IllRead { get => illRead; set { if (illRead != value) { illRead = value; OnPropertyChanged(); } } }
 
-        public string Reading { get => reading; set { reading = value; OnPropertyChanged(); } }
+        public string Reading { get => reading; set { if (reading != value) { reading = value; OnPropertyChanged(); } } }
 
-        public string Read { get => read; set { read = value; OnPropertyChanged(); } }
+        public string Read { get => read; set { if (read != value) { read = value; OnPropertyChanged(); } } }
 
-        public string Interrupted { get => interrupted; set { interrupted = value; OnPropertyChanged(); } }
+        public string Interrupted { get => interrupted; set { if (interrupted != value) { interrupted = value; OnPropertyChanged(); } } }
 
         public string ImgSync { get => imgSync; set { if (value != imgSync) { imgSync = value; OnPropertyChanged(); } } }
 
@@ -34,11 +31,11 @@ namespace Bookshelf.ViewModels
 
         private double frmMainOpacity;
 
-        public double FrmMainOpacity { get => frmMainOpacity; set { frmMainOpacity = value; OnPropertyChanged(); } }
+        public double FrmMainOpacity { get => frmMainOpacity; set { if (frmMainOpacity != value) { frmMainOpacity = value; OnPropertyChanged(); } } }
 
         private bool frmMainIsEnabled, connectedVisible;
 
-        public bool FrmMainIsEnabled { get => frmMainIsEnabled; set { frmMainIsEnabled = value; OnPropertyChanged(); } }
+        public bool FrmMainIsEnabled { get => frmMainIsEnabled; set { if (value != frmMainIsEnabled) { frmMainIsEnabled = value; OnPropertyChanged(); } } }
 
         public bool ConnectedVisible { get => connectedVisible; set { if (value != connectedVisible) { connectedVisible = value; OnPropertyChanged(); } } }
 
@@ -61,7 +58,7 @@ namespace Bookshelf.ViewModels
                 //finalize sync thread process
                 BooksSyncServices.ThreadIsRunning = false;
 
-                await (Application.Current?.MainPage?.Navigation).PushAsync(navigation.ResolvePage<Access>(), true);
+                await Shell.Current.GoToAsync($"//{nameof(Login)}");
             }
         });
 
@@ -93,17 +90,18 @@ namespace Bookshelf.ViewModels
                         ImgSync = "rotate_solid_15_w.png";
 
                         //after finish first sync, enable the grid for access
-                        if (!firstSync)
+                        if (firstSyncIsRunnig)
                         {
                             FrmMainOpacity = 1;
-                            firstSync = true;
-                            FrmMainIsEnabled = true;
+                            firstSyncIsRunnig = false;
+                            FrmMainIsEnabled = false;
                         }
+                        else { FrmMainIsEnabled = true; }
                     }
                 }
 
                 //in fisrt sync not finish yet, verify with one second interval
-                if (!firstSync)
+                if (firstSyncIsRunnig)
                 { await Task.Delay(2000); }
                 //checks with ten seconds interval
                 else
@@ -114,10 +112,7 @@ namespace Bookshelf.ViewModels
         public ICommand OnAppearingCommand => new Command((e) =>
         {
             IllRead = Reading = Read = Interrupted = "...";
-
-            FrmMainOpacity = 0.7;
-            FrmMainIsEnabled = false;
-
+            FrmMainOpacity = 0.5;
             _ = ChekSync();
 
         });
@@ -136,12 +131,16 @@ namespace Bookshelf.ViewModels
 
         public ICommand CreateBookCommand => new Command(async (e) =>
         {
-            Page page = navigation.ResolvePage<CreateBook>();
-            (page?.BindingContext as CreateBookVM).OnNavigatingTo("");
-            await (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
+            var route = $"{nameof(AddBook)}";
+            await Shell.Current.GoToAsync(route);
+
+
+            //Page page = navigation.ResolvePage<AddBook>();
+            //(page?.BindingContext as AddBookVM).OnNavigatingTo("");
+            //await (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
         });
 
-        public ICommand ReadCommand => new Command(async (e) => await CallBookList(3));
+        public ICommand ReadCommand => new Command(async (e) => { if (FrmMainIsEnabled) await CallBookList(3); });
 
         public ICommand InterruptedCommand => new Command(async (e) => await CallBookList(4));
 
@@ -160,7 +159,8 @@ namespace Bookshelf.ViewModels
             (page?.BindingContext as BookListVM).OnNavigatingTo(BookSituation);
 
             //push ui
-            await (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
+            var route = $"{nameof(BookList)}";
+            await Shell.Current.GoToAsync(route);
         }
     }
 }

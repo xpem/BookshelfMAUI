@@ -134,10 +134,10 @@ namespace Bookshelf.ViewModels
         public ICommand NavToUpdateBookCommand => new Command(async (e) =>
         {
             //define the page
-            Page page = navigation.ResolvePage<CreateBook>();
+            Page page = navigation.ResolvePage<AddBook>();
 
             //pass parameter
-            (page?.BindingContext as CreateBookVM).OnNavigatingTo(BookKey);
+            (page?.BindingContext as AddBookVM).OnNavigatingTo(BookKey);
 
             //push ui
             await (Application.Current?.MainPage?.Navigation).PushAsync(page, true);

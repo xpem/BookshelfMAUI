@@ -6,9 +6,18 @@
     xmlns:local="clr-namespace:Bookshelf.Views"
     Shell.FlyoutBehavior="Disabled">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:Access}"
-        Route="MainPage" />
+    <ShellItem Route="Login" FlyoutItemIsVisible="False">
+        <ShellContent ContentTemplate="{DataTemplate local:Login}" />
+    </ShellItem>
 
+    <ShellItem Route="Main" FlyoutItemIsVisible="False">
+        <ShellContent ContentTemplate="{DataTemplate local:Main}" />
+    </ShellItem>
+
+    
+    <FlyoutItem Title="Estante" >
+        <ShellContent ContentTemplate="{DataTemplate local:AddBook}" Route="AddBook" />
+    </FlyoutItem>
+
+    
 </Shell>

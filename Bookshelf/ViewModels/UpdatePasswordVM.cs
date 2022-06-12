@@ -45,7 +45,7 @@ namespace Bookshelf.ViewModels
 
                 await Application.Current.MainPage.DisplayAlert("Aviso", "Email de alteração de senha enviado!", null, "Ok");
 
-                _ = navigation.NavigateBack();
+                await Shell.Current.GoToAsync("..");
             }
         });
     }

@@ -32,10 +32,10 @@ namespace Bookshelf.ViewModels
                         if (SituationIndex == -1)
                         {
                             //define the page
-                            Page page = navigation.ResolvePage<CreateBook>();
+                            Page page = navigation.ResolvePage<AddBook>();
 
                             //pass parameter
-                            (page?.BindingContext as CreateBookVM).OnNavigatingTo(bookItem.Key);
+                            (page?.BindingContext as AddBookVM).OnNavigatingTo(bookItem.Key);
 
                             //push ui
                             (Application.Current?.MainPage?.Navigation).PushAsync(page, true);

@@ -7,6 +7,7 @@ public partial class BookList : ContentPage
 	public BookList(BookListVM bookListVM)
 	{
 		InitializeComponent();
+
 		BindingContext = bookListVM;
 	}
 }

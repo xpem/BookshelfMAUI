@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class CreateBookVM : RatingBar
+    public class AddBookVM : RatingBar
     {
 
         #region Properties
@@ -95,7 +95,7 @@ namespace Bookshelf.ViewModels
 
         #endregion
 
-        public CreateBookVM(INavigationServices _navigation, IBooksServices _booksServices)
+        public AddBookVM(INavigationServices _navigation, IBooksServices _booksServices)
         {
             navigation = _navigation;
             booksServices = _booksServices;           
@@ -248,7 +248,8 @@ namespace Bookshelf.ViewModels
 
                 if (!resposta)
                 {
-                    await navigation.NavigateBack();
+                    await Shell.Current.GoToAsync("..");
+                    //await navigation.NavigateBack();
                 }
             }
         }

@@ -57,14 +57,14 @@
     </ContentPage.Behaviors>
     <ContentPage.Content>
         <ScrollView>
-            <VerticalStackLayout MaximumWidthRequest="400" Padding="4">
-                <Frame Style="{ StaticResource MainFrame }" Margin="0">
+            <VerticalStackLayout MaximumWidthRequest="400" Padding="4" >
+                <Frame Style="{ StaticResource MainFrame }" Margin="0" >
                     <VerticalStackLayout Spacing="2" >
                         <Frame Style="{ StaticResource FrameCardItem }" HorizontalOptions="CenterAndExpand">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding IllReadCommand}" />
+                            </Frame.GestureRecognizers>
                             <Grid Style="{ StaticResource GridCardItem }">
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer x:Name="TpGstRg_IllRead" Command="{Binding IllReadCommand}" />
-                                </Grid.GestureRecognizers>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50"/>
                                     <RowDefinition Height="13"/>
@@ -81,82 +81,75 @@
                             </Grid>
                         </Frame>
                         <Frame Style="{ StaticResource FrameCardItem }" >
-                            <StackLayout Style="{ StaticResource MainStackLayout }" >
-                                <Grid Style="{ StaticResource GridCardItem }">
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer x:Name="TpGstRg_Reading"  Command="{Binding ReadingCommand}" />
-                                    </Grid.GestureRecognizers>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="50"/>
-                                        <RowDefinition Height="13"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width ="75" />
-                                        <ColumnDefinition Width ="*" />
-                                        <ColumnDefinition Width="70" />
-                                    </Grid.ColumnDefinitions>
-                                    <Image Grid.Row="0" Grid.Column="0" SemanticProperties.Description="Lendo" HeightRequest="30"  Style="{ StaticResource ImgIcon }" Source="book_open_reader_solid_50.png" />
-                                    <Label Text="{Binding Reading}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
-                                    <Label Text="Lendo" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
-                                    <Image Grid.Column="3" Grid.RowSpan="2" SemanticProperties.Description="Acessar lista de livros que estou lendo" Style="{StaticResource ImgAngleRight}" />
-                                </Grid>
-                            </StackLayout>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ReadingCommand}" />
+                            </Frame.GestureRecognizers>
+                            <Grid Style="{ StaticResource GridCardItem }">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="13"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width ="75" />
+                                    <ColumnDefinition Width ="*" />
+                                    <ColumnDefinition Width="70" />
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Row="0" Grid.Column="0" SemanticProperties.Description="Lendo" HeightRequest="30"  Style="{ StaticResource ImgIcon }" Source="book_open_reader_solid_50.png" />
+                                <Label Text="{Binding Reading}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
+                                <Label Text="Lendo" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
+                                <Image Grid.Column="3" Grid.RowSpan="2" SemanticProperties.Description="Acessar lista de livros que estou lendo" Style="{StaticResource ImgAngleRight}" />
+                            </Grid>
                         </Frame>
                         <Frame Style="{ StaticResource FrameCardItem }" >
-                            <StackLayout Style="{ StaticResource MainStackLayout }" >
-                                <Grid Style="{ StaticResource GridCardItem }">
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer x:Name="TpGstRg_Read" Command="{Binding ReadCommand}"/>
-                                    </Grid.GestureRecognizers>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="50"/>
-                                        <RowDefinition Height="13"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="75" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="70" />
-                                    </Grid.ColumnDefinitions>
-                                    <Image Grid.Row="0" Grid.Column="0" SemanticProperties.Description="Lidos" HeightRequest="30"  Style="{ StaticResource ImgIcon }" Source="check_solid_30.png" />
-                                    <Label Text="{Binding Read}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
-                                    <Label Text="Lidos" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
-                                    <Image Grid.Column="3" Grid.RowSpan="2" SemanticProperties.Description="Acessar lista de livros que já li" Style="{StaticResource ImgAngleRight}" />
-                                </Grid>
-                            </StackLayout>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ReadCommand}"/>
+                            </Frame.GestureRecognizers>
+                            <Grid Style="{ StaticResource GridCardItem }">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="13"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="75" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="70" />
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Row="0" Grid.Column="0" SemanticProperties.Description="Lidos" HeightRequest="30"  Style="{ StaticResource ImgIcon }" Source="check_solid_30.png" />
+                                <Label Text="{Binding Read}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
+                                <Label Text="Lidos" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
+                                <Image Grid.Column="3" Grid.RowSpan="2" SemanticProperties.Description="Acessar lista de livros que já li" Style="{StaticResource ImgAngleRight}" />
+                            </Grid>
                         </Frame>
                         <Frame Style="{ StaticResource FrameCardItem }" >
-                            <StackLayout Style="{ StaticResource MainStackLayout }" >
-                                <Grid Style="{ StaticResource GridCardItem }">
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer x:Name="TpGstRg_Interrupted" Command="{Binding InterruptedCommand}" />
-                                    </Grid.GestureRecognizers>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="50"/>
-                                        <RowDefinition Height="13"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="75" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="70" />
-                                    </Grid.ColumnDefinitions>
-                                    <Image Grid.Row="0" Grid.Column="0" SemanticProperties.Description="Interrompidos" HeightRequest="30"  Style="{ StaticResource ImgIcon }" Source="pause_solid_30.png" />
-                                    <Label Text="{Binding Interrupted}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
-                                    <Label Text="Suspensos" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
-                                    <Image Grid.Column="3" Grid.RowSpan="2" SemanticProperties.Description="Acessar lista de livros que interrompi a leitura" Style="{StaticResource ImgAngleRight}" />
-                                </Grid>
-                            </StackLayout>
+                            <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding InterruptedCommand}" />
+                            </Frame.GestureRecognizers>
+                            <Grid Style="{ StaticResource GridCardItem }">                                
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="13"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="75" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="70" />
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Row="0" Grid.Column="0" SemanticProperties.Description="Interrompidos" HeightRequest="30"  Style="{ StaticResource ImgIcon }" Source="pause_solid_30.png" />
+                                <Label Text="{Binding Interrupted}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
+                                <Label Text="Suspensos" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
+                                <Image Grid.Column="3" Grid.RowSpan="2" SemanticProperties.Description="Acessar lista de livros que interrompi a leitura" Style="{StaticResource ImgAngleRight}" />
+                            </Grid>
                         </Frame>
                     </VerticalStackLayout>
                 </Frame>
                 <VerticalStackLayout Padding="4">
                     <Frame BackgroundColor="#BDBDBD">
-                        <VerticalStackLayout >                           
-                                <Button HorizontalOptions="FillAndExpand" Text="Adicionar Livro"
+                        <VerticalStackLayout >
+                            <Button HorizontalOptions="FillAndExpand" Text="Adicionar Livro"
                                         Grid.Row="0" Grid.Column="0" 
                                         Style="{StaticResource MainBtn}" Command="{Binding CreateBookCommand}" FontSize="15" 
                                 ImageSource="book_solid_15_w.png" ContentLayout="Left, 10" Margin="0,0,0,4"/>
-                                <Button Text="Listar Todos" Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand"  Style="{StaticResource BtnSecondary}" FontSize="15" ImageSource="bars_staggered_solid_15_w.png" BackgroundColor="#2D4144" ContentLayout="Left, 10" Command="{Binding ArchiveCommand}" />
-                          
+                            <Button Text="Listar Todos" Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand"  Style="{StaticResource BtnSecondary}" FontSize="15" ImageSource="bars_staggered_solid_15_w.png" BackgroundColor="#2D4144" ContentLayout="Left, 10" Command="{Binding ArchiveCommand}" />
                             <Grid HorizontalOptions="FillAndExpand" Margin="0,5,0,0" >
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
@@ -177,5 +170,5 @@
             </VerticalStackLayout>
         </ScrollView>
     </ContentPage.Content>
-        
+
 </ContentPage>

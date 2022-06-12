@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class AccessVM : ViewModelBase
+    public class LoginVM : ViewModelBase
     {
 
         string email;
@@ -30,7 +30,7 @@ namespace Bookshelf.ViewModels
         readonly IUserServices userServices;
         readonly IBooksSyncServices booksSyncServices;
 
-        public AccessVM(INavigationServices _navigation, IUserServices _userServices, IBooksSyncServices _booksSyncServices)
+        public LoginVM(INavigationServices _navigation, IUserServices _userServices, IBooksSyncServices _booksSyncServices)
         {
             navigation = _navigation;
             userServices = _userServices;
@@ -59,8 +59,10 @@ namespace Bookshelf.ViewModels
                              {
                                  booksSyncServices.StartThread();
 
-                                 Application.Current.MainPage = new NavigationPage();
-                                 _ = (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<Main>(), true);
+                                 await Shell.Current.GoToAsync($"//{nameof(Main)}");
+
+                                 //Application.Current.MainPage = new NavigationPage();
+                                 //_ = (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<Main>(), true);
                              }
                              else
                                  await Application.Current.MainPage.DisplayAlert("Aviso", "Email/senha incorretos", null, "Ok");
@@ -84,9 +86,9 @@ namespace Bookshelf.ViewModels
 
          });
 
-        public ICommand CreateUserCommand => new Command(async () => await (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<CreateUser>(), true));
+        public ICommand CreateUserCommand => new Command(async () => await Shell.Current.GoToAsync($"{nameof(AddUser)}"));
 
-        public ICommand UpdatePasswordCommand => new Command(async () => await (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<UpdatePassword>(), true));
+        public ICommand UpdatePasswordCommand => new Command(async () => await Shell.Current.GoToAsync($"{nameof(UpdatePassword)}"));
 
     }
 }
