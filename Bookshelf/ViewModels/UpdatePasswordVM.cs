@@ -1,5 +1,4 @@
 ﻿using Bookshelf.Utils;
-using Bookshelf.Utils.Navigation;
 using Bookshelf.ViewModels.Components;
 using BookshelfServices.User.AuthServices;
 using System.Windows.Input;
@@ -15,9 +14,8 @@ namespace Bookshelf.ViewModels
 
         readonly IUserAuthServices userAuthServices;
 
-        public UpdatePasswordVM(INavigationServices _navigation, IUserAuthServices _userAuthServices)
+        public UpdatePasswordVM( IUserAuthServices _userAuthServices)
         {
-            navigation = _navigation;
             userAuthServices = _userAuthServices;
         }
 

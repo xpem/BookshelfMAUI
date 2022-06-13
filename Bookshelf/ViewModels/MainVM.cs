@@ -1,5 +1,4 @@
-﻿using Bookshelf.Utils.Navigation;
-using Bookshelf.ViewModels.Components;
+﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using BookshelfServices.Books;
 using BookshelfServices.Books.Sync;
@@ -41,9 +40,8 @@ namespace Bookshelf.ViewModels
 
         readonly IBooksServices booksServices;
 
-        public MainVM(INavigationServices _navigation, IBooksServices _booksServices)
+        public MainVM(IBooksServices _booksServices)
         {
-            navigation = _navigation;
             booksServices = _booksServices;
         }
 

@@ -122,9 +122,9 @@
                         </Frame>
                         <Frame Style="{ StaticResource FrameCardItem }" >
                             <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding InterruptedCommand}" />
+                                <TapGestureRecognizer Command="{Binding InterruptedCommand}" />
                             </Frame.GestureRecognizers>
-                            <Grid Style="{ StaticResource GridCardItem }">                                
+                            <Grid Style="{ StaticResource GridCardItem }">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50"/>
                                     <RowDefinition Height="13"/>
@@ -145,11 +145,19 @@
                 <VerticalStackLayout Padding="4">
                     <Frame BackgroundColor="#BDBDBD">
                         <VerticalStackLayout >
-                            <Button HorizontalOptions="FillAndExpand" Text="Adicionar Livro"
-                                        Grid.Row="0" Grid.Column="0" 
-                                        Style="{StaticResource MainBtn}" Command="{Binding CreateBookCommand}" FontSize="15" 
-                                ImageSource="book_solid_15_w.png" ContentLayout="Left, 10" Margin="0,0,0,4"/>
-                            <Button Text="Listar Todos" Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand"  Style="{StaticResource BtnSecondary}" FontSize="15" ImageSource="bars_staggered_solid_15_w.png" BackgroundColor="#2D4144" ContentLayout="Left, 10" Command="{Binding ArchiveCommand}" />
+                            <Grid HorizontalOptions="FillAndExpand">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Text="Adicionar" Grid.Row="0" Grid.Column="0" HorizontalOptions="FillAndExpand" Style="{StaticResource MainBtn}" Command="{Binding CreateBookCommand}" FontSize="15" 
+                                    ImageSource="book_solid_15_w.png" ContentLayout="Left, 10" />
+                                <Button Text="Listar Todos" Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand" Style="{StaticResource BtnSecondary}" FontSize="15"
+                                    ImageSource="bars_staggered_solid_15_w.png" BackgroundColor="#2D4144" ContentLayout="Left, 10" Command="{Binding ArchiveCommand}" />
+                            </Grid>                            
                             <Grid HorizontalOptions="FillAndExpand" Margin="0,5,0,0" >
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
@@ -159,7 +167,7 @@
                                     <ColumnDefinition  Width ="30" />
                                     <ColumnDefinition  Width ="30" />
                                 </Grid.ColumnDefinitions>
-                                <Button Text="Sair" Grid.Row="0" Grid.Column="0" Style="{ StaticResource BtnExit}" FontSize="15" ImageSource="right_from_bracket_solid_12.png" Command="{Binding LogoutCommand}" ContentLayout="Left, 10" />
+                                <Button Text="Sair" Grid.Row="0" Grid.Column="0" Style="{ StaticResource BtnExit}" FontSize="12" ImageSource="right_from_bracket_solid_12.png" Command="{Binding LogoutCommand}" ContentLayout="Left, 10" />
 
                                 <Image Grid.Row="0" Grid.Column="1" SemanticProperties.Description="Status da conexão" HeightRequest="10" Source="wifi_solid_15_red.png" IsVisible="{Binding ConnectedVisible}" VerticalOptions="End"/>
                                 <Image Grid.Row="0" Grid.Column="2" SemanticProperties.Description="Status da sincronização" HeightRequest="10" Source="{Binding ImgSync}" VerticalOptions="End"/>

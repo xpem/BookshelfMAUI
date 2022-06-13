@@ -1,5 +1,4 @@
-﻿using Bookshelf.Utils.Navigation;
-using Bookshelf.Views;
+﻿using Bookshelf.Views;
 using BookshelfServices.Books.Sync;
 using BookshelfServices.User;
 

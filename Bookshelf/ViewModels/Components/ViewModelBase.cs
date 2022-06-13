@@ -1,11 +1,7 @@
-﻿using Bookshelf.Utils.Navigation;
-
-namespace Bookshelf.ViewModels.Components
+﻿namespace Bookshelf.ViewModels.Components
 {
     public class ViewModelBase : BindableObject
     {
-        protected INavigationServices navigation;
-
 
         bool isBusy;
 

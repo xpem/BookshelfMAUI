@@ -1,5 +1,4 @@
-﻿using Bookshelf.Utils.Navigation;
-using Bookshelf.ViewModels.Components;
+﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using BookshelfModels.Books;
 using BookshelfServices.Books;
@@ -30,29 +29,10 @@ namespace Bookshelf.ViewModels
                     if (bookItem is not null)
                     {
                         if (SituationIndex == -1)
-                        {
-                            //define the page
-                            Page page = navigation.ResolvePage<AddBook>();
-
-                            //pass parameter
-                            (page?.BindingContext as AddBookVM).OnNavigatingTo(bookItem.Key);
-
-                            //push ui
-                            (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
-                        }
+                            Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={bookItem.Key}", true);
                         else
-                        {
-                            Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={bookItem.Key}",true);
-                            
-                            ////define the page
-                            //Page page = navigation.ResolvePage<BookDetail>();
+                            Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={bookItem.Key}", true);
 
-                            ////pass parameter
-                            //(page?.BindingContext as BookDetailVM).OnNavigatingTo(bookItem.Key);
-
-                            ////push ui
-                            //(Application.Current?.MainPage?.Navigation).PushAsync(page, true);
-                        }
                         bookItem = null;
                     }
                     OnPropertyChanged();
@@ -95,9 +75,8 @@ namespace Bookshelf.ViewModels
 
         #endregion
 
-        public BookListVM(INavigationServices _navigation, IBooksServices _booksServices)
+        public BookListVM(IBooksServices _booksServices)
         {
-            navigation = _navigation;
             booksServices = _booksServices;
         }
 
@@ -111,24 +90,6 @@ namespace Bookshelf.ViewModels
             LoadBooks(1);
         }
 
-        //public void OnNavigatingTo(int _situationIndex)
-        //{
-        //    SituationIndex = _situationIndex;
-
-        //    if (BooksList.Count > 0)
-        //        BooksList.Clear();
-
-        //    LoadBooks(1);
-        //}
-
-
-        public ICommand ItemSelectedCommand => new Command((object item) =>
-        {
-            var teste = item;
-            Console.Write(item);
-        });
-
-
         public ICommand LoadMoreCommand => new Command(() =>
         {
             CurrentPage++;
@@ -141,17 +102,10 @@ namespace Bookshelf.ViewModels
         /// </summary>
         public bool SearchingBookList { get; set; }
 
-        //public ICommand OnAppearingCommand => new Command((e) =>
-        //{
-        //    if (BooksList.Count > 0)
-        //        BooksList.Clear();
-        //    LoadBooks(1);
-        //});
-
         /// <summary>
         /// Get books by status
         /// </summary>
-        private async void LoadBooks(int pageNumber)
+        private async void LoadBooks(int? pageNumber)
         {
             PageTitle = "Carregando lista...";
             IsBusy = true;
@@ -160,13 +114,10 @@ namespace Bookshelf.ViewModels
             if (!string.IsNullOrEmpty(SearchTitle))
                 textoBusca = SearchTitle.ToUpper();
 
-            string teste = "0";
-
             //implementar meio de evitar a paginação do windows, até update que corriga o RemainingItemsThresholdReachedCommand para uwp
-#if WINDOWS
-teste = "2";
-#endif
-            Console.WriteLine("teste: " + teste);
+            #if WINDOWS
+                pageNumber = null;
+            #endif
 
             (var booksList, TotalBooksItens) = await booksServices.GetBookSituationByStatus(pageNumber, SituationIndex.Value, textoBusca);
 

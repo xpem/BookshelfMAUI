@@ -1,14 +1,12 @@
-﻿using Bookshelf.Utils.Navigation;
-using Bookshelf.ViewModels.Components;
+﻿using Bookshelf.ViewModels.Components;
 using BookshelfModels.Books;
 using BookshelfServices.Books;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class AddBookVM : RatingBar
+    public class AddBookVM : RatingBar, IQueryAttributable
     {
 
         #region Properties
@@ -75,14 +73,15 @@ namespace Bookshelf.ViewModels
         #region btnInsert propeties
 
         private bool btnInsertIsVisible = true, btnInsertIsEnabled = true;
-        private string btnInsertText;
+        private string btnInsertText,btnAddBookImageSource;
 
         public bool BtnInsertIsVisible { get => btnInsertIsVisible; set { btnInsertIsVisible = value; OnPropertyChanged(); } }
 
         public bool BtnInsertIsEnabled { get => btnInsertIsEnabled; set { btnInsertIsEnabled = value; OnPropertyChanged(); } }
 
-
         public string BtnInsertText { get => btnInsertText; set { btnInsertText = value; OnPropertyChanged(); } }
+
+        public string BtnAddBookImageSource { get => btnAddBookImageSource; set { btnAddBookImageSource = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// btn insert book command
@@ -95,19 +94,19 @@ namespace Bookshelf.ViewModels
 
         #endregion
 
-        public AddBookVM(INavigationServices _navigation, IBooksServices _booksServices)
+        public AddBookVM(IBooksServices _booksServices)
         {
-            navigation = _navigation;
-            booksServices = _booksServices;           
+            booksServices = _booksServices;
         }
 
-        public void OnNavigatingTo(string bookKey)
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            BookKey = bookKey;
+            BookKey = query["Key"].ToString();
 
             Rate = 0;
             Situation = "0";
             BtnInsertText = "Cadastrar";
+            BtnAddBookImageSource = "book_solid_15_w.png";
 
             if (string.IsNullOrEmpty(BookKey))
             {
@@ -120,7 +119,6 @@ namespace Bookshelf.ViewModels
             {
                 _ = Task.Run(() => GetBook(BookKey));
             }
-
         }
 
         /// <summary>
@@ -148,7 +146,7 @@ namespace Bookshelf.ViewModels
                 Situation = book.Situation.ToString();
                 Rate = book.Rating.Rate.Value;
                 if (book.Rating.Rate.HasValue)
-                   BuildRatingBar(book.Rating.Rate.Value);
+                    BuildRatingBar(book.Rating.Rate.Value);
                 Comment = book.Rating.Comment;
             }
             else
@@ -159,6 +157,7 @@ namespace Bookshelf.ViewModels
                 Comment = "";
             }
 
+            BtnAddBookImageSource = "pen_solid_12_w.png";
             BtnInsertText = "Alterar";
             IsUpdate = true;
         }
@@ -249,7 +248,6 @@ namespace Bookshelf.ViewModels
                 if (!resposta)
                 {
                     await Shell.Current.GoToAsync("..");
-                    //await navigation.NavigateBack();
                 }
             }
         }

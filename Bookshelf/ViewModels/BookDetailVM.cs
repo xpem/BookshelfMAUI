@@ -1,13 +1,7 @@
-﻿using Bookshelf.Utils.Navigation;
-using Bookshelf.ViewModels.Components;
+﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using BookshelfServices.Books;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
@@ -55,9 +49,8 @@ namespace Bookshelf.ViewModels
         #endregion
 
 
-        public BookDetailVM(INavigationServices _navigation, IBooksServices _booksServices)
+        public BookDetailVM(IBooksServices _booksServices)
         {
-            navigation = _navigation;
             booksServices = _booksServices;
         }
 
@@ -131,17 +124,7 @@ namespace Bookshelf.ViewModels
         /// <summary>
         /// navigate to update book
         /// </summary>
-        public ICommand NavToUpdateBookCommand => new Command(async (e) =>
-        {
-            //define the page
-            Page page = navigation.ResolvePage<AddBook>();
-
-            //pass parameter
-            (page?.BindingContext as AddBookVM).OnNavigatingTo(BookKey);
-
-            //push ui
-            await (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
-        });
+        public ICommand NavToUpdateBookCommand => new Command(async (e) => { await Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={BookKey}", true); });
 
         /// <summary>
         /// inactivate book
@@ -155,7 +138,7 @@ namespace Bookshelf.ViewModels
 
                     if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
                     {
-                        await navigation.NavigateBack();
+                        await Shell.Current.GoToAsync("..");
                     }
                 }
             });
@@ -274,7 +257,7 @@ namespace Bookshelf.ViewModels
 
                 if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Situação alterada", null, "Ok"))
                 {
-                    await navigation.NavigateBack();
+                    await Shell.Current.GoToAsync("..");
                 }
             }
             else

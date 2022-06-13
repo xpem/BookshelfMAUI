@@ -51,6 +51,7 @@
         <Setter Property="TextColor" Value="#EDEDED"></Setter>
         <Setter Property="CornerRadius" Value="5"></Setter>
         <Setter Property="FontFamily" Value="EBGaramondSemibold"></Setter>
+        <Setter Property="FontSize" Value="20"></Setter>
     </Style>
 
     <Style x:Key="Picker" TargetType="Picker">

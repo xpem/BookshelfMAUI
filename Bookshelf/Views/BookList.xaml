@@ -19,10 +19,10 @@
                 <Entry Placeholder="Buscar por Título" Style="{StaticResource Entry}" TextTransform="Uppercase" HorizontalOptions="FillAndExpand"  Text="{Binding SearchTitle}" />
             </Frame>
             <Frame Style="{ StaticResource MainFrame }" VerticalOptions="FillAndExpand" Margin="5,0">
-                <CollectionView ItemsSource="{Binding BooksList}" RemainingItemsThreshold="{Binding TotalBooksItens}" SelectionMode="Single" SelectedItem="{Binding BookItem, Mode=TwoWay}"  RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"  VerticalScrollBarVisibility="Always">
-                        <!--<CollectionView.Behaviors>
+                <!--<CollectionView ItemsSource="{Binding BooksList}" RemainingItemsThreshold="{Binding TotalBooksItens}" SelectionMode="Single" SelectedItem="{Binding BookItem, Mode=TwoWay}"  RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"  VerticalScrollBarVisibility="Always">
+                        --><!--<CollectionView.Behaviors>
                             <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
-                        </CollectionView.Behaviors>-->
+                        </CollectionView.Behaviors>--><!--
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:UIBookItem">
                                 <Frame Margin="1" BorderColor="Gray" BackgroundColor="GhostWhite" CornerRadius="10">
@@ -63,15 +63,15 @@
                                 </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
-                    </CollectionView>
+                    </CollectionView>-->
                     
-                    <!--<ListView x:Name="LstBooks"  HasUnevenRows="True" CachingStrategy="RecycleElement" 
+                    <ListView x:Name="LstBooks"  HasUnevenRows="True" CachingStrategy="RecycleElement" 
                               ItemsSource="{Binding BooksList}" SelectedItem="{Binding BookItem}">
                         <ListView.Behaviors>
                             <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
                         </ListView.Behaviors>
                         <ListView.ItemTemplate>
-                            <DataTemplate>
+                        <DataTemplate x:DataType="model:UIBookItem">
                                 <ViewCell>
                                     <Frame Margin="1" BorderColor="Gray" BackgroundColor="GhostWhite" CornerRadius="10">
                                         <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" >
@@ -83,10 +83,10 @@
                                                     <RowDefinition Height="20"/>
                                                     <RowDefinition Height="20"/>
                                                 </Grid.RowDefinitions>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition  Width ="5*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label Text="{Binding Title}" Grid.Row="0" Grid.Column="0" 
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition  Width ="5*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Text="{Binding Title}" Grid.Row="0" Grid.Column="0" 
                                                     VerticalTextAlignment="Start" MaxLines="1" LineBreakMode="TailTruncation" 
                                                     FontSize="22" TextDecorations="Underline"
                                                     FontFamily="EBGaramondSemiBold"
@@ -103,16 +103,17 @@
                                                        HorizontalTextAlignment="Start"  VerticalTextAlignment="Start"
                                                        Grid.Row="3" Grid.Column="0" FontSize="15" LineBreakMode="TailTruncation"
                                                        FontFamily="EBGaramondRegular" TextColor="Black"/>
-                                                <Label Text="{Binding Rate}" HorizontalTextAlignment="Start"
+                                            <Label Text="{Binding Rate}" HorizontalTextAlignment="Start"
                                                        HorizontalOptions="Fill" Grid.Row="4" Grid.Column="0"  FontSize="15"
                                                        FontFamily="EBGaramondItalic" TextColor="Black" />
-                                            </Grid>
+                                        </Grid>
+                                               
                                         </StackLayout>
                                     </Frame>
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
-                        <ListView.Footer>
+                        <!--<ListView.Footer>
                             <Grid Padding="6" IsVisible="{Binding IsLoading}">
                                 <Grid.Triggers>
                                     <Trigger TargetType="Grid" Property="IsVisible" Value="False">
@@ -123,8 +124,8 @@
                                        Color="#2196F3" VerticalOptions="Center" 
                                        HorizontalOptions="Center"/>
                             </Grid>
-                        </ListView.Footer>
-                    </ListView>-->
+                        </ListView.Footer>-->
+                    </ListView>
             </Frame>
         </StackLayout>
     </ContentPage.Content>

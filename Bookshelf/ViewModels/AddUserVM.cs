@@ -1,5 +1,4 @@
 ﻿using Bookshelf.Utils;
-using Bookshelf.Utils.Navigation;
 using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using BookshelfModels.User;
@@ -35,9 +34,8 @@ namespace Bookshelf.ViewModels
         public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { btnCreateUserIsEnabled = value; OnPropertyChanged(); } } }
 
 
-        public AddUserVM(INavigationServices _navigation, IUserServices _userService, IBooksSyncServices _booksSyncServices)
+        public AddUserVM( IUserServices _userService, IBooksSyncServices _booksSyncServices)
         {
-            navigation = _navigation;
             userService = _userService;
             booksSyncServices = _booksSyncServices;
         }
@@ -89,31 +87,31 @@ namespace Bookshelf.ViewModels
                 return;
             }
 
-            //if (VerifyFileds())
-            //{
-            //    BtnCreateUserIsEnabled = false;
+            if (VerifyFileds())
+            {
+                BtnCreateUserIsEnabled = false;
 
-            //    //
-            //    User user = await userService.InsertUser(email, password);
+                //
+                User user = await userService.InsertUser(email, password);
 
-            //    if (user != null)
-            //    {
-            //        if (user.Error != null)
-            //        {
-            //            if (user.Error == ErrorType.EMAIL_EXISTS)
-            //                await Application.Current.MainPage.DisplayAlert("Aviso", "Email já cadastrado!", null, "Ok");
-            //            else
-            //                await Application.Current.MainPage.DisplayAlert("Erro", "Não foi possível cadastrar o usuário!", null, "Ok");
-            //        }
-            //        else
-            //        {
-            //            bool res = await Application.Current.MainPage.DisplayAlert("Aviso", "Usuário cadastrado!", null, "Ok");
+                if (user != null)
+                {
+                    if (user.Error != null)
+                    {
+                        if (user.Error == ErrorType.EMAIL_EXISTS)
+                            await Application.Current.MainPage.DisplayAlert("Aviso", "Email já cadastrado!", null, "Ok");
+                        else
+                            await Application.Current.MainPage.DisplayAlert("Erro", "Não foi possível cadastrar o usuário!", null, "Ok");
+                    }
+                    else
+                    {
+                        bool res = await Application.Current.MainPage.DisplayAlert("Aviso", "Usuário cadastrado!", null, "Ok");
 
-            //            if (!res)
+                        if (!res)
                             await Shell.Current.GoToAsync("..");
-            //        }
-            //    }
-            //}
+                    }
+                }
+            }
         });
     }
 }

@@ -1,5 +1,4 @@
-﻿using Bookshelf.Utils.Navigation;
-using Bookshelf.ViewModels.Components;
+﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using BookshelfServices.Books.Sync;
 using BookshelfServices.User;
@@ -30,9 +29,8 @@ namespace Bookshelf.ViewModels
         readonly IUserServices userServices;
         readonly IBooksSyncServices booksSyncServices;
 
-        public LoginVM(INavigationServices _navigation, IUserServices _userServices, IBooksSyncServices _booksSyncServices)
+        public LoginVM(IUserServices _userServices, IBooksSyncServices _booksSyncServices)
         {
-            navigation = _navigation;
             userServices = _userServices;
             booksSyncServices = _booksSyncServices;
             SignInText = "Acessar";

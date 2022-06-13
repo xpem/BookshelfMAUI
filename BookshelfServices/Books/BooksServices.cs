@@ -18,7 +18,7 @@ namespace BookshelfServices.Books
         {
             Totals BTotals = new();
 
-            BookshelfModels.User.User? User  = BookshelfRepos.User.UserRepos.GetUser();
+            BookshelfModels.User.User? User = BookshelfRepos.User.UserRepos.GetUser();
             if (User?.Id != null)
             {
                 List<(Situation, int)> list = await BookshelfRepos.Books.BooksRepos.GetBookshelfTotals(User.Id);
@@ -113,7 +113,7 @@ namespace BookshelfServices.Books
         /// </summary>
         /// <param name="Situation"></param>
         /// <returns></returns>
-        public async Task<(List<UIBookItem>, int total)> GetBookSituationByStatus(int page, int Situation, string? textoBusca = null)
+        public async Task<(List<UIBookItem>, int total)> GetBookSituationByStatus(int? page, int Situation, string? textoBusca = null)
         {
             List<UIBookItem> listBooksItens = new();
             int total = 0;
@@ -127,8 +127,8 @@ namespace BookshelfServices.Books
 
                 total = list.Count;
 
-                list = list.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
+                if (page != null)
+                    list = list.Skip((page.Value - 1) * pageSize).Take(pageSize).ToList();
 
                 string SubtitleAndVol;
 

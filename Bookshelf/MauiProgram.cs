@@ -1,5 +1,4 @@
-﻿using Bookshelf.Utils.Navigation;
-using Bookshelf.ViewModels;
+﻿using Bookshelf.ViewModels;
 using Bookshelf.Views;
 using BookshelfServices.Books;
 using BookshelfServices.Books.Api;
@@ -62,9 +61,6 @@ public static class MauiProgram
 
         builder.Services.AddTransient<BookDetail>();
         builder.Services.AddTransient<BookDetailVM>();
-
-        //Services
-        builder.Services.AddSingleton<INavigationServices, NavigationServices>();
 
         builder.Services.AddScoped<IUserAuthServices, UserAuthServices>();
         builder.Services.AddScoped<IUserServices, UserServices>();

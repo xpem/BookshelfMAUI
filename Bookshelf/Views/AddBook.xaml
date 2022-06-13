@@ -8,15 +8,15 @@
              Style="{StaticResource ContentPage}" 
              >
     <ContentPage.Content>
-        <StackLayout  Style="{StaticResource MainStackLayout}" HorizontalOptions="StartAndExpand">
-            <Frame Style="{ StaticResource MainFrame }"  HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand">
-                <ScrollView HorizontalOptions="FillAndExpand">
-                    <StackLayout Style="{StaticResource MainStackLayout}" HorizontalOptions="StartAndExpand">
-                        <Label Text="Título" Style="{StaticResource LblEntry}"></Label>
-                        <Entry  MinimumWidthRequest="250" Text="{Binding Title}" Style="{StaticResource Entry}" HorizontalOptions="FillAndExpand" MaxLength="400" />
+        <ScrollView>
+            <StackLayout VerticalOptions="Center" Style="{StaticResource MainStackLayout}" >
+                <Frame Style="{ StaticResource MainFrame }">
+
+                    <StackLayout>
+                        <Label Text="Título" Style="{StaticResource LblEntry}"/>
+                        <Entry  MinimumWidthRequest="250" Text="{Binding Title}" Style="{StaticResource Entry}" CompressedLayout.IsHeadless="False" HorizontalOptions="FillAndExpand" MaxLength="400"  />
                         <Label Text="*Subtítulo" Style="{StaticResource LblEntry}"></Label>
-                        <Entry x:Name="EntSubTitle" MaximumWidthRequest="350" MinimumWidthRequest="250" Text="{Binding SubTitle}" Style="{StaticResource Entry}" HorizontalOptions="FillAndExpand" MaxLength="400" />
-                        
+                        <Entry x:Name="EntSubTitle" MinimumWidthRequest="250" Text="{Binding SubTitle}" Style="{StaticResource Entry}" HorizontalOptions="FillAndExpand" MaxLength="400"  />
                         <Grid HorizontalOptions="FillAndExpand">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -49,8 +49,9 @@
                             </Frame>
                             <Frame VerticalOptions="Start" BorderColor="Transparent" HorizontalOptions="FillAndExpand" Grid.Row="1" Grid.ColumnSpan="2" Padding="0" BackgroundColor="Transparent">
                                 <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
-                                    <Label Text="Autor" Style="{StaticResource LblEntry}"></Label>
-                                    <Entry MaximumWidthRequest="350" MinimumWidthRequest="250" Text="{Binding Authors}" MaxLength="400" HorizontalOptions="FillAndExpand" Style="{StaticResource Entry}"/>
+                                    <Label Text="Autor(es)" Style="{StaticResource LblEntry}"></Label>
+                                    <Entry  MinimumWidthRequest="250" Text="{Binding Authors}" MaxLength="400" 
+                                           HorizontalOptions="FillAndExpand" Style="{StaticResource Entry}" />
                                 </StackLayout>
                             </Frame>
                             <Frame VerticalOptions="Start" BorderColor="Transparent"  HorizontalOptions="FillAndExpand" Grid.Row="2" Grid.Column="0" Padding="0" BackgroundColor="Transparent">
@@ -73,15 +74,14 @@
                         <Frame VerticalOptions="Start" BorderColor="Transparent" HorizontalOptions="FillAndExpand" Grid.Row="0" Grid.Column="1" Padding="0" BackgroundColor="Transparent">
                             <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
                                 <Label Text="*Isbn" Style="{StaticResource LblEntry}"></Label>
-                                <Entry MaximumWidthRequest="350" MinimumWidthRequest="250" Text="{Binding Isbn}" HorizontalOptions="FillAndExpand" MaxLength="300" Style="{StaticResource Entry}" />
+                                <Entry MaximumWidthRequest="350" MinimumWidthRequest="250" Text="{Binding Isbn}" HorizontalOptions="StartAndExpand" MaxLength="300" Style="{StaticResource Entry}" />
                             </StackLayout>
                         </Frame>
                         <BoxView HeightRequest="1" BackgroundColor="Black" Color="Black" Margin="0,10,0,10"></BoxView>
                         <Label Text="Situação" VerticalOptions="Fill" HorizontalOptions="Center" TextColor="Black" FontFamily="EBGaramondSemiBold" FontSize="20"/>
-                        <Picker ItemsSource="{Binding StatusList}" Style="{StaticResource Picker}" SelectedIndex="{ Binding PkrStatusSelectedIndex }"
-                            />
+                        <Picker ItemsSource="{Binding StatusList}" Style="{StaticResource Picker}" SelectedIndex="{ Binding PkrStatusSelectedIndex }" />
 
-                        <Grid HorizontalOptions="StartAndExpand" Margin="0,10,0,10" IsVisible="{Binding RatingBarIsVisible}">
+                        <Grid HorizontalOptions="CenterAndExpand" Margin="0,10,0,10" IsVisible="{Binding RatingBarIsVisible}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
@@ -125,11 +125,10 @@
 
                         <Button Text="{Binding BtnInsertText}" Command="{Binding InsertBookCommand}" Margin="0,10,0,0"
                                 IsVisible="{Binding BtnInsertIsVisible}" IsEnabled="{Binding BtnInsertIsEnabled}"
-                                Style="{StaticResource MainBtn}" ImageSource="book_solid_15_w.png" ContentLayout="Left, 10" />
+                                Style="{StaticResource MainBtn}" ImageSource="{Binding BtnAddBookImageSource}" ContentLayout="Left, 10" />
                     </StackLayout>
-                </ScrollView>
-            </Frame>
-        </StackLayout>
-
+                </Frame>
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>
