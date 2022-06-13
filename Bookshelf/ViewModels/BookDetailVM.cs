@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class BookDetailVM : RatingBar
+    public class BookDetailVM : RatingBar, IQueryAttributable
     {
 
         IBooksServices booksServices;
@@ -160,15 +160,14 @@ namespace Bookshelf.ViewModels
                 }
             });
 
-        public void OnNavigatingTo(string bookKey)
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            BookKey = bookKey;
+            BookKey = query["Key"].ToString();
             situation = "0";
             rate = 0;
 
             GetBook(BookKey);
         }
-
 
         private async void GetBook(string bookKey)
         {

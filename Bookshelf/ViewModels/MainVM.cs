@@ -131,16 +131,10 @@ namespace Bookshelf.ViewModels
 
         public ICommand CreateBookCommand => new Command(async (e) =>
         {
-            var route = $"{nameof(AddBook)}";
-            await Shell.Current.GoToAsync(route);
-
-
-            //Page page = navigation.ResolvePage<AddBook>();
-            //(page?.BindingContext as AddBookVM).OnNavigatingTo("");
-            //await (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
+            await Shell.Current.GoToAsync($"{nameof(AddBook)}");
         });
 
-        public ICommand ReadCommand => new Command(async (e) => { if (FrmMainIsEnabled) await CallBookList(3); });
+        public ICommand ReadCommand => new Command(async (e) => { await CallBookList(3); });
 
         public ICommand InterruptedCommand => new Command(async (e) => await CallBookList(4));
 
@@ -150,17 +144,8 @@ namespace Bookshelf.ViewModels
 
         public ICommand ArchiveCommand => new Command(async (e) => await CallBookList(0));
 
-        private async Task CallBookList(int BookSituation)
-        {
-            //define the page
-            Page page = navigation.ResolvePage<BookList>();
+        private async Task CallBookList(int BookSituation) =>
+            await Shell.Current.GoToAsync($"{nameof(BookList)}?Situation={BookSituation}", true);
 
-            //pass parameter
-            (page?.BindingContext as BookListVM).OnNavigatingTo(BookSituation);
-
-            //push ui
-            var route = $"{nameof(BookList)}";
-            await Shell.Current.GoToAsync(route);
-        }
     }
 }

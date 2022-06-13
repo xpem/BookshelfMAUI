@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class BookListVM : ViewModelBase
+    public class BookListVM : ViewModelBase, IQueryAttributable
     {
 
         #region Vars
@@ -42,14 +42,16 @@ namespace Bookshelf.ViewModels
                         }
                         else
                         {
-                            //define the page
-                            Page page = navigation.ResolvePage<BookDetail>();
+                            Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={bookItem.Key}",true);
+                            
+                            ////define the page
+                            //Page page = navigation.ResolvePage<BookDetail>();
 
-                            //pass parameter
-                            (page?.BindingContext as BookDetailVM).OnNavigatingTo(bookItem.Key);
+                            ////pass parameter
+                            //(page?.BindingContext as BookDetailVM).OnNavigatingTo(bookItem.Key);
 
-                            //push ui
-                            (Application.Current?.MainPage?.Navigation).PushAsync(page, true);
+                            ////push ui
+                            //(Application.Current?.MainPage?.Navigation).PushAsync(page, true);
                         }
                         bookItem = null;
                     }
@@ -58,20 +60,17 @@ namespace Bookshelf.ViewModels
             }
         }
 
-    
+
         string pageTitle;
 
         public string PageTitle
         {
-            get => pageTitle; set { if (pageTitle!=value) { pageTitle = value; OnPropertyChanged(); } }
+            get => pageTitle; set { if (pageTitle != value) { pageTitle = value; OnPropertyChanged(); } }
         }
 
         int totalBooksItens;
 
-        public int TotalBooksItens
-        {
-            get => totalBooksItens; set { if (totalBooksItens != value) { totalBooksItens = value; OnPropertyChanged(); } }
-        }
+        public int TotalBooksItens { get => totalBooksItens; set { if (totalBooksItens != value) { totalBooksItens = value; OnPropertyChanged(); } } }
 
         string searchTitle;
 
@@ -89,7 +88,7 @@ namespace Bookshelf.ViewModels
             }
         }
 
-        public int SituationIndex { get; set; }
+        public int? SituationIndex { get; set; }
 
         public int CurrentPage { get; set; }
 
@@ -102,15 +101,33 @@ namespace Bookshelf.ViewModels
             booksServices = _booksServices;
         }
 
-        public void OnNavigatingTo(int _situationIndex)
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            SituationIndex = _situationIndex;
+            SituationIndex = Convert.ToInt16(query["Situation"].ToString());
 
             if (BooksList.Count > 0)
                 BooksList.Clear();
 
             LoadBooks(1);
         }
+
+        //public void OnNavigatingTo(int _situationIndex)
+        //{
+        //    SituationIndex = _situationIndex;
+
+        //    if (BooksList.Count > 0)
+        //        BooksList.Clear();
+
+        //    LoadBooks(1);
+        //}
+
+
+        public ICommand ItemSelectedCommand => new Command((object item) =>
+        {
+            var teste = item;
+            Console.Write(item);
+        });
+
 
         public ICommand LoadMoreCommand => new Command(() =>
         {
@@ -124,12 +141,12 @@ namespace Bookshelf.ViewModels
         /// </summary>
         public bool SearchingBookList { get; set; }
 
-        public ICommand OnAppearingCommand => new Command((e) =>
-        {
-            if (BooksList.Count > 0)
-                BooksList.Clear();
-            LoadBooks(1);
-        });
+        //public ICommand OnAppearingCommand => new Command((e) =>
+        //{
+        //    if (BooksList.Count > 0)
+        //        BooksList.Clear();
+        //    LoadBooks(1);
+        //});
 
         /// <summary>
         /// Get books by status
@@ -151,7 +168,7 @@ teste = "2";
 #endif
             Console.WriteLine("teste: " + teste);
 
-            (var booksList, TotalBooksItens) = await booksServices.GetBookSituationByStatus(pageNumber, SituationIndex, textoBusca);
+            (var booksList, TotalBooksItens) = await booksServices.GetBookSituationByStatus(pageNumber, SituationIndex.Value, textoBusca);
 
             foreach (UIBookItem bookItem in booksList)
             {

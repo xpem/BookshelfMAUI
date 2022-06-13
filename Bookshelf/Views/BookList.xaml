@@ -8,18 +8,18 @@
              xmlns:model="clr-namespace:BookshelfModels.Books;assembly=BookshelfModels"
              x:DataType="vm:BookListVM"
              Title="{Binding PageTitle}" Style="{StaticResource ContentPage}">
-    <ContentPage.Behaviors>
+    <!--<ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
         EventName="Appearing"
         Command="{Binding OnAppearingCommand}" />
-    </ContentPage.Behaviors>
+    </ContentPage.Behaviors>-->
     <ContentPage.Content>
         <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
             <Frame Style="{ StaticResource MainFrame }" HorizontalOptions="FillAndExpand" Margin="5">
                 <Entry Placeholder="Buscar por Título" Style="{StaticResource Entry}" TextTransform="Uppercase" HorizontalOptions="FillAndExpand"  Text="{Binding SearchTitle}" />
             </Frame>
             <Frame Style="{ StaticResource MainFrame }" VerticalOptions="FillAndExpand" Margin="5,0">
-                <CollectionView ItemsSource="{Binding BooksList}" RemainingItemsThreshold="{Binding TotalBooksItens}" RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}" VerticalScrollBarVisibility="Always">
+                <CollectionView ItemsSource="{Binding BooksList}" RemainingItemsThreshold="{Binding TotalBooksItens}" SelectionMode="Single" SelectedItem="{Binding BookItem, Mode=TwoWay}"  RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"  VerticalScrollBarVisibility="Always">
                         <!--<CollectionView.Behaviors>
                             <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
                         </CollectionView.Behaviors>-->
