@@ -100,8 +100,7 @@
                         <Label Text="Situação" IsVisible="{Binding LblHSituationIsVisible}"                                
                                 VerticalOptions="Fill" HorizontalOptions="Center" TextColor="Black" FontFamily="EBGaramondSemiBold" FontSize="20"
                                 />
-                        <!---->
-
+                        
                         <!---->
                         <Picker ItemsSource="{Binding StatusList}" SelectedIndex="{ Binding PkrStatusSelectedIndex }" Style="{StaticResource Picker}" Margin="0,5,0,5" />
 

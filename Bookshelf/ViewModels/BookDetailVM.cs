@@ -8,8 +8,7 @@ namespace Bookshelf.ViewModels
 {
     public class BookDetailVM : RatingBar, IQueryAttributable
     {
-
-        IBooksServices booksServices;
+        readonly IBooksServices booksServices;
 
         #region bind variables.
 
@@ -48,12 +47,6 @@ namespace Bookshelf.ViewModels
 
         #endregion
 
-
-        public BookDetailVM(IBooksServices _booksServices)
-        {
-            booksServices = _booksServices;
-        }
-
         #region Ui properties
 
         private ObservableCollection<string> statusList = new() { "Nenhuma", "Vou ler", "Lendo", "Lido", "Interrompido" };
@@ -70,8 +63,7 @@ namespace Bookshelf.ViewModels
 
         public bool EdtCommentIsVisible { get => edtCommentIsVisible; set { edtCommentIsVisible = value; OnPropertyChanged(); } }
 
-
-        public bool LblHSituationIsVisible { get => lblHSituationIsVisible; set { lblHSituationIsVisible = value; OnPropertyChanged(); } }
+        public bool LblHSituationIsVisible { get => lblHSituationIsVisible; set { lblHSituationIsVisible = value; OnPropertyChanged(); } } 
 
         public bool BtnConfIsEnabled { get => btnConfIsEnabled; set { btnConfIsEnabled = value; OnPropertyChanged(); } }
 
@@ -98,12 +90,10 @@ namespace Bookshelf.ViewModels
                 {
                     case BookshelfModels.Books.Situation.None:
                         RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
-                        // BtnConfIsVisible = false;
                         break;
                     case BookshelfModels.Books.Situation.Reading:
                     case BookshelfModels.Books.Situation.Interrupted:
                     case BookshelfModels.Books.Situation.IllRead:
-                        LblHSituationIsVisible = true;
                         RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
                         break;
                     case BookshelfModels.Books.Situation.Read:
@@ -118,6 +108,13 @@ namespace Bookshelf.ViewModels
         }
 
         #endregion
+
+        public BookDetailVM(IBooksServices _booksServices)
+        {
+            booksServices = _booksServices;
+        }
+
+
 
         public ICommand ConfirmCommand => new Command(async (e) => { await UpdateBookSituation(); });
 
@@ -179,6 +176,7 @@ namespace Bookshelf.ViewModels
             SubtitleAndVol = subtitleAndVol;
 
             //LblHCommentIsVisible = false;
+            LblHSituationIsVisible = true;
 
             pkrStatusSelectedIndexOri = (int)book.Situation;
 
@@ -190,14 +188,12 @@ namespace Bookshelf.ViewModels
 
                 PkrStatusSelectedIndex = (int)book.Situation;
 
-                //  LblHCommentIsVisible = !string.IsNullOrEmpty(Comment);
-
                 UpdatesEnableds = true;
-                LblHSituationIsVisible = EdtCommentIsVisible = RatingBarIsVisible = LblRatingBarIsVisible = false;
+                EdtCommentIsVisible = RatingBarIsVisible = LblRatingBarIsVisible = false;
 
                 if (book.Situation == BookshelfModels.Books.Situation.Read)
                 {
-                    LblHSituationIsVisible = LblRatingBarIsVisible = RatingBarIsVisible = true;
+                    LblRatingBarIsVisible = RatingBarIsVisible = true;
                     BuildRatingBar(Rate.Value);
 
                     if (!string.IsNullOrEmpty(Comment))
@@ -209,7 +205,6 @@ namespace Bookshelf.ViewModels
             else
             {
                 RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
-                LblHSituationIsVisible = LblHSituationIsVisible = true;
                 Situation = "0";
                 Rate = 0;
                 Comment = "";
@@ -224,7 +219,7 @@ namespace Bookshelf.ViewModels
         {
             if (!UpdatesEnableds)
             {
-                lblHSituationIsVisible = UpdatesEnableds = false;
+                UpdatesEnableds = false;
                 BtnConfText = "Confirmar";
                 return;
             }

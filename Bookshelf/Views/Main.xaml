@@ -4,7 +4,8 @@
              x:Class="Bookshelf.Views.Main"
              Title="Coleção"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit" xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels" x:DataType="viewmodels:MainVM"
-             Style="{StaticResource ContentPage}" >
+             Style="{StaticResource ContentPage}"             
+             >
     <ContentPage.Resources>
         <!--carditens-->
         <Style x:Key="FrameCardItem" TargetType="Frame">
@@ -142,10 +143,10 @@
                         </Frame>
                     </VerticalStackLayout>
                 </Frame>
-                <VerticalStackLayout Padding="4">
+                <VerticalStackLayout Padding="0,5,0,0">
                     <Frame BackgroundColor="#BDBDBD">
                         <VerticalStackLayout >
-                            <Grid HorizontalOptions="FillAndExpand">
+                            <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="5">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
@@ -158,7 +159,7 @@
                                 <Button Text="Listar Todos" Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand" Style="{StaticResource BtnSecondary}" FontSize="15"
                                     ImageSource="bars_staggered_solid_15_w.png" BackgroundColor="#2D4144" ContentLayout="Left, 10" Command="{Binding ArchiveCommand}" />
                             </Grid>                            
-                            <Grid HorizontalOptions="FillAndExpand" Margin="0,5,0,0" >
+                            <Grid HorizontalOptions="FillAndExpand" Margin="0,5,0,0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>

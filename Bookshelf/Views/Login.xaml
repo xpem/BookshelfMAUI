@@ -10,7 +10,7 @@
              Style="{StaticResource ContentPage}" 
              >
   
-    <VerticalStackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="Center" MaximumWidthRequest="500">
+    <VerticalStackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="Center">
         <Frame Style="{StaticResource MainFrame}" IsEnabled="{Binding IsNotBusy}">
             <VerticalStackLayout >
                 <Image Source="book_solid.png" SemanticProperties.Description="Bookshelf - Gerenciamento de livros" HeightRequest="50" HorizontalOptions="Center"  Aspect="AspectFit"/>
@@ -22,7 +22,7 @@
 
                 <Button Text="{Binding SignInText}" Margin="0,10,0,20" Style="{StaticResource MainBtn}" 
                             FontSize="20" ImageSource="right_to_bracket_solid_20_w.png"  IsEnabled="{Binding BtnSignEnabled}"
-                            ContentLayout="Left, 20" Command="{Binding SignInCommand}"  />
+                            ContentLayout="Left, 10" Command="{Binding SignInCommand}"  />
                 <HorizontalStackLayout>
                     <Label Text="Não tem conta? " FontFamily="EBGaramondBold" TextColor="#4B4B4B" Margin="0,0,5,0"/>
                     <Label Text="Criar Conta" HorizontalOptions="Start" FontFamily="EBGaramondBold" TextColor="#362624" TextDecorations="Underline" >

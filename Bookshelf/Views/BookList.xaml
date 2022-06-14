@@ -7,7 +7,9 @@
              xmlns:vm="clr-namespace:Bookshelf.ViewModels"
              xmlns:model="clr-namespace:BookshelfModels.Books;assembly=BookshelfModels"
              x:DataType="vm:BookListVM"
-             Title="{Binding PageTitle}" Style="{StaticResource ContentPage}">
+             Title="{Binding PageTitle}" 
+             Style="{StaticResource ContentPage}"
+             >
     <!--<ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
         EventName="Appearing"

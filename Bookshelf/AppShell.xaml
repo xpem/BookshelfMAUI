@@ -4,7 +4,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Bookshelf.Views"
-    Shell.FlyoutBehavior="Disabled">
+    Shell.FlyoutBehavior="Disabled"
+    BackgroundColor="#442E26"
+    >
 
     <ShellItem Route="Login" FlyoutItemIsVisible="False">
         <ShellContent ContentTemplate="{DataTemplate local:Login}" />
@@ -13,11 +15,5 @@
     <ShellItem Route="Main" FlyoutItemIsVisible="False">
         <ShellContent ContentTemplate="{DataTemplate local:Main}" />
     </ShellItem>
-
-    
-    <FlyoutItem Title="Estante" >
-        <ShellContent ContentTemplate="{DataTemplate local:AddBook}" Route="AddBook" />
-    </FlyoutItem>
-
     
 </Shell>
