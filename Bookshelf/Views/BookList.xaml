@@ -10,11 +10,11 @@
              Title="{Binding PageTitle}" 
              Style="{StaticResource ContentPage}"
              >
-    <!--<ContentPage.Behaviors>
+    <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
         EventName="Appearing"
         Command="{Binding OnAppearingCommand}" />
-    </ContentPage.Behaviors>-->
+    </ContentPage.Behaviors>
     <ContentPage.Content>
         <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
             <Frame Style="{ StaticResource MainFrame }" HorizontalOptions="FillAndExpand" Margin="5">

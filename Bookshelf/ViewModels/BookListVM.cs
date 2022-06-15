@@ -87,13 +87,24 @@ namespace Bookshelf.ViewModels
             if (BooksList.Count > 0)
                 BooksList.Clear();
 
-            LoadBooks(1);
+            CurrentPage++;
+            LoadBooks(CurrentPage);
         }
 
         public ICommand LoadMoreCommand => new Command(() =>
         {
             CurrentPage++;
             LoadBooks(CurrentPage);
+        });
+
+        public ICommand OnAppearingCommand => new Command((e) =>
+        {
+            if (BooksList.Count > 0)
+                BooksList.Clear();
+
+            CurrentPage = 1;
+            LoadBooks(CurrentPage);
+
         });
 
 
@@ -115,9 +126,9 @@ namespace Bookshelf.ViewModels
                 textoBusca = SearchTitle.ToUpper();
 
             //implementar meio de evitar a paginação do windows, até update que corriga o RemainingItemsThresholdReachedCommand para uwp
-            #if WINDOWS
-                pageNumber = null;
-            #endif
+            //#if WINDOWS
+            //    pageNumber = null;
+            //#endif
 
             (var booksList, TotalBooksItens) = await booksServices.GetBookSituationByStatus(pageNumber, SituationIndex.Value, textoBusca);
 

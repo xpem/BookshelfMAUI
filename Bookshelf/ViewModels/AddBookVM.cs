@@ -73,7 +73,7 @@ namespace Bookshelf.ViewModels
         #region btnInsert propeties
 
         private bool btnInsertIsVisible = true, btnInsertIsEnabled = true;
-        private string btnInsertText,btnAddBookImageSource;
+        private string btnInsertText, btnAddBookImageSource;
 
         public bool BtnInsertIsVisible { get => btnInsertIsVisible; set { btnInsertIsVisible = value; OnPropertyChanged(); } }
 
@@ -101,7 +101,8 @@ namespace Bookshelf.ViewModels
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            BookKey = query["Key"].ToString();
+            if (query != null && query.ContainsKey("Key"))
+                BookKey = query["Key"].ToString();
 
             Rate = 0;
             Situation = "0";
