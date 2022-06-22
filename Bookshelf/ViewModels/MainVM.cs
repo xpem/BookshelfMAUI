@@ -1,5 +1,6 @@
 ﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
+using Bookshelf.Views.GoogleSearch;
 using BookshelfServices.Books;
 using BookshelfServices.Books.Sync;
 using Microsoft.Maui.Controls;
@@ -89,7 +90,7 @@ namespace Bookshelf.ViewModels
 
                         //after finish first sync, enable the grid for access
                         if (firstSyncIsRunnig)
-                        {
+                        {                          
                             FrmMainOpacity = 1;
                             firstSyncIsRunnig = false;
                             FrmMainIsEnabled = false;
@@ -131,6 +132,12 @@ namespace Bookshelf.ViewModels
         {
             await Shell.Current.GoToAsync($"{nameof(AddBook)}");
         });
+
+        public ICommand GoogleSearchCommand => new Command(async (e) =>
+        {
+            await Shell.Current.GoToAsync($"{nameof(GoogleBooksResults)}");
+        }
+        );
 
         public ICommand ReadCommand => new Command(async (e) => { await CallBookList(3); });
 

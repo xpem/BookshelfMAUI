@@ -43,9 +43,7 @@ namespace BookshelfServices.Books
         {
             BookshelfModels.User.User? User = BookshelfRepos.User.UserRepos.GetUser();
             if (User?.Id != null)
-            {
                 return await BookshelfRepos.Books.BooksRepos.GetBook(User.Id, bookKey);
-            }
 
             return null;
         }

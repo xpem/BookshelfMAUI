@@ -1,5 +1,7 @@
 ﻿using Bookshelf.ViewModels;
+using Bookshelf.ViewModels.GoogleSearch;
 using Bookshelf.Views;
+using Bookshelf.Views.GoogleSearch;
 using BookshelfServices.Books;
 using BookshelfServices.Books.Api;
 using BookshelfServices.Books.Sync;
@@ -61,6 +63,9 @@ public static class MauiProgram
 
         builder.Services.AddTransient<BookDetail>();
         builder.Services.AddTransient<BookDetailVM>();
+
+        builder.Services.AddTransient<GoogleBooksResults>();
+        builder.Services.AddTransient<GoogleBooksResultsVM>();
 
         builder.Services.AddScoped<IUserAuthServices, UserAuthServices>();
         builder.Services.AddScoped<IUserServices, UserServices>();

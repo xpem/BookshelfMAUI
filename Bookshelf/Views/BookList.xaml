@@ -67,7 +67,7 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>-->
                     
-                    <ListView x:Name="LstBooks"  HasUnevenRows="True" CachingStrategy="RecycleElement" 
+                    <ListView HasUnevenRows="True" CachingStrategy="RecycleElement" 
                               ItemsSource="{Binding BooksList}" SelectedItem="{Binding BookItem}">
                         <ListView.Behaviors>
                             <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />

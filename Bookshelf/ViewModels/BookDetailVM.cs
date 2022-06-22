@@ -15,21 +15,21 @@ namespace Bookshelf.ViewModels
         public string title, authors, pages, genre, situation, bookKey, comment, subtitleAndVol, volume;
         public int rate;
 
-        public string Title { get => title; set { title = value; OnPropertyChanged(); } }
+        public string Title { get => title; set { if (title != value) { title = value; OnPropertyChanged(); } } }
 
-        public string Authors { get => authors; set { authors = value; OnPropertyChanged(); } }
+        public string Authors { get => authors; set { if (authors != value) { authors = value; OnPropertyChanged(); } } }
 
-        public string Pages { get => pages; set { pages = value; OnPropertyChanged(); } }
+        public string Pages { get => pages; set { if (pages != value) { pages = value; OnPropertyChanged(); } } }
 
-        public string Genre { get => genre; set { genre = value; OnPropertyChanged(); } }
+        public string Genre { get => genre; set { if (genre != value) { genre = value; OnPropertyChanged(); } } }
 
-        public string Situation { get => situation; set { situation = value; OnPropertyChanged(); } }
+        public string Situation { get => situation; set { if (situation != value) { situation = value; OnPropertyChanged(); } } }
 
-        public string SubtitleAndVol { get => subtitleAndVol; set { subtitleAndVol = value; OnPropertyChanged(); } }
+        public string SubtitleAndVol { get => subtitleAndVol; set { if (subtitleAndVol != value) { subtitleAndVol = value; OnPropertyChanged(); } } }
 
         //public int Rate { get => rate; set { rate = value; OnPropertyChanged(); } }
 
-        public string Comment { get => comment; set { comment = value; OnPropertyChanged(); } }
+        public string Comment { get => comment; set { if (comment != value) { comment = value; OnPropertyChanged(); } } }
 
         #endregion
 
@@ -51,25 +51,23 @@ namespace Bookshelf.ViewModels
 
         private ObservableCollection<string> statusList = new() { "Nenhuma", "Vou ler", "Lendo", "Lido", "Interrompido" };
 
-        public ObservableCollection<string> StatusList { get => statusList; set { statusList = value; OnPropertyChanged(); } }
+        public ObservableCollection<string> StatusList { get => statusList; set { if (statusList != value) { statusList = value; OnPropertyChanged(); } } }
 
-        private bool ratingBarIsVisible, lblRatingBarIsVisible, edtCommentIsVisible, //lblHCommentIsVisible,
-            lblHSituationIsVisible,
-            btnConfIsEnabled;
+        private bool ratingBarIsVisible, lblRatingBarIsVisible, edtCommentIsVisible, lblHSituationIsVisible, btnConfIsEnabled;
 
-        public bool RatingBarIsVisible { get => ratingBarIsVisible; set { ratingBarIsVisible = value; OnPropertyChanged(); } }
+        public bool RatingBarIsVisible { get => ratingBarIsVisible; set { if (ratingBarIsVisible != value) { ratingBarIsVisible = value; OnPropertyChanged(); } } }
 
-        public bool LblRatingBarIsVisible { get => lblRatingBarIsVisible; set { lblRatingBarIsVisible = value; OnPropertyChanged(); } }
+        public bool LblRatingBarIsVisible { get => lblRatingBarIsVisible; set { if (lblRatingBarIsVisible != value) { lblRatingBarIsVisible = value; OnPropertyChanged(); } } }
 
-        public bool EdtCommentIsVisible { get => edtCommentIsVisible; set { edtCommentIsVisible = value; OnPropertyChanged(); } }
+        public bool EdtCommentIsVisible { get => edtCommentIsVisible; set { if (edtCommentIsVisible != value) { edtCommentIsVisible = value; OnPropertyChanged(); } } }
 
-        public bool LblHSituationIsVisible { get => lblHSituationIsVisible; set { lblHSituationIsVisible = value; OnPropertyChanged(); } } 
+        public bool LblHSituationIsVisible { get => lblHSituationIsVisible; set { if (lblHSituationIsVisible != value) { lblHSituationIsVisible = value; OnPropertyChanged(); } } }
 
-        public bool BtnConfIsEnabled { get => btnConfIsEnabled; set { btnConfIsEnabled = value; OnPropertyChanged(); } }
+        public bool BtnConfIsEnabled { get => btnConfIsEnabled; set { if (btnConfIsEnabled != value) { btnConfIsEnabled = value; OnPropertyChanged(); } } }
 
         private string btnConfText = "Confirmar";
 
-        public string BtnConfText { get => btnConfText; set { btnConfText = value; OnPropertyChanged(); } }
+        public string BtnConfText { get => btnConfText; set { if (btnConfText != value) { btnConfText = value; OnPropertyChanged(); } } }
 
         private int pkrStatusSelectedIndex = 0, pkrStatusSelectedIndexOri;
 
@@ -114,8 +112,6 @@ namespace Bookshelf.ViewModels
             booksServices = _booksServices;
         }
 
-
-
         public ICommand ConfirmCommand => new Command(async (e) => { await UpdateBookSituation(); });
 
         /// <summary>
@@ -130,14 +126,15 @@ namespace Bookshelf.ViewModels
             new Command(async (e) =>
             {
                 if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir esse livro?", "Sim", "Cancelar"))
-                {
-                    booksServices.InactivateBook(BookKey);
-
-                    if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
+                    if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir esse livro?", "Sim", "Cancelar"))
                     {
-                        await Shell.Current.GoToAsync("..");
+                        booksServices.InactivateBook(BookKey);
+
+                        if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
+                        {
+                            await Shell.Current.GoToAsync("..");
+                        }
                     }
-                }
             });
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)

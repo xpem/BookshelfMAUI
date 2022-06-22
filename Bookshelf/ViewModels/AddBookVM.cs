@@ -264,10 +264,10 @@ namespace Bookshelf.ViewModels
             {
                 ValidInfo = false;
             }
-            if (string.IsNullOrEmpty(Year))
-            {
-                ValidInfo = false;
-            }
+            //if (string.IsNullOrEmpty(Year))
+            //{
+            //    ValidInfo = false;
+            //}
             if (string.IsNullOrEmpty(Pages))
             {
                 if (Int32.TryParse(Pages, out int pages))
@@ -283,10 +283,10 @@ namespace Bookshelf.ViewModels
                 }
 
             }
-            if (string.IsNullOrEmpty(Genre))
-            {
-                ValidInfo = false;
-            }
+            //if (string.IsNullOrEmpty(Genre))
+            //{
+            //    ValidInfo = false;
+            //}
 
             if (!ValidInfo)
             {

@@ -39,7 +39,7 @@
                             </Frame>
                             <Frame VerticalOptions="Start" BorderColor="Transparent" Grid.Row="0" Grid.Column="1" Padding="0" BackgroundColor="Transparent" HorizontalOptions="Start">
                                 <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
-                                    <Label Text="Ano" Style="{StaticResource LblEntry}"></Label>
+                                    <Label Text="*Ano" Style="{StaticResource LblEntry}"></Label>
                                     <Entry Grid.Row="0" Grid.Column="1" WidthRequest="90" Text="{Binding Year}" HorizontalOptions="Start" x:Name="EntAno" MaxLength="4" Keyboard="Numeric" Style="{StaticResource Entry}" >
                                         <Entry.Behaviors>
                                             <behaviors:NumericValidationBehavior />
@@ -66,7 +66,7 @@
                             </Frame>
                             <Frame VerticalOptions="Start" BorderColor="Transparent" HorizontalOptions="FillAndExpand" Grid.Row="2" Grid.Column="1" Padding="0" BackgroundColor="Transparent">
                                 <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
-                                    <Label Text="Gênero" Style="{StaticResource LblEntry}"></Label>
+                                    <Label Text="*Gênero" Style="{StaticResource LblEntry}"></Label>
                                     <Entry Text="{Binding Genre}" HorizontalOptions="FillAndExpand" MaxLength="100" Style="{StaticResource Entry}"/>
                                 </StackLayout>
                             </Frame>

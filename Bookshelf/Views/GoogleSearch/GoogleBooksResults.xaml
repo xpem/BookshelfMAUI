@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Bookshelf.Views.GoogleSearch.GoogleBooksResults"
+             xmlns:vm="clr-namespace:Bookshelf.ViewModels.GoogleSearch"
+             x:DataType="vm:GoogleBooksResultsVM"
+               xmlns:model="clr-namespace:BookshelfModels.Books.GoogleApi;assembly=BookshelfModels"
+             Title="{Binding PageTitle}" 
+             Style="{StaticResource ContentPage}"
+             >
+    <ContentPage.Content>
+        <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
+            <Frame Style="{ StaticResource MainFrame }" HorizontalOptions="FillAndExpand" Margin="5">
+                <VerticalStackLayout HorizontalOptions="FillAndExpand">
+                    <!--<Picker ItemsSource="{Binding ParametersList}" Style="{StaticResource Picker}" Margin="0,5,0,5" />-->
+                    <Entry Placeholder="Buscar" Style="{StaticResource Entry}" TextTransform="Uppercase" HorizontalOptions="FillAndExpand" Text="{Binding SearchText}" />
+                </VerticalStackLayout>
+            </Frame>
+            <Frame Style="{ StaticResource MainFrame }" VerticalOptions="FillAndExpand" Margin="5,0">
+                <ListView  HasUnevenRows="True" CachingStrategy="RecycleElement" 
+                          ItemsSource="{Binding GoogleBooksList}" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="model:UIGoogleBook">
+                            <ViewCell>
+                                <Frame Margin="5" BorderColor="BlueViolet">
+                                    <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" Spacing="5">
+                                        <Grid HorizontalOptions="FillAndExpand" HeightRequest="150">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="20"/>
+                                                <RowDefinition Height="20"/>
+                                                <RowDefinition Height="12"/>
+                                                <RowDefinition Height="*"/>
+                                                <!--<RowDefinition Height="12"/>
+                                            <RowDefinition Height="*"/>-->
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition  Width ="3*" />
+                                                <ColumnDefinition  Width ="6*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Image Source="{Binding Thumbnail}" Grid.RowSpan="5"  Aspect="AspectFit"  />
+                                            <Label Text="{Binding Title}" Grid.Row="0" Grid.Column="1" VerticalTextAlignment="Start" MaxLines="2" LineBreakMode="TailTruncation"  FontSize="Small" FontAttributes="Bold" />
+                                            <Label Text="{Binding Authors}" HorizontalTextAlignment="Start" VerticalTextAlignment="Start" Grid.Row="1" Grid.Column="1" FontSize="Micro" LineBreakMode="TailTruncation" FontAttributes="Italic"/>
+                                            <Label Text="{Binding PageCount}"  HorizontalTextAlignment="Start" VerticalTextAlignment="Start" Grid.Row="2" Grid.Column="1" FontSize="Micro"/>
+                                            <Label Text="Ano:" Grid.Row="3"  HorizontalTextAlignment="Start" VerticalTextAlignment="Start" Grid.Column="1" TextColor="Black" FontAttributes="Italic" FontSize="10"/>
+                                            <Label Text="{Binding PublishedDate}" HorizontalTextAlignment="Start"  VerticalTextAlignment="Start" Grid.Row="4" Grid.Column="1" FontSize="Micro" LineBreakMode="TailTruncation" />
+                                            <!--<Label  Text="Categoria:" Grid.Row="5"  HorizontalTextAlignment="Start" VerticalTextAlignment="Start" Grid.Column="1" TextColor="Black" FontAttributes="Italic" FontSize="10"/>
+                                        <Label  Text="{Binding Categories}" HorizontalTextAlignment="Start" VerticalTextAlignment="Start" Grid.Row="6" Grid.Column="1" FontSize="Micro"/>-->
+
+                                        </Grid>
+                                    </StackLayout>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.Footer>
+                        <Grid Padding="6" IsVisible="{Binding IsBusy}">
+                            <Grid.Triggers>
+                                <Trigger TargetType="Grid" Property="IsVisible" Value="False">
+                                    <Setter Property="HeightRequest" Value="0" />
+                                </Trigger>
+                            </Grid.Triggers>
+                            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" 
+                                       Color="#2196F3" VerticalOptions="Center" 
+                                       HorizontalOptions="Center"/>
+                        </Grid>
+                    </ListView.Footer>
+                </ListView>
+            </Frame>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

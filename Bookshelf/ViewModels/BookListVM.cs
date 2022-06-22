@@ -40,7 +40,6 @@ namespace Bookshelf.ViewModels
             }
         }
 
-
         string pageTitle;
 
         public string PageTitle
@@ -125,11 +124,6 @@ namespace Bookshelf.ViewModels
             if (!string.IsNullOrEmpty(SearchTitle))
                 textoBusca = SearchTitle.ToUpper();
 
-            //implementar meio de evitar a paginação do windows, até update que corriga o RemainingItemsThresholdReachedCommand para uwp
-            //#if WINDOWS
-            //    pageNumber = null;
-            //#endif
-
             (var booksList, TotalBooksItens) = await booksServices.GetBookSituationByStatus(pageNumber, SituationIndex.Value, textoBusca);
 
             foreach (UIBookItem bookItem in booksList)
@@ -171,7 +165,8 @@ namespace Bookshelf.ViewModels
                         if (BooksList.Count > 0)
                             BooksList.Clear();
 
-                        LoadBooks(1);
+                        CurrentPage = 1;
+                        LoadBooks(CurrentPage);
 
                         SearchingBookList = false;
                     }
