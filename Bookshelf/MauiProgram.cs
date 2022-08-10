@@ -23,7 +23,6 @@ public static class MauiProgram
 
         //fonts: https://fonts.google.com/specimen/Playfair+Display
         //icons: https://fontawesome.com/icons/right-to-bracket?s=solid
-        //resize icons: https://www.iloveimg.com/pt/redimensionar-imagem#resize-options,pixels
         builder
             .UseMauiApp<App>()
             .ConfigureFonts(fonts =>
@@ -38,6 +37,7 @@ public static class MauiProgram
                 fonts.AddFont("EBGaramond-Bold.ttf", "EBGaramondBold");
                 fonts.AddFont("EBGaramond-SemiBold.ttf", "EBGaramondSemiBold");
                 fonts.AddFont("EBGaramond-Regular.ttf", "EBGaramondRegular");
+                fonts.AddFont("Free-Solid-900.otf", "FontAwesome");
             });
 
         #region Dependency injections

@@ -147,10 +147,10 @@
                         <!--Comment-->
                         <Label Text="Comentários:" Style="{StaticResource LblEntry}" IsVisible="{Binding EdtCommentIsVisible}" />
                         <Editor Style="{StaticResource Entry}" HeightRequest="70" MaxLength="200" Keyboard="Chat" Text="{ Binding Comment }"
-                                IsVisible="{Binding EdtCommentIsVisible}"  MinimumWidthRequest="250" MaximumWidthRequest="350" />
+                                IsVisible="{Binding EdtCommentIsVisible}" MinimumWidthRequest="250" HorizontalOptions="FillAndExpand" />
                         <!---->
 
-                        <Button Text="{Binding BtnConfText}" Style="{StaticResource MainBtn}" Command="{Binding ConfirmCommand}" />
+                        <Button Text="{Binding BtnConfText}" Style="{StaticResource MainBtn}" Margin="0,10,0,0" Command="{Binding ConfirmCommand}" />
 
                     </StackLayout>
                 </ScrollView>

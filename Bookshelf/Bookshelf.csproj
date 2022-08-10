@@ -39,30 +39,6 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\book_solid.svg">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</MauiImage>
-		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</MauiImage>
-		<MauiImage Update="Resources\Images\list_solid_50.svg">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</MauiImage>
-		<MauiImage Update="Resources\Images\right_from_bracket_solid_12.svg">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</MauiImage>
-		<MauiImage Update="Resources\Images\right_to_bracket_solid_20_w.svg">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</MauiImage>
-		<MauiImage Update="Resources\Images\unlock_solid_15_w.svg">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</MauiImage>
-		<MauiImage Update="Resources\Images\user_plus_solid_15_w.svg">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</MauiImage>
-		<MauiImage Update="Resources\Images\user_plus_solid_30.svg">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</MauiImage>
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -77,11 +53,11 @@
 	  <None Remove="Resources\Fonts\EBGaramond\EBGaramond-Medium.ttf" />
 	  <None Remove="Resources\Fonts\EBGaramond\EBGaramond-Regular.ttf" />
 	  <None Remove="Resources\Fonts\EBGaramond\EBGaramond-SemiBold.ttf" />
+	  <None Remove="Resources\Fonts\Free-Solid-900.otf" />
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Bold.ttf" />
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Italic.ttf" />
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Medium.ttf" />
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Regular.ttf" />
-	  <None Remove="Resources\Images\rotate_solid_15_green.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -107,7 +83,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="CommunityToolkit.Maui" Version="1.0.0" />
+	  <PackageReference Include="CommunityToolkit.Maui" Version="1.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>

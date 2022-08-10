@@ -1,14 +1,6 @@
 ﻿using Bookshelf.ViewModels.Components;
-using Bookshelf.Views;
-using BookshelfModels.Books;
 using BookshelfModels.Books.GoogleApi;
-using BookshelfServices.Books;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.GoogleSearch
@@ -16,14 +8,22 @@ namespace Bookshelf.ViewModels.GoogleSearch
     public class GoogleBooksResultsVM : ViewModelBase//, IQueryAttributable
     {
 
-        string pageTitle;
+        string pageTitle = "Busca";
+
+        string urlteste = "http://books.google.com/books/content?id=6RCcBAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api";
+
+        public string Urlteste
+        {
+            get => urlteste; set { if (urlteste != value) { urlteste = value; OnPropertyChanged(); } }
+        }
 
         public string PageTitle
         {
-            get => pageTitle; set { if (pageTitle != value) { pageTitle = value; OnPropertyChanged(); } }
+            get => pageTitle; set { if (pageTitle != value) { pageTitle = value; OnPropertyChanged(); } } 
         }
 
         private int CurrentPage;
+        private int TotalItems;
 
         public ObservableCollection<UIGoogleBook> GoogleBooksList { get; } = new();
 
@@ -48,34 +48,42 @@ namespace Bookshelf.ViewModels.GoogleSearch
             }
         }
 
-        private async void LoadGoogleBooks(int? pageNumber)
+        public ICommand LoadMoreCommand => new Command(() =>
         {
-            PageTitle = "Carregando lista...";
+            CurrentPage++;
+            LoadGoogleBooks(CurrentPage);
+        });
+
+        /// <summary>
+        /// is necessary the config: android:usesCleartextTraffic="true"
+        /// </summary>
+        /// <param name="pageNumber"></param>
+        private async void LoadGoogleBooks(int pageNumber)
+        {
+            
             IsBusy = true;
 
-            string textoBusca = "";
+            string _searchText = "";
             if (!string.IsNullOrEmpty(SearchText))
-textoBusca = SearchText.ToUpper();
+                _searchText = SearchText.ToUpper();
 
-        var googleBooksListResult = await BookshelfServices.Books.GoogleBooksApi.GoogleBooksApiService.GetBooks(textoBusca, 0);
+            _searchText = "o guia do mochileiro";
 
-            //(var booksList, TotalBooksItens) = await booksServices.GetBookSituationByStatus(pageNumber, SituationIndex.Value, textoBusca);
+            int startIndex = 0;
 
-            foreach (var googleBookItem in googleBooksListResult)
+            if (pageNumber > 0)
+                startIndex = pageNumber * 10;
+
+
+            if (startIndex == 0 || startIndex < TotalItems)
             {
-                GoogleBooksList.Add(googleBookItem);
-            }
+                (List<UIGoogleBook> googleBooksListResult, TotalItems) = await BookshelfServices.Books.GoogleBooksApi.GoogleBooksApiService.GetBooks(_searchText, startIndex);
 
-            ////Definição do título da interface
-            //PageTitle = "Livros ";
-            //switch (SituationIndex)
-            //{
-            //    case 0: PageTitle += " do arquivo"; break;
-            //    case 1: PageTitle += " que vou ler"; break;
-            //    case 2: PageTitle += " que estou lendo"; break;
-            //    case 3: PageTitle += " lidos"; break;
-            //    case 4: PageTitle += " interrompidos"; break;
-            //}
+                foreach ( var googleBookItem in googleBooksListResult)
+                {
+                    GoogleBooksList.Add(googleBookItem);
+                }
+            }
 
             IsBusy = false;
         }
@@ -97,7 +105,7 @@ textoBusca = SearchText.ToUpper();
                         if (GoogleBooksList.Count > 0)
                             GoogleBooksList.Clear();
 
-                        CurrentPage = 1;
+                        CurrentPage = 0;
                         LoadGoogleBooks(CurrentPage);
 
                         SearchingBookList = false;

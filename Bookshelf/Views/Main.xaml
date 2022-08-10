@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Bookshelf.Views.Main"
              Title="Coleção"
+                  xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit" xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels" x:DataType="viewmodels:MainVM"
              Style="{StaticResource ContentPage}"             
              >
@@ -25,21 +26,29 @@
             <Setter Property="FontFamily" Value="EBGaramondSemiBold"></Setter>
             <Setter Property="Padding" Value="0,10,0,15"></Setter>
         </Style>
-        <Style x:Key="ImgIcon" TargetType="Image">
+        <Style x:Key="ImgIcon" TargetType="Label">
+            <Setter Property="TextColor" Value="#2b3133"></Setter>
             <Setter Property="HorizontalOptions" Value="Start"></Setter>
-            <Setter Property="VerticalOptions" Value="Center"></Setter>
+            <Setter Property="VerticalOptions" Value="End"></Setter>
+            <Setter Property="FontSize" Value="30"></Setter>
+            <Setter Property="Margin" Value="0,0,0,10"></Setter>
+            <Setter Property="FontFamily" Value="FontAwesome"></Setter>
+            <!--<Setter Property="HorizontalOptions" Value="Start"></Setter>
+            <Setter Property="VerticalOptions" Value="Center"></Setter>-->
         </Style>
-        <Style x:Key="ImgAngleRight" TargetType="Image">
-            <Setter Property="HeightRequest" Value="55"></Setter>
+        <Style x:Key="ImgAngleRight" TargetType="Label">
+            <Setter Property="FontFamily" Value="FontAwesome"></Setter>
+            <Setter Property="VerticalTextAlignment" Value="Center"></Setter>
+            <Setter Property="FontSize" Value="45"></Setter>
+            <Setter Property="TextColor" Value="#2b3133"></Setter>
             <Setter Property="HorizontalOptions" Value="End"></Setter>
-            <Setter Property="WidthRequest" Value="40"/>
-            <Setter Property="Source" Value="angle_right_solid_50.png"></Setter>
+            <Setter Property="Text" Value="{x:Static Icons:IconFont.AngleRight}"></Setter>
         </Style>
         <Style x:Key="LblText" TargetType="Label">
             <Setter Property="TextColor" Value="#2b3133"></Setter>
             <Setter Property="VerticalOptions" Value="End"></Setter>
             <Setter Property="VerticalTextAlignment" Value="End"></Setter>
-            <Setter Property="FontSize" Value="15"></Setter>
+            <Setter Property="FontSize" Value="12"></Setter>
             <Setter Property="FontFamily" Value="EBGaramondRegular"></Setter>
         </Style>
         <Style x:Key="BtnExit" TargetType="Button">
@@ -76,10 +85,14 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Image Grid.Row="0" Grid.Column="0" SemanticProperties.Description="Vou ler" HeightRequest="30" Style="{ StaticResource ImgIcon }" Source="list_solid_50.png" />
+                                <Label Text="{x:Static Icons:IconFont.List}" Grid.Row="0" Grid.Column="0" Style="{ StaticResource ImgIcon }" SemanticProperties.Description="Vou ler" />
                                 <Label Text="{Binding IllRead}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }" />
                                 <Label Text="Vou ler" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
-                                <Image Grid.Column="3" Grid.RowSpan="2" SemanticProperties.Description="Acessar lista de livros que vou ler" Style="{StaticResource ImgAngleRight}" />
+                                <Label Grid.Column="3"
+                                       Grid.RowSpan="2"
+                                       Style="{ StaticResource ImgAngleRight }"
+                                       SemanticProperties.Description="Acessar lista de livros que vou ler" 
+                                       />
                             </Grid>
                         </Frame>
                         <Frame Style="{ StaticResource FrameCardItem }" >
@@ -96,10 +109,14 @@
                                     <ColumnDefinition Width ="*" />
                                     <ColumnDefinition Width="70" />
                                 </Grid.ColumnDefinitions>
-                                <Image Grid.Row="0" Grid.Column="0" SemanticProperties.Description="Lendo" HeightRequest="30"  Style="{ StaticResource ImgIcon }" Source="book_open_reader_solid_50.png" />
+                                <Label Text="{x:Static Icons:IconFont.BookReader}" Grid.Row="0" Grid.Column="0" Style="{ StaticResource ImgIcon }" SemanticProperties.Description="Lendo" />
                                 <Label Text="{Binding Reading}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
                                 <Label Text="Lendo" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
-                                <Image Grid.Column="3" Grid.RowSpan="2" SemanticProperties.Description="Acessar lista de livros que estou lendo" Style="{StaticResource ImgAngleRight}" />
+                                <Label Grid.Column="3"
+                                       Grid.RowSpan="2"
+                                       Style="{ StaticResource ImgAngleRight }"
+                                       SemanticProperties.Description="Acessar lista de livros que estou lendo"
+                                       />
                             </Grid>
                         </Frame>
                         <Frame Style="{ StaticResource FrameCardItem }" >
@@ -116,10 +133,19 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="70" />
                                 </Grid.ColumnDefinitions>
-                                <Image Grid.Row="0" Grid.Column="0" SemanticProperties.Description="Lidos" HeightRequest="30"  Style="{ StaticResource ImgIcon }" Source="check_solid_30.png" />
+                                <Label Text="{x:Static Icons:IconFont.Check}"
+                                       Grid.Row="0" 
+                                       Grid.Column="0"
+                                       Style="{ StaticResource ImgIcon }"
+                                       SemanticProperties.Description="Lidos" 
+                                       />
                                 <Label Text="{Binding Read}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
                                 <Label Text="Lidos" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
-                                <Image Grid.Column="3" Grid.RowSpan="2" SemanticProperties.Description="Acessar lista de livros que já li" Style="{StaticResource ImgAngleRight}" />
+                                <Label Grid.Column="3"
+                                       Grid.RowSpan="2"
+                                       Style="{ StaticResource ImgAngleRight }"
+                                       SemanticProperties.Description="Acessar lista de livros que já li" 
+                                       />
                             </Grid>
                         </Frame>
                         <Frame Style="{ StaticResource FrameCardItem }" >
@@ -136,10 +162,19 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="70" />
                                 </Grid.ColumnDefinitions>
-                                <Image Grid.Row="0" Grid.Column="0" SemanticProperties.Description="Interrompidos" HeightRequest="30"  Style="{ StaticResource ImgIcon }" Source="pause_solid_30.png" />
+                                <Label Text="{x:Static Icons:IconFont.Pause}"
+                                       Grid.Row="0" 
+                                       Grid.Column="0"
+                                       Style="{ StaticResource ImgIcon }"
+                                       SemanticProperties.Description="Interrompidos" 
+                                       />
                                 <Label Text="{Binding Interrupted}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
                                 <Label Text="Suspensos" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
-                                <Image Grid.Column="3" Grid.RowSpan="2" SemanticProperties.Description="Acessar lista de livros que interrompi a leitura" Style="{StaticResource ImgAngleRight}" />
+                                <Label Grid.Column="3"
+                                       Grid.RowSpan="2"
+                                       Style="{ StaticResource ImgAngleRight }"
+                                       SemanticProperties.Description="Acessar lista de livros que interrompi a leitura"
+                                       />
                             </Grid>
                         </Frame>
                     </VerticalStackLayout>
@@ -171,8 +206,7 @@
                                     <ColumnDefinition  Width ="30" />
                                     <ColumnDefinition  Width ="30" />
                                 </Grid.ColumnDefinitions>
-                                <Button Text="Sair" Grid.Row="0" Grid.Column="0" Style="{ StaticResource BtnExit}" FontSize="12" ImageSource="right_from_bracket_solid_12.png" Command="{Binding LogoutCommand}" ContentLayout="Left, 10" />
-
+                                <Button Text="Sair" Grid.Row="0" Grid.Column="0" Style="{ StaticResource BtnExit}" FontSize="10" ImageSource="right_to_bracket_solid_10.png" Command="{Binding LogoutCommand}" ContentLayout="Left, 10" />
                                 <Image Grid.Row="0" Grid.Column="1" SemanticProperties.Description="Status da conexão" HeightRequest="10" Source="wifi_solid_15_red.png" IsVisible="{Binding ConnectedVisible}" VerticalOptions="End"/>
                                 <Image Grid.Row="0" Grid.Column="2" SemanticProperties.Description="Status da sincronização" HeightRequest="10" Source="{Binding ImgSync}" VerticalOptions="End"/>
                             </Grid>

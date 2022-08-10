@@ -111,7 +111,7 @@ namespace BookshelfServices.Books
         /// </summary>
         /// <param name="Situation"></param>
         /// <returns></returns>
-        public async Task<(List<UIBookItem>, int total)> GetBookSituationByStatus(int? page, int Situation, string? textoBusca = null)
+        public async Task<(List<UIBookItem>, int)> GetBookSituationByStatus(int? page, int Situation, string? textoBusca = null)
         {
             List<UIBookItem> listBooksItens = new();
             int total = 0;
