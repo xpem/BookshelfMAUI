@@ -1,4 +1,5 @@
 ﻿using Bookshelf.ViewModels.Components;
+using Bookshelf.Views;
 using BookshelfModels.Books.GoogleApi;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -19,7 +20,7 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
         public string PageTitle
         {
-            get => pageTitle; set { if (pageTitle != value) { pageTitle = value; OnPropertyChanged(); } } 
+            get => pageTitle; set { if (pageTitle != value) { pageTitle = value; OnPropertyChanged(); } }
         }
 
         private int CurrentPage;
@@ -60,14 +61,12 @@ namespace Bookshelf.ViewModels.GoogleSearch
         /// <param name="pageNumber"></param>
         private async void LoadGoogleBooks(int pageNumber)
         {
-            
+
             IsBusy = true;
 
             string _searchText = "";
             if (!string.IsNullOrEmpty(SearchText))
                 _searchText = SearchText.ToUpper();
-
-            _searchText = "o guia do mochileiro";
 
             int startIndex = 0;
 
@@ -79,7 +78,7 @@ namespace Bookshelf.ViewModels.GoogleSearch
             {
                 (List<UIGoogleBook> googleBooksListResult, TotalItems) = await BookshelfServices.Books.GoogleBooksApi.GoogleBooksApiService.GetBooks(_searchText, startIndex);
 
-                foreach ( var googleBookItem in googleBooksListResult)
+                foreach (var googleBookItem in googleBooksListResult)
                 {
                     GoogleBooksList.Add(googleBookItem);
                 }
@@ -87,6 +86,8 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
             IsBusy = false;
         }
+
+        public ICommand CreateBookCommand => new Command(async (e) => { await Shell.Current.GoToAsync($"{nameof(AddBook)}"); });
 
         private async void SearchBookList()
         {

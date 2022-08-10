@@ -12,7 +12,7 @@ namespace Bookshelf.ViewModels
     {
         private bool firstSyncIsRunnig = true;
 
-        private string illRead, reading, read, interrupted, imgSync;
+        private string illRead, reading, read, interrupted, isSync;
 
         public string IllRead { get => illRead; set { if (illRead != value) { illRead = value; OnPropertyChanged(); } } }
 
@@ -22,7 +22,7 @@ namespace Bookshelf.ViewModels
 
         public string Interrupted { get => interrupted; set { if (interrupted != value) { interrupted = value; OnPropertyChanged(); } } }
 
-        public string ImgSync { get => imgSync; set { if (value != imgSync) { imgSync = value; OnPropertyChanged(); } } }
+        public string IsSync { get => isSync; set { if (value != isSync) { isSync = value; OnPropertyChanged(); } } }
 
         /// <summary>
         /// var that defines if the function that verify the synchronization is running  or not
@@ -33,11 +33,12 @@ namespace Bookshelf.ViewModels
 
         public double FrmMainOpacity { get => frmMainOpacity; set { if (frmMainOpacity != value) { frmMainOpacity = value; OnPropertyChanged(); } } }
 
-        private bool frmMainIsEnabled, connectedVisible;
+        private bool frmMainIsEnabled;
+        string isConnected;
 
         public bool FrmMainIsEnabled { get => frmMainIsEnabled; set { if (value != frmMainIsEnabled) { frmMainIsEnabled = value; OnPropertyChanged(); } } }
 
-        public bool ConnectedVisible { get => connectedVisible; set { if (value != connectedVisible) { connectedVisible = value; OnPropertyChanged(); } } }
+        public string IsConnected { get => isConnected; set { if (value != isConnected) { isConnected = value; OnPropertyChanged(); } } }
 
         readonly IBooksServices booksServices;
 
@@ -72,25 +73,25 @@ namespace Bookshelf.ViewModels
             {
                 if (!(Connectivity.NetworkAccess == NetworkAccess.Internet))
                 {
-                    connectedVisible = true;
+                    IsConnected = "#FF0000";
                 }
                 else
                 {
-                    connectedVisible = false;
+                    IsConnected = "#fff";
 
                     if (BookshelfServices.Books.Sync.BooksSyncServices.Synchronizing)
                     {
-                        ImgSync = "rotate_solid_15_green.png";
+                        IsSync = "#008000";
                     }
                     else
                     {
                         await GetBookshelfTotals();
 
-                        ImgSync = "rotate_solid_15_w.png";
+                        IsSync = "#fff";
 
                         //after finish first sync, enable the grid for access
                         if (firstSyncIsRunnig)
-                        {                          
+                        {
                             FrmMainOpacity = 1;
                             firstSyncIsRunnig = false;
                             FrmMainIsEnabled = false;
@@ -128,16 +129,7 @@ namespace Bookshelf.ViewModels
             //
         }
 
-        public ICommand CreateBookCommand => new Command(async (e) =>
-        {
-            await Shell.Current.GoToAsync($"{nameof(AddBook)}");
-        });
-
-        public ICommand GoogleSearchCommand => new Command(async (e) =>
-        {
-            await Shell.Current.GoToAsync($"{nameof(GoogleBooksResults)}");
-        }
-        );
+        public ICommand GoogleSearchCommand => new Command(async (e) => { await Shell.Current.GoToAsync($"{nameof(GoogleBooksResults)}"); });
 
         public ICommand ReadCommand => new Command(async (e) => { await CallBookList(3); });
 

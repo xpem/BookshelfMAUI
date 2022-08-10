@@ -5,6 +5,7 @@
              xmlns:vm="clr-namespace:Bookshelf.ViewModels.GoogleSearch"
              x:DataType="vm:GoogleBooksResultsVM"
              xmlns:behaviors="clr-namespace:Bookshelf.Utils.Behaviors" 
+             xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
              xmlns:model="clr-namespace:BookshelfModels.Books.GoogleApi;assembly=BookshelfModels"
              Title="{Binding PageTitle}" 
              Style="{StaticResource ContentPage}"
@@ -13,8 +14,14 @@
         <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand" BackgroundColor="#192D30" >
             <Frame Style="{ StaticResource MainFrame }" HorizontalOptions="FillAndExpand" Margin="5" >
                 <VerticalStackLayout HorizontalOptions="FillAndExpand">
+                    <Button Text="Adicionar" Grid.Row="0" Grid.Column="0" HorizontalOptions="FillAndExpand" Style="{StaticResource MainBtn}" Command="{Binding CreateBookCommand}" FontSize="15" 
+                                    ContentLayout="Left, 10">
+                        <Button.ImageSource>
+                            <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Book}" Size="15"></FontImageSource>
+                        </Button.ImageSource>
+                    </Button>
                     <!--<Picker ItemsSource="{Binding ParametersList}" Style="{StaticResource Picker}" Margin="0,5,0,5" />-->
-                    <Entry Placeholder="Buscar" 
+                    <Entry Placeholder="Digite o nome do livro" 
                            Style="{StaticResource Entry}" 
                            TextTransform="Uppercase"
                            HorizontalOptions="FillAndExpand"
@@ -23,23 +30,25 @@
                 </VerticalStackLayout>
             </Frame>
             <Frame Style="{ StaticResource MainFrame }" VerticalOptions="FillAndExpand" Margin="1,0">
-
-            
                 <!--http://books.google.com/books/content?id=6RCcBAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api-->
-                
-                <ListView HasUnevenRows="True" 
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <ListView HasUnevenRows="True" 
                           CachingStrategy="RecycleElement" 
                           ItemsSource="{Binding GoogleBooksList}" 
+                           Grid.Row="0"
                           >
-                    <ListView.Behaviors>
-                        <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
-                    </ListView.Behaviors>
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="model:UIGoogleBook">
-                            <ViewCell>
-                                <Frame Margin="1" BorderColor="Gray" BackgroundColor="GhostWhite" CornerRadius="10">
-                                    <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" Spacing="5">
-                                        <Label Text="{Binding Title}"
+                        <ListView.Behaviors>
+                            <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
+                        </ListView.Behaviors>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="model:UIGoogleBook">
+                                <ViewCell>
+                                    <Frame Margin="1" BorderColor="Gray" BackgroundColor="#607D8B" CornerRadius="10">
+                                        <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" Spacing="5">
+                                            <Label Text="{Binding Title}"
                                                    Grid.Row="0" Grid.Column="1"       
                                                    TextColor="Black" 
                                                    VerticalOptions="StartAndExpand" 
@@ -50,26 +59,27 @@
                                                    TextDecorations="Underline"
                                                    FontFamily="EBGaramondSemiBold"
                                                    />
-                                        <Grid HorizontalOptions="FillAndExpand" HeightRequest="150">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="20"/>
-                                                <RowDefinition Height="20"/>
-                                                <RowDefinition Height="12"/>
-                                                <RowDefinition Height="*"/>
-                                                <!--<RowDefinition Height="12"/>
+                                            <Grid HorizontalOptions="FillAndExpand" HeightRequest="150">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="20"/>
+                                                    <RowDefinition Height="20"/>
+                                                    <RowDefinition Height="12"/>
+                                                    <RowDefinition Height="*"/>
+                                                    <!--<RowDefinition Height="12"/>
                                             <RowDefinition Height="*"/>-->
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition  Width ="3*" />
-                                                <ColumnDefinition  Width ="6*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Image Source="{Binding Thumbnail}" 
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition  Width ="3*" />
+                                                    <ColumnDefinition  Width ="6*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Image Source="{Binding Thumbnail}" 
                                                    Grid.RowSpan="4"
+                                                   Grid.Column="1"
                                                    Aspect="AspectFit"
                                                    Margin="0,0,10,0"
                                                    />
-                                            <Label Text="{Binding Authors}"
-                                                   Grid.Row="0" Grid.Column="1"
+                                                <Label Text="{Binding Authors}"
+                                                   Grid.Row="0" Grid.Column="0"
                                                    VerticalTextAlignment="Start" 
                                                    HorizontalTextAlignment="Start"
                                                    FontSize="15"
@@ -77,8 +87,8 @@
                                                    FontFamily="EBGaramondRegular"
                                                    TextColor="#4e4e4e"
                                                    />
-                                            <Label Text="{Binding PageCount, StringFormat='Páginas: {0:F0}'}"
-                                                   Grid.Row="1" Grid.Column="1"
+                                                <Label Text="{Binding PageCount, StringFormat='Páginas: {0:F0}'}"
+                                                   Grid.Row="1" Grid.Column="0"
                                                    HorizontalTextAlignment="Start" 
                                                    VerticalTextAlignment="Start"
                                                    FontSize="15"
@@ -86,17 +96,17 @@
                                                    FontFamily="EBGaramondRegular"
                                                    TextColor="Black"
                                                    />
-                                            <Label Text="Ano:" 
+                                                <Label Text="Ano:" 
                                                    Grid.Row="2"
-                                                   Grid.Column="1"
+                                                   Grid.Column="0"
                                                    HorizontalTextAlignment="Start"
                                                    VerticalTextAlignment="Start"
                                                    TextColor="Black"
                                                    FontAttributes="Italic" 
                                                    FontSize="10"
                                                    />
-                                            <Label Text="{Binding PublishedDate}" 
-                                                   Grid.Row="3" Grid.Column="1" 
+                                                <Label Text="{Binding PublishedDate}" 
+                                                   Grid.Row="3" Grid.Column="0" 
                                                    VerticalTextAlignment="Start" 
                                                    HorizontalTextAlignment="Start"
                                                    FontSize="15"
@@ -104,30 +114,39 @@
                                                    FontFamily="EBGaramondRegular"
                                                    TextColor="#4e4e4e"
                                                    />
-                                            <!--<Label  Text="Categoria:" Grid.Row="5"  HorizontalTextAlignment="Start" VerticalTextAlignment="Start" Grid.Column="1" TextColor="Black" FontAttributes="Italic" FontSize="10"/>
+                                                <!--<Label  Text="Categoria:" Grid.Row="5"  HorizontalTextAlignment="Start" VerticalTextAlignment="Start" Grid.Column="1" TextColor="Black" FontAttributes="Italic" FontSize="10"/>
                                         <Label  Text="{Binding Categories}" HorizontalTextAlignment="Start" VerticalTextAlignment="Start" Grid.Row="6" Grid.Column="1" FontSize="Micro"/>-->
-                                        </Grid>
-                                    </StackLayout>
-                                </Frame>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.Footer>
-                        <Grid Padding="6" IsVisible="{Binding IsBusy}">
-                            <Grid.Triggers>
-                                <Trigger TargetType="Grid" Property="IsVisible" Value="False">
-                                    <Setter Property="HeightRequest" Value="0" />
-                                </Trigger>
-                            </Grid.Triggers>
-                            <ActivityIndicator IsRunning="{Binding IsBusy}" 
+                                            </Grid>
+                                        </StackLayout>
+                                    </Frame>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Footer>
+
+                            <Grid Padding="6" IsVisible="{Binding IsBusy}">
+                                <Grid.Triggers>
+                                    <Trigger TargetType="Grid" Property="IsVisible" Value="False">
+                                        <Setter Property="HeightRequest" Value="0" />
+                                    </Trigger>
+                                </Grid.Triggers>
+                                <ActivityIndicator IsRunning="{Binding IsBusy}" 
                                                IsVisible="{Binding IsBusy}"  
                                                Color="#2196F3" 
                                                VerticalOptions="Center" 
                                                HorizontalOptions="Center"
                                                />
-                        </Grid>
-                    </ListView.Footer>
-                </ListView>
+                            </Grid>
+                        </ListView.Footer>
+                    </ListView>
+
+                    <Button Grid.Row="0" Command="{Binding CreateBookCommand}" BackgroundColor="#362624"
+                                    VerticalOptions="End" HorizontalOptions="End"  CornerRadius="20" HeightRequest="40" ContentLayout="Top,0" >
+                        <Button.ImageSource>
+                            <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Plus}" Size="20" ></FontImageSource>
+                        </Button.ImageSource>
+                    </Button>
+                </Grid>
             </Frame>
         </StackLayout>
     </ContentPage.Content>

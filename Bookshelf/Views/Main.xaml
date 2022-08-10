@@ -190,13 +190,25 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Button Text="Adicionar" Grid.Row="0" Grid.Column="0" HorizontalOptions="FillAndExpand" Style="{StaticResource MainBtn}" Command="{Binding CreateBookCommand}" FontSize="15" 
-                                    ImageSource="book_solid_15_w.png" ContentLayout="Left, 10" />
+                                <Button Text="Adicionar" Grid.Row="0" Grid.Column="0" HorizontalOptions="FillAndExpand" Style="{StaticResource MainBtn}" Command="{Binding GoogleSearchCommand}" FontSize="15" 
+                                    ContentLayout="Left, 10">
+                                    <Button.ImageSource>
+                                        <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Book}" Size="15"></FontImageSource>
+                                    </Button.ImageSource>
+                                </Button>
                                 <Button Text="Listar Todos" Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand" Style="{StaticResource BtnSecondary}" FontSize="15"
-                                    ImageSource="bars_staggered_solid_15_w.png" BackgroundColor="#2D4144" ContentLayout="Left, 10" Command="{Binding ArchiveCommand}" />
+                                     BackgroundColor="#2D4144" ContentLayout="Left, 10" Command="{Binding ArchiveCommand}" >
+                                    <Button.ImageSource>
+                                        <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Bars}" Size="15"></FontImageSource>
+                                    </Button.ImageSource>
+                                </Button>
                             </Grid>
-                            <Button Text="Add"  HorizontalOptions="FillAndExpand" Style="{StaticResource BtnSecondary}" FontSize="15"
-                                    ImageSource="bars_staggered_solid_15_w.png" BackgroundColor="#2D4144" ContentLayout="Left, 10" Command="{Binding GoogleSearchCommand}" />
+                            <!--<Button Text="Add"  HorizontalOptions="FillAndExpand" Style="{StaticResource BtnSecondary}" FontSize="15"
+                                    ImageSource="bars_staggered_solid_15_w.png" BackgroundColor="#2D4144" ContentLayout="Left, 10" Command="{Binding GoogleSearchCommand}" >
+                                <Button.ImageSource>
+                                    <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Bars}" Size="15"></FontImageSource>
+                                </Button.ImageSource>
+                            </Button>-->
                             <Grid HorizontalOptions="FillAndExpand" Margin="0,5,0,0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
@@ -206,9 +218,18 @@
                                     <ColumnDefinition  Width ="30" />
                                     <ColumnDefinition  Width ="30" />
                                 </Grid.ColumnDefinitions>
-                                <Button Text="Sair" Grid.Row="0" Grid.Column="0" Style="{ StaticResource BtnExit}" FontSize="10" ImageSource="right_to_bracket_solid_10.png" Command="{Binding LogoutCommand}" ContentLayout="Left, 10" />
-                                <Image Grid.Row="0" Grid.Column="1" SemanticProperties.Description="Status da conexão" HeightRequest="10" Source="wifi_solid_15_red.png" IsVisible="{Binding ConnectedVisible}" VerticalOptions="End"/>
-                                <Image Grid.Row="0" Grid.Column="2" SemanticProperties.Description="Status da sincronização" HeightRequest="10" Source="{Binding ImgSync}" VerticalOptions="End"/>
+                                <Button Text="Sair" Grid.Row="0" Grid.Column="0" 
+                                        Style="{ StaticResource BtnExit}" 
+                                        FontSize="12"
+                                        Command="{Binding LogoutCommand}" 
+                                        ContentLayout="Left, 10"
+                                        >
+                                <Button.ImageSource>
+                                    <FontImageSource  FontFamily="FontAwesome" Color="#000" Glyph="{x:Static Icons:IconFont.SignOutAlt}" Size="10"></FontImageSource>
+                                </Button.ImageSource>
+                                </Button>
+                                <Label Text="{x:Static Icons:IconFont.Wifi}" Grid.Row="0" Grid.Column="1" Style="{ StaticResource ImgIcon }" SemanticProperties.Description="Status da conexão"  FontSize="12" VerticalOptions="End" />
+                                <Label Text="{x:Static Icons:IconFont.Sync}" Grid.Row="0" Grid.Column="2" Style="{ StaticResource ImgIcon }" SemanticProperties.Description="Status da sincronização"  FontSize="12" VerticalOptions="End" />
                             </Grid>
                         </VerticalStackLayout>
                     </Frame>
