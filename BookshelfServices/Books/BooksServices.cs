@@ -100,8 +100,15 @@ namespace BookshelfServices.Books
 
             BookshelfModels.User.User? User = BookshelfRepos.User.UserRepos.GetUser();
             if (User?.Id != null)
-                ret = await BookshelfRepos.Books.BooksRepos.GetBookByTitle(User.Id, title);
-
+            {
+                Book? _book = await BookshelfRepos.Books.BooksRepos.GetBookByTitleOrGooglekey(User.Id, title, null);
+                
+                if(_book is not null)
+                {
+                    ret = true;
+                }
+                
+            }
             return ret;
 
         }

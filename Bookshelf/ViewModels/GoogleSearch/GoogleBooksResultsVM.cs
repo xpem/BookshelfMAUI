@@ -1,5 +1,6 @@
 ﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
+using BookshelfModels.Books;
 using BookshelfModels.Books.GoogleApi;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -28,6 +29,33 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
         public ObservableCollection<UIGoogleBook> GoogleBooksList { get; } = new();
 
+
+        UIGoogleBook listItem;
+
+        public UIGoogleBook ListItem
+        {
+            get => listItem;
+            set
+            {
+                if (listItem != value)
+                {
+                    listItem = value;
+                    if (listItem is not null)
+                    {
+                        Shell.Current.GoToAsync($"{nameof(AddBook)}?GoogleKey={listItem.Id}", true);
+                        //if (SituationIndex == -1)
+                        //    Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={bookItem.Key}", true);
+                        //else
+                        //    Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={bookItem.Key}", true);
+
+                        //bookItem = null;
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+
         public bool SearchingBookList { get; set; }
 
         //private ObservableCollection<string> parametersList = new() { "Título", "Autor" };
@@ -49,11 +77,7 @@ namespace Bookshelf.ViewModels.GoogleSearch
             }
         }
 
-        public ICommand LoadMoreCommand => new Command(() =>
-        {
-            CurrentPage++;
-            LoadGoogleBooks(CurrentPage);
-        });
+        public ICommand LoadMoreCommand => new Command(() => { CurrentPage++; LoadGoogleBooks(CurrentPage); });
 
         /// <summary>
         /// is necessary the config: android:usesCleartextTraffic="true"

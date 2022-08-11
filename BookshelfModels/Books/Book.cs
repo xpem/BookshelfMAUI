@@ -15,6 +15,11 @@
         public Rating? Rating { get; set; }
         public Situation? Situation { get; set; }
         public bool Inactive { get; set; }
+
+        public string? Cover { get; set; }
+
+        public string? GoogleId { get; set; }
+
     }
 
     public class Rating

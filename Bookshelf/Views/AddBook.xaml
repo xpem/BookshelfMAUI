@@ -12,6 +12,14 @@
             <StackLayout VerticalOptions="Center" Style="{StaticResource MainStackLayout}" >
                 <Frame Style="{ StaticResource MainFrame }">
                     <StackLayout>
+                        <Image 
+                            Source="{Binding Cover}"                                  
+                            Grid.RowSpan="4"                       
+                            Grid.Column="1"                      
+                            Aspect="AspectFit"                  
+                            Margin="0,0,10,0"   
+                            HeightRequest="120"
+                            />
                         <Label Text="Título" Style="{StaticResource LblEntry}"/>
                         <Entry MinimumWidthRequest="250" Text="{Binding Title}" Style="{StaticResource Entry}" CompressedLayout.IsHeadless="False" HorizontalOptions="FillAndExpand" MaxLength="400" />
                         <Label Text="*Subtítulo" Style="{StaticResource LblEntry}"></Label>
@@ -121,9 +129,22 @@
                         <Editor Style="{StaticResource Entry}" HeightRequest="70" MaxLength="200" MinimumWidthRequest="250" HorizontalOptions="FillAndExpand" Keyboard="Chat"
                             Text="{ Binding Comment }" IsVisible="{Binding EdtCommentIsVisible}"  />
 
-                        <Button Text="{Binding BtnInsertText}" Command="{Binding InsertBookCommand}" Margin="0,10,0,0"
-                                IsVisible="{Binding BtnInsertIsVisible}" IsEnabled="{Binding BtnInsertIsEnabled}"
-                                Style="{StaticResource MainBtn}" ImageSource="{Binding BtnAddBookImageSource}" ContentLayout="Left, 10" />
+                        <Button Text="{Binding BtnInsertText}" 
+                                Command="{Binding InsertBookCommand}" 
+                                Margin="0,10,0,0"
+                                IsVisible="{Binding BtnInsertIsVisible}"
+                                IsEnabled="{Binding BtnInsertIsEnabled}"
+                                Style="{StaticResource MainBtn}"
+                                ContentLayout="Left, 10" >
+                            <Button.ImageSource>
+                                <FontImageSource 
+                                    FontFamily="FontAwesome"
+                                    Color="#EDEDED" 
+                                    Glyph="{Binding BtnAddBookImageSourceGlyph}"
+                                    Size="20" 
+                                    />
+                            </Button.ImageSource>
+                        </Button>
                     </StackLayout>
                 </Frame>
             </StackLayout>

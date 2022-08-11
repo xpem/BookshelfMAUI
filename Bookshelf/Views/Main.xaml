@@ -26,15 +26,13 @@
             <Setter Property="FontFamily" Value="EBGaramondSemiBold"></Setter>
             <Setter Property="Padding" Value="0,10,0,15"></Setter>
         </Style>
-        <Style x:Key="ImgIcon" TargetType="Label">
-            <Setter Property="TextColor" Value="#2b3133"></Setter>
+        <Style x:Key="LblCardImgIcon" TargetType="Label">
             <Setter Property="HorizontalOptions" Value="Start"></Setter>
             <Setter Property="VerticalOptions" Value="End"></Setter>
             <Setter Property="FontSize" Value="30"></Setter>
             <Setter Property="Margin" Value="0,0,0,10"></Setter>
             <Setter Property="FontFamily" Value="FontAwesome"></Setter>
-            <!--<Setter Property="HorizontalOptions" Value="Start"></Setter>
-            <Setter Property="VerticalOptions" Value="Center"></Setter>-->
+            <Setter Property="TextColor" Value="#2b3133"></Setter>
         </Style>
         <Style x:Key="ImgAngleRight" TargetType="Label">
             <Setter Property="FontFamily" Value="FontAwesome"></Setter>
@@ -85,7 +83,7 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Label Text="{x:Static Icons:IconFont.List}" Grid.Row="0" Grid.Column="0" Style="{ StaticResource ImgIcon }" SemanticProperties.Description="Vou ler" />
+                                <Label Text="{x:Static Icons:IconFont.List}" Grid.Row="0" Grid.Column="0" Style="{ StaticResource LblCardImgIcon }"  SemanticProperties.Description="Vou ler" />
                                 <Label Text="{Binding IllRead}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }" />
                                 <Label Text="Vou ler" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
                                 <Label Grid.Column="3"
@@ -109,7 +107,7 @@
                                     <ColumnDefinition Width ="*" />
                                     <ColumnDefinition Width="70" />
                                 </Grid.ColumnDefinitions>
-                                <Label Text="{x:Static Icons:IconFont.BookReader}" Grid.Row="0" Grid.Column="0" Style="{ StaticResource ImgIcon }" SemanticProperties.Description="Lendo" />
+                                <Label Text="{x:Static Icons:IconFont.BookReader}" Grid.Row="0" Grid.Column="0" Style="{ StaticResource LblCardImgIcon }" SemanticProperties.Description="Lendo" />
                                 <Label Text="{Binding Reading}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
                                 <Label Text="Lendo" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
                                 <Label Grid.Column="3"
@@ -136,7 +134,7 @@
                                 <Label Text="{x:Static Icons:IconFont.Check}"
                                        Grid.Row="0" 
                                        Grid.Column="0"
-                                       Style="{ StaticResource ImgIcon }"
+                                       Style="{ StaticResource LblCardImgIcon }"
                                        SemanticProperties.Description="Lidos" 
                                        />
                                 <Label Text="{Binding Read}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
@@ -165,11 +163,14 @@
                                 <Label Text="{x:Static Icons:IconFont.Pause}"
                                        Grid.Row="0" 
                                        Grid.Column="0"
-                                       Style="{ StaticResource ImgIcon }"
+                                       Style="{ StaticResource LblCardImgIcon }"
                                        SemanticProperties.Description="Interrompidos" 
                                        />
                                 <Label Text="{Binding Interrupted}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
-                                <Label Text="Suspensos" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
+                                <Label Text="Suspensos" 
+                                       Grid.Row="1" 
+                                       Grid.Column="0" 
+                                       Style="{ StaticResource LblText }" />
                                 <Label Grid.Column="3"
                                        Grid.RowSpan="2"
                                        Style="{ StaticResource ImgAngleRight }"
@@ -199,7 +200,7 @@
                                 <Button Text="Listar Todos" Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand" Style="{StaticResource BtnSecondary}" FontSize="15"
                                      BackgroundColor="#2D4144" ContentLayout="Left, 10" Command="{Binding ArchiveCommand}" >
                                     <Button.ImageSource>
-                                        <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Bars}" Size="15"></FontImageSource>
+                                        <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Bars}" Size="15" />
                                     </Button.ImageSource>
                                 </Button>
                             </Grid>
@@ -224,12 +225,32 @@
                                         Command="{Binding LogoutCommand}" 
                                         ContentLayout="Left, 10"
                                         >
-                                <Button.ImageSource>
-                                    <FontImageSource  FontFamily="FontAwesome" Color="#000" Glyph="{x:Static Icons:IconFont.SignOutAlt}" Size="10"></FontImageSource>
-                                </Button.ImageSource>
+                                    <Button.ImageSource>
+                                        <FontImageSource  
+                                            FontFamily="FontAwesome" 
+                                            Color="#000"
+                                            Glyph="{x:Static Icons:IconFont.SignOutAlt}"
+                                            Size="10" />
+                                    </Button.ImageSource>
                                 </Button>
-                                <Label Text="{x:Static Icons:IconFont.Wifi}" Grid.Row="0" Grid.Column="1" Style="{ StaticResource ImgIcon }" SemanticProperties.Description="Status da conexão"  FontSize="12" VerticalOptions="End" />
-                                <Label Text="{x:Static Icons:IconFont.Sync}" Grid.Row="0" Grid.Column="2" Style="{ StaticResource ImgIcon }" SemanticProperties.Description="Status da sincronização"  FontSize="12" VerticalOptions="End" />
+                                <Label Text="{x:Static Icons:IconFont.Wifi}"
+                                       Grid.Row="0"
+                                       Grid.Column="1" 
+                                       TextColor="{ Binding IsConnected}"
+                                       FontFamily="FontAwesome"
+                                       SemanticProperties.Description="Status da conexão"
+                                       FontSize="12" 
+                                       Margin="0,0,0,10"
+                                       VerticalOptions="End" />
+                                <Label Text="{x:Static Icons:IconFont.Sync}"
+                                       Grid.Row="0"
+                                       Grid.Column="2" 
+                                       TextColor="{Binding IsSync}"     
+                                       FontFamily="FontAwesome" 
+                                       SemanticProperties.Description="Status da sincronização"
+                                       FontSize="12"
+                                       Margin="0,0,0,10"
+                                       VerticalOptions="End" />
                             </Grid>
                         </VerticalStackLayout>
                     </Frame>

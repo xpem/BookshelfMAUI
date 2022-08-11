@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using static BookshelfModels.Books.GoogleApi.GoogleApiBook;
 
@@ -46,13 +47,89 @@ namespace BookshelfServices.Books.GoogleBooksApi
             }
         }
 
+        public async static Task<UIGoogleBook> GetBook(string googleId)
+        {
+            try
+            {
+                HttpResponseMessage response = await new HttpClient().GetAsync($"https://www.googleapis.com/books/v1/volumes/{googleId}");
+                Item array = JsonConvert.DeserializeObject<Item>(await response.Content.ReadAsStringAsync());
+
+                var item = BuildUIGoogleBook(array);
+                return item;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static UIGoogleBook BuildUIGoogleBook(Item item)
+        {
+            UIGoogleBook uIGoogleBook;
+            VolumeInfo volumeInfo;
+
+            uIGoogleBook = new();
+
+            volumeInfo = item.volumeInfo;
+
+            uIGoogleBook.Id = item.id;
+
+            uIGoogleBook.Title = volumeInfo.title;
+
+            if (volumeInfo is not null)
+            {
+                uIGoogleBook.PageCount = volumeInfo.pageCount;
+
+
+                if (volumeInfo.imageLinks?.smallThumbnail is not null)
+                    uIGoogleBook.Thumbnail = volumeInfo.imageLinks.smallThumbnail;
+
+
+
+                if (volumeInfo.publisher is not null)
+                    uIGoogleBook.Publisher = volumeInfo.publisher;
+
+                if (volumeInfo.publishedDate is not null)
+                {
+                    if (DateTime.TryParse((volumeInfo.publishedDate).ToString(), out DateTime publishedDate))
+                    {
+                        uIGoogleBook.PublishedDate = string.Format("{0:yyyy}", publishedDate);
+                    }
+                    else if (string.IsNullOrEmpty(volumeInfo.publishedDate))
+                    {
+                        uIGoogleBook.PublishedDate = volumeInfo.publishedDate;
+                    }
+                }
+
+                if (volumeInfo.authors is not null)
+                {
+                    string strbdrarrays = "";
+                    foreach (string itnAuthors in volumeInfo.authors)
+                    {
+                        if (string.IsNullOrEmpty(strbdrarrays.ToString()))
+                        {
+                            strbdrarrays = itnAuthors;
+                        }
+                        else
+                        {
+                            strbdrarrays += $"; {itnAuthors}";
+                        }
+                    }
+
+                    uIGoogleBook.Authors = strbdrarrays;
+                }
+            }
+
+            return uIGoogleBook;
+        }
+
         private static (List<UIGoogleBook>, int) BuildResult(string json)
         {
             List<UIGoogleBook> list = new();
-            int totalItems = 0;
+            int totalItems;
+
             try
             {
-
                 BookshelfModels.Books.GoogleApi.GoogleApiBook array = JsonConvert.DeserializeObject<GoogleApiBook>(json);
                 List<Item> items = array.items;
                 totalItems = array.totalItems;
@@ -61,65 +138,9 @@ namespace BookshelfServices.Books.GoogleBooksApi
                 {
                     if (items != null)
                     {
-                        //
-                        UIGoogleBook uIGoogleBook;
-                        VolumeInfo volumeInfo;
-
                         for (int i = 0; i < ((ICollection)array.items).Count; i++)
                         {
-                            //variaveis utilizadas na criação da lista
-                            uIGoogleBook = new();
-
-                            volumeInfo = items[i].volumeInfo;
-
-                            uIGoogleBook.Id = items[i].id;
-
-                            uIGoogleBook.Title = volumeInfo.title;
-
-                            if (volumeInfo is not null)
-                            {
-                                uIGoogleBook.PageCount = volumeInfo.pageCount;
-
-
-                                if (volumeInfo.imageLinks?.smallThumbnail is not null)
-                                    uIGoogleBook.Thumbnail = volumeInfo.imageLinks.smallThumbnail;
-
-
-
-                                if (volumeInfo.publisher is not null)
-                                    uIGoogleBook.Publisher = volumeInfo.publisher;
-
-                                if (volumeInfo.publishedDate is not null)
-                                {
-                                    if (DateTime.TryParse((volumeInfo.publishedDate).ToString(), out DateTime publishedDate))
-                                    {
-                                        uIGoogleBook.PublishedDate = string.Format("{0:yyyy}", publishedDate);
-                                    }
-                                    else if (string.IsNullOrEmpty(volumeInfo.publishedDate))
-                                    {
-                                        uIGoogleBook.PublishedDate = volumeInfo.publishedDate;
-                                    }
-                                }
-
-                                if (volumeInfo.authors is not null)
-                                {
-                                    string strbdrarrays = "";
-                                    foreach (string itnAuthors in volumeInfo.authors)
-                                    {
-                                        if (string.IsNullOrEmpty(strbdrarrays.ToString()))
-                                        {
-                                            strbdrarrays = itnAuthors;
-                                        }
-                                        else
-                                        {
-                                            strbdrarrays += $"; {itnAuthors}";
-                                        }
-                                    }
-
-                                    uIGoogleBook.Authors = strbdrarrays;
-                                }
-                            }
-                            list.Add(uIGoogleBook);
+                            list.Add(BuildUIGoogleBook(items[i]));
                         }
                     }
                 }

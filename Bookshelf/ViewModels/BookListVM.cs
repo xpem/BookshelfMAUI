@@ -120,11 +120,11 @@ namespace Bookshelf.ViewModels
             PageTitle = "Carregando lista...";
             IsBusy = true;
 
-            string textoBusca = "";
+            string _searchText = "";
             if (!string.IsNullOrEmpty(SearchTitle))
-                textoBusca = SearchTitle.ToUpper();
+                _searchText = SearchTitle.ToUpper();
 
-            (var booksList, TotalBooksItens) = await booksServices.GetBookSituationByStatus(pageNumber, SituationIndex.Value, textoBusca);
+            (var booksList, TotalBooksItens) = await booksServices.GetBookSituationByStatus(pageNumber, SituationIndex.Value, _searchText);
 
             foreach (UIBookItem bookItem in booksList)
             {

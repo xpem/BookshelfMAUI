@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Bookshelf.Views.BookDetail"
-               Title="Detalhes do livro" 
+             Title="Detalhes do livro" 
+             xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
              Style="{StaticResource ContentPage}" >
     <ContentPage.Resources>
         <!--carditens-->
@@ -150,8 +151,22 @@
                                 IsVisible="{Binding EdtCommentIsVisible}" MinimumWidthRequest="250" HorizontalOptions="FillAndExpand" />
                         <!---->
 
-                        <Button Text="{Binding BtnConfText}" Style="{StaticResource MainBtn}" Margin="0,10,0,0" Command="{Binding ConfirmCommand}" />
-
+                        <Button 
+                            Text="{Binding BtnConfText}" 
+                            Style="{StaticResource MainBtn}" 
+                            Margin="0,10,0,0"
+                            Command="{Binding ConfirmCommand}"   
+                            ContentLayout="Left, 10" 
+                            >
+                            <Button.ImageSource>
+                                <FontImageSource 
+                                    FontFamily="FontAwesome"
+                                    Color="#EDEDED" 
+                                    Glyph="{x:Static Icons:IconFont.Pen}"
+                                    Size="15" 
+                                    />
+                            </Button.ImageSource>
+                        </Button>
                     </StackLayout>
                 </ScrollView>
             </Frame>

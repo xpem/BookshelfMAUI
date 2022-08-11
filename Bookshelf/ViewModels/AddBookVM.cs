@@ -1,5 +1,7 @@
-﻿using Bookshelf.ViewModels.Components;
+﻿using Bookshelf.Resources.Fonts.Styles;
+using Bookshelf.ViewModels.Components;
 using BookshelfModels.Books;
+using BookshelfModels.Books.GoogleApi;
 using BookshelfServices.Books;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -14,44 +16,47 @@ namespace Bookshelf.ViewModels
         //
         private bool IsUpdate = false;
 
-        private string BookKey;
+        private string BookKey, GoogleKey;
 
-        private string title, subTitle, volume, authors, year, isbn, pages, genre, comment, situation;
+        private string title, subTitle, volume, authors, year, isbn, pages, genre, comment, situation, cover;
 
-        public string Title { get => title; set { title = value; OnPropertyChanged(); } }
+        public string Cover { get => cover; set { if (value != cover) { cover = value; OnPropertyChanged(); } } }
+        public string Title { get => title; set { if (value != title) { title = value; OnPropertyChanged(); } } }
 
-        public string SubTitle { get => subTitle; set { subTitle = value; OnPropertyChanged(); } }
+        public string SubTitle { get => subTitle; set { if (value != subTitle) { subTitle = value; OnPropertyChanged(); } } }
 
-        public string Volume { get => volume; set { volume = value; OnPropertyChanged(); } }
+        public string Volume { get => volume; set { if (value != volume) { volume = value; OnPropertyChanged(); } } }
 
-        public string Authors { get => authors; set { authors = value; OnPropertyChanged(); } }
+        public string Authors { get => authors; set { if (value != authors) { authors = value; OnPropertyChanged(); } } }
 
-        public string Year { get => year; set { year = value; OnPropertyChanged(); } }
+        public string Year { get => year; set { if (value != year) { year = value; OnPropertyChanged(); } } }
 
-        public string Isbn { get => isbn; set { isbn = value; OnPropertyChanged(); } }
+        public string Isbn { get => isbn; set { if (value != isbn) { isbn = value; OnPropertyChanged(); } } }
 
-        public string Pages { get => pages; set { pages = value; OnPropertyChanged(); } }
+        public string Pages { get => pages; set { if (value != pages) { pages = value; OnPropertyChanged(); } } }
 
-        public string Genre { get => genre; set { genre = value; OnPropertyChanged(); } }
+        public string Genre { get => genre; set { if (value != genre) { genre = value; OnPropertyChanged(); } } }
 
-        public string Comment { get => comment; set { comment = value; OnPropertyChanged(); } }
+        public string Comment { get => comment; set { if (value != comment) { comment = value; OnPropertyChanged(); } } }
 
-        public string Situation { get => situation; set { situation = value; OnPropertyChanged(); } }
+        public string Situation { get => situation; set { if (value != situation) { situation = value; OnPropertyChanged(); } } }
 
         #endregion
 
         #region Ui properties
 
         private ObservableCollection<string> statusList = new() { "Nenhuma", "Vou ler", "Lendo", "Lido", "Interrompido" };
-        public ObservableCollection<string> StatusList { get => statusList; set { statusList = value; OnPropertyChanged(); } }
+        public ObservableCollection<string> StatusList { get => statusList; set { if (value != statusList) { statusList = value; OnPropertyChanged(); } } }
 
-        private bool ratingBarIsVisible, lblRatingBarIsVisible, edtCommentIsVisible;
+        private bool ratingBarIsVisible, lblRatingBarIsVisible, edtCommentIsVisible, imgCoverIsVisible = true;
 
-        public bool RatingBarIsVisible { get => ratingBarIsVisible; set { ratingBarIsVisible = value; OnPropertyChanged(); } }
+        public bool RatingBarIsVisible { get => ratingBarIsVisible; set { if (value != ratingBarIsVisible) { ratingBarIsVisible = value; OnPropertyChanged(); } } }
 
-        public bool LblRatingBarIsVisible { get => lblRatingBarIsVisible; set { lblRatingBarIsVisible = value; OnPropertyChanged(); } }
+        public bool LblRatingBarIsVisible { get => lblRatingBarIsVisible; set { if (value != lblRatingBarIsVisible) { lblRatingBarIsVisible = value; OnPropertyChanged(); } } }
 
-        public bool EdtCommentIsVisible { get => edtCommentIsVisible; set { edtCommentIsVisible = value; OnPropertyChanged(); } }
+        public bool EdtCommentIsVisible { get => edtCommentIsVisible; set { if (value != edtCommentIsVisible) { edtCommentIsVisible = value; OnPropertyChanged(); } } }
+
+        public bool ImgCoverIsVisible { get => imgCoverIsVisible; set { if (value != imgCoverIsVisible) { imgCoverIsVisible = value; OnPropertyChanged(); } } }
 
         private int pkrStatusSelectedIndex = 0;
 
@@ -60,12 +65,15 @@ namespace Bookshelf.ViewModels
             get => pkrStatusSelectedIndex;
             set
             {
-                pkrStatusSelectedIndex = value;
+                if (value != pkrStatusSelectedIndex)
+                {
+                    pkrStatusSelectedIndex = value;
 
-                //fields visibilities conditions acoording selected situation reading
-                RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = pkrStatusSelectedIndex == 3;
+                    //fields visibilities conditions acoording selected situation reading
+                    RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = pkrStatusSelectedIndex == 3;
 
-                OnPropertyChanged();
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -73,15 +81,15 @@ namespace Bookshelf.ViewModels
         #region btnInsert propeties
 
         private bool btnInsertIsVisible = true, btnInsertIsEnabled = true;
-        private string btnInsertText, btnAddBookImageSource;
+        private string btnInsertText, btnAddBookImageSourceGlyph;
 
-        public bool BtnInsertIsVisible { get => btnInsertIsVisible; set { btnInsertIsVisible = value; OnPropertyChanged(); } }
+        public bool BtnInsertIsVisible { get => btnInsertIsVisible; set { if (value != btnInsertIsVisible) { btnInsertIsVisible = value; OnPropertyChanged(); } } }
 
-        public bool BtnInsertIsEnabled { get => btnInsertIsEnabled; set { btnInsertIsEnabled = value; OnPropertyChanged(); } }
+        public bool BtnInsertIsEnabled { get => btnInsertIsEnabled; set { if (value != btnInsertIsEnabled) { btnInsertIsEnabled = value; OnPropertyChanged(); } } }
 
-        public string BtnInsertText { get => btnInsertText; set { btnInsertText = value; OnPropertyChanged(); } }
+        public string BtnInsertText { get => btnInsertText; set { if (value != btnInsertText) { btnInsertText = value; OnPropertyChanged(); } } }
 
-        public string BtnAddBookImageSource { get => btnAddBookImageSource; set { btnAddBookImageSource = value; OnPropertyChanged(); } }
+        public string BtnAddBookImageSourceGlyph { get => btnAddBookImageSourceGlyph; set { if (value != btnAddBookImageSourceGlyph) { btnAddBookImageSourceGlyph = value; OnPropertyChanged(); } } }
 
         /// <summary>
         /// btn insert book command
@@ -99,26 +107,59 @@ namespace Bookshelf.ViewModels
             booksServices = _booksServices;
         }
 
-        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             if (query != null && query.ContainsKey("Key"))
                 BookKey = query["Key"].ToString();
 
+            if (query != null && query.ContainsKey("GoogleKey"))
+                GoogleKey = query["GoogleKey"].ToString();
+
             Rate = 0;
             Situation = "0";
             BtnInsertText = "Cadastrar";
-            BtnAddBookImageSource = "book_solid_15_w.png";
+            BtnAddBookImageSourceGlyph = IconFont.Plus;
+
+            if (!string.IsNullOrEmpty(GoogleKey))
+            {
+                await GetGoogleBook();
+            }
 
             if (string.IsNullOrEmpty(BookKey))
             {
                 pkrStatusSelectedIndex = 0;
 
                 RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
-                Title = SubTitle = Authors = Year = Isbn = Pages = Genre = Volume = "";
+
+                if (string.IsNullOrEmpty(GoogleKey))
+                    Cover = Title = SubTitle = Authors = Year = Pages = "";
+
+                Isbn = Genre = Volume = "";
             }
             else
             {
                 _ = Task.Run(() => GetBook(BookKey));
+            }
+
+            if (Cover is null) ImgCoverIsVisible = false;
+        }
+
+        protected async Task GetGoogleBook()
+        {
+            UIGoogleBook _googleBook = await BookshelfServices.Books.GoogleBooksApi.GoogleBooksApiService.GetBook(GoogleKey);
+
+            if (_googleBook != null)
+            {
+                Cover = _googleBook.Thumbnail;
+                Title = _googleBook.Title;
+                SubTitle = _googleBook.Subtitle;
+                Authors = _googleBook.Authors;
+                Year = _googleBook.PublishedDate;
+                Pages = _googleBook.PageCount.ToString();
+            }
+            else
+            {
+                GoogleKey = null;
             }
         }
 
@@ -138,7 +179,8 @@ namespace Bookshelf.ViewModels
             Pages = book.Pages.ToString();
             Genre = book.Genre;
             Volume = book.Volume;
-
+            Cover = book.Cover;
+            GoogleKey = book.GoogleId;
             Comment = book.Rating.Comment;
             PkrStatusSelectedIndex = Convert.ToInt32(book.Situation);
 
@@ -158,7 +200,7 @@ namespace Bookshelf.ViewModels
                 Comment = "";
             }
 
-            BtnAddBookImageSource = "pen_solid_12_w.png";
+            BtnAddBookImageSourceGlyph = IconFont.Edit;
             BtnInsertText = "Alterar";
             IsUpdate = true;
         }
@@ -179,6 +221,8 @@ namespace Bookshelf.ViewModels
                     Pages = Convert.ToInt32(Pages),
                     Genre = Genre,
                     Volume = Volume,
+                    Cover = Cover,
+                    GoogleId = GoogleKey
                 };
 
                 //cadastra o livro 
@@ -248,7 +292,7 @@ namespace Bookshelf.ViewModels
 
                 if (!resposta)
                 {
-                    await Shell.Current.GoToAsync("..");
+                    await Shell.Current.GoToAsync("../..");
                 }
             }
         }
