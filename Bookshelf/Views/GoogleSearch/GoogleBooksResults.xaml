@@ -40,8 +40,8 @@
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="model:UIGoogleBook">
                                 <ViewCell>
-                                    <Frame Margin="1" BorderColor="Gray" BackgroundColor="#607D8B" CornerRadius="10">
-                                        <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" Spacing="5">
+                                    <Frame BorderColor="Gray" BackgroundColor="GhostWhite" CornerRadius="10" Margin="0,0,0,5">
+                                        <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" >
                                             <Label Text="{Binding Title}"
                                                    Grid.Row="0" Grid.Column="1"       
                                                    TextColor="Black" 
@@ -67,8 +67,8 @@
                                                 <Image Source="{Binding Thumbnail}"                                  
                                                        Grid.RowSpan="4"                       
                                                        Grid.Column="1"                      
-                                                       Aspect="AspectFit"                  
-                                                       Margin="0,0,10,0"                  
+                                                       Aspect="AspectFit"
+                                                       HorizontalOptions="End"
                                                        />
                                                 <Label Text="{Binding Authors}"                         
                                                        Grid.Row="0" Grid.Column="0"          

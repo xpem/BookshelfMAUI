@@ -14,6 +14,8 @@ namespace BookshelfServices.Books
 
         Task<bool> VerifyBookbyTitle(string title);
 
+        Task<Book?> GetBookbyTitleAndGoogleId(string title, string googleId);
+
         Task<(List<UIBookItem>, int total)> GetBookSituationByStatus(int? page, int Situation, string? textoBusca);
 
         void InactivateBook(string bookKey);

@@ -282,14 +282,17 @@ namespace BookshelfRepos.Books
                     new SqliteParameter("@Title", bookTitle)
                 };
 
-                if (!string.IsNullOrEmpty(googleKey))
-                {
-                    parameters.Add(new SqliteParameter("@GoogleKey", googleKey));
-                }
-
                 StringBuilder query = new StringBuilder();
 
-                query.Append("select b.key,b.title,b.Authors,b.Year,b.Volume,b.Pages,b.Genre,b.LastUpdate,b.SubTitle,b.Isbn,br.Rate,b.situation,br.comment,b.Cover,b.GoogleId from BOOK b inner join BOOKRATING br on br.BookKey = b.key where b.userId = @UserId and b.title = @Title");
+                query.Append("select b.key,b.title,b.Authors,b.Year,b.Volume,b.Pages,b.Genre,b.LastUpdate,b.SubTitle,b.Isbn,br.Rate,b.situation,br.comment,b.Cover,b.GoogleId from BOOK b inner join BOOKRATING br on br.BookKey = b.key where b.userId = @UserId and LOWER(b.title) =  @Title");
+
+
+                if (!string.IsNullOrEmpty(googleKey))
+                {
+                    parameters.Add(new SqliteParameter("@GoogleId", googleKey));
+
+                    query.Append(" or b.GoogleId = @GoogleId");
+                }
 
                 SqliteDataReader response = await SQLiteDB.RunSqliteCommand(query.ToString(), parameters);
 
@@ -340,7 +343,7 @@ namespace BookshelfRepos.Books
 
                 if (!string.IsNullOrEmpty(textoBusca))
                 {
-                    command += " and b.title like @textoBusca";
+                    command += " and LOWER(b.title) like @textoBusca";
                 }
 
                 command += " and (b.Inactive is null or b.Inactive = '0') order by LastUpdate desc";

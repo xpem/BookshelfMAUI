@@ -122,7 +122,7 @@ namespace Bookshelf.ViewModels
 
             string _searchText = "";
             if (!string.IsNullOrEmpty(SearchTitle))
-                _searchText = SearchTitle.ToUpper();
+                _searchText = SearchTitle.ToLower();
 
             (var booksList, TotalBooksItens) = await booksServices.GetBookSituationByStatus(pageNumber, SituationIndex.Value, _searchText);
 

@@ -48,7 +48,7 @@ namespace Bookshelf.ViewModels
         private ObservableCollection<string> statusList = new() { "Nenhuma", "Vou ler", "Lendo", "Lido", "Interrompido" };
         public ObservableCollection<string> StatusList { get => statusList; set { if (value != statusList) { statusList = value; OnPropertyChanged(); } } }
 
-        private bool ratingBarIsVisible, lblRatingBarIsVisible, edtCommentIsVisible, imgCoverIsVisible = true;
+        private bool ratingBarIsVisible, lblRatingBarIsVisible, edtCommentIsVisible, imgCoverIsVisible = false;
 
         public bool RatingBarIsVisible { get => ratingBarIsVisible; set { if (value != ratingBarIsVisible) { ratingBarIsVisible = value; OnPropertyChanged(); } } }
 
@@ -120,28 +120,44 @@ namespace Bookshelf.ViewModels
             BtnInsertText = "Cadastrar";
             BtnAddBookImageSourceGlyph = IconFont.Plus;
 
-            if (!string.IsNullOrEmpty(GoogleKey))
-            {
-                await GetGoogleBook();
-            }
+
 
             if (string.IsNullOrEmpty(BookKey))
             {
-                pkrStatusSelectedIndex = 0;
+                if (!string.IsNullOrEmpty(GoogleKey))
+                    await GetGoogleBook();
 
-                RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
+                if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(GoogleKey))
+                {
+                    Book _book = await booksServices.GetBookbyTitleAndGoogleId(Title.ToLower(), GoogleKey);
 
-                if (string.IsNullOrEmpty(GoogleKey))
-                    Cover = Title = SubTitle = Authors = Year = Pages = "";
+                    if (_book is not null)
+                    {
+                        BuildBook(_book);
 
-                Isbn = Genre = Volume = "";
+                        BookKey = _book.BookKey;
+                    }
+
+
+                }
+
+                if (string.IsNullOrEmpty(BookKey))
+                {
+                    pkrStatusSelectedIndex = 0;
+
+                    RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
+
+                    if (string.IsNullOrEmpty(GoogleKey))
+                        Cover = Title = SubTitle = Authors = Year = Pages = "";
+
+                    Isbn = Genre = Volume = "";
+                }
             }
             else
-            {
                 _ = Task.Run(() => GetBook(BookKey));
-            }
 
-            if (Cover is null) ImgCoverIsVisible = false;
+
+            if (!string.IsNullOrEmpty(Cover)) ImgCoverIsVisible = true;
         }
 
         protected async Task GetGoogleBook()
@@ -158,18 +174,12 @@ namespace Bookshelf.ViewModels
                 Pages = _googleBook.PageCount.ToString();
             }
             else
-            {
                 GoogleKey = null;
-            }
+
         }
 
-        /// <summary>
-        /// get book by book key
-        /// </summary>
-        /// <param name="BookKey"></param>
-        protected async void GetBook(string BookKey)
+        protected void BuildBook(Book book)
         {
-            Book book = await booksServices.GetBook(BookKey);
 
             Title = book.Title;
             SubTitle = book.SubTitle;
@@ -179,10 +189,13 @@ namespace Bookshelf.ViewModels
             Pages = book.Pages.ToString();
             Genre = book.Genre;
             Volume = book.Volume;
-            Cover = book.Cover;
-            GoogleKey = book.GoogleId;
             Comment = book.Rating.Comment;
             PkrStatusSelectedIndex = Convert.ToInt32(book.Situation);
+
+            if (GoogleKey is null)
+                GoogleKey = book.GoogleId;
+            if (Cover is null)
+                Cover = book.Cover;
 
             if (book.Situation > 0)
             {
@@ -204,6 +217,12 @@ namespace Bookshelf.ViewModels
             BtnInsertText = "Alterar";
             IsUpdate = true;
         }
+
+        /// <summary>
+        /// get book by book key
+        /// </summary>
+        /// <param name="BookKey"></param>
+        protected async void GetBook(string BookKey) => BuildBook(await booksServices.GetBook(BookKey));
 
         private async Task InsertBook()
         {
@@ -233,9 +252,8 @@ namespace Bookshelf.ViewModels
                 {
                     int rate = 0;
                     if (pkrStatusSelectedIndex == 3)
-                    {
                         rate = Convert.ToInt32(Math.Round(Convert.ToDecimal(Rate), MidpointRounding.AwayFromZero));
-                    }
+
 
                     book.Situation = (Situation)pkrStatusSelectedIndex;
 
@@ -266,13 +284,9 @@ namespace Bookshelf.ViewModels
                     string res = await booksServices.UpdateBook(book);
 
                     if (res != null)
-                    {
                         mensagem = res;
-                    }
                     else
-                    {
                         mensagem += " atualizados";
-                    }
                 }
                 else
                 {

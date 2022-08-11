@@ -75,7 +75,7 @@ namespace BookshelfServices.Books.Sync
 
                                 if (success)
                                 {
-                                    BookshelfRepos.Books.BooksRepos.UpdateBookKey(localBookId, res, user.Id);
+                                 BookshelfRepos.Books.BooksRepos.UpdateBookKey(localBookId, res, user.Id);
                                 }
                                 else throw new Exception($"Não foi possivel sincronizar o livro {book.BookKey}, res: {res}");
                             }

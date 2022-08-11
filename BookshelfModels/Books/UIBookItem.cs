@@ -11,5 +11,9 @@
         public string? AuthorsAndYear { get; set; }
         public string? Pages { get; set; }
         public string? Rate { get; set; }
+
+        public string? Cover { get; set; }
+
+        public bool CoverIsVisible => Cover != null;
     }
 }

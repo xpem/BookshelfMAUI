@@ -19,6 +19,7 @@
                             Aspect="AspectFit"                  
                             Margin="0,0,10,0"   
                             HeightRequest="120"
+                            IsVisible="{Binding ImgCoverIsVisible}"
                             />
                         <Label Text="Título" Style="{StaticResource LblEntry}"/>
                         <Entry MinimumWidthRequest="250" Text="{Binding Title}" Style="{StaticResource Entry}" CompressedLayout.IsHeadless="False" HorizontalOptions="FillAndExpand" MaxLength="400" />

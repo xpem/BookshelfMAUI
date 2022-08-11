@@ -65,11 +65,11 @@
     </ContentPage.Behaviors>
     <ContentPage.Content>
         <ScrollView>
-            <VerticalStackLayout MaximumWidthRequest="400" Padding="4" >
-                <Frame Style="{ StaticResource MainFrame }" Margin="0" >
+            <VerticalStackLayout HorizontalOptions="FillAndExpand" Padding="1" >
+                <Frame Style="{ StaticResource MainFrame }">
                     <VerticalStackLayout Spacing="2" >
                         <!--<ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" ></ActivityIndicator>-->
-                        <Frame Style="{ StaticResource FrameCardItem }">
+                        <Frame Style="{ StaticResource FrameCardItem }" Margin="-10,0,-10,0">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding IllReadCommand}" />
                             </Frame.GestureRecognizers>
@@ -93,7 +93,7 @@
                                        />
                             </Grid>
                         </Frame>
-                        <Frame Style="{ StaticResource FrameCardItem }" >
+                        <Frame Style="{ StaticResource FrameCardItem }" Margin="-10,0,-10,0" >
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ReadingCommand}" />
                             </Frame.GestureRecognizers>
@@ -117,7 +117,7 @@
                                        />
                             </Grid>
                         </Frame>
-                        <Frame Style="{ StaticResource FrameCardItem }" >
+                        <Frame Style="{ StaticResource FrameCardItem }" Margin="-10,0,-10,0" >
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ReadCommand}"/>
                             </Frame.GestureRecognizers>
@@ -146,7 +146,7 @@
                                        />
                             </Grid>
                         </Frame>
-                        <Frame Style="{ StaticResource FrameCardItem }" >
+                        <Frame Style="{ StaticResource FrameCardItem }" Margin="-10,0,-10,0">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding InterruptedCommand}" />
                             </Frame.GestureRecognizers>

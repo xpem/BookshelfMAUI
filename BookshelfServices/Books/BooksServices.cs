@@ -113,6 +113,20 @@ namespace BookshelfServices.Books
 
         }
 
+        public async Task<Book?> GetBookbyTitleAndGoogleId(string title,string googleId)
+        {
+            BookshelfModels.User.User? User = BookshelfRepos.User.UserRepos.GetUser();
+            if (User?.Id != null)
+            {
+                Book? _book = await BookshelfRepos.Books.BooksRepos.GetBookByTitleOrGooglekey(User.Id, title, googleId);
+
+                return _book;
+            }
+
+            return null;
+
+        }
+
         /// <summary>
         /// Get books situations by status
         /// </summary>
@@ -160,6 +174,7 @@ namespace BookshelfServices.Books
                         AuthorsAndYear = book.Authors + "; Ano: " + book.Year,
                         Pages = book.Pages.ToString(),
                         SubtitleAndVol = SubtitleAndVol,
+                        Cover = book.Cover,
                     };
 
                     if ((Situation)Situation == BookshelfModels.Books.Situation.Read)
