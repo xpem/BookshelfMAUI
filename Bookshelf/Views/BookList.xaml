@@ -94,9 +94,20 @@
                                             TextColor="Black" 
                                             VerticalOptions="StartAndExpand" 
                                             />
+                                        <Label 
+                                            Text="{Binding SubtitleAndVol, StringFormat='{0}'}" 
+                                            Grid.Row="0" 
+                                            Grid.Column="0"         
+                                            VerticalTextAlignment="Start"
+                                            MaxLines="2" 
+                                            LineBreakMode="TailTruncation" 
+                                            FontSize="18"
+                                            FontFamily="EBGaramondItalic"
+                                            TextColor="Black"
+                                            VerticalOptions="StartAndExpand" 
+                                            />
                                         <Grid HorizontalOptions="FillAndExpand" HeightRequest="150">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition Height="20"/>
                                                 <RowDefinition Height="25"/>
                                                 <RowDefinition Height="20"/>
                                                 <RowDefinition Height="*"/>
@@ -107,27 +118,15 @@
                                             </Grid.ColumnDefinitions>
                                             <Image 
                                                 Source="{Binding Cover}"
-                                                Grid.RowSpan="4"
+                                                Grid.RowSpan="3"
                                                 Grid.Column="1"
                                                 Aspect="AspectFit"
                                                 HorizontalOptions="End"
                                                 IsVisible="{Binding CoverIsVisible}"
-                                                />
-                                            <Label 
-                                                Text="{Binding SubtitleAndVol, StringFormat='{0}'}" 
-                                                Grid.Row="0" 
-                                                Grid.Column="0"         
-                                                VerticalTextAlignment="Start"
-                                                MaxLines="2" 
-                                                LineBreakMode="TailTruncation" 
-                                                FontSize="18"
-                                                FontFamily="EBGaramondItalic"
-                                                TextColor="Black"
-                                                VerticalOptions="StartAndExpand" 
-                                                />
+                                                />                                            
                                             <Label 
                                                 Text="{Binding AuthorsAndYear}" 
-                                                Grid.Row="1" Grid.Column="0" 
+                                                Grid.Row="0" Grid.Column="0" 
                                                 VerticalTextAlignment="Start" 
                                                 HorizontalTextAlignment="Start"
                                                 FontSize="15" LineBreakMode="TailTruncation" 
@@ -136,7 +135,7 @@
                                                    />
                                             <Label 
                                                 Text="{Binding Pages, StringFormat='Páginas: {0:F0}'}" 
-                                                Grid.Row="2" Grid.Column="0"
+                                                Grid.Row="1" Grid.Column="0"
                                                 HorizontalTextAlignment="Start" 
                                                 VerticalTextAlignment="Start"
                                                 FontSize="15"
@@ -148,7 +147,7 @@
                                                 Text="{Binding Rate}"
                                                 HorizontalTextAlignment="Start"
                                                 HorizontalOptions="Fill"
-                                                Grid.Row="3" 
+                                                Grid.Row="2" 
                                                 Grid.Column="0" 
                                                 FontSize="15"
                                                 FontFamily="EBGaramondItalic" 

@@ -11,7 +11,7 @@ namespace BookshelfRepos
         /// <summary>
         /// version upgrade of a table force his recreation
         /// </summary>
-        public static VersionsDbTables ActualVersionsDbTables = new() { USER = 3, BOOK = 18 };
+        public static VersionsDbTables ActualVersionsDbTables = new() { USER = 3, BOOK = 19 };
 
         /// <summary>
         /// Need additional package Microsoft.EntityFrameworkCore.SqliteMicrosoft.EntityFrameworkCore.Sqlite to work

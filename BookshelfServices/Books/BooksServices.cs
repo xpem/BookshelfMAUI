@@ -72,6 +72,7 @@ namespace BookshelfServices.Books
             book.LastUpdate = DateTime.Now;
 
             BookshelfModels.User.User? User = BookshelfRepos.User.UserRepos.GetUser();
+
             if (User?.Id != null)
             {
                 if (CrossConnectivity.Current.IsConnected)

@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Bookshelf.Views.AddBook"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit" xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels" x:DataType="viewmodels:AddBookVM"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit" 
+             xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels" x:DataType="viewmodels:AddBookVM"
              xmlns:behaviors="clr-namespace:Bookshelf.Utils.Behaviors"
              Title="Cadastrar Livro"
              Style="{StaticResource ContentPage}" 
@@ -21,10 +22,27 @@
                             HeightRequest="120"
                             IsVisible="{Binding ImgCoverIsVisible}"
                             />
-                        <Label Text="Título" Style="{StaticResource LblEntry}"/>
-                        <Entry MinimumWidthRequest="250" Text="{Binding Title}" Style="{StaticResource Entry}" CompressedLayout.IsHeadless="False" HorizontalOptions="FillAndExpand" MaxLength="400" />
-                        <Label Text="*Subtítulo" Style="{StaticResource LblEntry}"></Label>
-                        <Entry x:Name="EntSubTitle" MinimumWidthRequest="250" Text="{Binding SubTitle}" Style="{StaticResource Entry}" HorizontalOptions="FillAndExpand" MaxLength="400" />
+                        <Entry 
+                            MinimumWidthRequest="250"
+                            Text="{Binding Title}"
+                            Style="{StaticResource Entry}" 
+                            CompressedLayout.IsHeadless="False" 
+                            HorizontalOptions="FillAndExpand" 
+                            MaxLength="400" 
+                            IsEnabled="{Binding LblTitleIsEnabled}"
+                            />
+                        <Label 
+                            Text="*Subtítulo" 
+                            Style="{StaticResource LblEntry}"
+                            />
+                        <Entry 
+                            x:Name="EntSubTitle" 
+                            MinimumWidthRequest="250"
+                            Text="{Binding SubTitle}"
+                            Style="{StaticResource Entry}"
+                            HorizontalOptions="FillAndExpand"
+                            MaxLength="400" 
+                            />
                         <Grid HorizontalOptions="FillAndExpand">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -35,10 +53,30 @@
                                 <ColumnDefinition Width ="4*" />
                                 <ColumnDefinition Width ="6*" />
                             </Grid.ColumnDefinitions>
-                            <Frame VerticalOptions="Start" BorderColor="Transparent" HorizontalOptions="Fill" Grid.Row="0" Grid.Column="0" Padding="0" BackgroundColor="Transparent">
+                            <Frame 
+                                VerticalOptions="Start" 
+                                BorderColor="Transparent" 
+                                HorizontalOptions="Fill" 
+                                Grid.Row="0" 
+                                Grid.Column="0" 
+                                Padding="0" 
+                                BackgroundColor="Transparent"
+                                >
                                 <StackLayout Orientation="Vertical" VerticalOptions="Start" HorizontalOptions="FillAndExpand">
-                                    <Label Text="*Volume" Style="{StaticResource LblEntry}"></Label>
-                                    <Entry WidthRequest="60" Text="{Binding Volume}" HorizontalOptions="StartAndExpand" VerticalOptions="Start" x:Name="EntVol" Keyboard="Numeric" MaxLength="2" Style="{StaticResource Entry}" >
+                                    <Label 
+                                        Text="*Volume" 
+                                        Style="{StaticResource LblEntry}"
+                                        />
+                                    <Entry
+                                        WidthRequest="60" 
+                                        Text="{Binding Volume}"
+                                        HorizontalOptions="StartAndExpand" 
+                                        VerticalOptions="Start" 
+                                        x:Name="EntVol" 
+                                        Keyboard="Numeric"
+                                        MaxLength="2" 
+                                        Style="{StaticResource Entry}" 
+                                        >
                                         <Entry.Behaviors>
                                             <behaviors:NumericValidationBehavior />
                                         </Entry.Behaviors>
@@ -81,7 +119,7 @@
                         </Grid>
                         <Frame VerticalOptions="Start" BorderColor="Transparent" HorizontalOptions="FillAndExpand" Grid.Row="0" Grid.Column="1" Padding="0" BackgroundColor="Transparent">
                             <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
-                                <Label Text="*Isbn" Style="{StaticResource LblEntry}"></Label>
+                                <Label Text="*Isbn" Style="{StaticResource LblEntry}" />
                                 <Entry MaximumWidthRequest="350" MinimumWidthRequest="250" Text="{Binding Isbn}" HorizontalOptions="StartAndExpand" MaxLength="300" Style="{StaticResource Entry}" />
                             </StackLayout>
                         </Frame>
@@ -99,44 +137,54 @@
                                 <ColumnDefinition Width ="*" />
                                 <ColumnDefinition Width ="*" />
                             </Grid.ColumnDefinitions>
-                            <Image Source="{Binding ImgStar1}"  Grid.Row="0" Grid.Column="0" HeightRequest="30" HorizontalOptions="Center" Margin="0,0,3,0" >
+                            <Image 
+                                Source="{Binding ImgStar1}"  
+                                Grid.Row="0" 
+                                Grid.Column="0"
+                                HeightRequest="30" 
+                                HorizontalOptions="Center"
+                                Margin="0,0,3,0" 
+                                >                                
                                 <Image.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding ImgStar1ClickCommand}" NumberOfTapsRequired="1" />
                                 </Image.GestureRecognizers>
                             </Image>
-                            <Image Source="{Binding ImgStar2}"  Grid.Row="0" Grid.Column="1" HeightRequest="30" HorizontalOptions="Center" Margin="0,0,3,0" >
+                            <Image Source="{Binding ImgStar2}" Grid.Row="0" Grid.Column="1" HeightRequest="30" HorizontalOptions="Center" Margin="0,0,3,0" >
                                 <Image.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding ImgStar2ClickCommand}" NumberOfTapsRequired="1" />
                                 </Image.GestureRecognizers>
                             </Image>
-                            <Image Source="{Binding ImgStar3}"  Grid.Row="0" Grid.Column="2" HeightRequest="30" HorizontalOptions="Center" Margin="0,0,3,0" >
+                            <Image Source="{Binding ImgStar3}" Grid.Row="0" Grid.Column="2" HeightRequest="30" HorizontalOptions="Center" Margin="0,0,3,0" >
                                 <Image.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding ImgStar3ClickCommand}" NumberOfTapsRequired="1" />
                                 </Image.GestureRecognizers>
                             </Image>
-                            <Image Source="{Binding ImgStar4}"  Grid.Row="0" Grid.Column="3" HeightRequest="30" HorizontalOptions="Center" Margin="0,0,3,0" >
+                            <Image Source="{Binding ImgStar4}" Grid.Row="0" Grid.Column="3" HeightRequest="30" HorizontalOptions="Center" Margin="0,0,3,0" >
                                 <Image.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding ImgStar4ClickCommand}" NumberOfTapsRequired="1" />
                                 </Image.GestureRecognizers>
                             </Image>
-                            <Image Source="{Binding ImgStar5}"  Grid.Row="0" Grid.Column="4" HeightRequest="30" HorizontalOptions="Center"  >
+                            <Image Source="{Binding ImgStar5}" Grid.Row="0" Grid.Column="4" HeightRequest="30" HorizontalOptions="Center" >
                                 <Image.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding ImgStar5ClickCommand}" NumberOfTapsRequired="1" />
                                 </Image.GestureRecognizers>
                             </Image>
                         </Grid>
 
-                        <Label Text="*Comentários" Style="{StaticResource LblEntry}" IsVisible="{Binding EdtCommentIsVisible}"></Label>
-                        <Editor Style="{StaticResource Entry}" HeightRequest="70" MaxLength="200" MinimumWidthRequest="250" HorizontalOptions="FillAndExpand" Keyboard="Chat"
-                            Text="{ Binding Comment }" IsVisible="{Binding EdtCommentIsVisible}"  />
+                        <Label
+                            Text="*Comentários" Style="{StaticResource LblEntry}" IsVisible="{Binding EdtCommentIsVisible}" />
+                        <Editor 
+                            Style="{StaticResource Entry}" HeightRequest="70" MaxLength="200" MinimumWidthRequest="250" HorizontalOptions="FillAndExpand" Keyboard="Chat"
+                            Text="{ Binding Comment }" IsVisible="{Binding EdtCommentIsVisible}" />
 
-                        <Button Text="{Binding BtnInsertText}" 
-                                Command="{Binding InsertBookCommand}" 
-                                Margin="0,10,0,0"
-                                IsVisible="{Binding BtnInsertIsVisible}"
-                                IsEnabled="{Binding BtnInsertIsEnabled}"
-                                Style="{StaticResource MainBtn}"
-                                ContentLayout="Left, 10" >
+                        <Button 
+                            Text="{Binding BtnInsertText}" 
+                            Command="{Binding InsertBookCommand}" 
+                            Margin="0,10,0,0"
+                            IsVisible="{Binding BtnInsertIsVisible}"
+                            IsEnabled="{Binding BtnInsertIsEnabled}"
+                            Style="{StaticResource MainBtn}"
+                            ContentLayout="Left, 10" >
                             <Button.ImageSource>
                                 <FontImageSource 
                                     FontFamily="FontAwesome"

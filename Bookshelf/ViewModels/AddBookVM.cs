@@ -1,5 +1,6 @@
 ﻿using Bookshelf.Resources.Fonts.Styles;
 using Bookshelf.ViewModels.Components;
+using Bookshelf.Views;
 using BookshelfModels.Books;
 using BookshelfModels.Books.GoogleApi;
 using BookshelfServices.Books;
@@ -77,19 +78,21 @@ namespace Bookshelf.ViewModels
             }
         }
 
-
         #region btnInsert propeties
 
-        private bool btnInsertIsVisible = true, btnInsertIsEnabled = true;
+        private bool btnInsertIsVisible = true, btnInsertIsEnabled = true, lblTitleIsEnabled = true;
         private string btnInsertText, btnAddBookImageSourceGlyph;
 
         public bool BtnInsertIsVisible { get => btnInsertIsVisible; set { if (value != btnInsertIsVisible) { btnInsertIsVisible = value; OnPropertyChanged(); } } }
 
         public bool BtnInsertIsEnabled { get => btnInsertIsEnabled; set { if (value != btnInsertIsEnabled) { btnInsertIsEnabled = value; OnPropertyChanged(); } } }
 
+        public bool LblTitleIsEnabled { get => lblTitleIsEnabled; set { if (value != lblTitleIsEnabled) { lblTitleIsEnabled = value; OnPropertyChanged(); } } }
+
         public string BtnInsertText { get => btnInsertText; set { if (value != btnInsertText) { btnInsertText = value; OnPropertyChanged(); } } }
 
         public string BtnAddBookImageSourceGlyph { get => btnAddBookImageSourceGlyph; set { if (value != btnAddBookImageSourceGlyph) { btnAddBookImageSourceGlyph = value; OnPropertyChanged(); } } }
+
 
         /// <summary>
         /// btn insert book command
@@ -120,8 +123,6 @@ namespace Bookshelf.ViewModels
             BtnInsertText = "Cadastrar";
             BtnAddBookImageSourceGlyph = IconFont.Plus;
 
-
-
             if (string.IsNullOrEmpty(BookKey))
             {
                 if (!string.IsNullOrEmpty(GoogleKey))
@@ -137,8 +138,6 @@ namespace Bookshelf.ViewModels
 
                         BookKey = _book.BookKey;
                     }
-
-
                 }
 
                 if (string.IsNullOrEmpty(BookKey))
@@ -157,7 +156,7 @@ namespace Bookshelf.ViewModels
                 _ = Task.Run(() => GetBook(BookKey));
 
 
-            if (!string.IsNullOrEmpty(Cover)) ImgCoverIsVisible = true;
+            
         }
 
         protected async Task GetGoogleBook()
@@ -192,10 +191,14 @@ namespace Bookshelf.ViewModels
             Comment = book.Rating.Comment;
             PkrStatusSelectedIndex = Convert.ToInt32(book.Situation);
 
-            if (GoogleKey is null)
-                GoogleKey = book.GoogleId;
-            if (Cover is null)
-                Cover = book.Cover;
+            GoogleKey ??= book.GoogleId;
+            Cover ??= book.Cover;
+            
+            if (!string.IsNullOrEmpty(Cover))
+            {
+                ImgCoverIsVisible = true;
+                LblTitleIsEnabled = false;
+            }
 
             if (book.Situation > 0)
             {
@@ -293,20 +296,16 @@ namespace Bookshelf.ViewModels
                     string res = await booksServices.AddBook(book);
 
                     if (res != null)
-                    {
                         mensagem = res;
-                    }
                     else
-                    {
                         mensagem += " cadastrados";
-                    }
                 }
 
                 bool resposta = await Application.Current.MainPage.DisplayAlert("Aviso", mensagem, null, "Ok");
 
                 if (!resposta)
                 {
-                    await Shell.Current.GoToAsync("../..");
+                    await Shell.Current.GoToAsync($"//{nameof(Main)}");
                 }
             }
         }

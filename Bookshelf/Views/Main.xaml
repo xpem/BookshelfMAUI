@@ -65,11 +65,11 @@
     </ContentPage.Behaviors>
     <ContentPage.Content>
         <ScrollView>
-            <VerticalStackLayout HorizontalOptions="FillAndExpand" Padding="1" >
-                <Frame Style="{ StaticResource MainFrame }">
+            <StackLayout HorizontalOptions="FillAndExpand" Padding="1" VerticalOptions="FillAndExpand" >
+                <Frame Style="{ StaticResource MainFrame }" Padding="5">
                     <VerticalStackLayout Spacing="2" >
                         <!--<ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" ></ActivityIndicator>-->
-                        <Frame Style="{ StaticResource FrameCardItem }" Margin="-10,0,-10,0">
+                        <Frame Style="{ StaticResource FrameCardItem }" >
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding IllReadCommand}" />
                             </Frame.GestureRecognizers>
@@ -84,16 +84,18 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Text="{x:Static Icons:IconFont.List}" Grid.Row="0" Grid.Column="0" Style="{ StaticResource LblCardImgIcon }"  SemanticProperties.Description="Vou ler" />
-                                <Label Text="{Binding IllRead}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }" />
+                                <Label 
+                                    Text="{Binding IllRead}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }" />
                                 <Label Text="Vou ler" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
-                                <Label Grid.Column="3"
-                                       Grid.RowSpan="2"
-                                       Style="{ StaticResource ImgAngleRight }"
-                                       SemanticProperties.Description="Acessar lista de livros que vou ler" 
-                                       />
+                                <Label 
+                                    Grid.Column="3"
+                                    Grid.RowSpan="2"
+                                    Style="{ StaticResource ImgAngleRight }"
+                                    SemanticProperties.Description="Acessar lista de livros que vou ler" 
+                                    />
                             </Grid>
                         </Frame>
-                        <Frame Style="{ StaticResource FrameCardItem }" Margin="-10,0,-10,0" >
+                        <Frame Style="{ StaticResource FrameCardItem }" >
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ReadingCommand}" />
                             </Frame.GestureRecognizers>
@@ -117,7 +119,7 @@
                                        />
                             </Grid>
                         </Frame>
-                        <Frame Style="{ StaticResource FrameCardItem }" Margin="-10,0,-10,0" >
+                        <Frame Style="{ StaticResource FrameCardItem }">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ReadCommand}"/>
                             </Frame.GestureRecognizers>
@@ -139,14 +141,15 @@
                                        />
                                 <Label Text="{Binding Read}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
                                 <Label Text="Lidos" Grid.Row="1" Grid.Column="0" Style="{ StaticResource LblText }" />
-                                <Label Grid.Column="3"
-                                       Grid.RowSpan="2"
-                                       Style="{ StaticResource ImgAngleRight }"
-                                       SemanticProperties.Description="Acessar lista de livros que já li" 
-                                       />
+                                <Label 
+                                    Grid.Column="3"
+                                    Grid.RowSpan="2"
+                                    Style="{ StaticResource ImgAngleRight }"
+                                    SemanticProperties.Description="Acessar lista de livros que já li" 
+                                    />
                             </Grid>
                         </Frame>
-                        <Frame Style="{ StaticResource FrameCardItem }" Margin="-10,0,-10,0">
+                        <Frame Style="{ StaticResource FrameCardItem }">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding InterruptedCommand}" />
                             </Frame.GestureRecognizers>
@@ -167,7 +170,7 @@
                                        SemanticProperties.Description="Interrompidos" 
                                        />
                                 <Label Text="{Binding Interrupted}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
-                                <Label Text="Suspensos" 
+                                <Label Text="Suspenso" 
                                        Grid.Row="1" 
                                        Grid.Column="0" 
                                        Style="{ StaticResource LblText }" />
@@ -180,60 +183,59 @@
                         </Frame>
                     </VerticalStackLayout>
                 </Frame>
-                <VerticalStackLayout Padding="0,5,0,0">
-                    <Frame BackgroundColor="#BDBDBD">
-                        <VerticalStackLayout >
-                            <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="5">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Button Text="Adicionar" Grid.Row="0" Grid.Column="0" HorizontalOptions="FillAndExpand" Style="{StaticResource MainBtn}" Command="{Binding GoogleSearchCommand}" FontSize="15" 
+                <Frame BackgroundColor="#BDBDBD" Padding="5" VerticalOptions="FillAndExpand" Margin="0,5,0,5">
+                    <StackLayout VerticalOptions="FillAndExpand">
+                        <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="5" Margin="0,10,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Text="Adicionar" Grid.Row="0" Grid.Column="0" HorizontalOptions="FillAndExpand" Style="{StaticResource MainBtn}" Command="{Binding GoogleSearchCommand}" FontSize="15" 
                                     ContentLayout="Left, 10">
-                                    <Button.ImageSource>
-                                        <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Book}" Size="15"></FontImageSource>
-                                    </Button.ImageSource>
-                                </Button>
-                                <Button Text="Listar Todos" Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand" Style="{StaticResource BtnSecondary}" FontSize="15"
+                                <Button.ImageSource>
+                                    <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Book}" Size="15"></FontImageSource>
+                                </Button.ImageSource>
+                            </Button>
+                            <Button Text="Listar Todos" Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand" Style="{StaticResource BtnSecondary}" FontSize="15"
                                      BackgroundColor="#2D4144" ContentLayout="Left, 10" Command="{Binding ArchiveCommand}" >
-                                    <Button.ImageSource>
-                                        <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Bars}" Size="15" />
-                                    </Button.ImageSource>
-                                </Button>
-                            </Grid>
-                            <!--<Button Text="Add"  HorizontalOptions="FillAndExpand" Style="{StaticResource BtnSecondary}" FontSize="15"
+                                <Button.ImageSource>
+                                    <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Bars}" Size="15" />
+                                </Button.ImageSource>
+                            </Button>
+                        </Grid>
+                        <!--<Button Text="Add"  HorizontalOptions="FillAndExpand" Style="{StaticResource BtnSecondary}" FontSize="15"
                                     ImageSource="bars_staggered_solid_15_w.png" BackgroundColor="#2D4144" ContentLayout="Left, 10" Command="{Binding GoogleSearchCommand}" >
                                 <Button.ImageSource>
                                     <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Bars}" Size="15"></FontImageSource>
                                 </Button.ImageSource>
                             </Button>-->
-                            <Grid HorizontalOptions="FillAndExpand" Margin="0,5,0,0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition  Width ="*" />
-                                    <ColumnDefinition  Width ="30" />
-                                    <ColumnDefinition  Width ="30" />
-                                </Grid.ColumnDefinitions>
-                                <Button Text="Sair" Grid.Row="0" Grid.Column="0" 
+                        <Grid HorizontalOptions="FillAndExpand" Margin="0,5,0,0" VerticalOptions="EndAndExpand">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition  Width ="*" />
+                                <ColumnDefinition  Width ="30" />
+                                <ColumnDefinition  Width ="30" />
+                            </Grid.ColumnDefinitions>
+                            <Button Text="Sair" Grid.Row="0" Grid.Column="0" 
                                         Style="{ StaticResource BtnExit}" 
                                         FontSize="12"
                                         Command="{Binding LogoutCommand}" 
                                         ContentLayout="Left, 10"
                                         >
-                                    <Button.ImageSource>
-                                        <FontImageSource  
+                                <Button.ImageSource>
+                                    <FontImageSource  
                                             FontFamily="FontAwesome" 
                                             Color="#000"
                                             Glyph="{x:Static Icons:IconFont.SignOutAlt}"
                                             Size="10" />
-                                    </Button.ImageSource>
-                                </Button>
-                                <Label Text="{x:Static Icons:IconFont.Wifi}"
+                                </Button.ImageSource>
+                            </Button>
+                            <Label Text="{x:Static Icons:IconFont.Wifi}"
                                        Grid.Row="0"
                                        Grid.Column="1" 
                                        TextColor="{ Binding IsConnected}"
@@ -242,7 +244,7 @@
                                        FontSize="12" 
                                        Margin="0,0,0,10"
                                        VerticalOptions="End" />
-                                <Label Text="{x:Static Icons:IconFont.Sync}"
+                            <Label Text="{x:Static Icons:IconFont.Sync}"
                                        Grid.Row="0"
                                        Grid.Column="2" 
                                        TextColor="{Binding IsSync}"     
@@ -251,11 +253,10 @@
                                        FontSize="12"
                                        Margin="0,0,0,10"
                                        VerticalOptions="End" />
-                            </Grid>
-                        </VerticalStackLayout>
-                    </Frame>
-                </VerticalStackLayout>
-            </VerticalStackLayout>
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
         </ScrollView>
     </ContentPage.Content>
 

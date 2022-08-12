@@ -13,10 +13,12 @@ namespace BookshelfRepos.Books
             {
                 SQLiteDB.OpenIfClosed();
 
+                string _lastUpdate = lastUpdate.ToString("yyyy-MM-dd hh:mm:ss.fff");
+
                 List<SqliteParameter> parameters = new()
                 {
                     new SqliteParameter("@UserId", userId),
-                    new SqliteParameter("@LastUpdate", lastUpdate.ToString("yyyy-MM-dd hh:mm:ss"))
+                    new SqliteParameter("@LastUpdate", _lastUpdate)
                 };
 
                 SqliteDataReader response = await SQLiteDB.RunSqliteCommand("select b.Title, b.Authors, b.Year, b.Volume, b.Pages, b.Genre, b.LastUpdate, b.SubTitle, b.Isbn, b.Situation, br.Rate, " +
@@ -97,6 +99,7 @@ namespace BookshelfRepos.Books
                 "values (@Key, @UserId, @Title, @SubTitle, @Authors, @Year, @Volume, @Pages, @Genre, @LastUpdate,@Isbn,@Situation,@Cover,@GoogleId)",
                 sqliteParametersList);
 
+            //BOOK RATING
             sqliteParametersList = new() {
                 new SqliteParameter("@BookKey", book.BookKey),
                 new SqliteParameter("@Rate", book.Rating?.Rate),

@@ -43,8 +43,9 @@ namespace BookshelfServices.Books.Api
                     if (response.IsSuccessStatusCode)
                     {
                         var obj = JsonNode.Parse(result);
+
                         if (obj != null)
-                            return (true, obj["BookKey"]?.ToJsonString());
+                            return (true, obj["BookKey"]?.GetValue<string>());
                         else throw new Exception(result);
                     }
                     else
@@ -133,7 +134,7 @@ namespace BookshelfServices.Books.Api
                 {
                     httpClient = new();
                     httpClient.DefaultRequestHeaders.Add("Authorization", user?.Token);
-                    httpClient.DefaultRequestHeaders.Add("lastUpdate", user?.LastUpdate.ToString("yyyy-MM-ddThh:mm:ss"));
+                    httpClient.DefaultRequestHeaders.Add("lastUpdate", user?.LastUpdate.ToString("yyyy-MM-ddThh:mm:ss.fff"));
                     HttpResponseMessage response = await httpClient.GetAsync(ApiKeys.ApiUri + "/GetBooksByLastUpdate");
 
                     if (response.IsSuccessStatusCode)
