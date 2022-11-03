@@ -14,7 +14,7 @@ namespace BookshelfRepos.BuildDb
 
             UpdateSQLiteTablesByVersions();
 
-            _ = SQLiteDB.RunSqliteCommand("create table if not exists USER (Id integer primary key autoincrement, EMAIL text, UID text,TOKEN text,Password text, lastUpdate datetime);");
+            _ = SQLiteDB.RunSqliteCommand("create table if not exists USER (Id integer primary key autoincrement,NAME text, EMAIL text, UID text,TOKEN text,PASSWORD text, LASTUPDATE datetime);");
             _ = SQLiteDB.RunSqliteCommand("create table if not exists BOOK (Key text, UserId text, Title text, SubTitle text, Authors text, Year integer, Volume text, Pages integer, Isbn text, Genre text, LastUpdate DATETIME,Inactive integer,Situation integer,Cover TEXT,GoogleId TEXT);");
             _ = SQLiteDB.RunSqliteCommand("create table if not exists BOOKRATING (BookKey text, Rate integer, Comment text);");
             _ = SQLiteDB.RunSqliteCommand("create table if not exists VERSIONDB (USER integer,BOOK integer);");

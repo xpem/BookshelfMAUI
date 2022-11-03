@@ -8,6 +8,6 @@
 
         Task<bool> SignIn(string email, string password);
 
-        Task<BookshelfModels.User.User> InsertUser(string email, string password);
+        Task<BookshelfModels.User.User> InsertUser(string name, string email, string password);
     }
 }

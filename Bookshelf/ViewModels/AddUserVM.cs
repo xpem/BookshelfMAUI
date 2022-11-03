@@ -14,6 +14,10 @@ namespace Bookshelf.ViewModels
         readonly IUserServices userService;
         readonly IBooksSyncServices booksSyncServices;
 
+        string name;
+
+        public string Name { get => name; set { if (name != value) { name = value; OnPropertyChanged(); } } }
+
         string email;
 
         public string Email { get => email; set { if (email != value) { email = value; OnPropertyChanged(); } } }
@@ -34,7 +38,7 @@ namespace Bookshelf.ViewModels
         public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { btnCreateUserIsEnabled = value; OnPropertyChanged(); } } }
 
 
-        public AddUserVM( IUserServices _userService, IBooksSyncServices _booksSyncServices)
+        public AddUserVM(IUserServices _userService, IBooksSyncServices _booksSyncServices)
         {
             userService = _userService;
             booksSyncServices = _booksSyncServices;
@@ -43,6 +47,11 @@ namespace Bookshelf.ViewModels
         private bool VerifyFileds()
         {
             bool validInformation = true;
+
+            if (string.IsNullOrEmpty(Name))
+            {
+                validInformation = false;
+            }
 
             if (string.IsNullOrEmpty(Email))
             {
@@ -92,7 +101,7 @@ namespace Bookshelf.ViewModels
                 BtnCreateUserIsEnabled = false;
 
                 //
-                User user = await userService.InsertUser(email, password);
+                User user = await userService.InsertUser(name, email, password);
 
                 if (user != null)
                 {

@@ -32,6 +32,7 @@
                         CachingStrategy="RecycleElement" 
                         ItemsSource="{Binding GoogleBooksList}" 
                         SelectedItem="{Binding ListItem}"
+                        SelectionMode="Single"
                         Grid.Row="0"                        
                         >
                         <ListView.Behaviors>

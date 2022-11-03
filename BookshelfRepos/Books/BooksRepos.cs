@@ -135,11 +135,13 @@ namespace BookshelfRepos.Books
                 new SqliteParameter("@LastUpdate", book.LastUpdate),
                 new SqliteParameter("@Isbn", book.Isbn),
                 new SqliteParameter("@Inactive", (book.Inactive ? "1" : "0")),
-                new SqliteParameter("@Situation", book.Situation)
+                new SqliteParameter("@Situation", book.Situation),
+                new SqliteParameter("@Cover", book.Cover),
+                new SqliteParameter("@GoogleId", book.GoogleId)
             };
 
             _ = SQLiteDB.RunSqliteCommand("update BOOK set Title = @Title, SubTitle = @SubTitle, Authors = @Authors, Year = @Year, Volume = @Volume, Pages = @Pages" +
-                         ", Genre = @Genre, LastUpdate = @LastUpdate,Isbn = @Isbn,Inactive = @Inactive,Situation = @Situation where KEY = @Key and UserId = @UserId",
+                         ", Genre = @Genre, LastUpdate = @LastUpdate,Isbn = @Isbn,Inactive = @Inactive,Situation = @Situation,Cover = @Cover,GoogleId = @GoogleId where KEY = @Key and UserId = @UserId",
                         sqliteParameters);
 
             sqliteParameters = new()

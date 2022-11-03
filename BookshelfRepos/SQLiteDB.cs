@@ -6,12 +6,12 @@ namespace BookshelfRepos
     public static class SQLiteDB
     {
 
-        private static readonly SqliteConnection db = new($"Filename={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Bookshelf2.db")}");
+        private static readonly SqliteConnection db = new($"Filename={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Bookshelf.db")}");
 
         /// <summary>
         /// version upgrade of a table force his recreation
         /// </summary>
-        public static VersionsDbTables ActualVersionsDbTables = new() { USER = 3, BOOK = 19 };
+        public static VersionsDbTables ActualVersionsDbTables = new() { USER = 4, BOOK = 19 };
 
         /// <summary>
         /// Need additional package Microsoft.EntityFrameworkCore.SqliteMicrosoft.EntityFrameworkCore.Sqlite to work

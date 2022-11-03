@@ -33,18 +33,14 @@
                         </Label.GestureRecognizers>
                     </Label>
                 </HorizontalStackLayout>
-                <HorizontalStackLayout Margin="0,5,0,0">
+                <!--<HorizontalStackLayout Margin="0,5,0,0">
                     <Label Text="Esqueceu sua senha?" FontFamily="EBGaramondBold" TextColor="#4B4B4B" Margin="0,0,5,0"/>
                     <Label Text="Recuperar Senha" FontFamily="EBGaramondBold" HorizontalOptions="End" TextColor="#362624" TextDecorations="Underline" >
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding UpdatePasswordCommand}"/>
                         </Label.GestureRecognizers>
                     </Label>
-                </HorizontalStackLayout>
-                <!--<Button Text="Cadastrar" x:Name="BtnAddUser" Command="{Binding CreateUserCommand}" Margin="0,0,0,5"
-                                Style="{StaticResource BtnSecondary}" BackgroundColor="#2D4144" FontSize="15" ImageSource="user_plus_solid_15_w.png" ContentLayout="Left, 20" />
-                <Button Text="Recuperar Senha" x:Name="BtnRecoverPassword" Command="{Binding UpdatePasswordCommand}"
-                                Style="{StaticResource BtnSecondary}"  BackgroundColor="#2D4144" FontSize="15" ImageSource="unlock_solid_15_w.png" ContentLayout="Left, 20"/>-->
+                </HorizontalStackLayout>-->
             </VerticalStackLayout>
         </Frame>
 

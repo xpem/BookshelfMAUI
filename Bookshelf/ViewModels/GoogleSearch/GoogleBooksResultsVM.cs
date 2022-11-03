@@ -12,13 +12,6 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
         string pageTitle = "Busca";
 
-        string urlteste = "http://books.google.com/books/content?id=6RCcBAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api";
-
-        public string Urlteste
-        {
-            get => urlteste; set { if (urlteste != value) { urlteste = value; OnPropertyChanged(); } }
-        }
-
         public string PageTitle
         {
             get => pageTitle; set { if (pageTitle != value) { pageTitle = value; OnPropertyChanged(); } }
@@ -40,6 +33,7 @@ namespace Bookshelf.ViewModels.GoogleSearch
                 if (listItem != value)
                 {
                     listItem = value;
+
                     if (listItem is not null)
                     {
                         Shell.Current.GoToAsync($"{nameof(AddBook)}?GoogleKey={listItem.Id}", true);
@@ -78,6 +72,10 @@ namespace Bookshelf.ViewModels.GoogleSearch
         }
 
         public ICommand LoadMoreCommand => new Command(() => { CurrentPage++; LoadGoogleBooks(CurrentPage); });
+
+        public GoogleBooksResultsVM()
+        {
+        }
 
         /// <summary>
         /// is necessary the config: android:usesCleartextTraffic="true"
@@ -127,7 +125,7 @@ namespace Bookshelf.ViewModels.GoogleSearch
                         //
                         await Task.Delay(2000);
 
-                        if (GoogleBooksList.Count > 0)
+                       if (GoogleBooksList.Count > 0)
                             GoogleBooksList.Clear();
 
                         CurrentPage = 0;

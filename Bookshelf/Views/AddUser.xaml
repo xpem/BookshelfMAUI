@@ -12,6 +12,9 @@
                 <VerticalStackLayout>
                     <!--<Image SemanticProperties.Description="Criar Usuário" HeightRequest="30" WidthRequest="80" Source="user_plus_solid_30.png" />-->
 
+                    <Label Text="Nome" Style="{StaticResource LblEntry}" />
+                    <Entry Style="{StaticResource Entry}" Text="{Binding Name}" MaxLength="150" MaximumWidthRequest="350" MinimumWidthRequest="250" Keyboard="Name"  />
+                    
                     <Label Text="Email" Style="{StaticResource LblEntry}" />
                     <Entry Style="{StaticResource Entry}" Text="{Binding Email}" MaxLength="150" MaximumWidthRequest="350" MinimumWidthRequest="250" Keyboard="Email"  />
 

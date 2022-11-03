@@ -171,6 +171,12 @@ namespace Bookshelf.ViewModels
                 Authors = _googleBook.Authors;
                 Year = _googleBook.PublishedDate;
                 Pages = _googleBook.PageCount.ToString();
+
+                if (!string.IsNullOrEmpty(Cover))
+                {
+                    ImgCoverIsVisible = true;
+                    LblTitleIsEnabled = false;
+                }
             }
             else
                 GoogleKey = null;
@@ -305,7 +311,7 @@ namespace Bookshelf.ViewModels
 
                 if (!resposta)
                 {
-                    await Shell.Current.GoToAsync($"//{nameof(Main)}");
+                    await Shell.Current.GoToAsync("..");
                 }
             }
         }

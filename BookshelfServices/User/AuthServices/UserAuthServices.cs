@@ -59,6 +59,7 @@ namespace BookshelfServices.User.AuthServices
         {
             try
             {
+
                 var fbTokens = await authProvider.CreateUserWithEmailAndPasswordAsync(email, password);
 
                 return new BookshelfModels.User.User() { Token = fbTokens.FirebaseToken, Email = fbTokens.User.Email, Password = password, };
