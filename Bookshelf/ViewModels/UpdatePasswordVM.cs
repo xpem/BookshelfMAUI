@@ -1,6 +1,5 @@
 ﻿using Bookshelf.Utils;
 using Bookshelf.ViewModels.Components;
-using BookshelfServices.User.AuthServices;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
@@ -12,11 +11,9 @@ namespace Bookshelf.ViewModels
 
         public string Email { get => email; set { if (email != value) { email = value; OnPropertyChanged(); } } }
 
-        readonly IUserAuthServices userAuthServices;
 
-        public UpdatePasswordVM( IUserAuthServices _userAuthServices)
+        public UpdatePasswordVM()
         {
-            userAuthServices = _userAuthServices;
         }
 
         public ICommand UpdatePasswordCommand => new Command(async () =>
@@ -39,9 +36,10 @@ namespace Bookshelf.ViewModels
             }
             else
             {
-                _ = userAuthServices.SendPasswordResetEmail(Email);
+                //desenvolver mecanismo de update de email.
+               // _ = userAuthServices.SendPasswordResetEmail(Email);
 
-                await Application.Current.MainPage.DisplayAlert("Aviso", "Email de alteração de senha enviado!", null, "Ok");
+                await Application.Current.MainPage.DisplayAlert("Aviso", "Email de alteração de senha enviado em implementacao!", null, "Ok");
 
                 await Shell.Current.GoToAsync("..");
             }

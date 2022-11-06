@@ -66,18 +66,19 @@ namespace BookshelfServices.Books.Sync
                         foreach (Book book in booksList)
                         {
                             //if the book has a local temporary Guid key, register it in the firebase
-                            if (Guid.TryParse(book.BookKey, out Guid localBookId))
+                            if (book.LocalTempId != null)
                             {
                                 //define the key has a null for register the book in firebase
-                                book.BookKey = null;
 
                                 (bool success, string? res) = await booksApiServices.AddBook(book, user);
 
-                                if (success)
+                                if (success && !string.IsNullOrEmpty(res))
                                 {
-                                 BookshelfRepos.Books.BooksRepos.UpdateBookKey(localBookId, res, user.Id);
+                                    string localTempId = book.LocalTempId;
+                                    book.LocalTempId = null;
+                                    BookshelfRepos.Books.BooksRepos.UpdateBookId(localTempId, res, user.Id);
                                 }
-                                else throw new Exception($"Não foi possivel sincronizar o livro {book.BookKey}, res: {res}");
+                                else throw new Exception($"Não foi possivel sincronizar o livro {book.Id}, res: {res}");
                             }
                             else
                                 BookshelfRepos.Books.BooksRepos.UpdateBook(book, user.Id);
@@ -91,7 +92,7 @@ namespace BookshelfServices.Books.Sync
                             {
                                 BookshelfRepos.Books.BooksRepos.AddOrUpdateBook(book, user.Id);
 
-                                if (LastUptade < book.LastUpdate) LastUptade = book.LastUpdate;
+                                if (LastUptade < book.UpdatedAt) LastUptade = book.UpdatedAt;
                             }
                         }
 

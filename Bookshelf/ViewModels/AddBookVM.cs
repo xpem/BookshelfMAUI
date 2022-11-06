@@ -17,7 +17,7 @@ namespace Bookshelf.ViewModels
         //
         private bool IsUpdate = false;
 
-        private string BookKey, GoogleKey;
+        private string BookId, GoogleKey;
 
         private string title, subTitle, volume, authors, year, isbn, pages, genre, comment, situation, cover;
 
@@ -113,7 +113,7 @@ namespace Bookshelf.ViewModels
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             if (query != null && query.ContainsKey("Key"))
-                BookKey = query["Key"].ToString();
+                BookId = query["Key"].ToString();
 
             if (query != null && query.ContainsKey("GoogleKey"))
                 GoogleKey = query["GoogleKey"].ToString();
@@ -123,7 +123,7 @@ namespace Bookshelf.ViewModels
             BtnInsertText = "Cadastrar";
             BtnAddBookImageSourceGlyph = IconFont.Plus;
 
-            if (string.IsNullOrEmpty(BookKey))
+            if (string.IsNullOrEmpty(BookId))
             {
                 if (!string.IsNullOrEmpty(GoogleKey))
                     await GetGoogleBook();
@@ -136,11 +136,11 @@ namespace Bookshelf.ViewModels
                     {
                         BuildBook(_book);
 
-                        BookKey = _book.BookKey;
+                        BookId = _book.Id.ToString();
                     }
                 }
 
-                if (string.IsNullOrEmpty(BookKey))
+                if (string.IsNullOrEmpty(BookId))
                 {
                     pkrStatusSelectedIndex = 0;
 
@@ -153,7 +153,7 @@ namespace Bookshelf.ViewModels
                 }
             }
             else
-                _ = Task.Run(() => GetBook(BookKey));
+                _ = Task.Run(() => GetBook(BookId));
 
 
             
@@ -193,9 +193,9 @@ namespace Bookshelf.ViewModels
             Isbn = book.Isbn;
             Pages = book.Pages.ToString();
             Genre = book.Genre;
-            Volume = book.Volume;
-            Comment = book.Rating.Comment;
-            PkrStatusSelectedIndex = Convert.ToInt32(book.Situation);
+            Volume = book.Volume.ToString();
+            Comment = book.Comment;
+            PkrStatusSelectedIndex = Convert.ToInt32(book.Status);
 
             GoogleKey ??= book.GoogleId;
             Cover ??= book.Cover;
@@ -206,13 +206,13 @@ namespace Bookshelf.ViewModels
                 LblTitleIsEnabled = false;
             }
 
-            if (book.Situation > 0)
+            if (book.Status > 0)
             {
-                Situation = book.Situation.ToString();
-                Rate = book.Rating.Rate.Value;
-                if (book.Rating.Rate.HasValue)
-                    BuildRatingBar(book.Rating.Rate.Value);
-                Comment = book.Rating.Comment;
+                Situation = book.Status.ToString();
+                Rate = book.Score.Value;
+                if (book.Score.HasValue)
+                    BuildRatingBar(book.Score.Value);
+                Comment = book.Comment;
             }
             else
             {
@@ -235,85 +235,86 @@ namespace Bookshelf.ViewModels
 
         private async Task InsertBook()
         {
-            if (await VerrifyFields())
+            try
             {
-                BtnInsertIsEnabled = false;
-
-                Book book = new()
+                if (await VerrifyFields())
                 {
-                    Title = Title,
-                    SubTitle = SubTitle,
-                    Authors = Authors,
-                    Year = Convert.ToInt32(Year),
-                    Isbn = Isbn,
-                    Pages = Convert.ToInt32(Pages),
-                    Genre = Genre,
-                    Volume = Volume,
-                    Cover = Cover,
-                    GoogleId = GoogleKey
-                };
-
-                //cadastra o livro 
-                string mensagem;
-
-                //caso tenha avaliação
-                if (pkrStatusSelectedIndex > 0)
-                {
-                    int rate = 0;
-                    if (pkrStatusSelectedIndex == 3)
-                        rate = Convert.ToInt32(Math.Round(Convert.ToDecimal(Rate), MidpointRounding.AwayFromZero));
+                    BtnInsertIsEnabled = false;
 
 
-                    book.Situation = (Situation)pkrStatusSelectedIndex;
+                    int? _year = (!string.IsNullOrEmpty(Year) ? Convert.ToInt32(Year) : null);
+                    int? _volume = (!string.IsNullOrEmpty(Volume) ? Convert.ToInt32(Volume) : null);
 
-                    book.Rating = new Rating
+                    Book book = new()
                     {
-                        Rate = rate,
-                        Comment = Comment,
+                        Title = Title,
+                        SubTitle = SubTitle,
+                        Authors = Authors,
+                        Year = _year,
+                        Isbn = Isbn,
+                        Pages = Convert.ToInt32(Pages),
+                        Genre = Genre,
+                        Volume = _volume,
+                        Cover = Cover,
+                        GoogleId = GoogleKey
                     };
 
-                    mensagem = "Livro e avaliação";
-                }
-                else
-                {
-                    book.Situation = 0;
+                    //cadastra o livro 
+                    string mensagem;
 
-                    book.Rating = new Rating
+                    //caso tenha avaliação
+                    if (pkrStatusSelectedIndex > 0)
                     {
-                        Rate = 0,
-                        Comment = "",
-                    };
-                    mensagem = "Livro";
-                }
+                        int rate = 0;
+                        if (pkrStatusSelectedIndex == 3)
+                            rate = Convert.ToInt32(Math.Round(Convert.ToDecimal(Rate), MidpointRounding.AwayFromZero));
 
-                if (!string.IsNullOrEmpty(BookKey))
-                {
-                    book.BookKey = BookKey;
 
-                    string res = await booksServices.UpdateBook(book);
+                        book.Status = (Status)pkrStatusSelectedIndex;
 
-                    if (res != null)
-                        mensagem = res;
+                        book.Score = rate;
+                        book.Comment = comment;
+
+                        mensagem = "Livro e avaliação";
+                    }
                     else
-                        mensagem += " atualizados";
-                }
-                else
-                {
-                    string res = await booksServices.AddBook(book);
+                    {
+                        book.Status = 0;
+                        book.Score = 0;
+                        book.Comment = "";
+                        mensagem = "Livro";
+                    }
 
-                    if (res != null)
-                        mensagem = res;
+                    if (!string.IsNullOrEmpty(BookId))
+                    {
+                        book.Id = Convert.ToInt32(BookId);
+
+                        string res = await booksServices.UpdateBook(book);
+
+                        if (res != null)
+                            mensagem = res;
+                        else
+                            mensagem += " atualizados";
+                    }
                     else
-                        mensagem += " cadastrados";
-                }
+                    {
+                        string res = await booksServices.AddBook(book);
 
-                bool resposta = await Application.Current.MainPage.DisplayAlert("Aviso", mensagem, null, "Ok");
+                        if (res != null)
+                            mensagem = res;
+                        else
+                            mensagem += " cadastrados";
+                    }
 
-                if (!resposta)
-                {
-                    await Shell.Current.GoToAsync("..");
+                    bool resposta = await Application.Current.MainPage.DisplayAlert("Aviso", mensagem, null, "Ok");
+
+                    if (!resposta)
+                    {
+                        await Shell.Current.GoToAsync("..");
+                    }
                 }
             }
+            catch (Exception) { throw; }
         }
 
         private async Task<bool> VerrifyFields()

@@ -36,8 +36,8 @@ namespace BookshelfServices.Books.Api
 
                     //to do - make a base to this
                     httpClient = new HttpClient();
-                    httpClient.DefaultRequestHeaders.Add("Authorization", user?.Token);
-                    HttpResponseMessage response = await httpClient.PostAsync(ApiKeys.ApiUri + "/InsertBook", data);
+                    httpClient.DefaultRequestHeaders.Add("authorization", "bearer " + user?.Token);
+                    HttpResponseMessage response = await httpClient.PostAsync(ApiKeys.ApiUri + "/Book", data);
                     var result = response.Content.ReadAsStringAsync().Result;
 
                     if (response.IsSuccessStatusCode)
@@ -45,7 +45,7 @@ namespace BookshelfServices.Books.Api
                         var obj = JsonNode.Parse(result);
 
                         if (obj != null)
-                            return (true, obj["BookKey"]?.GetValue<string>());
+                            return (true, (obj["Id"]?.GetValue<int>()).ToString());
                         else throw new Exception(result);
                     }
                     else
@@ -87,8 +87,8 @@ namespace BookshelfServices.Books.Api
                     var data = new StringContent(json, Encoding.UTF8, "application/json");
 
                     httpClient = new HttpClient();
-                    httpClient.DefaultRequestHeaders.Add("Authorization", user?.Token);
-                    HttpResponseMessage response = await httpClient.PutAsync(ApiKeys.ApiUri + "/UpdateBook/" + book.BookKey, data);
+                    httpClient.DefaultRequestHeaders.Add("Authorization","bearer "+ user?.Token);
+                    HttpResponseMessage response = await httpClient.PutAsync(ApiKeys.ApiUri + "/Book/" + book.Id, data);
                     var result = response.Content.ReadAsStringAsync().Result;
 
                     if (response.IsSuccessStatusCode)
@@ -124,7 +124,7 @@ namespace BookshelfServices.Books.Api
         /// <param name="vUserKey"></param>
         /// <param name="vLastUpdate"></param>
         /// <returns></returns>
-        public async Task<List<Book>?> GetBooksByLastUpdate(BookshelfModels.User.User? user)
+        public async Task<List<Book>?> GetBooksByLastUpdate(BookshelfModels.User.User user)
         {
             try
             {
@@ -133,9 +133,8 @@ namespace BookshelfServices.Books.Api
                 while (forContinue < 2)
                 {
                     httpClient = new();
-                    httpClient.DefaultRequestHeaders.Add("Authorization", user?.Token);
-                    httpClient.DefaultRequestHeaders.Add("lastUpdate", user?.LastUpdate.ToString("yyyy-MM-ddThh:mm:ss.fff"));
-                    HttpResponseMessage response = await httpClient.GetAsync(ApiKeys.ApiUri + "/GetBooksByLastUpdate");
+                    httpClient.DefaultRequestHeaders.Add("Authorization", "bearer " + user.Token);
+                    HttpResponseMessage response = await httpClient.GetAsync(ApiKeys.ApiUri + "/book/byupdatedat/" + user.LastUpdate.ToString("yyyy-MM-ddThh:mm:ss.fff"));
 
                     if (response.IsSuccessStatusCode)
                         return await response.Content.ReadFromJsonAsync<List<Book>>();
@@ -143,12 +142,11 @@ namespace BookshelfServices.Books.Api
                     {
                         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                         {
-                            user = await userServices.RefreshUserToken(user);
-                            //retry get
-                            forContinue++;
+                            await userServices.RefreshUserToken(user);
                         }
                         else return null;
                     }
+                    forContinue++;
                 }
                 return null;
             }

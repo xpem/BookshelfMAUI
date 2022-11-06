@@ -6,7 +6,6 @@ using BookshelfServices.Books;
 using BookshelfServices.Books.Api;
 using BookshelfServices.Books.Sync;
 using BookshelfServices.User;
-using BookshelfServices.User.AuthServices;
 using CommunityToolkit.Maui;
 
 namespace Bookshelf;
@@ -67,7 +66,6 @@ public static class MauiProgram
         builder.Services.AddTransient<GoogleBooksResults>();
         builder.Services.AddTransient<GoogleBooksResultsVM>();
 
-        builder.Services.AddScoped<IUserAuthServices, UserAuthServices>();
         builder.Services.AddScoped<IUserServices, UserServices>();
 
         builder.Services.AddScoped<IBooksApiServices, BooksApiServices>();

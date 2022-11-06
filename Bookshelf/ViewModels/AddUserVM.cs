@@ -101,7 +101,7 @@ namespace Bookshelf.ViewModels
                 BtnCreateUserIsEnabled = false;
 
                 //
-                User user = await userService.InsertUser(name, email, password);
+                User user = await userService.AddUser(name, email, password);
 
                 if (user != null)
                 {

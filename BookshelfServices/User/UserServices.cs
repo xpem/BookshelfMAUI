@@ -1,40 +1,45 @@
-﻿using BookshelfModels.Books;
+﻿using BookshelfModels.User;
 using BookshelfRepos.User;
-using BookshelfServices.User.AuthServices;
-using System.Net.Http;
-using System.Text.Json.Nodes;
-using System.Text;
-using System.Text.Json;
-using System.Xml.Linq;
+using BookshelfServices.User.Api;
 
 namespace BookshelfServices.User
 {
     public class UserServices : IUserServices
     {
-        private readonly IUserAuthServices userAuthServices;
-        static HttpClient httpClient = new();
-
-        public UserServices(IUserAuthServices _userAuthServices)
-        {
-            userAuthServices = _userAuthServices;
-        }
-
         /// <summary>
         /// get user in the static var
         /// </summary>
         /// <returns></returns>
         public BookshelfModels.User.User? GetUserLocal() => UserRepos.GetUser();
 
-        public async Task<BookshelfModels.User.User?> RefreshUserToken(BookshelfModels.User.User? user)
+        public async Task<BookshelfModels.User.User?> RefreshUserToken(BookshelfModels.User.User user)
         {
-            (BookshelfModels.User.User? userResponse, bool Success) = await userAuthServices.RefreshUserToken(user);
-
-            if (Success && userResponse is not null)
+            try
             {
-                UserRepos.UpdateToken(userResponse.Id, userResponse.Token);
-            }
+                BookshelfModels.User.User userResponse = user;
 
-            return userResponse;
+                if (!string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.Password))
+                {
+                    (bool success, string? res) = await UserApiService.GetUserToken(user.Email, user.Password);
+
+                    if (success && res != null)
+                    {
+                        UserRepos.UpdateToken(user.Id, res);
+                        userResponse.Token = res;
+                    }
+                    else
+                    {
+                        if (res != null)
+                            userResponse.Error = ErrorType.WrongEmailOrPassword;
+                    }
+                    return userResponse;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex) { throw ex; }
         }
 
         /// <summary>
@@ -47,103 +52,21 @@ namespace BookshelfServices.User
         {
             try
             {
-                int forContinue = 0;
+                BookshelfModels.User.User user = await UserApiService.GetUser(email, password);
 
-                while (forContinue < 2)
+                if (user.Error is null)
                 {
-                    string json = JsonSerializer.Serialize(new { email, password });
-                    StringContent data = new(json, Encoding.UTF8, "application/json");
-
-                    //to do - make a base to this
-                    httpClient = new HttpClient();
-                    HttpResponseMessage response = await httpClient.PostAsync(ApiKeys.ApiUri + "/user/signin", data);
-                    string result = response.Content.ReadAsStringAsync().Result;
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        JsonNode? obj = JsonNode.Parse(result);
-
-                        if (obj != null)
-                        {
-                            string? token = obj["token"]?.GetValue<string>();
-
-                            if (token != null)
-                            {
-                                httpClient = new HttpClient();
-                                httpClient.DefaultRequestHeaders.Add("authorization", "bearer " + token);
-                                response = await httpClient.GetAsync(ApiKeys.ApiUri + "/user");
-                                result = response.Content.ReadAsStringAsync().Result;
-
-                                if (response.IsSuccessStatusCode)
-                                {
-                                    obj = JsonNode.Parse(result);
-
-                                    if (obj != null)
-                                    {
-                                        BookshelfModels.User.User UserResponse = new() { Id = obj["id"]?.GetValue<int>().ToString(), Name = obj["name"]?.GetValue<string>(), Email = obj["email"]?.GetValue<string>() };
-
-                                        if (UserResponse is not null)
-                                        {
-                                            if (UserResponse.Error != null)
-                                                return false;
-                                            else
-                                            {
-                                                UserRepos.InsertUser(UserResponse);
-                                                return true;
-                                            }
-                                        }
-                                        else
-                                            return false;
-                                    }
-                                }
-                                else throw new Exception(result);
-                            }
-                            else throw new Exception(result);
-                        }
-                        else throw new Exception(result);
-                    }
+                    UserRepos.InsertUser(user);
+                    return true;
                 }
-
-                throw new Exception("O servidor está indisponível");
-            }
-            catch (Exception) { throw; }
-        }
-
-        public async Task<BookshelfModels.User.User> InsertUser(string name, string email, string password)
-        {
-            try
-            {
-                int forContinue = 0;
-
-                while (forContinue < 2)
-                {
-                    string json = JsonSerializer.Serialize(new { name, email, password });
-                    StringContent data = new(json, Encoding.UTF8, "application/json");
-
-                    //to do - make a base to this
-                    httpClient = new HttpClient();
-                    HttpResponseMessage response = await httpClient.PostAsync(ApiKeys.ApiUri + "/user", data);
-                    string result = response.Content.ReadAsStringAsync().Result;
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        JsonNode? obj = JsonNode.Parse(result);
-
-                        if (obj != null)
-                        {
-                            BookshelfModels.User.User userResponse = new() { Id = obj["id"]?.GetValue<int>().ToString(), Name = obj["name"]?.GetValue<string>(), Email = obj["email"]?.GetValue<string>() };
-
-                            return (userResponse);
-                        }
-                        else throw new Exception(result);
-                    }
-                }
-
-                throw new Exception("O servidor está indisponível");
+                else
+                    return false;
             }
             catch (Exception) { throw; }
         }
 
         public static void CleanUserDatabase() => UserRepos.CleanUserDatabase();
+
+        public async Task<BookshelfModels.User.User> AddUser(string name, string email, string password) => await UserApiService.AddUser(name, email, password);
     }
 }

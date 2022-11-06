@@ -8,7 +8,7 @@ namespace BookshelfServices.Books.Api
 
         Task<(bool, string?)> UpdateBook(Book book, BookshelfModels.User.User? user);
 
-        Task<List<Book>?> GetBooksByLastUpdate(BookshelfModels.User.User? user);
+        Task<List<Book>?> GetBooksByLastUpdate(BookshelfModels.User.User user);
 
     }
 }

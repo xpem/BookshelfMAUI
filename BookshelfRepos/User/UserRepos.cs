@@ -11,12 +11,14 @@ namespace BookshelfRepos.User
 
             List<SqliteParameter> parameters = new()
             {
-                new SqliteParameter("@TOKEN", user.Token), 
+                new SqliteParameter("@TOKEN", user.Token),
                 new SqliteParameter("@NAME", user.Name),
                 new SqliteParameter("@EMAIL", user.Email),
                 new SqliteParameter("@PASSWORD", user.Password),
                 new SqliteParameter("@LASTUPDATE", DateTime.MinValue),
             };
+
+            _ = SQLiteDB.RunSqliteCommand("delete from USER");
 
             _ = SQLiteDB.RunSqliteCommand("insert into USER (TOKEN,NAME,EMAIL,PASSWORD,LASTUPDATE) values (@TOKEN,@NAME,@EMAIL,@PASSWORD,@LASTUPDATE)", parameters);
 

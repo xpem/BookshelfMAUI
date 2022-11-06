@@ -20,6 +20,6 @@ namespace BookshelfServices.Books
 
         void InactivateBook(string bookKey);
 
-        void UpdateBookSituation(string Key, Situation situation, int rate, string comment);
+        void UpdateBookSituation(string Key, Status status, int rate, string comment);
     }
 }

@@ -15,6 +15,6 @@
 
     public enum ErrorType
     {
-        WrongPassword, UnknownEmailAddress, EMAIL_EXISTS
+        WrongEmailOrPassword, UnknownEmailAddress, EMAIL_EXISTS
     }
 }
