@@ -68,7 +68,6 @@ namespace BookshelfRepos.BuildDb
             if (versionsDbTables.BOOK < SQLiteDB.ActualVersionsDbTables.BOOK)
             {
                 _ = SQLiteDB.RunSqliteCommand("drop table if exists BOOK");
-                _ = SQLiteDB.RunSqliteCommand("drop table if exists BOOKRATING");
 
                 updateVersionDb = true;
             }

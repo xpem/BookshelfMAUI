@@ -30,13 +30,13 @@ namespace BookshelfRepos.Books
                 {
                     lista.Add(new Book()
                     {
-                        Id= response.GetInt32(0),
+                        Id = response.GetInt32(0),
                         LocalTempId = response.GetWithNullableString(1),
                         Title = response.GetWithNullableString(2),
                         SubTitle = response.GetWithNullableString(3),
                         Authors = response.GetWithNullableString(4),
-                        Year = response.GetInt32(5),
-                        Volume = response.GetInt32(6),
+                        Year = response.GetWithNullableInt(5),
+                        Volume = response.GetWithNullableInt(6),
                         Pages = response.GetInt32(7),
                         Isbn = response.GetWithNullableString(8),
                         Genre = response.GetWithNullableString(9),
@@ -97,15 +97,10 @@ namespace BookshelfRepos.Books
                 new SqliteParameter("@Comment", book.Comment)
             };
 
-            string query = 
-              "insert into BOOK(ID,LOCAL_TEMP_ID, UID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, GENRE, UPDATED_AT, ISBN, STATUS,COVER,GOOGLE_ID,SCORE,COMMENT) " +
-              "values ('"+ book.Id + "', '"+ book.LocalTempId + "', '"+ userId + "', '"+ book.Title + "', '" + book.SubTitle + "', '"+ book.Authors + "', '"+ book.Year + "','"+ book.Volume + "', '"+ book.Pages +
-              "', '"+ book.Genre + "', '" + book.UpdatedAt + "', '"+ book.Isbn + "', '"+ (int)book.Status + "', '"+ book.Cover + "', '"+ book.GoogleId + "', '"+ book.Score + "', '"+ book.Comment + "')";
-
-            _ = SQLiteDB.RunSqliteCommand(
-                "insert into BOOK(ID,LOCAL_TEMP_ID, UID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, GENRE, UPDATED_AT, ISBN, STATUS,COVER,GOOGLE_ID,SCORE,COMMENT) " +
+            _ = SQLiteDB.RunSqliteCommand("insert into BOOK(ID,LOCAL_TEMP_ID, UID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, GENRE, UPDATED_AT, ISBN, STATUS,COVER,GOOGLE_ID,SCORE,COMMENT) " +
                 "values (@Id, @LocalTempId, @UserId, @Title, @SubTitle, @Authors, @Year, @Volume, @Pages, @Genre, @UpdatedAt, @Isbn, @Status, @Cover, @GoogleId, @Score, @Comment)",
                 sqliteParametersList);
+
             SQLiteDB.CloseIfOpen();
         }
 
@@ -117,7 +112,7 @@ namespace BookshelfRepos.Books
         {
             SQLiteDB.OpenIfClosed();
 
-                List<SqliteParameter> sqliteParameters = new()
+            List<SqliteParameter> sqliteParameters = new()
             {
                 new SqliteParameter("@Id", book.Id),
                 new SqliteParameter("@UserId", userId),
@@ -139,10 +134,10 @@ namespace BookshelfRepos.Books
             };
 
             _ = SQLiteDB.RunSqliteCommand("update BOOK set TITLE = @Title, SUBTITLE = @SubTitle, AUTHORS = @Authors, YEAR = @Year, VOLUME = @Volume, PAGES = @Pages" +
-                         ", GENRE = @Genre, UPDATED_AT = @LastUpdate,ISBN = @Isbn, INACTIVE = @Inactive, STATUS = @Situation, COVER = @Cover, GOOGLE_ID = @GoogleId, SCORE = @Score, COMMENT = @Comment" +
-                         " where ID = @Id and UID = @UserId",
-                        sqliteParameters);
-                       
+                ", GENRE = @Genre, UPDATED_AT = @LastUpdate,ISBN = @Isbn, INACTIVE = @Inactive, STATUS = @Situation, COVER = @Cover, GOOGLE_ID = @GoogleId, SCORE = @Score, COMMENT = @Comment" +
+                " where ID = @Id and UID = @UserId",
+                sqliteParameters);
+
             SQLiteDB.CloseIfOpen();
         }
 
@@ -222,12 +217,12 @@ namespace BookshelfRepos.Books
 
                 List<SqliteParameter> parameters = new()
                 {
-                    //
                     new SqliteParameter("@userId", userId),
                     new SqliteParameter("@key", bookKey)
                 };
 
-                SqliteDataReader response = await SQLiteDB.RunSqliteCommand("select ID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, ISBN, GENRE, UPDATED_AT, INACTIVE, STATUS, COVER, GOOGLE_ID, SCORE, COMMENT, CREATED_AT from BOOK where UID = @userId and ID = @key", parameters);
+                SqliteDataReader response = await SQLiteDB.RunSqliteCommand("select ID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, ISBN, GENRE, UPDATED_AT, INACTIVE, STATUS," +
+                    " COVER, GOOGLE_ID, SCORE, COMMENT, CREATED_AT from BOOK where UID = @userId and ID = @key", parameters);
 
                 response.Read();
 
