@@ -171,7 +171,7 @@ namespace BookshelfServices.Books
                     {
                         Key = book.Id.ToString(),
                         Title = book.Title,
-                        AuthorsAndYear = book.Authors + "; Ano: " + book.Year,
+                        Authors = book.Authors,// + "; Ano: " + book.Year,
                         Pages = book.Pages.ToString(),
                         SubtitleAndVol = SubtitleAndVol,
                         Cover = book.Cover,

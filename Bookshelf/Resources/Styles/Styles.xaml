@@ -21,7 +21,7 @@
     <Style x:Key="Entry" TargetType="Entry">
         <Setter Property="BackgroundColor" Value="White"></Setter>
         <Setter Property="PlaceholderColor" Value="#606060"></Setter>
-        <Setter Property="TextColor" Value="Black"></Setter>
+        <Setter Property="TextColor" Value="Gray"></Setter>
         <Setter Property="FontFamily" Value="EBGaramondSemibold"></Setter>
         <Setter Property="Margin" Value="0,5,0,0"></Setter>
         <Setter Property="HorizontalOptions" Value="Start"></Setter>

@@ -3,15 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Bookshelf.Views.Main"
              Title="Coleção"
-                  xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit" xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels" x:DataType="viewmodels:MainVM"
+             xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels"
+             x:DataType="viewmodels:MainVM"
              Style="{StaticResource ContentPage}"             
              >
     <ContentPage.Resources>
         <!--carditens-->
         <Style x:Key="FrameCardItem" TargetType="Frame">
-            <Setter Property="BackgroundColor" Value="#607D8B"></Setter>
-            <Setter Property="BorderColor" Value="#607D8B"></Setter>
+            <Setter Property="BackgroundColor" Value="#607D8B"/>
+            <Setter Property="BorderColor" Value="#607D8B"/>
+            <Setter Property="CornerRadius" Value="10"/>
         </Style>
         <Style x:Key="GridCardItem" TargetType="Frame">
             <Setter Property="VerticalOptions" Value="Start"></Setter>
@@ -66,10 +69,10 @@
     <ContentPage.Content>
         <ScrollView>
             <StackLayout HorizontalOptions="FillAndExpand" Padding="1" VerticalOptions="FillAndExpand" >
-                <Frame Style="{ StaticResource MainFrame }" Padding="5">
+                <Frame Style="{ StaticResource MainFrame }" CornerRadius="10" Padding="5" Margin="5">
                     <VerticalStackLayout Spacing="2" >
                         <!--<ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" ></ActivityIndicator>-->
-                        <Frame Style="{ StaticResource FrameCardItem }" >
+                        <Frame Style="{ StaticResource FrameCardItem }"  >
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding IllReadCommand}" />
                             </Frame.GestureRecognizers>
@@ -170,7 +173,7 @@
                                        SemanticProperties.Description="Interrompidos" 
                                        />
                                 <Label Text="{Binding Interrupted}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Style="{ StaticResource LblQuantity }"/>
-                                <Label Text="Suspenso" 
+                                <Label Text="Suspensos" 
                                        Grid.Row="1" 
                                        Grid.Column="0" 
                                        Style="{ StaticResource LblText }" />
@@ -183,7 +186,7 @@
                         </Frame>
                     </VerticalStackLayout>
                 </Frame>
-                <Frame BackgroundColor="#BDBDBD" Padding="5" VerticalOptions="FillAndExpand" Margin="0,5,0,5">
+                <Frame BackgroundColor="#BDBDBD" Padding="5" VerticalOptions="FillAndExpand" Margin="5,0,5,5" CornerRadius="10">
                     <StackLayout VerticalOptions="FillAndExpand">
                         <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="5" Margin="0,10,0,0">
                             <Grid.RowDefinitions>
@@ -193,13 +196,13 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Button Text="Adicionar" Grid.Row="0" Grid.Column="0" HorizontalOptions="FillAndExpand" Style="{StaticResource MainBtn}" Command="{Binding GoogleSearchCommand}" FontSize="15" 
+                            <Button Text="Adicionar" HorizontalOptions="FillAndExpand" Style="{StaticResource MainBtn}" Command="{Binding GoogleSearchCommand}" FontSize="12" 
                                     ContentLayout="Left, 10">
                                 <Button.ImageSource>
                                     <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Book}" Size="15"></FontImageSource>
                                 </Button.ImageSource>
                             </Button>
-                            <Button Text="Listar Todos" Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand" Style="{StaticResource BtnSecondary}" FontSize="15"
+                            <Button Text="Listar Todos" Grid.Row="0" Grid.Column="1" HorizontalOptions="FillAndExpand" Style="{StaticResource BtnSecondary}" FontSize="12"
                                      BackgroundColor="#2D4144" ContentLayout="Left, 10" Command="{Binding ArchiveCommand}" >
                                 <Button.ImageSource>
                                     <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Bars}" Size="15" />

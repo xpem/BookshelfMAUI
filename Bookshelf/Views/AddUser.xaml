@@ -5,7 +5,10 @@
              Title="Cadastrar Usuário"           
              Shell.FlyoutBehavior="Disabled"
              xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
-             Style="{StaticResource ContentPage}" >
+             xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels"
+             x:DataType="viewmodels:AddUserVM"
+             Style="{StaticResource ContentPage}"
+             >
     <ContentPage.Content>
         <VerticalStackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="Center" MaximumWidthRequest="500">
             <Frame Style="{ StaticResource MainFrame }">
