@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.GoogleSearch
 {
-    public class GoogleBooksResultsVM : ViewModelBase//, IQueryAttributable
+    public class GoogleBooksResultsVM : ViewModelBase, IQueryAttributable
     {
 
         string pageTitle = "Busca";
@@ -21,7 +21,6 @@ namespace Bookshelf.ViewModels.GoogleSearch
         private int TotalItems;
 
         public ObservableCollection<UIGoogleBook> GoogleBooksList { get; } = new();
-
 
         UIGoogleBook listItem;
 
@@ -49,6 +48,14 @@ namespace Bookshelf.ViewModels.GoogleSearch
             }
         }
 
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            if (GoogleBooksList.Count > 0)
+                GoogleBooksList.Clear();
+
+            LoadGoogleBooks(0);
+        }
 
         public bool SearchingBookList { get; set; }
 
@@ -125,7 +132,7 @@ namespace Bookshelf.ViewModels.GoogleSearch
                         //
                         await Task.Delay(2000);
 
-                       if (GoogleBooksList.Count > 0)
+                        if (GoogleBooksList.Count > 0)
                             GoogleBooksList.Clear();
 
                         CurrentPage = 0;
@@ -134,7 +141,7 @@ namespace Bookshelf.ViewModels.GoogleSearch
                         SearchingBookList = false;
                     }
                     catch (Exception ex)
-                    { throw ex; }
+                    { throw; }
                 }
             }
         }

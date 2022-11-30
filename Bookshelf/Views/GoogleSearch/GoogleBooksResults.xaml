@@ -13,14 +13,21 @@
     <ContentPage.Content>
         <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand" BackgroundColor="#192D30" >
             <Frame Style="{ StaticResource MainFrame }" HorizontalOptions="FillAndExpand" Margin="5" >
-                <VerticalStackLayout HorizontalOptions="FillAndExpand">
-                    <Entry Placeholder="Digite o nome do livro" 
+                <Border HorizontalOptions="FillAndExpand">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Entry Placeholder="Digite o título do livro" 
                            Style="{StaticResource Entry}" 
                            TextTransform="Uppercase"
-                           HorizontalOptions="FillAndExpand"
+                           TextColor="Gray"
+                           BackgroundColor="White"
+                           HorizontalOptions="FillAndExpand"                           
+                           VerticalOptions="CenterAndExpand"
+                           Margin="10,0,10,0"
                            Text="{Binding SearchText}" 
                            />
-                </VerticalStackLayout>
+                </Border>
             </Frame>
             <Frame Style="{ StaticResource MainFrame }" VerticalOptions="FillAndExpand" Margin="1,0">
                 <Grid>
@@ -31,9 +38,7 @@
                         HasUnevenRows="True" 
                         CachingStrategy="RecycleElement" 
                         ItemsSource="{Binding GoogleBooksList}" 
-                        SelectedItem="{Binding ListItem}"
-                        SelectionMode="Single"
-                        Grid.Row="0"                        
+                        SelectedItem="{Binding ListItem}"             
                         >
                         <ListView.Behaviors>
                             <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
@@ -44,22 +49,21 @@
                                     <Frame BorderColor="Gray" BackgroundColor="GhostWhite" CornerRadius="10" Margin="0,0,0,5">
                                         <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" >
                                             <Label Text="{Binding Title}"
-                                                   Grid.Row="0" Grid.Column="1"       
                                                    TextColor="Black" 
                                                    VerticalOptions="StartAndExpand" 
                                                    VerticalTextAlignment="Start" 
                                                    MaxLines="1" 
                                                    LineBreakMode="TailTruncation" 
-                                                   FontSize="22" 
+                                                   FontSize="20" 
                                                    TextDecorations="Underline"
                                                    FontFamily="EBGaramondSemiBold"
                                                    />
                                             <Grid HorizontalOptions="FillAndExpand" HeightRequest="150">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="20"/>
-                                                    <RowDefinition Height="20"/>
-                                                    <RowDefinition Height="12"/>
                                                     <RowDefinition Height="*"/>
+                                                    <!--<RowDefinition Height="12"/>
+                                                    <RowDefinition Height="*"/>-->
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition  Width ="3*" />
@@ -71,8 +75,7 @@
                                                        Aspect="AspectFit"
                                                        HorizontalOptions="End"
                                                        />
-                                                <Label Text="{Binding Authors}"                         
-                                                       Grid.Row="0" Grid.Column="0"          
+                                                <Label Text="{Binding Authors}"       
                                                        VerticalTextAlignment="Start"        
                                                        HorizontalTextAlignment="Start"      
                                                        FontSize="15"                      
@@ -89,7 +92,7 @@
                                                        FontFamily="EBGaramondRegular"
                                                        TextColor="Black"
                                                        />
-                                                <Label 
+                                                <!--<Label 
                                                     Text="Ano:" 
                                                     Grid.Row="2"
                                                     Grid.Column="0"
@@ -109,7 +112,7 @@
                                                     LineBreakMode="TailTruncation" 
                                                     FontFamily="EBGaramondRegular"
                                                     TextColor="#4e4e4e"
-                                                    />
+                                                    />-->
                                             </Grid>
                                         </StackLayout>
                                     </Frame>

@@ -16,6 +16,8 @@
     <Style x:Key="MainFrame" TargetType="Frame">
         <Setter Property="HorizontalOptions" Value="CenterAndExpand"></Setter>
         <Setter Property="BackgroundColor" Value="#BDBDBD"></Setter>
+        <Setter Property="Margin" Value="5"></Setter>
+        <Setter Property="CornerRadius" Value="10"></Setter>
     </Style>
 
     <Style x:Key="Entry" TargetType="Entry">

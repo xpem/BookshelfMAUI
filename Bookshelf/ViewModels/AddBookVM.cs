@@ -153,10 +153,7 @@ namespace Bookshelf.ViewModels
                 }
             }
             else
-                _ = Task.Run(() => GetBook(BookId));
-
-
-            
+                _ = Task.Run(() => GetBook(BookId));            
         }
 
         protected async Task GetGoogleBook()

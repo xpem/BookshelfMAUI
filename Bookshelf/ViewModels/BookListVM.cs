@@ -26,6 +26,7 @@ namespace Bookshelf.ViewModels
                 if (bookItem != value)
                 {
                     bookItem = value;
+                   
                     if (bookItem is not null)
                     {
                         if (SituationIndex == -1)
@@ -70,7 +71,6 @@ namespace Bookshelf.ViewModels
         public int? SituationIndex { get; set; }
 
         public int CurrentPage { get; set; }
-
 
         #endregion
 
