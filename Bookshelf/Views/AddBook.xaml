@@ -20,27 +20,37 @@
                             HeightRequest="120"
                             IsVisible="{Binding ImgCoverIsVisible}"
                             />
-                        <Entry 
+                        <Border HorizontalOptions="FillAndExpand">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="5" />
+                            </Border.StrokeShape>
+                            <Entry
                             MinimumWidthRequest="250"
                             Text="{Binding Title}"
-                            Style="{StaticResource Entry}" 
+                            Style="{StaticResource Entry}"
                             CompressedLayout.IsHeadless="False" 
                             HorizontalOptions="FillAndExpand" 
                             MaxLength="400" 
                             IsEnabled="{Binding LblTitleIsEnabled}"
                             />
+                        </Border>
                         <Label 
                             Text="*Subtítulo" 
                             Style="{StaticResource LblEntry}"
                             />
-                        <Entry 
-                            x:Name="EntSubTitle" 
-                            MinimumWidthRequest="250"
-                            Text="{Binding SubTitle}"
-                            Style="{StaticResource Entry}"
-                            HorizontalOptions="FillAndExpand"
-                            MaxLength="400" 
-                            />
+                        <Border HorizontalOptions="FillAndExpand">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="5" />
+                            </Border.StrokeShape>
+                            <Entry 
+                                x:Name="EntSubTitle" 
+                                MinimumWidthRequest="250"
+                                Text="{Binding SubTitle}"
+                                Style="{StaticResource Entry}"
+                                HorizontalOptions="FillAndExpand"
+                                MaxLength="400" 
+                                />
+                        </Border>
                         <Grid HorizontalOptions="FillAndExpand">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -60,73 +70,114 @@
                                 Padding="0" 
                                 BackgroundColor="Transparent"
                                 >
-                                <StackLayout Orientation="Vertical" VerticalOptions="Start" HorizontalOptions="FillAndExpand">
+                                <StackLayout
+                                    Orientation="Vertical" 
+                                    VerticalOptions="Start"
+                                    HorizontalOptions="FillAndExpand"
+                                    >
                                     <Label 
                                         Text="*Volume" 
                                         Style="{StaticResource LblEntry}"
                                         />
-                                    <Entry
-                                        WidthRequest="60" 
-                                        Text="{Binding Volume}"
-                                        HorizontalOptions="StartAndExpand" 
-                                        VerticalOptions="Start" 
-                                        x:Name="EntVol" 
-                                        Keyboard="Numeric"
-                                        MaxLength="2" 
-                                        Style="{StaticResource Entry}" 
-                                        >
-                                        <Entry.Behaviors>
-                                            <behaviors:NumericValidationBehavior />
-                                        </Entry.Behaviors>
-                                    </Entry>
+                                    <Border WidthRequest="70"  
+                                            HorizontalOptions="StartAndExpand"
+                                            >
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="5" />
+                                        </Border.StrokeShape>
+                                        <Entry               
+                                            WidthRequest="60"    
+                                            Text="{Binding Volume}"                                                               
+                                            HorizontalOptions="StartAndExpand"
+                                            VerticalOptions="Start" 
+                                            x:Name="EntVol" 
+                                            Keyboard="Numeric"
+                                            MaxLength="2" 
+                                            Style="{StaticResource Entry}" 
+                                            >
+                                            <Entry.Behaviors>
+                                                <behaviors:NumericValidationBehavior />
+                                            </Entry.Behaviors>
+                                        </Entry>
+                                    </Border>
                                 </StackLayout>
                             </Frame>
                             <Frame VerticalOptions="Start" BorderColor="Transparent" Grid.Row="0" Grid.Column="1" Padding="0" BackgroundColor="Transparent" HorizontalOptions="Start">
                                 <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
                                     <Label Text="*Ano" Style="{StaticResource LblEntry}"></Label>
-                                    <Entry Grid.Row="0" Grid.Column="1" WidthRequest="90" Text="{Binding Year}" HorizontalOptions="Start" x:Name="EntAno" MaxLength="4" Keyboard="Numeric" Style="{StaticResource Entry}" >
-                                        <Entry.Behaviors>
-                                            <behaviors:NumericValidationBehavior />
-                                        </Entry.Behaviors>
-                                    </Entry>
+                                    <Border  WidthRequest="90" Grid.Row="0" Grid.Column="1">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="5" />
+                                        </Border.StrokeShape>
+                                        <Entry  WidthRequest="80" Text="{Binding Year}" HorizontalOptions="Start" x:Name="EntAno" MaxLength="4" Keyboard="Numeric" Style="{StaticResource Entry}" >
+                                            <Entry.Behaviors>
+                                                <behaviors:NumericValidationBehavior />
+                                            </Entry.Behaviors>
+                                        </Entry>
+                                    </Border>
                                 </StackLayout>
                             </Frame>
                             <Frame VerticalOptions="Start" BorderColor="Transparent" HorizontalOptions="FillAndExpand" Grid.Row="1" Grid.ColumnSpan="2" Padding="0" BackgroundColor="Transparent">
                                 <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
                                     <Label Text="Autor(es)" Style="{StaticResource LblEntry}"></Label>
-                                    <Entry MinimumWidthRequest="250" Text="{Binding Authors}" MaxLength="400" 
+                                    <Border MinimumWidthRequest="250">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="5" />
+                                        </Border.StrokeShape>
+                                        <Entry MinimumWidthRequest="240" Text="{Binding Authors}" MaxLength="400" 
                                            HorizontalOptions="FillAndExpand" Style="{StaticResource Entry}" />
+                                    </Border>
                                 </StackLayout>
                             </Frame>
                             <Frame VerticalOptions="Start" BorderColor="Transparent"  HorizontalOptions="FillAndExpand" Grid.Row="2" Grid.Column="0" Padding="0" BackgroundColor="Transparent">
                                 <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
                                     <Label Text="Páginas" Style="{StaticResource LblEntry}"></Label>
-                                    <Entry WidthRequest="60" Text="{Binding Pages}" HorizontalOptions="Start" x:Name="EntPages" MaxLength="4" Keyboard="Numeric" Style="{StaticResource Entry}" >
-                                        <Entry.Behaviors>
-                                            <behaviors:NumericValidationBehavior />
-                                        </Entry.Behaviors>
-                                    </Entry>
+                                    <Border  WidthRequest="70" HorizontalOptions="Start">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="5" />
+                                        </Border.StrokeShape>
+                                        <Entry Text="{Binding Pages}" x:Name="EntPages" MaxLength="4" Keyboard="Numeric" Style="{StaticResource Entry}" >
+                                            <Entry.Behaviors>
+                                                <behaviors:NumericValidationBehavior />
+                                            </Entry.Behaviors>
+                                        </Entry>
+                                    </Border>
                                 </StackLayout>
                             </Frame>
                             <Frame VerticalOptions="Start" BorderColor="Transparent" HorizontalOptions="FillAndExpand" Grid.Row="2" Grid.Column="1" Padding="0" BackgroundColor="Transparent">
                                 <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
                                     <Label Text="*Gênero" Style="{StaticResource LblEntry}"></Label>
-                                    <Entry Text="{Binding Genre}" HorizontalOptions="FillAndExpand" MaxLength="100" Style="{StaticResource Entry}"/>
-                                </StackLayout>
+                                    <Border  HorizontalOptions="FillAndExpand" >
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="5" />
+                                        </Border.StrokeShape>
+                                        <Entry Text="{Binding Genre}" HorizontalOptions="FillAndExpand" MaxLength="100" Style="{StaticResource Entry}"/>
+                                    </Border>
+                                </StackLayout>                                    
                             </Frame>
                         </Grid>
                         <Frame VerticalOptions="Start" BorderColor="Transparent" HorizontalOptions="FillAndExpand" Grid.Row="0" Grid.Column="1" Padding="0" BackgroundColor="Transparent">
                             <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
                                 <Label Text="*Isbn" Style="{StaticResource LblEntry}" />
-                                <Entry MaximumWidthRequest="350" MinimumWidthRequest="250" Text="{Binding Isbn}" HorizontalOptions="StartAndExpand" MaxLength="300" Style="{StaticResource Entry}" />
+                                <Border  MaximumWidthRequest="350" MinimumWidthRequest="250" HorizontalOptions="StartAndExpand">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="5" />
+                                    </Border.StrokeShape>
+                                    <Entry MaximumWidthRequest="350" MinimumWidthRequest="250" Text="{Binding Isbn}" HorizontalOptions="StartAndExpand" MaxLength="300" Style="{StaticResource Entry}" />
+                                </Border>
                             </StackLayout>
                         </Frame>
                         <BoxView HeightRequest="1" BackgroundColor="Black" Color="Black" Margin="0,10,0,10"></BoxView>
                         <Label Text="Situação" VerticalOptions="Fill" HorizontalOptions="Center" TextColor="Black" FontFamily="EBGaramondSemiBold" FontSize="20"/>
-                        <Picker ItemsSource="{Binding StatusList}" 
+                        <Border HorizontalOptions="CenterAndExpand">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="5" />
+                            </Border.StrokeShape>
+                            <Picker ItemsSource="{Binding StatusList}" 
                                 Style="{StaticResource Picker}" 
-                                SelectedIndex="{ Binding PkrStatusSelectedIndex }"
+                                SelectedIndex="{ Binding PkrStatusSelectedIndex }"                                    
                                 />
+                        </Border>
                         <Grid HorizontalOptions="CenterAndExpand" Margin="0,10,0,10" IsVisible="{Binding RatingBarIsVisible}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -145,7 +196,7 @@
                                 HeightRequest="30" 
                                 HorizontalOptions="Center"
                                 Margin="0,0,3,0" 
-                                >                                
+                                >
                                 <Image.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding ImgStar1ClickCommand}" NumberOfTapsRequired="1" />
                                 </Image.GestureRecognizers>
@@ -171,9 +222,11 @@
                                 </Image.GestureRecognizers>
                             </Image>
                         </Grid>
-
                         <Label
-                            Text="*Comentários" Style="{StaticResource LblEntry}" IsVisible="{Binding EdtCommentIsVisible}" />
+                            Text="*Comentários" 
+                            Style="{StaticResource LblEntry}" 
+                            IsVisible="{Binding EdtCommentIsVisible}"
+                            />
                         <Editor 
                             Style="{StaticResource Entry}" HeightRequest="70" MaxLength="200" MinimumWidthRequest="250" HorizontalOptions="FillAndExpand" Keyboard="Chat"
                             Text="{ Binding Comment }" IsVisible="{Binding EdtCommentIsVisible}" />
@@ -185,7 +238,8 @@
                             IsVisible="{Binding BtnInsertIsVisible}"
                             IsEnabled="{Binding BtnInsertIsEnabled}"
                             Style="{StaticResource MainBtn}"
-                            ContentLayout="Left, 10" >
+                            ContentLayout="Left, 10" 
+                            >
                             <Button.ImageSource>
                                 <FontImageSource 
                                     FontFamily="FontAwesome"

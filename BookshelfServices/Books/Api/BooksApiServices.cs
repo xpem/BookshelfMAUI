@@ -5,6 +5,9 @@ using System.Text.Json.Serialization;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.Json;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Diagnostics;
+using System.Reflection.PortableExecutable;
 
 namespace BookshelfServices.Books.Api
 {
@@ -87,7 +90,7 @@ namespace BookshelfServices.Books.Api
                     var data = new StringContent(json, Encoding.UTF8, "application/json");
 
                     httpClient = new HttpClient();
-                    httpClient.DefaultRequestHeaders.Add("Authorization","bearer "+ user?.Token);
+                    httpClient.DefaultRequestHeaders.Add("Authorization", "bearer " + user?.Token);
                     HttpResponseMessage response = await httpClient.PutAsync(ApiKeys.ApiUri + "/Book/" + book.Id, data);
                     var result = response.Content.ReadAsStringAsync().Result;
 
@@ -150,7 +153,17 @@ namespace BookshelfServices.Books.Api
                 }
                 return null;
             }
-            catch (Exception ex) { throw ex; }
+            catch (HttpRequestException ex)
+            {
+                var innerexception = ex.InnerException;
+                if (innerexception != null && innerexception.Message.Contains("No connection could be made because the target machine actively refused it."))
+                { return null; }
+                else throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
 

@@ -18,19 +18,18 @@
     <ContentPage.Content>
         <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
             <Frame Style="{ StaticResource MainFrame }" HorizontalOptions="FillAndExpand" >
-                <Border HorizontalOptions="FillAndExpand">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="10" />
-                    </Border.StrokeShape>
-                    <Entry Placeholder="Buscar por Título" Style="{StaticResource Entry}" 
-                           TextColor="Gray"
-                           BackgroundColor="White"
+                <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0">
+                    <Label Text="Digite o título do livro" Style="{StaticResource LblEntry}"></Label>
+                    <Border HorizontalOptions="FillAndExpand">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="5" />
+                        </Border.StrokeShape>
+                        <Entry Style="{StaticResource Entry}"                            
                            HorizontalOptions="FillAndExpand"
                            TextTransform="Uppercase" 
-                           VerticalOptions="CenterAndExpand"
-                           Margin="10,0,10,0"
                            Text="{Binding SearchTitle}" />
-                </Border>
+                    </Border>
+                </StackLayout>
             </Frame>
             <Frame Style="{ StaticResource MainFrame }" VerticalOptions="FillAndExpand" Margin="5" CornerRadius="10" Padding="5">
                 <ListView 
@@ -71,7 +70,7 @@
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="20"/>
                                                 <RowDefinition Height="20"/>
-                                                <RowDefinition Height="12"/>
+                                                <RowDefinition Height="20"/>
                                                 <RowDefinition Height="*"/>
                                             </Grid.RowDefinitions>
                                             <Grid.ColumnDefinitions>
@@ -108,7 +107,8 @@
                                                 Text="{Binding Rate}"
                                                 HorizontalTextAlignment="Start"
                                                 HorizontalOptions="Fill"
-                                                Grid.Row="2" 
+                                                VerticalOptions="End"
+                                                Grid.Row="3" 
                                                 Grid.Column="0" 
                                                 FontSize="15"
                                                 FontFamily="EBGaramondItalic" 

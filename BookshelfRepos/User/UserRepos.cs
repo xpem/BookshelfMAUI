@@ -30,8 +30,9 @@ namespace BookshelfRepos.User
             SQLiteDB.OpenIfClosed();
 
             //clean local database
-            await SQLiteDB.RunSqliteCommand("delete from USER");
-            await SQLiteDB.RunSqliteCommand("delete from BOOK");
+            _ = await SQLiteDB.RunSqliteCommand("delete from USER");
+
+            _ = await SQLiteDB.RunSqliteCommand("delete from BOOK");
 
             SQLiteDB.CloseIfOpen();
         }

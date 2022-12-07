@@ -25,15 +25,17 @@
         <Setter Property="PlaceholderColor" Value="#606060"></Setter>
         <Setter Property="TextColor" Value="Gray"></Setter>
         <Setter Property="FontFamily" Value="EBGaramondSemibold"></Setter>
-        <Setter Property="Margin" Value="0,5,0,0"></Setter>
+        <Setter Property="FontSize" Value="12"></Setter>
+        <Setter Property="Margin" Value="5,0,0,0"></Setter>
         <Setter Property="HorizontalOptions" Value="Start"></Setter>
+        
     </Style>
 
     <Style x:Key="LblEntry" TargetType="Label">
         <Setter Property="TextColor" Value="#4B4B4B"></Setter>
         <Setter Property="FontFamily" Value="EBGaramondRegular"></Setter>
         <Setter Property="HeightRequest" Value="18"></Setter>
-        <Setter Property="Margin" Value="0,10,0,0"></Setter>
+        <Setter Property="Margin" Value="10,10,0,0"></Setter>
     </Style>
 
     <Style x:Key="MainBtn" TargetType="Button">

@@ -122,6 +122,7 @@ namespace Bookshelf.ViewModels
             Situation = "0";
             BtnInsertText = "Cadastrar";
             BtnAddBookImageSourceGlyph = IconFont.Plus;
+            pkrStatusSelectedIndex = 0;
 
             if (string.IsNullOrEmpty(BookId))
             {
@@ -142,8 +143,6 @@ namespace Bookshelf.ViewModels
 
                 if (string.IsNullOrEmpty(BookId))
                 {
-                    pkrStatusSelectedIndex = 0;
-
                     RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
 
                     if (string.IsNullOrEmpty(GoogleKey))

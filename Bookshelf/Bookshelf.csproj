@@ -58,6 +58,7 @@
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Italic.ttf" />
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Medium.ttf" />
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Regular.ttf" />
+	  <None Remove="Resources\Images\cover.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>

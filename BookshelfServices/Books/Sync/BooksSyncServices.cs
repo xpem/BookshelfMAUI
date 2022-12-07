@@ -16,49 +16,53 @@ namespace BookshelfServices.Books.Sync
             booksApiServices = _booksApiServices;
         }
 
-        public static bool Synchronizing { get; set; }
+        public static SyncStatus Synchronizing { get; set; }
 
-        public static bool ThreadIsRunning { get; set; }
+        public enum SyncStatus
+        {
+            Processing, Sleeping, ServerOff
+        }
+
+        public static Timer? _Timer;
+        readonly int Interval = 60000;
+        public static bool ThreadIsRunning = false;
 
 
         public void StartThread()
         {
             if (!ThreadIsRunning)
             {
-                ThreadIsRunning = true;
-                Thread thread = new(SyncLocalDb) { IsBackground = true };
+                Synchronizing = SyncStatus.Sleeping;
+
+                Thread thread = new(SetTimer) { IsBackground = true };
                 thread.Start();
             }
         }
 
-        public async void ContinuosSync()
+        public void SetTimer()
         {
-            try
+            if (!ThreadIsRunning)
             {
-                while (ThreadIsRunning)
-                {
-                    SyncLocalDb();
+                ThreadIsRunning = true;
+                SyncLocalDb(null);
 
-                    //delay of three minutes 
-                    await Task.Delay(180000);
-                }
+                _Timer = new Timer(SyncLocalDb, null, Interval, Timeout.Infinite);
             }
-            catch (Exception ex) { throw ex; }
         }
 
-        public async void SyncLocalDb()
+        private async void SyncLocalDb(object? state)
         {
             try
             {
                 BookshelfModels.User.User? user = userServices.GetUserLocal();
 
-                if (user != null && !Synchronizing)
+                if (user != null && Synchronizing != SyncStatus.Processing)
                 {
-                    Synchronizing = true;
+                    Synchronizing = SyncStatus.Processing;
 
                     if (CrossConnectivity.Current.IsConnected)
                     {
-                        DateTime LastUptade = user.LastUpdate;
+                        DateTime LastUpdate = user.LastUpdate;
 
                         List<Book> booksList = await BookshelfRepos.Books.BooksRepos.GetBooksByLastUpdate(user.Id, user.LastUpdate);
 
@@ -69,7 +73,6 @@ namespace BookshelfServices.Books.Sync
                             if (book.LocalTempId != null)
                             {
                                 //define the key has a null for register the book in firebase
-
                                 (bool success, string? res) = await booksApiServices.AddBook(book, user);
 
                                 if (success && !string.IsNullOrEmpty(res))
@@ -92,16 +95,27 @@ namespace BookshelfServices.Books.Sync
                             {
                                 BookshelfRepos.Books.BooksRepos.AddOrUpdateBook(book, user.Id);
 
-                                if (LastUptade < book.UpdatedAt) LastUptade = book.UpdatedAt;
+                                if (LastUpdate < book.UpdatedAt) LastUpdate = book.UpdatedAt;
                             }
                         }
 
-                        BookshelfRepos.User.UserRepos.UpdateUserLastUpdateLocal(user.Id, LastUptade);
+                        BookshelfRepos.User.UserRepos.UpdateUserLastUpdateLocal(user.Id, LastUpdate);
                     }
-                    Synchronizing = false;
+
+                    Synchronizing = SyncStatus.Sleeping;
                 }
             }
-            catch (Exception ex) { throw ex; }
+            catch (HttpRequestException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("No connection could be made because the target machine actively refused it."))
+                { Synchronizing = SyncStatus.ServerOff; }
+                else throw ex;
+            }
+            catch { throw; }
+            finally
+            {
+                _Timer?.Change(Interval, Timeout.Infinite);
+            }
         }
     }
 }

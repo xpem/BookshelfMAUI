@@ -128,7 +128,12 @@ namespace Bookshelf.ViewModels
 
             foreach (UIBookItem bookItem in booksList)
             {
+                if(bookItem.Cover is null)
+                {
+                    bookItem.Cover = "cover.jpg";
+                }
                 BooksList.Add(bookItem);
+
             }
 
             //Definição do título da interface

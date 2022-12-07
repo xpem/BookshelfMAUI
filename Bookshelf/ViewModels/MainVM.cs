@@ -12,7 +12,9 @@ namespace Bookshelf.ViewModels
     {
         private bool firstSyncIsRunnig = true;
 
-        private string illRead, reading, read, interrupted, isSync;
+        private string illRead, reading, read, interrupted;
+
+        private Color isSync;
 
         public string IllRead { get => illRead; set { if (illRead != value) { illRead = value; OnPropertyChanged(); } } }
 
@@ -22,7 +24,8 @@ namespace Bookshelf.ViewModels
 
         public string Interrupted { get => interrupted; set { if (interrupted != value) { interrupted = value; OnPropertyChanged(); } } }
 
-        public string IsSync { get => isSync; set { if (value != isSync) { isSync = value; OnPropertyChanged(); } } }
+        public Color IsSync { get => isSync; set { if (value != isSync) { isSync = value; OnPropertyChanged(); } } }
+
 
         /// <summary>
         /// var that defines if the function that verify the synchronization is running  or not
@@ -34,11 +37,11 @@ namespace Bookshelf.ViewModels
         public double FrmMainOpacity { get => frmMainOpacity; set { if (frmMainOpacity != value) { frmMainOpacity = value; OnPropertyChanged(); } } }
 
         private bool frmMainIsEnabled;
-        string isConnected;
+        Color isConnected;
 
         public bool FrmMainIsEnabled { get => frmMainIsEnabled; set { if (value != frmMainIsEnabled) { frmMainIsEnabled = value; OnPropertyChanged(); } } }
 
-        public string IsConnected { get => isConnected; set { if (value != isConnected) { isConnected = value; OnPropertyChanged(); } } }
+        public Color IsConnected { get => isConnected; set { if (value != isConnected) { isConnected = value; OnPropertyChanged(); } } }
 
         readonly IBooksServices booksServices;
 
@@ -54,68 +57,91 @@ namespace Bookshelf.ViewModels
             if (resp)
             {
                 BookshelfServices.User.UserServices.CleanUserDatabase();
-
+                _Timer.Dispose();
                 //finalize sync thread process
                 BooksSyncServices.ThreadIsRunning = false;
+                BooksSyncServices._Timer.Dispose();
 
                 await Shell.Current.GoToAsync($"//{nameof(Login)}");
             }
         });
 
+
+        private Timer _Timer;
+        int Interval = 2000;
+        bool ThreadIsRunning = false;
+
+        public ICommand OnAppearingCommand => new Command(async (e) =>
+        {
+            IsSync = Colors.Gray;
+            SetTimer();
+        });
+
+        public void SetTimer()
+        {
+            if (!ThreadIsRunning)
+            {
+                IllRead = Reading = Read = Interrupted = "...";
+                FrmMainOpacity = 0.5;
+
+                ThreadIsRunning = true;
+                firstSyncIsRunnig = true;
+                _Timer = new Timer(CheckSync, null, Interval, Timeout.Infinite);
+            }
+        }
+
         /// <summary>
         /// parallel operation that checks if the system is synchronizyng.
         /// </summary>
-        private async Task ChekSync()
+        private void CheckSync(object state)
         {
-            ChekingSync = true;
-
-            while (ChekingSync)
+            try
             {
                 if (!(Connectivity.NetworkAccess == NetworkAccess.Internet))
                 {
-                    IsConnected = "#FF0000";
+                    IsConnected = Colors.Red;
                 }
                 else
                 {
-                    IsConnected = "#fff";
+                    IsConnected = Colors.Green;
 
-                    if (BookshelfServices.Books.Sync.BooksSyncServices.Synchronizing)
+                    switch (BookshelfServices.Books.Sync.BooksSyncServices.Synchronizing)
                     {
-                        IsSync = "#008000";
-                    }
-                    else
-                    {
-                        await GetBookshelfTotals();
+                        case BooksSyncServices.SyncStatus.Processing: IsSync = Colors.Green; break;
+                        case BooksSyncServices.SyncStatus.Sleeping:
 
-                        IsSync = "#fff";
+                            _ = GetBookshelfTotals();
 
-                        //after finish first sync, enable the grid for access
-                        if (firstSyncIsRunnig)
-                        {
-                            FrmMainOpacity = 1;
-                            firstSyncIsRunnig = false;
-                            FrmMainIsEnabled = false;
-                        }
-                        else { FrmMainIsEnabled = true; }
+                            IsSync = Colors.Gray;
+
+                            //after finish first sync, enable the grid for access
+                            if (firstSyncIsRunnig)
+                            {
+                                FrmMainOpacity = 1;
+                                firstSyncIsRunnig = false;
+                                FrmMainIsEnabled = false;
+                            }
+                            else { FrmMainIsEnabled = true; }
+
+                            break;
+                        case BooksSyncServices.SyncStatus.ServerOff:
+                            IsSync = Colors.Red;
+                            break;
                     }
                 }
 
                 //in fisrt sync not finish yet, verify with one second interval
                 if (firstSyncIsRunnig)
-                { await Task.Delay(2000); }
+                { Interval = 2000; }
                 //checks with ten seconds interval
                 else
-                { await Task.Delay(10000); }
+                { Interval = 10000; }
+            }
+            finally
+            {
+                _Timer?.Change(Interval, Timeout.Infinite);
             }
         }
-
-        public ICommand OnAppearingCommand => new Command((e) =>
-        {
-            IllRead = Reading = Read = Interrupted = "...";
-            FrmMainOpacity = 0.5;
-            _ = ChekSync();
-
-        });
 
         public async Task GetBookshelfTotals()
         {
