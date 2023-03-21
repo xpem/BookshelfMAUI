@@ -62,7 +62,7 @@ namespace Bookshelf.ViewModels
                 BooksSyncServices.ThreadIsRunning = false;
                 BooksSyncServices._Timer.Dispose();
 
-                await Shell.Current.GoToAsync($"//{nameof(Login)}");
+                await Shell.Current.GoToAsync($"//{nameof(SignIn)}");
             }
         });
 
@@ -71,7 +71,7 @@ namespace Bookshelf.ViewModels
         int Interval = 2000;
         bool ThreadIsRunning = false;
 
-        public ICommand OnAppearingCommand => new Command(async (e) =>
+        public ICommand OnAppearingCommand => new Command((e) =>
         {
             IsSync = Colors.Gray;
             SetTimer();

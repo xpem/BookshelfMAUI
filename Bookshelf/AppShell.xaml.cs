@@ -13,7 +13,7 @@ public partial class AppShell : Shell
 
         Routing.RegisterRoute(nameof(BookDetail), typeof(BookDetail));
 
-        Routing.RegisterRoute(nameof(AddUser), typeof(AddUser));
+        Routing.RegisterRoute(nameof(SignUp), typeof(SignUp));
 
         Routing.RegisterRoute(nameof(UpdatePassword), typeof(UpdatePassword));
 

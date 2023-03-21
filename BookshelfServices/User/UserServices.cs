@@ -67,6 +67,6 @@ namespace BookshelfServices.User
 
         public static void CleanUserDatabase() => UserRepos.CleanUserDatabase();
 
-        public async Task<BookshelfModels.User.User> AddUser(string name, string email, string password) => await UserApiService.AddUser(name, email, password);
+        public async Task<BookshelfModels.User.User> SignUp(string name, string email, string password) => await UserApiService.SignUp(name, email, password);
     }
 }

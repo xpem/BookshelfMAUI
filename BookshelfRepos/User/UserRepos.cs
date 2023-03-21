@@ -89,7 +89,7 @@ namespace BookshelfRepos.User
 
                 SQLiteDB.CloseIfOpen();
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception) { throw; }
         }
     }
 }

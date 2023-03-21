@@ -2,9 +2,9 @@ using Bookshelf.ViewModels;
 
 namespace Bookshelf.Views;
 
-public partial class Login : ContentPage
+public partial class SignIn : ContentPage
 {
-    public Login(LoginVM loginVM)
+    public SignIn(SignInVM loginVM)
     {
         InitializeComponent();
 

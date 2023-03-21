@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Bookshelf.Views.SignUp"
+             Title="Cadastrar Usuário"
+             Shell.FlyoutBehavior="Disabled"
+             xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
+             xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels"
+             x:DataType="viewmodels:SignUpVM"
+             xmlns:components = "clr-namespace:Bookshelf.Components"
+             Style="{StaticResource ContentPage}" >
+    <ContentPage.Resources>
+        <Style x:Key="Icon" TargetType="Label">
+            <Setter Property="TextColor" Value="White"></Setter>
+            <Setter Property="HorizontalOptions" Value="Center"></Setter>
+            <Setter Property="FontSize" Value="40"></Setter>
+            <Setter Property="FontFamily" Value="FontAwesome"></Setter>
+            <Setter Property="Padding" Value="0,0,0,10"></Setter>
+        </Style>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <ScrollView HorizontalOptions="CenterAndExpand">
+            <Frame Style="{ StaticResource FramePrimary }" IsEnabled="{Binding IsNotBusy}">
+                <VerticalStackLayout>
+                    <Label Text="{x:Static Icons:IconFont.User}" Style="{StaticResource Icon}" />
+                    <components:BorderedEntry Text="{Binding Name}" LabelText="Nome"/>
+                    <components:BorderedEntry Text="{Binding Email}" LabelText="Email"/>
+                    <components:BorderedEntry Text="{Binding Password}" LabelText="Senha" IsPassword="True"/>
+                    <components:BorderedEntry Text="{Binding ConfirmPassword}" LabelText="Confirmação da senha" IsPassword="True"/>
+
+                    <Button Text="Cadastrar" ContentLayout="Left, 10"
+                                Style="{StaticResource ButtonPrimary}" 
+                                Command="{Binding SignUpCommand}" IsEnabled="{Binding BtnCreateUserIsEnabled}" Margin="0,10,0,20" >
+                        <Button.ImageSource>
+                            <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.UserPlus}" Size="15"></FontImageSource>
+                        </Button.ImageSource>
+                    </Button>
+                </VerticalStackLayout>
+            </Frame>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

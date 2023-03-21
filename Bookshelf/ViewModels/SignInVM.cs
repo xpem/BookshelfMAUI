@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class LoginVM : ViewModelBase
+    public class SignInVM : ViewModelBase
     {
 
         string email;
@@ -29,7 +29,7 @@ namespace Bookshelf.ViewModels
         readonly IUserServices userServices;
         readonly IBooksSyncServices booksSyncServices;
 
-        public LoginVM(IUserServices _userServices, IBooksSyncServices _booksSyncServices)
+        public SignInVM(IUserServices _userServices, IBooksSyncServices _booksSyncServices)
         {
             userServices = _userServices;
             booksSyncServices = _booksSyncServices;
@@ -84,7 +84,7 @@ namespace Bookshelf.ViewModels
 
          });
 
-        public ICommand CreateUserCommand => new Command(async () => await Shell.Current.GoToAsync($"{nameof(AddUser)}"));
+        public ICommand CreateUserCommand => new Command(async () => await Shell.Current.GoToAsync($"{nameof(SignUp)}"));
 
         public ICommand UpdatePasswordCommand => new Command(async () => await Shell.Current.GoToAsync($"{nameof(UpdatePassword)}"));
 

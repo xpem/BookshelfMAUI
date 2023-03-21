@@ -1,13 +1,7 @@
 ﻿using BookshelfModels.User;
-using BookshelfRepos.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 
 namespace BookshelfServices.User.Api
 {
@@ -93,7 +87,7 @@ namespace BookshelfServices.User.Api
             catch (Exception) { throw; }
         }
 
-        public static async Task<BookshelfModels.User.User> AddUser(string name, string email, string password)
+        public static async Task<BookshelfModels.User.User> SignUp(string name, string email, string password)
         {
             try
             {
@@ -128,5 +122,41 @@ namespace BookshelfServices.User.Api
             catch (Exception) { throw; }
         }
 
+
+        public static async Task<string?> RecoverPassword(string email)
+        {
+            try
+            {
+                int forContinue = 0;
+
+                while (forContinue < 2)
+                {
+                    string json = JsonSerializer.Serialize(new { email });
+                    StringContent data = new(json, Encoding.UTF8, "application/json");
+
+                    //to do - make a base to this
+                    httpClient = new HttpClient();
+                    HttpResponseMessage response = await httpClient.PostAsync(ApiKeys.ApiUri + "/user/recoverpassword", data);
+                    string result = response.Content.ReadAsStringAsync().Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        JsonNode? obj = JsonNode.Parse(result);
+
+                        if (obj != null)
+                        {
+                            if (obj["Mensagem"]?.GetValue<string>() != null)
+                            {
+                                return obj["Mensagem"]?.GetValue<string>();
+                            }
+                        }
+                        else throw new Exception(result);
+                    }
+                }
+
+                throw new Exception("O servidor está indisponível");
+            }
+            catch (Exception) { throw; }
+        }
     }
 }

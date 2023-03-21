@@ -8,8 +8,8 @@
     BackgroundColor="#442E26"
     >
 
-    <ShellItem Route="Login" FlyoutItemIsVisible="False">
-        <ShellContent ContentTemplate="{DataTemplate local:Login}" />
+    <ShellItem Route="SignIn" FlyoutItemIsVisible="False">
+        <ShellContent ContentTemplate="{DataTemplate local:SignIn}" />
     </ShellItem>
 
     <ShellItem Route="Main" FlyoutItemIsVisible="False">

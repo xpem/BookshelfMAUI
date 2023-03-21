@@ -1,13 +1,9 @@
 ﻿using BookshelfModels.Books;
 using BookshelfServices.User;
 using System.Net.Http.Json;
-using System.Text.Json.Serialization;
 using System.Text;
-using System.Text.Json.Nodes;
 using System.Text.Json;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using System.Diagnostics;
-using System.Reflection.PortableExecutable;
+using System.Text.Json.Nodes;
 
 namespace BookshelfServices.Books.Api
 {
@@ -130,7 +126,7 @@ namespace BookshelfServices.Books.Api
         public async Task<List<Book>?> GetBooksByLastUpdate(BookshelfModels.User.User user)
         {
             try
-            {
+            { 
                 int forContinue = 0;
 
                 while (forContinue < 2)

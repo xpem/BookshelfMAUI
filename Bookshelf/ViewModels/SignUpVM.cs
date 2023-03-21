@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public partial class AddUserVM : ViewModelBase
+    public partial class SignUpVM : ViewModelBase
     {
         readonly IUserServices userService;
         readonly IBooksSyncServices booksSyncServices;
@@ -26,19 +26,16 @@ namespace Bookshelf.ViewModels
 
         public string Password { get => password; set { if (password != value) { password = value; OnPropertyChanged(); } } }
 
-
         string confirmPassword;
 
         public string ConfirmPassword { get => confirmPassword; set { if (confirmPassword != value) { confirmPassword = value; OnPropertyChanged(); } } }
-
-
 
         bool btnCreateUserIsEnabled = true;
 
         public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { btnCreateUserIsEnabled = value; OnPropertyChanged(); } } }
 
 
-        public AddUserVM(IUserServices _userService, IBooksSyncServices _booksSyncServices)
+        public SignUpVM(IUserServices _userService, IBooksSyncServices _booksSyncServices)
         {
             userService = _userService;
             booksSyncServices = _booksSyncServices;
@@ -88,7 +85,7 @@ namespace Bookshelf.ViewModels
             return validInformation;
         }
 
-        public ICommand AddUserCommand => new Command(async () =>
+        public ICommand SignUpCommand => new Command(async () =>
         {
             if (!CrossConnectivity.Current.IsConnected)
             {
@@ -101,7 +98,7 @@ namespace Bookshelf.ViewModels
                 BtnCreateUserIsEnabled = false;
 
                 //
-                User user = await userService.AddUser(name, email, password);
+                User user = await userService.SignUp(name, email, password);
 
                 if (user != null)
                 {

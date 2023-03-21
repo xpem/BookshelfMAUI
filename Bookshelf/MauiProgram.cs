@@ -45,11 +45,11 @@ public static class MauiProgram
         builder.Services.AddTransient<Main>();
         builder.Services.AddTransient<MainVM>();
 
-        builder.Services.AddTransient<Login>();
-        builder.Services.AddTransient<LoginVM>();
+        builder.Services.AddTransient<SignIn>();
+        builder.Services.AddTransient<SignInVM>();
 
-        builder.Services.AddTransient<AddUser>();
-        builder.Services.AddTransient<AddUserVM>();
+        builder.Services.AddTransient<SignUp>();
+        builder.Services.AddTransient<SignUpVM>();
 
         builder.Services.AddTransient<UpdatePassword>();
         builder.Services.AddTransient<UpdatePasswordVM>();

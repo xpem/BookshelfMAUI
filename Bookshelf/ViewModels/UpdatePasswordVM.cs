@@ -1,5 +1,6 @@
 ﻿using Bookshelf.Utils;
 using Bookshelf.ViewModels.Components;
+using BookshelfServices.User.Api;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
@@ -37,9 +38,9 @@ namespace Bookshelf.ViewModels
             else
             {
                 //desenvolver mecanismo de update de email.
-               // _ = userAuthServices.SendPasswordResetEmail(Email);
+                _ = UserApiService.RecoverPassword(Email);
 
-                await Application.Current.MainPage.DisplayAlert("Aviso", "Email de alteração de senha enviado em implementacao!", null, "Ok");
+                await Application.Current.MainPage.DisplayAlert("Aviso", "Email de alteração de senha enviado!", null, "Ok");
 
                 await Shell.Current.GoToAsync("..");
             }
