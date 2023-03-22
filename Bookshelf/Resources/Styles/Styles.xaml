@@ -14,7 +14,6 @@
         <Setter Property="VerticalOptions" Value="FillAndExpand"></Setter>
     </Style>
 
-
     <Style x:Key="MainFrame" TargetType="Frame">
         <Setter Property="HorizontalOptions" Value="FillAndExpand"></Setter>
         <Setter Property="VerticalOptions" Value="Center"></Setter>
@@ -27,17 +26,6 @@
         <Setter Property="HasShadow" Value="False" />
         <Setter Property="BackgroundColor" Value="Transparent"></Setter>
     </Style>
-
-    <!--<Style x:Key="Entry" TargetType="Entry">
-        <Setter Property="BackgroundColor" Value="White"></Setter>
-        <Setter Property="PlaceholderColor" Value="#606060"></Setter>
-        <Setter Property="TextColor" Value="Gray"></Setter>
-        <Setter Property="FontFamily" Value="EBGaramondSemibold"></Setter>
-        <Setter Property="FontSize" Value="12"></Setter>
-        <Setter Property="Margin" Value="5,0,0,0"></Setter>
-        <Setter Property="HorizontalOptions" Value="Start"></Setter>
-        
-    </Style>-->
 
     <Style TargetType="Entry" x:Key="Entry">
         <Setter Property="TextColor" Value="{StaticResource Black}" />
@@ -116,18 +104,17 @@
         <Setter Property="VerticalOptions" Value="Fill"></Setter>
         <Setter Property="HorizontalOptions" Value="Fill"></Setter>
         <Setter Property="BackgroundColor" Value="#362624"></Setter>
-        <Setter Property="TextColor" Value="#EDEDED"></Setter>
+        <Setter Property="TextColor" Value="{StaticResource White}"></Setter>
         <Setter Property="CornerRadius" Value="5"></Setter>
         <Setter Property="FontFamily" Value="EBGaramondBold"></Setter>
         <Setter Property="FontSize" Value="20"></Setter>
     </Style>
 
-
     <Style x:Key="BtnPrimary" TargetType="Button">
         <Setter Property="VerticalOptions" Value="Fill"></Setter>
         <Setter Property="HorizontalOptions" Value="Fill"></Setter>
         <Setter Property="BackgroundColor" Value="{StaticResource MainItemColor}"></Setter>
-        <Setter Property="TextColor" Value="#EDEDED"></Setter>
+        <Setter Property="TextColor" Value="{StaticResource White}"></Setter>
         <Setter Property="CornerRadius" Value="5"></Setter>
         <Setter Property="FontFamily" Value="EBGaramondBold"></Setter>
         <Setter Property="FontSize" Value="20"></Setter>
@@ -137,7 +124,17 @@
         <Setter Property="VerticalOptions" Value="Fill"></Setter>
         <Setter Property="HorizontalOptions" Value="FillAndExpand"></Setter>
         <Setter Property="BackgroundColor" Value="#5D4037"></Setter>
-        <Setter Property="TextColor" Value="#EDEDED"></Setter>
+        <Setter Property="TextColor" Value="{StaticResource White}"></Setter>
+        <Setter Property="CornerRadius" Value="5"></Setter>
+        <Setter Property="FontFamily" Value="EBGaramondSemibold"></Setter>
+        <Setter Property="FontSize" Value="20"></Setter>
+    </Style>
+
+    <Style x:Key="BtnInfoSecondary" TargetType="Button">
+        <Setter Property="VerticalOptions" Value="Fill"></Setter>
+        <Setter Property="HorizontalOptions" Value="Fill"></Setter>
+        <Setter Property="BackgroundColor" Value="{StaticResource SecondaryInfoColor}"></Setter>
+        <Setter Property="TextColor" Value="{StaticResource Black}"></Setter>
         <Setter Property="CornerRadius" Value="5"></Setter>
         <Setter Property="FontFamily" Value="EBGaramondSemibold"></Setter>
         <Setter Property="FontSize" Value="20"></Setter>
@@ -153,11 +150,11 @@
         <Setter Property="TextColor" Value="Black"/>
     </Style>
 
-    <Style x:Key="StackLayoutPrimary" TargetType="StackLayout">
+    <!--<Style x:Key="StackLayoutPrimary" TargetType="StackLayout">
         <Setter Property="VerticalOptions" Value="Center"></Setter>
         <Setter Property="HorizontalOptions" Value="FillAndExpand"></Setter>
         <Setter Property="MaximumWidthRequest" Value="600"></Setter>
-    </Style>
+    </Style>-->
 
     <Style x:Key="EntryBorders" TargetType="Border">
         <Setter Property="HorizontalOptions" Value="FillAndExpand"></Setter>

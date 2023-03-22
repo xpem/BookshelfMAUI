@@ -7,7 +7,8 @@
     <Color x:Key="Success">#76B947</Color>
     <Color x:Key="MainItemColor">#4D7176</Color>
     <Color x:Key="InfoColor">#BCECE0</Color>
-
+    <Color x:Key="SecondaryInfoColor">#5EA2AC</Color>
+    
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>
     <Color x:Key="Gray100">#E1E1E1</Color>
