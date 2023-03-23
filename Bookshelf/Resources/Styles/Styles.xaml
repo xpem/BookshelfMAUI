@@ -150,12 +150,6 @@
         <Setter Property="TextColor" Value="Black"/>
     </Style>
 
-    <!--<Style x:Key="StackLayoutPrimary" TargetType="StackLayout">
-        <Setter Property="VerticalOptions" Value="Center"></Setter>
-        <Setter Property="HorizontalOptions" Value="FillAndExpand"></Setter>
-        <Setter Property="MaximumWidthRequest" Value="600"></Setter>
-    </Style>-->
-
     <Style x:Key="EntryBorders" TargetType="Border">
         <Setter Property="HorizontalOptions" Value="FillAndExpand"></Setter>
     </Style>

@@ -11,7 +11,7 @@ public partial class App : Application
     //criação de componentes
     //utilizar item tapped nas list views na seleção
     //ajuste da nomeclatura dos itens de acordo com o padrao que criei
-
+    //passar as chamadas de api p uma camada repo propria
 
     //<Nome do objeto><ação da interface>
     //list - listagem

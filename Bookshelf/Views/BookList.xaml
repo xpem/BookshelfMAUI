@@ -7,6 +7,7 @@
              xmlns:vm="clr-namespace:Bookshelf.ViewModels"
              xmlns:model="clr-namespace:BookshelfModels.Books;assembly=BookshelfModels"
              x:DataType="vm:BookListVM"
+             xmlns:components = "clr-namespace:Bookshelf.Components"
              Title="{Binding PageTitle}" 
              Style="{StaticResource ContentPage}"
              >
@@ -16,27 +17,23 @@
         Command="{Binding OnAppearingCommand}" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
-            <Frame Style="{ StaticResource MainFrame }" HorizontalOptions="FillAndExpand" >
-                <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0">
-                    <Label Text="Digite o título do livro" Style="{StaticResource LblEntry}"></Label>
-                    <Border HorizontalOptions="FillAndExpand">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="5" />
-                        </Border.StrokeShape>
-                        <Entry Style="{StaticResource Entry}"                            
-                           HorizontalOptions="FillAndExpand"
-                           TextTransform="Uppercase" 
-                           Text="{Binding SearchTitle}" />
-                    </Border>
+        <StackLayout Style="{StaticResource FramePrimary}" 
+                     VerticalOptions="FillAndExpand">
+            <Frame HorizontalOptions="FillAndExpand" Padding="10,0,10,5"
+                   BackgroundColor="Transparent" >
+                <StackLayout Margin="0">
+                    <components:BorderedEntry Text="{Binding SearchTitle}" LabelText="Digite o título do livro"/>
                 </StackLayout>
             </Frame>
-            <Frame Style="{ StaticResource MainFrame }" VerticalOptions="FillAndExpand" Margin="5" CornerRadius="10" Padding="5">
+            <Frame VerticalOptions="FillAndExpand" 
+                   Margin="5" CornerRadius="10"
+                   Padding="5" BackgroundColor="Transparent">
                 <ListView 
                     HasUnevenRows="True"
                     CachingStrategy="RecycleElement"                              
                     ItemsSource="{Binding BooksList}"
-                    SelectedItem="{Binding BookItem}"
+                    SelectionMode="None"
+                    ItemTapped="ListView_ItemTapped"
                     >
                     <ListView.Behaviors>
                         <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
@@ -44,7 +41,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="model:UIBookItem">
                             <ViewCell>
-                                <Frame BorderColor="Gray" BackgroundColor="GhostWhite" CornerRadius="10" Margin="0,0,0,5">
+                                <Frame BorderColor="Gray" BackgroundColor="#BDBDBD" CornerRadius="10" Margin="0,0,0,5">
                                     <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" >
                                         <Label 
                                             Text="{Binding Title}"
@@ -56,6 +53,7 @@
                                             FontFamily="EBGaramondSemiBold"
                                             TextColor="Black" 
                                             VerticalOptions="StartAndExpand" 
+                                            Padding="0,0,0,10"
                                             />
                                         <Label Text="{Binding SubtitleAndVol, StringFormat='{0}'}" 
                                             VerticalTextAlignment="Start"

@@ -209,7 +209,7 @@
                         </Frame>
                     </VerticalStackLayout>
                 </Frame>
-                <Frame BackgroundColor="Transparent" Padding="5" VerticalOptions="FillAndExpand" Margin="5,0,5,5" CornerRadius="10">
+                <Frame Padding="5" BackgroundColor="Transparent" VerticalOptions="FillAndExpand" Margin="5,0,5,5" CornerRadius="10">
                     <StackLayout VerticalOptions="FillAndExpand">
                         <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="5" Margin="0,10,0,0">
                             <Grid.RowDefinitions>
@@ -236,12 +236,6 @@
                                 </Button.ImageSource>
                             </Button>
                         </Grid>
-                        <!--<Button Text="Add"  HorizontalOptions="FillAndExpand" Style="{StaticResource BtnSecondary}" FontSize="15"
-                                    ImageSource="bars_staggered_solid_15_w.png" BackgroundColor="#2D4144" ContentLayout="Left, 10" Command="{Binding GoogleSearchCommand}" >
-                                <Button.ImageSource>
-                                    <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.Bars}" Size="15"></FontImageSource>
-                                </Button.ImageSource>
-                            </Button>-->
                         <Grid HorizontalOptions="FillAndExpand" Margin="0,5,0,0" VerticalOptions="EndAndExpand">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>

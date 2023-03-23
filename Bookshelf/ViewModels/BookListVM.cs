@@ -16,30 +16,30 @@ namespace Bookshelf.ViewModels
 
         public ObservableCollection<UIBookItem> BooksList { get; } = new();
 
-        UIBookItem bookItem;
+        //UIBookItem bookItem;
 
-        public UIBookItem BookItem
-        {
-            get => bookItem;
-            set
-            {
-                if (bookItem != value)
-                {
-                    bookItem = value;
+        //public UIBookItem BookItem
+        //{
+        //    get => bookItem;
+        //    set
+        //    {
+        //        if (bookItem != value)
+        //        {
+        //            bookItem = value;
                    
-                    if (bookItem is not null)
-                    {
-                        if (SituationIndex == -1)
-                            Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={bookItem.Key}", true);
-                        else
-                            Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={bookItem.Key}", true);
+        //            if (bookItem is not null)
+        //            {
+        //                if (SituationIndex == -1)
+        //                    Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={bookItem.Key}", true);
+        //                else
+        //                    Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={bookItem.Key}", true);
 
-                        bookItem = null;
-                    }
-                    OnPropertyChanged();
-                }
-            }
-        }
+        //                bookItem = null;
+        //            }
+        //            OnPropertyChanged();
+        //        }
+        //    }
+        //}
 
         string pageTitle;
 
