@@ -17,10 +17,11 @@
         Command="{Binding OnAppearingCommand}" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        <StackLayout Style="{StaticResource FramePrimary}" 
-                     VerticalOptions="FillAndExpand">
+        <StackLayout 
+            Style="{StaticResource MainStackLayout}"
+            VerticalOptions="FillAndExpand">
             <Frame HorizontalOptions="FillAndExpand" Padding="10,0,10,5"
-                   BackgroundColor="Transparent" >
+                   Style="{StaticResource FramePrimary}" >
                 <StackLayout Margin="0">
                     <components:BorderedEntry Text="{Binding SearchTitle}" LabelText="Digite o título do livro"/>
                 </StackLayout>
@@ -41,7 +42,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="model:UIBookItem">
                             <ViewCell>
-                                <Frame BorderColor="Gray" BackgroundColor="#BDBDBD" CornerRadius="10" Margin="0,0,0,5">
+                                <Frame BorderColor="Gray" BackgroundColor="WhiteSmoke" CornerRadius="10" Margin="0,0,0,5">
                                     <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" >
                                         <Label 
                                             Text="{Binding Title}"

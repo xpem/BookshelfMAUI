@@ -71,14 +71,14 @@
             <StackLayout HorizontalOptions="FillAndExpand" Padding="1" VerticalOptions="FillAndExpand" >
                 <Frame Style="{ StaticResource FramePrimary }" CornerRadius="10" Padding="5" Margin="5">
                     <VerticalStackLayout Spacing="2" >
-                        <Frame Style="{ StaticResource FrameCardItem }"  Margin="0,5,0,10">
+                        <Frame Style="{ StaticResource FrameCardItem }"  Margin="0,5,0,5">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding IllReadCommand}" />
                             </Frame.GestureRecognizers>
                             <Grid Style="{ StaticResource GridCardItem }">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50"/>
-                                    <RowDefinition Height="13"/>
+                                    <RowDefinition Height="17"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="75" />
@@ -108,14 +108,14 @@
                                     />
                             </Grid>
                         </Frame>
-                        <Frame Style="{ StaticResource FrameCardItem }"  Margin="0,0,0,10" >
+                        <Frame Style="{ StaticResource FrameCardItem }"  Margin="0,0,0,5" >
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ReadingCommand}" />
                             </Frame.GestureRecognizers>
                             <Grid Style="{ StaticResource GridCardItem }">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50"/>
-                                    <RowDefinition Height="13"/>
+                                    <RowDefinition Height="17"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width ="75" />
@@ -145,14 +145,14 @@
                                        />
                             </Grid>
                         </Frame>
-                        <Frame Style="{ StaticResource FrameCardItem }"  Margin="0,0,0,10">
+                        <Frame Style="{ StaticResource FrameCardItem }"  Margin="0,0,0,5">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ReadCommand}"/>
                             </Frame.GestureRecognizers>
                             <Grid Style="{ StaticResource GridCardItem }">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50"/>
-                                    <RowDefinition Height="13"/>
+                                    <RowDefinition Height="17"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="75" />
@@ -175,14 +175,14 @@
                                     />
                             </Grid>
                         </Frame>
-                        <Frame Style="{ StaticResource FrameCardItem }"  Margin="0,0,0,10">
+                        <Frame Style="{ StaticResource FrameCardItem }"  Margin="0,0,0,5">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding InterruptedCommand}" />
                             </Frame.GestureRecognizers>
                             <Grid Style="{ StaticResource GridCardItem }">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50"/>
-                                    <RowDefinition Height="13"/>
+                                    <RowDefinition Height="17"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="75" />

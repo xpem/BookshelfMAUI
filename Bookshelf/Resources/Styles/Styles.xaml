@@ -51,10 +51,10 @@
     </Style>
 
     <Style x:Key="LblEntry" TargetType="Label">
-        <Setter Property="TextColor" Value="#4B4B4B"></Setter>
+        <Setter Property="TextColor" Value="{StaticResource White}"></Setter>
         <Setter Property="FontFamily" Value="EBGaramondRegular"></Setter>
         <Setter Property="HeightRequest" Value="18"></Setter>
-        <Setter Property="Margin" Value="10,10,0,0"></Setter>
+        <Setter Property="Margin" Value="0,0,0,5"></Setter>
     </Style>
 
     <Style x:Key="LblHEntry" TargetType="Label">
@@ -62,7 +62,7 @@
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="FontFamily" Value="OpenSansSemibold" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="Padding" Value="5,0,0,0"/>
+        <Setter Property="Padding" Value="5,0,10,0"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -140,7 +140,7 @@
         <Setter Property="FontSize" Value="20"></Setter>
     </Style>
 
-    <Style x:Key="Picker" TargetType="Picker">
+    <!--<Style x:Key="Picker" TargetType="Picker">
         <Setter Property="BackgroundColor" Value="Gray"/>
         <Setter Property="HorizontalOptions" Value="Center"/>
         <Setter Property="VerticalOptions" Value="Start"/>
@@ -148,6 +148,29 @@
         <Setter Property="FontSize" Value="17"/>
         <Setter Property="FontFamily" Value="EBGaramondRegular"/>
         <Setter Property="TextColor" Value="Black"/>
+    </Style>-->
+
+    <Style TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource Black}" />
+        <Setter Property="TitleColor" Value="{StaticResource Black}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontFamily" Value="EBGaramondRegular"/>
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="MinimumHeightRequest" Value="44"/>
+        <Setter Property="MinimumWidthRequest" Value="250"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{StaticResource Gray600}" />
+                            <Setter Property="TitleColor" Value="{StaticResource Gray600}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
     </Style>
 
     <Style x:Key="EntryBorders" TargetType="Border">

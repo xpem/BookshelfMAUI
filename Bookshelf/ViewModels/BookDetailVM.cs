@@ -12,8 +12,10 @@ namespace Bookshelf.ViewModels
 
         #region bind variables.
 
-        public string title, authors, pages, genre, situation, bookKey, comment, subtitleAndVol, volume;
+        public string title, authors, pages, genre, situation, bookKey, comment, subtitleAndVol, volume, cover;
         public int rate;
+
+        public string Cover { get => cover; set { if (value != cover) { cover = value; OnPropertyChanged(); } } }
 
         public string Title { get => title; set { if (title != value) { title = value; OnPropertyChanged(); } } }
 
@@ -53,7 +55,7 @@ namespace Bookshelf.ViewModels
 
         public ObservableCollection<string> StatusList { get => statusList; set { if (statusList != value) { statusList = value; OnPropertyChanged(); } } }
 
-        private bool ratingBarIsVisible, lblRatingBarIsVisible, edtCommentIsVisible, lblHSituationIsVisible, btnConfIsEnabled;
+        private bool ratingBarIsVisible, lblRatingBarIsVisible, edtCommentIsVisible, lblHSituationIsVisible, btnConfIsEnabled, imgCoverIsVisible = false;
 
         public bool RatingBarIsVisible { get => ratingBarIsVisible; set { if (ratingBarIsVisible != value) { ratingBarIsVisible = value; OnPropertyChanged(); } } }
 
@@ -101,9 +103,11 @@ namespace Bookshelf.ViewModels
                         break;
                 }
 
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(PkrStatusSelectedIndex));
             }
         }
+
+        public bool ImgCoverIsVisible { get => imgCoverIsVisible; set { if (value != imgCoverIsVisible) { imgCoverIsVisible = value; OnPropertyChanged(); } } }
 
         #endregion
 
@@ -163,6 +167,12 @@ namespace Bookshelf.ViewModels
             if (book.Volume != null)
             {
                 subtitleAndVol += "Vol.: " + book.Volume;
+            }
+
+            if (book.Cover != null)
+            {
+                ImgCoverIsVisible = true;
+                Cover = book.Cover;
             }
 
             Title = book.Title;
