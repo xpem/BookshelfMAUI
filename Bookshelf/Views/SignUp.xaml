@@ -29,7 +29,7 @@
                     <components:BorderedEntry Text="{Binding ConfirmPassword}" LabelText="Confirmação da senha" IsPassword="True"/>
 
                     <Button Text="Cadastrar" ContentLayout="Left, 10"
-                                Style="{StaticResource ButtonPrimary}" 
+                                Style="{StaticResource BtnSuccess}" 
                                 Command="{Binding SignUpCommand}" IsEnabled="{Binding BtnCreateUserIsEnabled}" Margin="0,10,0,20" >
                         <Button.ImageSource>
                             <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.UserPlus}" Size="15"></FontImageSource>

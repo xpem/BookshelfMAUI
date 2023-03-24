@@ -13,6 +13,7 @@
             Style="{StaticResource Entry}" 
             Text="{Binding Source={x:Reference this},Path= Text}"
             IsPassword="{Binding Source={x:Reference this},Path= IsPassword}"
+            IsEnabled="{Binding Source={x:Reference this},Path= Enabled}"
             />
     </Border>
 </VerticalStackLayout>

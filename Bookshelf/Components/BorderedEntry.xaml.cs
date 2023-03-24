@@ -20,5 +20,10 @@ public partial class BorderedEntry : VerticalStackLayout
     public static readonly BindableProperty IsPasswordProperty = BindableProperty.Create(
         propertyName: nameof(IsPassword), returnType: typeof(bool), declaringType: typeof(BorderedEntry), defaultValue: false, defaultBindingMode: BindingMode.OneWay);
 
-    public bool? IsPassword { get => (bool?)GetValue(IsPasswordProperty); set { SetValue(IsPasswordProperty, value); } }
+    public bool IsPassword { get => (bool)GetValue(IsPasswordProperty); set { SetValue(IsPasswordProperty, value); } }
+
+    public static readonly BindableProperty EnabledProperty = BindableProperty.Create(
+      propertyName: nameof(Enabled), returnType: typeof(bool), declaringType: typeof(BorderedEntry), defaultValue: true, defaultBindingMode: BindingMode.OneWay);
+
+    public bool Enabled { get => (bool)GetValue(EnabledProperty); set { SetValue(EnabledProperty, value); } }
 }

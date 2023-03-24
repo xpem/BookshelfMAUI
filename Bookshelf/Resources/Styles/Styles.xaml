@@ -42,7 +42,8 @@
                     <VisualState x:Name="Normal" />
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="TextColor" Value="{StaticResource Gray300}" />
+                            <Setter Property="TextColor" Value="{StaticResource Gray900}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource Gray300}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -77,7 +78,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="Button" x:Key="ButtonPrimary">
+    <Style TargetType="Button" x:Key="BtnSuccess">
         <Setter Property="TextColor" Value="{StaticResource White}" />
         <Setter Property="BackgroundColor" Value="{StaticResource Success}" />
         <Setter Property="FontFamily" Value="OpenSansSemibold"/>
