@@ -13,14 +13,15 @@
              >
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
-        EventName="Appearing"
-        Command="{Binding OnAppearingCommand}" />
+            EventName="Appearing"
+            Command="{Binding OnAppearingCommand}" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
         <StackLayout 
             Style="{StaticResource MainStackLayout}"
-            VerticalOptions="FillAndExpand">
-            <Frame HorizontalOptions="FillAndExpand" Padding="10,0,10,5"
+            VerticalOptions="FillAndExpand" >
+            <Frame HorizontalOptions="FillAndExpand" 
+                   Padding="10,0,10,5"
                    Style="{StaticResource FramePrimary}" >
                 <StackLayout Margin="0">
                     <components:BorderedEntry Text="{Binding SearchTitle}" LabelText="Digite o título do livro"/>
@@ -113,7 +114,6 @@
                                                 FontFamily="EBGaramondItalic" 
                                                 TextColor="Black" />
                                         </Grid>
-
                                     </StackLayout>
                                 </Frame>
                             </ViewCell>

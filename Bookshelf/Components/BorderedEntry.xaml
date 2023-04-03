@@ -15,5 +15,7 @@
             IsPassword="{Binding Source={x:Reference this},Path= IsPassword}"
             IsEnabled="{Binding Source={x:Reference this},Path= Enabled}"
             />
+        <!--erro no net 7 impossibilita o uso dessa função, necessário esperar fix ser publicado no net 8-->
+        <!--TextTransform="{Binding Source={x:Reference this},Path= TextTransformValue}"-->
     </Border>
 </VerticalStackLayout>

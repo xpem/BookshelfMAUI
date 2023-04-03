@@ -22,31 +22,31 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
         public ObservableCollection<UIGoogleBook> GoogleBooksList { get; } = new();
 
-        UIGoogleBook listItem;
+        //UIGoogleBook listItem;
 
-        public UIGoogleBook ListItem
-        {
-            get => listItem;
-            set
-            {
-                if (listItem != value)
-                {
-                    listItem = value;
+        //public UIGoogleBook ListItem
+        //{
+        //    get => listItem;
+        //    set
+        //    {
+        //        if (listItem != value)
+        //        {
+        //            listItem = value;
 
-                    if (listItem is not null)
-                    {
-                        Shell.Current.GoToAsync($"{nameof(AddBook)}?GoogleKey={listItem.Id}", true);
-                        //if (SituationIndex == -1)
-                        //    Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={bookItem.Key}", true);
-                        //else
-                        //    Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={bookItem.Key}", true);
+        //            if (listItem is not null)
+        //            {
+        //                Shell.Current.GoToAsync($"{nameof(AddBook)}?GoogleKey={listItem.Id}", true);
+        //                //if (SituationIndex == -1)
+        //                //    Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={bookItem.Key}", true);
+        //                //else
+        //                //    Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={bookItem.Key}", true);
 
-                        //bookItem = null;
-                    }
-                    OnPropertyChanged();
-                }
-            }
-        }
+        //                //bookItem = null;
+        //            }
+        //            OnPropertyChanged();
+        //        }
+        //    }
+        //}
 
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -101,7 +101,6 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
             if (pageNumber > 0)
                 startIndex = pageNumber * 10;
-
 
             if (startIndex == 0 || startIndex < TotalItems)
             {

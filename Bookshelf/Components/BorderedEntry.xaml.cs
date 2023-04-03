@@ -26,4 +26,10 @@ public partial class BorderedEntry : VerticalStackLayout
       propertyName: nameof(Enabled), returnType: typeof(bool), declaringType: typeof(BorderedEntry), defaultValue: true, defaultBindingMode: BindingMode.OneWay);
 
     public bool Enabled { get => (bool)GetValue(EnabledProperty); set { SetValue(EnabledProperty, value); } }
+
+    //public static readonly BindableProperty TextTransformProperty = BindableProperty.Create(
+    //  propertyName: nameof(TextTransformValue), returnType: typeof(TextTransform), declaringType: typeof(BorderedEntry), defaultValue: TextTransform.Default, defaultBindingMode: BindingMode.OneWay);
+
+    //public TextTransform TextTransformValue { get => (TextTransform)GetValue(TextTransformProperty); set { SetValue(TextTransformProperty, value); } }
+
 }

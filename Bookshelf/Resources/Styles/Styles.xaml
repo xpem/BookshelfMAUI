@@ -158,7 +158,7 @@
         <Setter Property="FontFamily" Value="EBGaramondRegular"/>
         <Setter Property="FontSize" Value="17"/>
         <Setter Property="MinimumHeightRequest" Value="44"/>
-        <Setter Property="MinimumWidthRequest" Value="250"/>
+        <Setter Property="WidthRequest" Value="150"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">

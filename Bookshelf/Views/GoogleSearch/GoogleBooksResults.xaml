@@ -6,30 +6,27 @@
              x:DataType="vm:GoogleBooksResultsVM"
              xmlns:behaviors="clr-namespace:Bookshelf.Utils.Behaviors" 
              xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
+             xmlns:components = "clr-namespace:Bookshelf.Components"
              xmlns:model="clr-namespace:BookshelfModels.Books.GoogleApi;assembly=BookshelfModels"
              Title="{Binding PageTitle}" 
              Style="{StaticResource ContentPage}"
              >
     <ContentPage.Content>
-        <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand" BackgroundColor="#192D30" >
-            <Frame Style="{ StaticResource MainFrame }" HorizontalOptions="FillAndExpand" Margin="5" >
-                <Border HorizontalOptions="FillAndExpand">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="10" />
-                    </Border.StrokeShape>
-                    <Entry Placeholder="Digite o título do livro" 
-                           Style="{StaticResource Entry}" 
-                           TextTransform="Uppercase"
-                           TextColor="Gray"
-                           BackgroundColor="White"
-                           HorizontalOptions="FillAndExpand"                           
-                           VerticalOptions="CenterAndExpand"
-                           Margin="10,0,10,0"
-                           Text="{Binding SearchText}" 
-                           />
-                </Border>
+        <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand" >
+            <Frame                 
+                HorizontalOptions="FillAndExpand"
+                Style="{ StaticResource FramePrimary }"
+                Padding="10,0,10,5"
+                >
+                <StackLayout Margin="0">
+                    <components:BorderedEntry Text="{Binding SearchText}" LabelText="Digite o título do livro"
+                                              />
+                                              <!--TextTransformValue="Uppercase"-->
+                </StackLayout>
             </Frame>
-            <Frame Style="{ StaticResource MainFrame }" VerticalOptions="FillAndExpand" Margin="1,0">
+            <Frame VerticalOptions="FillAndExpand" 
+                   Margin="5" CornerRadius="10"
+                   Padding="5" BackgroundColor="Transparent">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -38,7 +35,8 @@
                         HasUnevenRows="True" 
                         CachingStrategy="RecycleElement" 
                         ItemsSource="{Binding GoogleBooksList}" 
-                        SelectedItem="{Binding ListItem}"             
+                        SelectionMode="None"
+                        ItemTapped="ListView_ItemTapped"
                         >
                         <ListView.Behaviors>
                             <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
@@ -120,7 +118,6 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                         <ListView.Footer>
-
                             <Grid Padding="6" IsVisible="{Binding IsBusy}">
                                 <Grid.Triggers>
                                     <Trigger TargetType="Grid" Property="IsVisible" Value="False">
@@ -139,7 +136,7 @@
                     </ListView>
                     <Button Grid.Row="0" 
                             Command="{Binding CreateBookCommand}" 
-                            BackgroundColor="#362624"
+                            BackgroundColor="{StaticResource Success}"
                             VerticalOptions="End"
                             HorizontalOptions="End"
                             CornerRadius="20"

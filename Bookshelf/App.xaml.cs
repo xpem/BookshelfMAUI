@@ -25,7 +25,6 @@ public partial class App : Application
 
     public App(IUserServices userServices, IBooksSyncServices booksSyncServices)
     {
-
         BookshelfServices.BuildDbServices.BuildSQLiteDb();
 
         InitializeComponent();
