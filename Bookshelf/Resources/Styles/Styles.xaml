@@ -1,41 +1,42 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
-<ResourceDictionary 
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Style x:Key="ContentPage" TargetType="ContentPage" ApplyToDerivedTypes="True">
-        <Setter Property="Padding" Value="0"/>
-        <Setter Property="BackgroundColor" Value="#362624"></Setter>
+    <Style
+        x:Key="ContentPage"
+        ApplyToDerivedTypes="True"
+        TargetType="ContentPage">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BackgroundColor" Value="#362624" />
     </Style>
 
-    <!--Main StackLayout-->
+    <!--  Main StackLayout  -->
     <Style x:Key="MainStackLayout" TargetType="StackLayout">
-        <Setter Property="VerticalOptions" Value="FillAndExpand"></Setter>
+        <Setter Property="VerticalOptions" Value="FillAndExpand" />
     </Style>
 
     <Style x:Key="MainFrame" TargetType="Frame">
-        <Setter Property="HorizontalOptions" Value="FillAndExpand"></Setter>
-        <Setter Property="VerticalOptions" Value="Center"></Setter>
-        <Setter Property="BackgroundColor" Value="#BDBDBD"></Setter>
-        <Setter Property="Margin" Value="5"></Setter>
-        <Setter Property="CornerRadius" Value="10"></Setter>
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="BackgroundColor" Value="#BDBDBD" />
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="CornerRadius" Value="10" />
     </Style>
 
     <Style x:Key="FramePrimary" TargetType="Frame">
         <Setter Property="HasShadow" Value="False" />
-        <Setter Property="BackgroundColor" Value="Transparent"></Setter>
+        <Setter Property="BackgroundColor" Value="Transparent" />
     </Style>
 
-    <Style TargetType="Entry" x:Key="Entry">
+    <Style x:Key="Entry" TargetType="Entry">
         <Setter Property="TextColor" Value="{StaticResource Black}" />
         <Setter Property="BackgroundColor" Value="{StaticResource White}" />
-        <Setter Property="FontFamily" Value="EBGaramondSemibold"/>
+        <Setter Property="FontFamily" Value="EBGaramondSemibold" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="PlaceholderColor" Value="{StaticResource Gray200}" />
-        <Setter Property="MinimumHeightRequest" Value="44"/>
+        <Setter Property="MinimumHeightRequest" Value="44" />
         <!--<Setter Property="MinimumWidthRequest" Value="250"/>-->
-        <Setter Property="Margin" Value="0,0,0,0"></Setter>
+        <Setter Property="Margin" Value="0,0,0,0" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -52,10 +53,10 @@
     </Style>
 
     <Style x:Key="LblEntry" TargetType="Label">
-        <Setter Property="TextColor" Value="{StaticResource White}"></Setter>
-        <Setter Property="FontFamily" Value="EBGaramondRegular"></Setter>
-        <Setter Property="HeightRequest" Value="18"></Setter>
-        <Setter Property="Margin" Value="0,0,0,5"></Setter>
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="FontFamily" Value="EBGaramondRegular" />
+        <Setter Property="HeightRequest" Value="18" />
+        <Setter Property="Margin" Value="0,0,0,5" />
     </Style>
 
     <Style x:Key="LblHEntry" TargetType="Label">
@@ -63,7 +64,7 @@
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="FontFamily" Value="OpenSansSemibold" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="Padding" Value="5,0,10,0"/>
+        <Setter Property="Padding" Value="5,0,10,0" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -78,14 +79,14 @@
         </Setter>
     </Style>
 
-    <Style TargetType="Button" x:Key="BtnSuccess">
+    <Style x:Key="BtnSuccess" TargetType="Button">
         <Setter Property="TextColor" Value="{StaticResource White}" />
         <Setter Property="BackgroundColor" Value="{StaticResource Success}" />
-        <Setter Property="FontFamily" Value="OpenSansSemibold"/>
-        <Setter Property="FontSize" Value="20"/>
-        <Setter Property="CornerRadius" Value="8"/>
-        <Setter Property="MinimumHeightRequest" Value="44"/>
-        <Setter Property="MinimumWidthRequest" Value="44"/>
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="MinimumWidthRequest" Value="44" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -102,43 +103,43 @@
     </Style>
 
     <Style x:Key="MainBtn" TargetType="Button">
-        <Setter Property="VerticalOptions" Value="Fill"></Setter>
-        <Setter Property="HorizontalOptions" Value="Fill"></Setter>
-        <Setter Property="BackgroundColor" Value="#362624"></Setter>
-        <Setter Property="TextColor" Value="{StaticResource White}"></Setter>
-        <Setter Property="CornerRadius" Value="5"></Setter>
-        <Setter Property="FontFamily" Value="EBGaramondBold"></Setter>
-        <Setter Property="FontSize" Value="20"></Setter>
+        <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="BackgroundColor" Value="#362624" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="FontFamily" Value="EBGaramondBold" />
+        <Setter Property="FontSize" Value="20" />
     </Style>
 
     <Style x:Key="BtnPrimary" TargetType="Button">
-        <Setter Property="VerticalOptions" Value="Fill"></Setter>
-        <Setter Property="HorizontalOptions" Value="Fill"></Setter>
-        <Setter Property="BackgroundColor" Value="{StaticResource MainItemColor}"></Setter>
-        <Setter Property="TextColor" Value="{StaticResource White}"></Setter>
-        <Setter Property="CornerRadius" Value="5"></Setter>
-        <Setter Property="FontFamily" Value="EBGaramondBold"></Setter>
-        <Setter Property="FontSize" Value="20"></Setter>
+        <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="BackgroundColor" Value="{StaticResource MainItemColor}" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="FontFamily" Value="EBGaramondBold" />
+        <Setter Property="FontSize" Value="20" />
     </Style>
 
     <Style x:Key="BtnSecondary" TargetType="Button">
-        <Setter Property="VerticalOptions" Value="Fill"></Setter>
-        <Setter Property="HorizontalOptions" Value="FillAndExpand"></Setter>
-        <Setter Property="BackgroundColor" Value="#5D4037"></Setter>
-        <Setter Property="TextColor" Value="{StaticResource White}"></Setter>
-        <Setter Property="CornerRadius" Value="5"></Setter>
-        <Setter Property="FontFamily" Value="EBGaramondSemibold"></Setter>
-        <Setter Property="FontSize" Value="20"></Setter>
+        <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        <Setter Property="BackgroundColor" Value="#5D4037" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="FontFamily" Value="EBGaramondSemibold" />
+        <Setter Property="FontSize" Value="20" />
     </Style>
 
     <Style x:Key="BtnInfoSecondary" TargetType="Button">
-        <Setter Property="VerticalOptions" Value="Fill"></Setter>
-        <Setter Property="HorizontalOptions" Value="Fill"></Setter>
-        <Setter Property="BackgroundColor" Value="{StaticResource SecondaryInfoColor}"></Setter>
-        <Setter Property="TextColor" Value="{StaticResource Black}"></Setter>
-        <Setter Property="CornerRadius" Value="5"></Setter>
-        <Setter Property="FontFamily" Value="EBGaramondSemibold"></Setter>
-        <Setter Property="FontSize" Value="20"></Setter>
+        <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="BackgroundColor" Value="{StaticResource SecondaryInfoColor}" />
+        <Setter Property="TextColor" Value="{StaticResource Black}" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="FontFamily" Value="EBGaramondSemibold" />
+        <Setter Property="FontSize" Value="20" />
     </Style>
 
     <!--<Style x:Key="Picker" TargetType="Picker">
@@ -155,10 +156,10 @@
         <Setter Property="TextColor" Value="{StaticResource Black}" />
         <Setter Property="TitleColor" Value="{StaticResource Black}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="FontFamily" Value="EBGaramondRegular"/>
-        <Setter Property="FontSize" Value="17"/>
-        <Setter Property="MinimumHeightRequest" Value="44"/>
-        <Setter Property="WidthRequest" Value="150"/>
+        <Setter Property="FontFamily" Value="EBGaramondRegular" />
+        <Setter Property="FontSize" Value="17" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="WidthRequest" Value="150" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -175,7 +176,7 @@
     </Style>
 
     <Style x:Key="EntryBorders" TargetType="Border">
-        <Setter Property="HorizontalOptions" Value="FillAndExpand"></Setter>
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
     </Style>
-    
+
 </ResourceDictionary>

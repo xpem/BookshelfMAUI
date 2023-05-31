@@ -4,16 +4,15 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Bookshelf.Views"
-    Shell.FlyoutBehavior="Disabled"
     BackgroundColor="#5D4037"
-    >
+    Shell.FlyoutBehavior="Disabled">
 
-    <ShellItem Route="SignIn" FlyoutItemIsVisible="False">
+    <ShellItem FlyoutItemIsVisible="False" Route="SignIn">
         <ShellContent ContentTemplate="{DataTemplate local:SignIn}" />
     </ShellItem>
 
-    <ShellItem Route="Main" FlyoutItemIsVisible="False">
+    <ShellItem FlyoutItemIsVisible="False" Route="Main">
         <ShellContent ContentTemplate="{DataTemplate local:Main}" />
     </ShellItem>
-    
+
 </Shell>

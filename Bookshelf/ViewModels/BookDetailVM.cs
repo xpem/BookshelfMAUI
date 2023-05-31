@@ -129,16 +129,15 @@ namespace Bookshelf.ViewModels
         public ICommand InactivateBookCommand =>
             new Command(async (e) =>
             {
-                if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir esse livro?", "Sim", "Cancelar"))
-                    if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir esse livro?", "Sim", "Cancelar"))
-                    {
-                        booksServices.InactivateBook(BookKey);
+                if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir este livro?", "Sim", "Cancelar"))
+                {
+                    booksServices.InactivateBook(BookKey);
 
-                        if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
-                        {
-                            await Shell.Current.GoToAsync("..");
-                        }
+                    if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
+                    {
+                        await Shell.Current.GoToAsync("..");
                     }
+                }
             });
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)

@@ -1,38 +1,53 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Bookshelf.Views.SignUp"
-             Title="Cadastrar Usuário"
-             Shell.FlyoutBehavior="Disabled"
-             xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
-             xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels"
-             x:DataType="viewmodels:SignUpVM"
-             xmlns:components = "clr-namespace:Bookshelf.Components"
-             Style="{StaticResource ContentPage}" >
+<ContentPage
+    x:Class="Bookshelf.Views.SignUp"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
+    xmlns:components="clr-namespace:Bookshelf.Components"
+    xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels"
+    Title="Cadastrar Usuário"
+    x:DataType="viewmodels:SignUpVM"
+    Shell.FlyoutBehavior="Disabled"
+    Style="{StaticResource ContentPage}">
     <ContentPage.Resources>
         <Style x:Key="Icon" TargetType="Label">
-            <Setter Property="TextColor" Value="White"></Setter>
-            <Setter Property="HorizontalOptions" Value="Center"></Setter>
-            <Setter Property="FontSize" Value="40"></Setter>
-            <Setter Property="FontFamily" Value="FontAwesome"></Setter>
-            <Setter Property="Padding" Value="0,0,0,10"></Setter>
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="FontSize" Value="40" />
+            <Setter Property="FontFamily" Value="FontAwesome" />
+            <Setter Property="Padding" Value="0,0,0,10" />
         </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
         <ScrollView HorizontalOptions="CenterAndExpand">
-            <Frame Style="{ StaticResource FramePrimary }" IsEnabled="{Binding IsNotBusy}">
+            <Frame IsEnabled="{Binding IsNotBusy}" Style="{StaticResource FramePrimary}">
                 <VerticalStackLayout>
-                    <Label Text="{x:Static Icons:IconFont.User}" Style="{StaticResource Icon}" />
-                    <components:BorderedEntry Text="{Binding Name}" LabelText="Nome"/>
-                    <components:BorderedEntry Text="{Binding Email}" LabelText="Email"/>
-                    <components:BorderedEntry Text="{Binding Password}" LabelText="Senha" IsPassword="True"/>
-                    <components:BorderedEntry Text="{Binding ConfirmPassword}" LabelText="Confirmação da senha" IsPassword="True"/>
+                    <Label Style="{StaticResource Icon}" Text="{x:Static Icons:IconFont.User}" />
+                    <components:BorderedEntry LabelText="Nome" Text="{Binding Name}" />
+                    <components:BorderedEntry LabelText="Email" Text="{Binding Email}" />
+                    <components:BorderedEntry
+                        IsPassword="True"
+                        LabelText="Senha"
+                        Text="{Binding Password}" />
+                    <components:BorderedEntry
+                        IsPassword="True"
+                        LabelText="Confirmação da senha"
+                        Text="{Binding ConfirmPassword}" />
 
-                    <Button Text="Cadastrar" ContentLayout="Left, 10"
-                                Style="{StaticResource BtnSuccess}" 
-                                Command="{Binding SignUpCommand}" IsEnabled="{Binding BtnCreateUserIsEnabled}" Margin="0,10,0,20" >
+                    <Button
+                        Margin="0,10,0,20"
+                        Command="{Binding SignUpCommand}"
+                        ContentLayout="Left, 10"
+                        IsEnabled="{Binding BtnCreateUserIsEnabled}"
+                        Style="{StaticResource BtnSuccess}"
+                        Text="Cadastrar">
                         <Button.ImageSource>
-                            <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.UserPlus}" Size="15"></FontImageSource>
+                            <FontImageSource
+                                FontFamily="FontAwesome"
+                                Glyph="{x:Static Icons:IconFont.UserPlus}"
+                                Size="15"
+                                Color="#EDEDED" />
                         </Button.ImageSource>
                     </Button>
                 </VerticalStackLayout>

@@ -58,7 +58,7 @@ namespace BookshelfRepos.Books
             catch (Exception ex) { throw ex; }
         }
 
-        public static void UpdateBookId(string localTempId, string bookId, string? userId)
+        public static async Task UpdateBookId(string localTempId, string bookId, string? userId)
         {
             SQLiteDB.OpenIfClosed();
 
@@ -67,12 +67,12 @@ namespace BookshelfRepos.Books
                 new SqliteParameter("@Key", bookId), new SqliteParameter("@localKey", localTempId), new SqliteParameter("@userId", userId),
             };
 
-            _ = SQLiteDB.RunSqliteCommand("update BOOK set ID = @Key,LOCAL_TEMP_ID = null where LOCAL_TEMP_ID = @localKey and UID = @userId", sqliteParameters);
+            await SQLiteDB.RunSqliteCommand("update BOOK set ID = @Key,LOCAL_TEMP_ID = null where LOCAL_TEMP_ID = @localKey and UID = @userId", sqliteParameters);
 
             SQLiteDB.CloseIfOpen();
         }
 
-        public static void AddBook(Book book, string? userId)
+        public static async Task AddBook(Book book, string? userId)
         {
             SQLiteDB.OpenIfClosed();
 
@@ -97,7 +97,7 @@ namespace BookshelfRepos.Books
                 new SqliteParameter("@Comment", book.Comment)
             };
 
-            _ = SQLiteDB.RunSqliteCommand("insert into BOOK(ID,LOCAL_TEMP_ID, UID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, GENRE, UPDATED_AT, ISBN, STATUS,COVER,GOOGLE_ID,SCORE,COMMENT) " +
+            await SQLiteDB.RunSqliteCommand("insert into BOOK(ID,LOCAL_TEMP_ID, UID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, GENRE, UPDATED_AT, ISBN, STATUS,COVER,GOOGLE_ID,SCORE,COMMENT) " +
                 "values (@Id, @LocalTempId, @UserId, @Title, @SubTitle, @Authors, @Year, @Volume, @Pages, @Genre, @UpdatedAt, @Isbn, @Status, @Cover, @GoogleId, @Score, @Comment)",
                 sqliteParametersList);
 
@@ -108,7 +108,7 @@ namespace BookshelfRepos.Books
         /// update book local
         /// </summary>
         /// <param name="book"></param>
-        public static void UpdateBook(Book book, string? userId)
+        public static async Task UpdateBook(Book book, string? userId)
         {
             SQLiteDB.OpenIfClosed();
 
@@ -133,7 +133,7 @@ namespace BookshelfRepos.Books
                 new SqliteParameter("@Comment", book.Comment)
             };
 
-            _ = SQLiteDB.RunSqliteCommand("update BOOK set TITLE = @Title, SUBTITLE = @SubTitle, AUTHORS = @Authors, YEAR = @Year, VOLUME = @Volume, PAGES = @Pages" +
+            await SQLiteDB.RunSqliteCommand("update BOOK set TITLE = @Title, SUBTITLE = @SubTitle, AUTHORS = @Authors, YEAR = @Year, VOLUME = @Volume, PAGES = @Pages" +
                 ", GENRE = @Genre, UPDATED_AT = @LastUpdate,ISBN = @Isbn, INACTIVE = @Inactive, STATUS = @Situation, COVER = @Cover, GOOGLE_ID = @GoogleId, SCORE = @Score, COMMENT = @Comment" +
                 " where ID = @Id and UID = @UserId",
                 sqliteParameters);
@@ -180,14 +180,14 @@ namespace BookshelfRepos.Books
         /// Update or create local book with the newest version of the book in the server
         /// </summary>
         /// <param name="book"></param>
-        public static void AddOrUpdateBook(Book book, string? userId)
+        public static async Task AddOrUpdateBook(Book book, string? userId)
         {
             DateTime? lastUpdate = GetLastUpdateBook(book?.Id, book?.Title);
 
             if (lastUpdate == null && book is not null && book.Inactive == 0)
-                AddBook(book, userId);
+                await AddBook(book, userId);
             else if (book is not null && book.UpdatedAt > lastUpdate)
-                UpdateBook(book, userId);
+               await UpdateBook(book, userId);
         }
 
         public async static Task<List<(Status, int)>> GetBookshelfTotals(string userId)
@@ -389,7 +389,7 @@ namespace BookshelfRepos.Books
         /// <summary>
         /// Inactivate a book in local batabase
         /// </summary>
-        public static void InactivateBook(int? bookId, string userId, DateTime lastUpdate)
+        public static async Task InactivateBook(int? bookId, string userId, DateTime lastUpdate)
         {
             SQLiteDB.OpenIfClosed();
 
@@ -400,7 +400,7 @@ namespace BookshelfRepos.Books
                 new SqliteParameter("@LastUpdate", lastUpdate)
             };
 
-            _ = SQLiteDB.RunSqliteCommand("update BOOK set Inactive = '1',UPDATED_AT = @LastUpdate where ID = @Key and UID = @UserId",
+            await SQLiteDB.RunSqliteCommand("update BOOK set Inactive = '1',UPDATED_AT = @LastUpdate where ID = @Key and UID = @UserId",
                  sqliteParameters);
 
             SQLiteDB.CloseIfOpen();

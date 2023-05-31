@@ -1,203 +1,276 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Bookshelf.Views.BookDetail"
-             Title="Detalhes do livro" 
-             xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
-             xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels"
-             x:DataType="viewmodels:BookDetailVM"
-             Style="{StaticResource ContentPage}" >
+<ContentPage
+    x:Class="Bookshelf.Views.BookDetail"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
+    xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels"
+    Title="Detalhes do livro"
+    x:DataType="viewmodels:BookDetailVM"
+    Style="{StaticResource ContentPage}">
     <ContentPage.Resources>
-        <!--carditens-->
+        <!--  carditens  -->
         <Style x:Key="LblHeader" TargetType="Label">
-            <Setter Property="TextColor" Value="White"></Setter>
-            <Setter Property="FontAttributes" Value="Bold"></Setter>
-            <Setter Property="FontFamily" Value="EBGaramondRegular"></Setter>
-            <Setter Property="Margin" Value="0,0,5,0"/>
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="FontFamily" Value="EBGaramondRegular" />
+            <Setter Property="Margin" Value="0,0,5,0" />
         </Style>
         <Style x:Key="LblText" TargetType="Label">
-            <Setter Property="TextColor" Value="{StaticResource White}"></Setter>
-            <Setter Property="FontSize" Value="17"></Setter>
-            <Setter Property="FontFamily" Value="EBGaramondBold"></Setter>
+            <Setter Property="TextColor" Value="{StaticResource White}" />
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="FontFamily" Value="EBGaramondBold" />
         </Style>
         <Style x:Key="Pkr" TargetType="Picker">
-            <Setter Property="BackgroundColor" Value="White"></Setter>
-            <Setter Property="TextColor" Value="Black"></Setter>
-            <Setter Property="FontFamily" Value="EBGaramondRegular"></Setter>
-            <Setter Property="FontSize" Value="20"></Setter>
+            <Setter Property="BackgroundColor" Value="White" />
+            <Setter Property="TextColor" Value="Black" />
+            <Setter Property="FontFamily" Value="EBGaramondRegular" />
+            <Setter Property="FontSize" Value="20" />
         </Style>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
-        <ToolbarItem Order="Secondary"  Text="Editar Livro" Priority="0" Command="{Binding NavToUpdateBookCommand}" IconImageSource="pen_solid_12_w.png"/>
+        <ToolbarItem
+            Command="{Binding NavToUpdateBookCommand}"
+            IconImageSource="pen_solid_12_w.png"
+            Order="Secondary"
+            Priority="0"
+            Text="Editar Livro" />
 
-        <ToolbarItem Order="Secondary"  Text="Excluir Livro" Priority="0" Command="{Binding InactivateBookCommand}" IconImageSource="xmark_solid_12_w.png" />
+        <ToolbarItem
+            Command="{Binding InactivateBookCommand}"
+            IconImageSource="xmark_solid_12_w.png"
+            Order="Secondary"
+            Priority="0"
+            Text="Excluir Livro" />
         <!--<ToolbarItem.IconImageSource>
                 <FontImageSource  FontFamily="FontAwesomeBold" Color="White" Glyph="{x:Static local:Icons.Times}" Size="Micro"></FontImageSource>
             </ToolbarItem.IconImageSource>
         </ToolbarItem>-->
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <ScrollView>
-            <StackLayout VerticalOptions="StartAndExpand" >
-                <Frame Style="{ StaticResource FramePrimary }">
-                    <StackLayout>
-                <Image 
-                Source="{Binding Cover}"                                                              
-                Aspect="AspectFit"                  
-                Margin="0,0,0,5"   
-                HeightRequest="120"
-                IsVisible="{Binding ImgCoverIsVisible}"
-                />
-                        <Label Text="{Binding Title}" HorizontalOptions="CenterAndExpand" 
-                               Style="{StaticResource LblHeader}" FontSize="20" Padding="0,0,0,0"
-                               TextDecorations="Underline" FontFamily="EBGaramondSemiBold"
-                               />
+        <ScrollView Padding="0" VerticalOptions="StartAndExpand">
+            <StackLayout Padding="0" VerticalOptions="Fill">
+                <Image
+                    Margin="0,0,0,5"
+                    Aspect="AspectFit"
+                    HeightRequest="120"
+                    IsVisible="{Binding ImgCoverIsVisible}"
+                    Source="{Binding Cover}" />
+                <Label
+                    Padding="0,0,0,0"
+                    FontFamily="EBGaramondSemiBold"
+                    FontSize="20"
+                    HorizontalOptions="CenterAndExpand"
+                    Style="{StaticResource LblHeader}"
+                    Text="{Binding Title}"
+                    TextDecorations="Underline" />
 
-                        <Label Text="{Binding SubtitleAndVol}" HorizontalOptions="CenterAndExpand"
-                               TextColor="White" FontSize="15"
-                               Padding="0,0,0,5" FontFamily="EBGaramondRegular"
-                               />
+                <Label
+                    Padding="0,0,0,5"
+                    FontFamily="EBGaramondRegular"
+                    FontSize="15"
+                    HorizontalOptions="CenterAndExpand"
+                    Text="{Binding SubtitleAndVol}"
+                    TextColor="White" />
 
-                        <Label Text="Autores:" HorizontalTextAlignment="Start" 
-                               VerticalTextAlignment="Start" Style="{StaticResource LblEntry}"
-                               HorizontalOptions="Start" 
-                               />
+                <Label
+                    HorizontalOptions="Start"
+                    HorizontalTextAlignment="Start"
+                    Style="{StaticResource LblEntry}"
+                    Text="Autores:"
+                    VerticalTextAlignment="Start" />
 
-                        <Label Text="{Binding Authors}" HorizontalTextAlignment="Start"
-                               VerticalTextAlignment="Start" Grid.Row="0" Grid.Column="1" 
-                               HorizontalOptions="Start" Style="{StaticResource LblText}"
-                               />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalOptions="Start"
+                    HorizontalTextAlignment="Start"
+                    Style="{StaticResource LblText}"
+                    Text="{Binding Authors}"
+                    VerticalTextAlignment="Start" />
 
-                        <Grid HorizontalOptions="FillAndExpand">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="20"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition  Width ="5*" />
-                                <ColumnDefinition  Width ="5*" />
-                            </Grid.ColumnDefinitions>
+                <Grid HorizontalOptions="FillAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*" />
+                        <ColumnDefinition Width="5*" />
+                    </Grid.ColumnDefinitions>
 
-                            <!--Pages-->
-                            <Label Text="Páginas:" Grid.Row="0" Grid.Column="0"  
-                                    HorizontalTextAlignment="Start" 
-                                    VerticalTextAlignment="Start" 
-                                    Style="{StaticResource LblEntry}"                                 
-                                    />
+                    <!--  Pages  -->
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        HorizontalTextAlignment="Start"
+                        Style="{StaticResource LblEntry}"
+                        Text="Páginas:"
+                        VerticalTextAlignment="Start" />
 
-                            <Label Text="{Binding Pages}" HorizontalTextAlignment="Start"
-                                    Grid.Row="1"  Grid.Column="0"
-                                    VerticalTextAlignment="Start"
-                                    Style="{StaticResource LblText}" 
-                                    />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        HorizontalTextAlignment="Start"
+                        Style="{StaticResource LblText}"
+                        Text="{Binding Pages}"
+                        VerticalTextAlignment="Start" />
 
-                            <!---->
-                            <Label Text="Categoria:" Grid.Row="0" Grid.Column="1"   
-                                    HorizontalTextAlignment="Start" VerticalTextAlignment="Start" 
-                                     Style="{StaticResource LblEntry}"
-                                   />
+                    <!--    -->
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        HorizontalTextAlignment="Start"
+                        Style="{StaticResource LblEntry}"
+                        Text="Categoria:"
+                        VerticalTextAlignment="Start" />
 
-                            <Label Text="{Binding Genre}" HorizontalTextAlignment="Start" 
-                                   VerticalTextAlignment="Start"
-                                   Grid.Row="1" Grid.Column="1"
-                                   Style="{StaticResource LblText}"
-                                   />
-                        </Grid>
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        HorizontalTextAlignment="Start"
+                        Style="{StaticResource LblText}"
+                        Text="{Binding Genre}"
+                        VerticalTextAlignment="Start" />
+                </Grid>
 
-                        <BoxView HeightRequest="1" HorizontalOptions="FillAndExpand" 
-                                  BackgroundColor="White" Color="White" Margin="0,10,0,10"></BoxView>
+                <BoxView
+                    Margin="0,10,0,10"
+                    BackgroundColor="White"
+                    HeightRequest="1"
+                    HorizontalOptions="FillAndExpand"
+                    Color="White" />
 
-                        <!--Situation labels-->
-                        <Label Text="Situação" IsVisible="{Binding LblHSituationIsVisible}"                                
-                                VerticalOptions="Fill" HorizontalOptions="Center" TextColor="White" FontFamily="EBGaramondSemiBold" FontSize="20"
-                                />
+                <!--  Situation labels  -->
+                <Label
+                    FontFamily="EBGaramondSemiBold"
+                    FontSize="20"
+                    HorizontalOptions="Center"
+                    IsVisible="{Binding LblHSituationIsVisible}"
+                    Text="Situação"
+                    TextColor="White"
+                    VerticalOptions="Fill" />
 
-                        <!---->
-                        <Border HorizontalOptions="CenterAndExpand" Margin="0,5,0,5" Stroke="White">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="5" />
-                            </Border.StrokeShape>
-                            <Picker ItemsSource="{Binding StatusList}" SelectedIndex="{ Binding PkrStatusSelectedIndex }" />
-                        </Border>
-                        <!-- Rate -->
-                        <Border HorizontalOptions="CenterAndExpand" Margin="0,5,0,5" Stroke="Gray" BackgroundColor="White" Padding="10,0,10,0" IsVisible="{Binding RatingBarIsVisible}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="5" />
-                            </Border.StrokeShape>
-                            <Grid HorizontalOptions="Center" Margin="0,10,0,10" >
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width ="*" />
-                                    <ColumnDefinition Width ="*" />
-                                    <ColumnDefinition Width ="*" />
-                                    <ColumnDefinition Width ="*" />
-                                    <ColumnDefinition Width ="*" />
-                                </Grid.ColumnDefinitions>
-                                <Image Source="{Binding ImgStar1}" Grid.Row="0" Grid.Column="0" HeightRequest="30" HorizontalOptions="Center" Margin="0,0,3,0">
-                                    <Image.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding ImgStar1ClickCommand}" NumberOfTapsRequired="1" />
-                                    </Image.GestureRecognizers>
-                                </Image>
-                                <Image Source="{Binding ImgStar2}" Grid.Row="0" Grid.Column="1" HeightRequest="30" HorizontalOptions="Center" Margin="0,0,3,0" >
-                                    <Image.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding ImgStar2ClickCommand}" NumberOfTapsRequired="1" />
-                                    </Image.GestureRecognizers>
-                                </Image>
-                                <Image Source="{Binding ImgStar3}" Grid.Row="0" Grid.Column="2" HeightRequest="30" HorizontalOptions="Center" Margin="0,0,3,0" >
-                                    <Image.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding ImgStar3ClickCommand}" NumberOfTapsRequired="1" />
-                                    </Image.GestureRecognizers>
-                                </Image>
-                                <Image Source="{Binding ImgStar4}" Grid.Row="0" Grid.Column="3" HeightRequest="30" HorizontalOptions="Center" Margin="0,0,3,0" >
-                                    <Image.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding ImgStar4ClickCommand}" NumberOfTapsRequired="1" />
-                                    </Image.GestureRecognizers>
-                                </Image>
-                                <Image Source="{Binding ImgStar5}" Grid.Row="0" Grid.Column="4" HeightRequest="30" HorizontalOptions="Center"  >
-                                    <Image.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding ImgStar5ClickCommand}" NumberOfTapsRequired="1" />
-                                    </Image.GestureRecognizers>
-                                </Image>
-                            </Grid>
-                        </Border>
-                        <!---->
+                <!--    -->
+                <Border
+                    Margin="0,5,0,5"
+                    HorizontalOptions="CenterAndExpand"
+                    Stroke="White">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="5" />
+                    </Border.StrokeShape>
+                    <Picker ItemsSource="{Binding StatusList}" SelectedIndex="{Binding PkrStatusSelectedIndex}" />
+                </Border>
+                <!--  Rate  -->
+                <Border
+                    Margin="0,5,0,5"
+                    Padding="10,0,10,0"
+                    BackgroundColor="White"
+                    HorizontalOptions="CenterAndExpand"
+                    IsVisible="{Binding RatingBarIsVisible}"
+                    Stroke="Gray">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="5" />
+                    </Border.StrokeShape>
+                    <Grid Margin="0,10,0,10" HorizontalOptions="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="0,0,3,0"
+                            HeightRequest="30"
+                            HorizontalOptions="Center"
+                            Source="{Binding ImgStar1}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ImgStar1ClickCommand}" NumberOfTapsRequired="1" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0,0,3,0"
+                            HeightRequest="30"
+                            HorizontalOptions="Center"
+                            Source="{Binding ImgStar2}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ImgStar2ClickCommand}" NumberOfTapsRequired="1" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Margin="0,0,3,0"
+                            HeightRequest="30"
+                            HorizontalOptions="Center"
+                            Source="{Binding ImgStar3}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ImgStar3ClickCommand}" NumberOfTapsRequired="1" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="0"
+                            Grid.Column="3"
+                            Margin="0,0,3,0"
+                            HeightRequest="30"
+                            HorizontalOptions="Center"
+                            Source="{Binding ImgStar4}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ImgStar4ClickCommand}" NumberOfTapsRequired="1" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="0"
+                            Grid.Column="4"
+                            HeightRequest="30"
+                            HorizontalOptions="Center"
+                            Source="{Binding ImgStar5}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ImgStar5ClickCommand}" NumberOfTapsRequired="1" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </Grid>
+                </Border>
+                <!--    -->
 
-                        <!--Comment-->
-                        <Label Text="Comentários:" 
-                               Style="{StaticResource LblEntry}" 
-                               IsVisible="{Binding EdtCommentIsVisible}"
-                               />
-                        <Editor Style="{StaticResource Entry}" 
-                                HeightRequest="70" 
-                                MaxLength="200" 
-                                Keyboard="Chat"
-                                Text="{ Binding Comment }"
-                                IsVisible="{Binding EdtCommentIsVisible}" 
-                                MinimumWidthRequest="250" 
-                                HorizontalOptions="FillAndExpand"
-                                />
-                        <!---->
+                <!--  Comment  -->
+                <Label
+                    IsVisible="{Binding EdtCommentIsVisible}"
+                    Style="{StaticResource LblEntry}"
+                    Text="Comentários:" />
+                <Editor
+                    HeightRequest="70"
+                    HorizontalOptions="FillAndExpand"
+                    IsVisible="{Binding EdtCommentIsVisible}"
+                    Keyboard="Chat"
+                    MaxLength="200"
+                    MinimumWidthRequest="250"
+                    Style="{StaticResource Entry}"
+                    Text="{Binding Comment}" />
+                <!--    -->
 
-                        <Button 
-                            Text="{Binding BtnConfText}" 
-                          Style="{StaticResource BtnPrimary}" 
-                            Margin="0,10,0,0"
-                            Command="{Binding ConfirmCommand}"   
-                            ContentLayout="Left, 10" 
-                            >
-                            <Button.ImageSource>
-                                <FontImageSource 
-                                    FontFamily="FontAwesome"
-                                    Color="#EDEDED" 
-                                    Glyph="{x:Static Icons:IconFont.Pen}"
-                                    Size="15" 
-                                    />
-                            </Button.ImageSource>
-                        </Button>
-                    </StackLayout>
-                </Frame>
+                <Button
+                    Margin="0,10,0,0"
+                    Command="{Binding ConfirmCommand}"
+                    ContentLayout="Left, 10"
+                    Style="{StaticResource BtnPrimary}"
+                    Text="{Binding BtnConfText}">
+                    <Button.ImageSource>
+                        <FontImageSource
+                            FontFamily="FontAwesome"
+                            Glyph="{x:Static Icons:IconFont.Pen}"
+                            Size="15"
+                            Color="#EDEDED" />
+                    </Button.ImageSource>
+                </Button>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

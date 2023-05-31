@@ -11,7 +11,7 @@ namespace BookshelfRepos
         /// <summary>
         /// version upgrade of a table force his recreation
         /// </summary>
-        public static VersionsDbTables ActualVersionsDbTables = new() { USER = 4, BOOK = 21 };
+        public static readonly VersionsDbTables ActualVersionsDbTables = new() { USER = 4, BOOK = 21 };
 
         /// <summary>
         /// Need additional package Microsoft.EntityFrameworkCore.SqliteMicrosoft.EntityFrameworkCore.Sqlite to work
@@ -29,9 +29,9 @@ namespace BookshelfRepos
                 foreach (SqliteParameter parameter in parameters)
                 {
                     if (parameter.Value == null)
-                        _ = sqliteCommand.Parameters.AddWithValue(parameter.ParameterName, DBNull.Value);
+                        sqliteCommand.Parameters.AddWithValue(parameter.ParameterName, DBNull.Value);
                     else
-                        _ = sqliteCommand.Parameters.AddWithValue(parameter.ParameterName, parameter.Value);
+                        sqliteCommand.Parameters.AddWithValue(parameter.ParameterName, parameter.Value);
                 }
             }
 

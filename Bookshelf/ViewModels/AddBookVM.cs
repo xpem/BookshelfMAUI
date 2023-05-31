@@ -152,7 +152,7 @@ namespace Bookshelf.ViewModels
                 }
             }
             else
-                _ = Task.Run(() => GetBook(BookId));            
+                _ = Task.Run(() => GetBook(BookId));
         }
 
         protected async Task GetGoogleBook()
@@ -195,7 +195,7 @@ namespace Bookshelf.ViewModels
 
             GoogleKey ??= book.GoogleId;
             Cover ??= book.Cover;
-            
+
             if (!string.IsNullOrEmpty(Cover))
             {
                 ImgCoverIsVisible = true;
@@ -317,13 +317,11 @@ namespace Bookshelf.ViewModels
         {
             bool ValidInfo = true;
             if (string.IsNullOrEmpty(Title))
-            {
                 ValidInfo = false;
-            }
+
             if (string.IsNullOrEmpty(Authors))
-            {
                 ValidInfo = false;
-            }
+
             //if (string.IsNullOrEmpty(Year))
             //{
             //    ValidInfo = false;
@@ -333,15 +331,10 @@ namespace Bookshelf.ViewModels
                 if (Int32.TryParse(Pages, out int pages))
                 {
                     if (pages <= 0)
-                    {
                         ValidInfo = false;
-                    }
                 }
-                else
-                {
+                else                
                     ValidInfo = false;
-                }
-
             }
             //if (string.IsNullOrEmpty(Genre))
             //{

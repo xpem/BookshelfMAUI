@@ -1,118 +1,119 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Bookshelf.Views.BookList"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:behaviors="clr-namespace:Bookshelf.Utils.Behaviors"      
-             xmlns:vm="clr-namespace:Bookshelf.ViewModels"
-             xmlns:model="clr-namespace:BookshelfModels.Books;assembly=BookshelfModels"
-             x:DataType="vm:BookListVM"
-             xmlns:components = "clr-namespace:Bookshelf.Components"
-             Title="{Binding PageTitle}" 
-             Style="{StaticResource ContentPage}"
-             >
+<ContentPage
+    x:Class="Bookshelf.Views.BookList"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="clr-namespace:Bookshelf.Utils.Behaviors"
+    xmlns:components="clr-namespace:Bookshelf.Components"
+    xmlns:model="clr-namespace:BookshelfModels.Books;assembly=BookshelfModels"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:vm="clr-namespace:Bookshelf.ViewModels"
+    Title="{Binding PageTitle}"
+    x:DataType="vm:BookListVM"
+    Style="{StaticResource ContentPage}">
     <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior
-            EventName="Appearing"
-            Command="{Binding OnAppearingCommand}" />
+        <toolkit:EventToCommandBehavior Command="{Binding OnAppearingCommand}" EventName="Appearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        <StackLayout 
-            Style="{StaticResource MainStackLayout}"
-            VerticalOptions="FillAndExpand" >
-            <Frame HorizontalOptions="FillAndExpand" 
-                   Padding="10,0,10,5"
-                   Style="{StaticResource FramePrimary}" >
+        <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
+            <Frame
+                Padding="10,0,10,5"
+                HorizontalOptions="FillAndExpand"
+                Style="{StaticResource FramePrimary}">
                 <StackLayout Margin="0">
-                    <components:BorderedEntry Text="{Binding SearchTitle}" LabelText="Digite o título do livro"/>
+                    <components:BorderedEntry LabelText="Digite o título do livro" Text="{Binding SearchTitle}" />
                 </StackLayout>
             </Frame>
-            <Frame VerticalOptions="FillAndExpand" 
-                   Margin="5" CornerRadius="10"
-                   Padding="5" BackgroundColor="Transparent">
-                <ListView 
+            <Frame
+                Margin="5"
+                Padding="5"
+                BackgroundColor="Transparent"
+                CornerRadius="10"
+                VerticalOptions="FillAndExpand">
+                <ListView
+                    CachingStrategy="RecycleElement"
                     HasUnevenRows="True"
-                    CachingStrategy="RecycleElement"                              
-                    ItemsSource="{Binding BooksList}"
-                    SelectionMode="None"
                     ItemTapped="ListView_ItemTapped"
-                    >
+                    ItemsSource="{Binding BooksList}"
+                    SelectionMode="None">
                     <ListView.Behaviors>
                         <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
                     </ListView.Behaviors>
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="model:UIBookItem">
                             <ViewCell>
-                                <Frame BorderColor="Gray" BackgroundColor="WhiteSmoke" CornerRadius="10" Margin="0,0,0,5">
-                                    <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" >
-                                        <Label 
-                                            Text="{Binding Title}"
-                                            VerticalTextAlignment="Start" 
-                                            MaxLines="1" 
-                                            LineBreakMode="TailTruncation" 
-                                            FontSize="20" 
-                                            TextDecorations="Underline"
-                                            FontFamily="EBGaramondSemiBold"
-                                            TextColor="Black" 
-                                            VerticalOptions="StartAndExpand" 
+                                <Frame
+                                    Margin="0,0,0,5"
+                                    BackgroundColor="WhiteSmoke"
+                                    BorderColor="Gray"
+                                    CornerRadius="10">
+                                    <StackLayout HorizontalOptions="FillAndExpand" Orientation="Vertical">
+                                        <Label
                                             Padding="0,0,0,10"
-                                            />
-                                        <Label Text="{Binding SubtitleAndVol, StringFormat='{0}'}" 
-                                            VerticalTextAlignment="Start"
-                                            MaxLines="2" 
-                                            LineBreakMode="TailTruncation" 
-                                            FontSize="12"
-                                            FontFamily="EBGaramondItalic"
+                                            FontFamily="EBGaramondSemiBold"
+                                            FontSize="20"
+                                            LineBreakMode="TailTruncation"
+                                            MaxLines="1"
+                                            Text="{Binding Title}"
                                             TextColor="Black"
-                                            VerticalOptions="StartAndExpand" 
-                                            />
-                                        <Grid HorizontalOptions="FillAndExpand" HeightRequest="150">
+                                            TextDecorations="Underline"
+                                            VerticalOptions="StartAndExpand"
+                                            VerticalTextAlignment="Start" />
+                                        <Label
+                                            FontFamily="EBGaramondItalic"
+                                            FontSize="12"
+                                            LineBreakMode="TailTruncation"
+                                            MaxLines="2"
+                                            Text="{Binding SubtitleAndVol, StringFormat='{0}'}"
+                                            TextColor="Black"
+                                            VerticalOptions="StartAndExpand"
+                                            VerticalTextAlignment="Start" />
+                                        <Grid HeightRequest="150" HorizontalOptions="FillAndExpand">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition Height="20"/>
-                                                <RowDefinition Height="20"/>
-                                                <RowDefinition Height="20"/>
-                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="20" />
+                                                <RowDefinition Height="20" />
+                                                <RowDefinition Height="20" />
+                                                <RowDefinition Height="*" />
                                             </Grid.RowDefinitions>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="3*" />
                                                 <ColumnDefinition Width="6*" />
                                             </Grid.ColumnDefinitions>
-                                            <Image Source="{Binding Cover}"
-                                                Grid.RowSpan="4"                       
-                                                Grid.Column="1"     
+                                            <Image
+                                                Grid.RowSpan="4"
+                                                Grid.Column="1"
                                                 Aspect="AspectFit"
                                                 HorizontalOptions="End"
                                                 IsVisible="{Binding CoverIsVisible}"
-                                                />
-                                            <Label 
-                                                Text="{Binding Authors}" 
-                                                VerticalTextAlignment="Start" 
-                                                HorizontalTextAlignment="Start"
-                                                FontSize="15"
-                                                LineBreakMode="TailTruncation" 
+                                                Source="{Binding Cover}" />
+                                            <Label
                                                 FontFamily="EBGaramondRegular"
-                                                TextColor="#4e4e4e"
-                                                   />
-                                            <Label 
-                                                Text="{Binding Pages, StringFormat='Páginas: {0:F0}'}" 
-                                                Grid.Row="1" Grid.Column="0"
-                                                HorizontalTextAlignment="Start" 
-                                                VerticalTextAlignment="Start"
                                                 FontSize="15"
+                                                HorizontalTextAlignment="Start"
                                                 LineBreakMode="TailTruncation"
+                                                Text="{Binding Authors}"
+                                                TextColor="#4e4e4e"
+                                                VerticalTextAlignment="Start" />
+                                            <Label
+                                                Grid.Row="1"
+                                                Grid.Column="0"
                                                 FontFamily="EBGaramondRegular"
-                                                TextColor="Black"
-                                                   />
-                                            <Label 
-                                                Text="{Binding Rate}"
-                                                HorizontalTextAlignment="Start"
-                                                HorizontalOptions="Fill"
-                                                VerticalOptions="End"
-                                                Grid.Row="3" 
-                                                Grid.Column="0" 
                                                 FontSize="15"
-                                                FontFamily="EBGaramondItalic" 
-                                                TextColor="Black" />
+                                                HorizontalTextAlignment="Start"
+                                                LineBreakMode="TailTruncation"
+                                                Text="{Binding Pages, StringFormat='Páginas: {0:F0}'}"
+                                                TextColor="Black"
+                                                VerticalTextAlignment="Start" />
+                                            <Label
+                                                Grid.Row="3"
+                                                Grid.Column="0"
+                                                FontFamily="EBGaramondItalic"
+                                                FontSize="15"
+                                                HorizontalOptions="Fill"
+                                                HorizontalTextAlignment="Start"
+                                                Text="{Binding Rate}"
+                                                TextColor="Black"
+                                                VerticalOptions="End" />
                                         </Grid>
                                     </StackLayout>
                                 </Frame>
@@ -126,9 +127,12 @@
                                     <Setter Property="HeightRequest" Value="0" />
                                 </Trigger>
                             </Grid.Triggers>
-                            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" 
-                                       Color="#2196F3" VerticalOptions="Center" 
-                                       HorizontalOptions="Center"/>
+                            <ActivityIndicator
+                                HorizontalOptions="Center"
+                                IsRunning="{Binding IsBusy}"
+                                IsVisible="{Binding IsBusy}"
+                                VerticalOptions="Center"
+                                Color="#2196F3" />
                         </Grid>
                     </ListView.Footer>
                 </ListView>

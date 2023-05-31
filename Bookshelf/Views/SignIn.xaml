@@ -1,58 +1,99 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Bookshelf.Views.SignIn"
-             Title="Bookshelf - Gerenciamento de livros"  
-             NavigationPage.HasNavigationBar="False"
-             Shell.NavBarIsVisible="False"
-             x:DataType="vm:SignInVM"
-             xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
-             xmlns:vm="clr-namespace:Bookshelf.ViewModels"
-             xmlns:components = "clr-namespace:Bookshelf.Components"
-             Style="{StaticResource ContentPage}"
-             >
+<ContentPage
+    x:Class="Bookshelf.Views.SignIn"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
+    xmlns:components="clr-namespace:Bookshelf.Components"
+    xmlns:vm="clr-namespace:Bookshelf.ViewModels"
+    Title="Bookshelf - Gerenciamento de livros"
+    x:DataType="vm:SignInVM"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
+    Style="{StaticResource ContentPage}">
     <ContentPage.Resources>
         <Style x:Key="Icon" TargetType="Label">
-            <Setter Property="TextColor" Value="White"></Setter>
-            <Setter Property="HorizontalOptions" Value="Center"></Setter>
-            <Setter Property="FontSize" Value="70"></Setter>
-            <Setter Property="FontFamily" Value="FontAwesome"></Setter>
-            <Setter Property="Padding" Value="0,0,0,10"></Setter>
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="FontSize" Value="70" />
+            <Setter Property="FontFamily" Value="FontAwesome" />
+            <Setter Property="Padding" Value="0,0,0,10" />
         </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
         <ScrollView HorizontalOptions="CenterAndExpand">
-            <Frame Style="{StaticResource FramePrimary}" IsEnabled="{Binding IsNotBusy}" VerticalOptions="Center">
+            <Frame
+                IsEnabled="{Binding IsNotBusy}"
+                Style="{StaticResource FramePrimary}"
+                VerticalOptions="Center">
                 <VerticalStackLayout>
-                    <Label Text="{x:Static Icons:IconFont.BookReader}" Style="{StaticResource Icon}" />
-                    
-                    <components:BorderedEntry Text="{Binding Email}" LabelText="Email"/>
-                    <components:BorderedEntry Text="{Binding Password}" LabelText="Senha" IsPassword="True"/>
+                    <Label Style="{StaticResource Icon}" Text="{x:Static Icons:IconFont.BookReader}" />
 
-                    <Button Text="{Binding SignInText}" Margin="0,10,0,20" Style="{StaticResource BtnPrimary}" 
-                            FontSize="20" IsEnabled="{Binding BtnSignEnabled}"
-                            ContentLayout="Left, 10" Command="{Binding SignInCommand}">
+                    <components:BorderedEntry LabelText="Email" Text="{Binding Email}" />
+                    <components:BorderedEntry
+                        IsPassword="True"
+                        LabelText="Senha"
+                        Text="{Binding Password}" />
+
+                    <Button
+                        Margin="0,10,0,20"
+                        Command="{Binding SignInCommand}"
+                        ContentLayout="Left, 10"
+                        FontSize="20"
+                        IsEnabled="{Binding BtnSignEnabled}"
+                        Style="{StaticResource BtnPrimary}"
+                        Text="{Binding SignInText}">
                         <Button.ImageSource>
-                            <FontImageSource  FontFamily="FontAwesome" Color="#EDEDED" Glyph="{x:Static Icons:IconFont.SignInAlt}" Size="15"/>
+                            <FontImageSource
+                                FontFamily="FontAwesome"
+                                Glyph="{x:Static Icons:IconFont.SignInAlt}"
+                                Size="15"
+                                Color="#EDEDED" />
                         </Button.ImageSource>
                     </Button>
                     <HorizontalStackLayout>
-                        <Label Text="Não tem conta?" FontFamily="EBGaramondBold" TextColor="{StaticResource Gray100}" Margin="0,0,5,0" />
-                        <Label Text="Criar Conta" HorizontalOptions="Start" FontFamily="EBGaramondBold" TextColor="{StaticResource InfoColor}" TextDecorations="Underline" >
+                        <Label
+                            Margin="0,0,5,0"
+                            FontFamily="EBGaramondBold"
+                            Text="Não tem conta?"
+                            TextColor="{StaticResource Gray100}" />
+                        <Label
+                            FontFamily="EBGaramondBold"
+                            HorizontalOptions="Start"
+                            Text="Criar Conta"
+                            TextColor="{StaticResource InfoColor}"
+                            TextDecorations="Underline">
                             <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding CreateUserCommand}"/>
+                                <TapGestureRecognizer Command="{Binding CreateUserCommand}" />
                             </Label.GestureRecognizers>
                         </Label>
                     </HorizontalStackLayout>
                     <HorizontalStackLayout Margin="0,10,0,0">
-                        <Label Text="Esqueceu sua senha?" FontFamily="EBGaramondBold" TextColor="{StaticResource Gray100}" Margin="0,0,5,0" />
-                        <Label Text="Atualizar senha" HorizontalOptions="Start" FontFamily="EBGaramondBold" TextColor="{StaticResource InfoColor}" TextDecorations="Underline" >
+                        <Label
+                            Margin="0,0,5,0"
+                            FontFamily="EBGaramondBold"
+                            Text="Esqueceu sua senha?"
+                            TextColor="{StaticResource Gray100}" />
+                        <Label
+                            FontFamily="EBGaramondBold"
+                            HorizontalOptions="Start"
+                            Text="Atualizar senha"
+                            TextColor="{StaticResource InfoColor}"
+                            TextDecorations="Underline">
                             <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding UpdatePasswordCommand}"/>
+                                <TapGestureRecognizer Command="{Binding UpdatePasswordCommand}" />
                             </Label.GestureRecognizers>
                         </Label>
                     </HorizontalStackLayout>
-                    <Label Text="@Emanuel Martins" VerticalOptions="End" HorizontalOptions="End"  FontFamily="OpenSansRegular" TextColor="{StaticResource Gray100}" FontSize="10" FontAttributes="Italic" Margin="0,20,0,0"/>
+                    <Label
+                        Margin="0,20,0,0"
+                        FontAttributes="Italic"
+                        FontFamily="OpenSansRegular"
+                        FontSize="10"
+                        HorizontalOptions="End"
+                        Text="@Emanuel Martins"
+                        TextColor="{StaticResource Gray100}"
+                        VerticalOptions="End" />
 
                 </VerticalStackLayout>
             </Frame>
