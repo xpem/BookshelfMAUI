@@ -14,6 +14,7 @@ public partial class App : Application
     //passar as chamadas de api p uma camada repo propria
     //improvement: criar timeline
 
+
     //<Nome do objeto><ação da interface>
     //list - listagem
     //edit - inclusão ou update
