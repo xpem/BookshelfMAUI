@@ -54,7 +54,7 @@ namespace BookshelfServices.Books.Sync
         {
             try
             {
-                BookshelfModels.User.User? user = userServices.GetUserLocal();
+                BookshelfModels.User.User? user = await userServices.GetUserLocal();
 
                 if (user != null && Synchronizing != SyncStatus.Processing)
                 {
@@ -79,12 +79,12 @@ namespace BookshelfServices.Books.Sync
                                 {
                                     string localTempId = book.LocalTempId;
                                     book.LocalTempId = null;
-                                    BookshelfRepos.Books.BooksRepos.UpdateBookId(localTempId, res, user.Id);
+                                    await BookshelfRepos.Books.BooksRepos.UpdateBookId(localTempId, res, user.Id);
                                 }
                                 else throw new Exception($"Não foi possivel sincronizar o livro {book.Id}, res: {res}");
                             }
                             else
-                                BookshelfRepos.Books.BooksRepos.UpdateBook(book, user.Id);
+                                await BookshelfRepos.Books.BooksRepos.UpdateBook(book, user.Id);
                         }
 
                         List<Book>? BooksByLastUpdate = await booksApiServices.GetBooksByLastUpdate(user);
@@ -93,13 +93,13 @@ namespace BookshelfServices.Books.Sync
                         {
                             foreach (Book book in BooksByLastUpdate)
                             {
-                                BookshelfRepos.Books.BooksRepos.AddOrUpdateBook(book, user.Id);
+                                await BookshelfRepos.Books.BooksRepos.AddOrUpdateBook(book, user.Id);
 
                                 if (LastUpdate < book.UpdatedAt) LastUpdate = book.UpdatedAt;
                             }
                         }
 
-                        BookshelfRepos.User.UserRepos.UpdateUserLastUpdateLocal(user.Id, LastUpdate);
+                        await BookshelfRepos.User.UserRepos.UpdateUserLastUpdateLocal(user.Id, LastUpdate);
                     }
 
                     Synchronizing = SyncStatus.Sleeping;

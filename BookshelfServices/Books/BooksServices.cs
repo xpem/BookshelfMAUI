@@ -18,7 +18,7 @@ namespace BookshelfServices.Books
         {
             Totals BTotals = new();
 
-            BookshelfModels.User.User? User = BookshelfRepos.User.UserRepos.GetUser();
+            BookshelfModels.User.User? User = await UserRepos.GetUser();
             if (User?.Id != null)
             {
                 List<(Status, int)> list = await BookshelfRepos.Books.BooksRepos.GetBookshelfTotals(User.Id);
@@ -41,7 +41,7 @@ namespace BookshelfServices.Books
 
         public async Task<Book?> GetBook(string bookKey)
         {
-            BookshelfModels.User.User? User = BookshelfRepos.User.UserRepos.GetUser();
+            BookshelfModels.User.User? User = await UserRepos.GetUser();
             if (User?.Id != null)
                 return await BookshelfRepos.Books.BooksRepos.GetBook(User.Id, bookKey);
 
@@ -50,12 +50,12 @@ namespace BookshelfServices.Books
 
         public async Task<string?> UpdateBook(Book book)
         {
-            BookshelfModels.User.User? User = BookshelfRepos.User.UserRepos.GetUser();
+            BookshelfModels.User.User? User = await UserRepos.GetUser();
             if (User?.Id != null)
             {
                 book.UpdatedAt = DateTime.Now;
 
-                BookshelfRepos.Books.BooksRepos.UpdateBook(book, User.Id);
+                await BookshelfRepos.Books.BooksRepos.UpdateBook(book, User.Id);
                 //
                 if (CrossConnectivity.Current.IsConnected)
                 {
@@ -71,7 +71,7 @@ namespace BookshelfServices.Books
         {
             book.UpdatedAt = DateTime.Now;
 
-            BookshelfModels.User.User? User = BookshelfRepos.User.UserRepos.GetUser();
+            BookshelfModels.User.User? User = await UserRepos.GetUser();
 
             if (User?.Id != null)
             {
@@ -88,7 +88,7 @@ namespace BookshelfServices.Books
                     book.LocalTempId = Guid.NewGuid().ToString();
                 }
 
-                BookshelfRepos.Books.BooksRepos.AddBook(book, User.Id);
+                await BookshelfRepos.Books.BooksRepos.AddBook(book, User.Id);
             }
 
             return null;
@@ -98,24 +98,24 @@ namespace BookshelfServices.Books
         {
             bool ret = false;
 
-            BookshelfModels.User.User? User = BookshelfRepos.User.UserRepos.GetUser();
+            BookshelfModels.User.User? User = await UserRepos.GetUser();
             if (User?.Id != null)
             {
                 Book? _book = await BookshelfRepos.Books.BooksRepos.GetBookByTitleOrGooglekey(User.Id, title, null);
-                
-                if(_book is not null)
+
+                if (_book is not null)
                 {
                     ret = true;
                 }
-                
+
             }
             return ret;
 
         }
 
-        public async Task<Book?> GetBookbyTitleAndGoogleId(string title,string googleId)
+        public async Task<Book?> GetBookbyTitleAndGoogleId(string title, string googleId)
         {
-            BookshelfModels.User.User? User = BookshelfRepos.User.UserRepos.GetUser();
+            BookshelfModels.User.User? User = await UserRepos.GetUser();
             if (User?.Id != null)
             {
                 Book? _book = await BookshelfRepos.Books.BooksRepos.GetBookByTitleOrGooglekey(User.Id, title, googleId);
@@ -137,7 +137,7 @@ namespace BookshelfServices.Books
             List<UIBookItem> listBooksItens = new();
             int total = 0;
 
-            BookshelfModels.User.User? User = BookshelfRepos.User.UserRepos.GetUser();
+            BookshelfModels.User.User? User = await BookshelfRepos.User.UserRepos.GetUser();
             if (User?.Id != null)
             {
                 int pageSize = 10;
@@ -193,13 +193,13 @@ namespace BookshelfServices.Books
         {
             Book? book = await GetBook(bookKey);
 
-            BookshelfModels.User.User? User = BookshelfRepos.User.UserRepos.GetUser();
+            BookshelfModels.User.User? User = await UserRepos.GetUser();
             if (book?.Id is not null && User?.Id is not null)
             {
                 book.UpdatedAt = DateTime.Now;
                 book.Inactive = 1;
 
-                BookshelfRepos.Books.BooksRepos.InactivateBook(book.Id, User.Id, book.UpdatedAt);
+                await BookshelfRepos.Books.BooksRepos.InactivateBook(book.Id, User.Id, book.UpdatedAt);
 
                 if (CrossConnectivity.Current.IsConnected)
                 {
@@ -212,22 +212,16 @@ namespace BookshelfServices.Books
         {
             Book? book = await GetBook(Key);
 
-            BookshelfModels.User.User? User = UserRepos.GetUser();
+            BookshelfModels.User.User? User = await UserRepos.GetUser();
 
             if (book is not null && User?.Id is not null)
             {
                 book.UpdatedAt = DateTime.Now;
                 book.Status = status;
-
-                if (book.Score is null)
-                {
-                    book.Score = new();
-                }
-
                 book.Score = score;
                 book.Comment = comment;
 
-                BookshelfRepos.Books.BooksRepos.UpdateBook(book, User.Id);
+                await BookshelfRepos.Books.BooksRepos.UpdateBook(book, User.Id);
 
                 if (CrossConnectivity.Current.IsConnected)
                 {

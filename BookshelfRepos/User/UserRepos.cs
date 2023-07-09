@@ -37,11 +37,11 @@ namespace BookshelfRepos.User
             SQLiteDB.CloseIfOpen();
         }
 
-        public static BookshelfModels.User.User? GetUser()
+        public static async Task<BookshelfModels.User.User?> GetUser()
         {
             SQLiteDB.OpenIfClosed();
 
-            SqliteDataReader ret = Task.Run(async () => await SQLiteDB.RunSqliteCommand("select Id,token,email,password,lastUpdate from USER")).Result;
+            SqliteDataReader ret = await SQLiteDB.RunSqliteCommand("select Id,token,email,password,lastUpdate from USER");
             ret.Read();
 
             if (ret.HasRows)

@@ -92,6 +92,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Components\BorderedNumericEntry.xaml.cs">
+	    <DependentUpon>BorderedNumericEntry.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\SignUp.xaml.cs">
 	    <DependentUpon>SignUp.xaml</DependentUpon>
 	  </Compile>
@@ -107,6 +110,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Components\BorderedNumericEntry.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Components\BorderedEntry.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

@@ -21,43 +21,43 @@ namespace Bookshelf.ViewModels
 
         private string title, subTitle, volume, authors, year, isbn, pages, genre, comment, situation, cover;
 
-        public string Cover { get => cover; set { if (value != cover) { cover = value; OnPropertyChanged(); } } }
-        public string Title { get => title; set { if (value != title) { title = value; OnPropertyChanged(); } } }
+        public string Cover { get => cover; set { if (value != cover) { cover = value; OnPropertyChanged(nameof(Cover)); } } }
+        public string Title { get => title; set { if (value != title) { title = value; OnPropertyChanged(nameof(Title)); } } }
 
-        public string SubTitle { get => subTitle; set { if (value != subTitle) { subTitle = value; OnPropertyChanged(); } } }
+        public string SubTitle { get => subTitle; set { if (value != subTitle) { subTitle = value; OnPropertyChanged(nameof(SubTitle)); } } }
 
-        public string Volume { get => volume; set { if (value != volume) { volume = value; OnPropertyChanged(); } } }
+        public string Volume { get => volume; set { if (value != volume) { volume = value; OnPropertyChanged(nameof(Volume)); } } }
 
-        public string Authors { get => authors; set { if (value != authors) { authors = value; OnPropertyChanged(); } } }
+        public string Authors { get => authors; set { if (value != authors) { authors = value; OnPropertyChanged(nameof(Authors)); } } }
 
-        public string Year { get => year; set { if (value != year) { year = value; OnPropertyChanged(); } } }
+        public string Year { get => year; set { if (value != year) { year = value; OnPropertyChanged(nameof(Year)); } } }
 
-        public string Isbn { get => isbn; set { if (value != isbn) { isbn = value; OnPropertyChanged(); } } }
+        public string Isbn { get => isbn; set { if (value != isbn) { isbn = value; OnPropertyChanged(nameof(Isbn)); } } }
 
-        public string Pages { get => pages; set { if (value != pages) { pages = value; OnPropertyChanged(); } } }
+        public string Pages { get => pages; set { if (value != pages) { pages = value; OnPropertyChanged(nameof(Pages)); } } }
 
-        public string Genre { get => genre; set { if (value != genre) { genre = value; OnPropertyChanged(); } } }
+        public string Genre { get => genre; set { if (value != genre) { genre = value; OnPropertyChanged(nameof(Genre)); } } }
 
-        public string Comment { get => comment; set { if (value != comment) { comment = value; OnPropertyChanged(); } } }
+        public string Comment { get => comment; set { if (value != comment) { comment = value; OnPropertyChanged(nameof(Comment)); } } }
 
-        public string Situation { get => situation; set { if (value != situation) { situation = value; OnPropertyChanged(); } } }
+        public string Situation { get => situation; set { if (value != situation) { situation = value; OnPropertyChanged(nameof(Situation)); } } }
 
         #endregion
 
         #region Ui properties
 
         private ObservableCollection<string> statusList = new() { "Nenhuma", "Vou ler", "Lendo", "Lido", "Interrompido" };
-        public ObservableCollection<string> StatusList { get => statusList; set { if (value != statusList) { statusList = value; OnPropertyChanged(); } } }
+        public ObservableCollection<string> StatusList { get => statusList; set { if (value != statusList) { statusList = value; OnPropertyChanged(nameof(StatusList)); } } }
 
         private bool ratingBarIsVisible, lblRatingBarIsVisible, edtCommentIsVisible, imgCoverIsVisible = false;
 
-        public bool RatingBarIsVisible { get => ratingBarIsVisible; set { if (value != ratingBarIsVisible) { ratingBarIsVisible = value; OnPropertyChanged(); } } }
+        public bool RatingBarIsVisible { get => ratingBarIsVisible; set { if (value != ratingBarIsVisible) { ratingBarIsVisible = value; OnPropertyChanged(nameof(RatingBarIsVisible)); } } }
 
-        public bool LblRatingBarIsVisible { get => lblRatingBarIsVisible; set { if (value != lblRatingBarIsVisible) { lblRatingBarIsVisible = value; OnPropertyChanged(); } } }
+        public bool LblRatingBarIsVisible { get => lblRatingBarIsVisible; set { if (value != lblRatingBarIsVisible) { lblRatingBarIsVisible = value; OnPropertyChanged(nameof(LblRatingBarIsVisible)); } } }
 
-        public bool EdtCommentIsVisible { get => edtCommentIsVisible; set { if (value != edtCommentIsVisible) { edtCommentIsVisible = value; OnPropertyChanged(); } } }
+        public bool EdtCommentIsVisible { get => edtCommentIsVisible; set { if (value != edtCommentIsVisible) { edtCommentIsVisible = value; OnPropertyChanged(nameof(EdtCommentIsVisible)); } } }
 
-        public bool ImgCoverIsVisible { get => imgCoverIsVisible; set { if (value != imgCoverIsVisible) { imgCoverIsVisible = value; OnPropertyChanged(); } } }
+        public bool ImgCoverIsVisible { get => imgCoverIsVisible; set { if (value != imgCoverIsVisible) { imgCoverIsVisible = value; OnPropertyChanged(nameof(ImgCoverIsVisible)); } } }
 
         private int pkrStatusSelectedIndex = 0;
 
@@ -73,7 +73,7 @@ namespace Bookshelf.ViewModels
                     //fields visibilities conditions acoording selected situation reading
                     RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = pkrStatusSelectedIndex == 3;
 
-                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(PkrStatusSelectedIndex));
                 }
             }
         }
@@ -83,15 +83,15 @@ namespace Bookshelf.ViewModels
         private bool btnInsertIsVisible = true, btnInsertIsEnabled = true, lblTitleIsEnabled = true;
         private string btnInsertText, btnAddBookImageSourceGlyph;
 
-        public bool BtnInsertIsVisible { get => btnInsertIsVisible; set { if (value != btnInsertIsVisible) { btnInsertIsVisible = value; OnPropertyChanged(); } } }
+        public bool BtnInsertIsVisible { get => btnInsertIsVisible; set { if (value != btnInsertIsVisible) { btnInsertIsVisible = value; OnPropertyChanged(nameof(BtnInsertIsVisible)); } } }
 
-        public bool BtnInsertIsEnabled { get => btnInsertIsEnabled; set { if (value != btnInsertIsEnabled) { btnInsertIsEnabled = value; OnPropertyChanged(); } } }
+        public bool BtnInsertIsEnabled { get => btnInsertIsEnabled; set { if (value != btnInsertIsEnabled) { btnInsertIsEnabled = value; OnPropertyChanged(nameof(BtnInsertIsEnabled)); } } }
 
-        public bool LblTitleIsEnabled { get => lblTitleIsEnabled; set { if (value != lblTitleIsEnabled) { lblTitleIsEnabled = value; OnPropertyChanged(); } } }
+        public bool LblTitleIsEnabled { get => lblTitleIsEnabled; set { if (value != lblTitleIsEnabled) { lblTitleIsEnabled = value; OnPropertyChanged(nameof(LblTitleIsEnabled)); } } }
 
-        public string BtnInsertText { get => btnInsertText; set { if (value != btnInsertText) { btnInsertText = value; OnPropertyChanged(); } } }
+        public string BtnInsertText { get => btnInsertText; set { if (value != btnInsertText) { btnInsertText = value; OnPropertyChanged(nameof(BtnInsertText)); } } }
 
-        public string BtnAddBookImageSourceGlyph { get => btnAddBookImageSourceGlyph; set { if (value != btnAddBookImageSourceGlyph) { btnAddBookImageSourceGlyph = value; OnPropertyChanged(); } } }
+        public string BtnAddBookImageSourceGlyph { get => btnAddBookImageSourceGlyph; set { if (value != btnAddBookImageSourceGlyph) { btnAddBookImageSourceGlyph = value; OnPropertyChanged(nameof(BtnAddBookImageSourceGlyph)); } } }
 
 
         /// <summary>
@@ -181,7 +181,6 @@ namespace Bookshelf.ViewModels
 
         protected void BuildBook(Book book)
         {
-
             Title = book.Title;
             SubTitle = book.SubTitle;
             Authors = book.Authors;
@@ -236,7 +235,6 @@ namespace Bookshelf.ViewModels
                 if (await VerrifyFields())
                 {
                     BtnInsertIsEnabled = false;
-
 
                     int? _year = (!string.IsNullOrEmpty(Year) ? Convert.ToInt32(Year) : null);
                     int? _volume = (!string.IsNullOrEmpty(Volume) ? Convert.ToInt32(Volume) : null);

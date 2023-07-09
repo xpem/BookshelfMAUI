@@ -26,6 +26,7 @@
                         Enabled="{Binding LblTitleIsEnabled}"
                         LabelText="Título"
                         Text="{Binding Title}" />
+
                     <components:BorderedEntry LabelText="*Subtítulo" Text="{Binding SubTitle}" />
 
                     <Grid HorizontalOptions="FillAndExpand">
@@ -38,136 +39,62 @@
                             <ColumnDefinition Width="4*" />
                             <ColumnDefinition Width="6*" />
                         </Grid.ColumnDefinitions>
-                        <Frame
-                            Grid.Row="0"
-                            Grid.Column="0"
+                        <StackLayout
                             Padding="0"
-                            BackgroundColor="Transparent"
-                            BorderColor="Transparent"
                             HorizontalOptions="Fill"
                             VerticalOptions="Start">
-                            <StackLayout
-                                HorizontalOptions="FillAndExpand"
-                                Orientation="Vertical"
-                                VerticalOptions="Start">
-                                <Label Style="{StaticResource LblHEntry}" Text="*Volume" />
-                                <Border HorizontalOptions="StartAndExpand" WidthRequest="70">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="5" />
-                                    </Border.StrokeShape>
-                                    <Entry
-                                        x:Name="EntVol"
-                                        HorizontalOptions="StartAndExpand"
-                                        Keyboard="Numeric"
-                                        MaxLength="2"
-                                        Style="{StaticResource Entry}"
-                                        Text="{Binding Volume}"
-                                        VerticalOptions="Start"
-                                        WidthRequest="60">
-                                        <Entry.Behaviors>
-                                            <behaviors:NumericValidationBehavior />
-                                        </Entry.Behaviors>
-                                    </Entry>
-                                </Border>
-                            </StackLayout>
-                        </Frame>
-                        <Frame
-                            Grid.Row="0"
+                            <components:BorderedNumericEntry
+                                LabelText="*Volume"
+                                MaxLength="2"
+                                Text="{Binding Volume}" />
+                        </StackLayout>
+                        <StackLayout
                             Grid.Column="1"
                             Padding="0"
-                            BackgroundColor="Transparent"
-                            BorderColor="Transparent"
                             HorizontalOptions="Start"
                             VerticalOptions="Start">
-                            <StackLayout
-                                HorizontalOptions="FillAndExpand"
-                                Orientation="Vertical"
-                                VerticalOptions="StartAndExpand">
-                                <Label Style="{StaticResource LblHEntry}" Text="*Ano" />
-                                <Border
-                                    Grid.Row="0"
-                                    Grid.Column="1"
-                                    WidthRequest="90">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="5" />
-                                    </Border.StrokeShape>
-                                    <Entry
-                                        x:Name="EntAno"
-                                        HorizontalOptions="Start"
-                                        Keyboard="Numeric"
-                                        MaxLength="4"
-                                        Style="{StaticResource Entry}"
-                                        Text="{Binding Year}"
-                                        WidthRequest="80">
-                                        <Entry.Behaviors>
-                                            <behaviors:NumericValidationBehavior />
-                                        </Entry.Behaviors>
-                                    </Entry>
-                                </Border>
-                            </StackLayout>
-                        </Frame>
-                        <Frame
+                            <components:BorderedNumericEntry
+                                LabelText="*Ano"
+                                MaxLength="4"
+                                Text="{Binding Year}" />
+                        </StackLayout>
+                        <StackLayout
                             Grid.Row="1"
                             Grid.ColumnSpan="2"
                             Padding="0"
-                            BackgroundColor="Transparent"
-                            BorderColor="Transparent"
                             HorizontalOptions="FillAndExpand"
                             VerticalOptions="Start">
                             <components:BorderedEntry LabelText="Autor(es)" Text="{Binding Authors}" />
-                        </Frame>
-                        <Frame
+                        </StackLayout>
+                        <StackLayout
                             Grid.Row="2"
                             Grid.Column="0"
                             Padding="0"
-                            BackgroundColor="Transparent"
-                            BorderColor="Transparent"
                             HorizontalOptions="FillAndExpand"
                             VerticalOptions="Start">
-                            <StackLayout
-                                HorizontalOptions="FillAndExpand"
-                                Orientation="Vertical"
-                                VerticalOptions="Start">
-                                <Label Style="{StaticResource LblHEntry}" Text="Páginas" />
-                                <Border HorizontalOptions="Start" WidthRequest="70">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="5" />
-                                    </Border.StrokeShape>
-                                    <Entry
-                                        x:Name="EntPages"
-                                        Keyboard="Numeric"
-                                        MaxLength="4"
-                                        Style="{StaticResource Entry}"
-                                        Text="{Binding Pages}">
-                                        <Entry.Behaviors>
-                                            <behaviors:NumericValidationBehavior />
-                                        </Entry.Behaviors>
-                                    </Entry>
-                                </Border>
-                            </StackLayout>
-                        </Frame>
-                        <Frame
+                            <components:BorderedNumericEntry
+                                LabelText="*Páginas"
+                                MaxLength="4"
+                                Text="{Binding Pages}" />
+                        </StackLayout>
+                        <StackLayout
                             Grid.Row="2"
                             Grid.Column="1"
                             Padding="0"
-                            BackgroundColor="Transparent"
-                            BorderColor="Transparent"
                             HorizontalOptions="FillAndExpand"
                             VerticalOptions="Start">
                             <components:BorderedEntry LabelText="*Gênero" Text="{Binding Genre}" />
-                        </Frame>
+                        </StackLayout>
                     </Grid>
-                    <Frame
-                        Grid.Row="0"
+                    <StackLayout
                         Grid.Column="1"
                         Padding="0"
-                        BackgroundColor="Transparent"
-                        BorderColor="Transparent"
                         HorizontalOptions="FillAndExpand"
                         VerticalOptions="Start">
                         <components:BorderedEntry LabelText="*Isbn" Text="{Binding Isbn}" />
-                    </Frame>
+                    </StackLayout>
                     <!--    -->
+
                     <BoxView
                         Margin="0,10,0,10"
                         BackgroundColor="{StaticResource White}"

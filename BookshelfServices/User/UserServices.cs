@@ -10,7 +10,7 @@ namespace BookshelfServices.User
         /// get user in the static var
         /// </summary>
         /// <returns></returns>
-        public BookshelfModels.User.User? GetUserLocal() => UserRepos.GetUser();
+        public async Task<BookshelfModels.User.User?> GetUserLocal() => await UserRepos.GetUser();
 
         public async Task<BookshelfModels.User.User?> RefreshUserToken(BookshelfModels.User.User user)
         {
@@ -24,7 +24,7 @@ namespace BookshelfServices.User
 
                     if (success && res != null)
                     {
-                        UserRepos.UpdateToken(user.Id, res);
+                        await UserRepos.UpdateToken(user.Id, res);
                         userResponse.Token = res;
                     }
                     else
@@ -65,7 +65,7 @@ namespace BookshelfServices.User
             catch (Exception) { throw; }
         }
 
-        public static void CleanUserDatabase() => UserRepos.CleanUserDatabase();
+        public static Task CleanUserDatabase() => UserRepos.CleanUserDatabase();
 
         public async Task<BookshelfModels.User.User> SignUp(string name, string email, string password) => await UserApiService.SignUp(name, email, password);
     }

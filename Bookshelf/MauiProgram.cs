@@ -15,7 +15,6 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         //todo
-        //pq n tá mostrando os covers de livros adicionados?
         //criar uma branch para o desenvolvimento da timeline
         //criar branch para o desenvolvimento da abstração da camada dal.
 

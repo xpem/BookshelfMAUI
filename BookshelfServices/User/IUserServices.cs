@@ -2,7 +2,7 @@
 {
     public interface IUserServices
     {
-        BookshelfModels.User.User? GetUserLocal();
+       Task<BookshelfModels.User.User?> GetUserLocal();
 
         Task<BookshelfModels.User.User?> RefreshUserToken(BookshelfModels.User.User user);
 
