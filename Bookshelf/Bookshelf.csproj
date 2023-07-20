@@ -137,6 +137,9 @@
 	  <MauiXaml Update="Views\Main.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\Timeline.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\UpdatePassword.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

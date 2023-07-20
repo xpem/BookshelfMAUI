@@ -26,7 +26,6 @@ namespace Bookshelf.ViewModels
 
         public Color IsSync { get => isSync; set { if (value != isSync) { isSync = value; OnPropertyChanged(); } } }
 
-
         /// <summary>
         /// var that defines if the function that verify the synchronization is running  or not
         /// </summary>
@@ -50,16 +49,19 @@ namespace Bookshelf.ViewModels
             booksServices = _booksServices;
         }
 
+        public ICommand CallTimelineCommand => new Command(async (e) => await Shell.Current.GoToAsync($"{nameof(Timeline)}"));
+
         public ICommand LogoutCommand => new Command(async (e) =>
         {
             bool resp = await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja sair e retornar a tela inicial?", "Sim", "Cancelar");
 
             if (resp)
             {
-                BookshelfServices.User.UserServices.CleanUserDatabase();
+                await BookshelfServices.User.UserServices.CleanUserDatabase();
                 _Timer.Dispose();
                 //finalize sync thread process
                 BooksSyncServices.ThreadIsRunning = false;
+                ThreadIsRunning = false;
                 BooksSyncServices._Timer.Dispose();
 
                 await Shell.Current.GoToAsync($"//{nameof(SignIn)}");

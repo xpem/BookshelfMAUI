@@ -12,7 +12,6 @@ namespace Bookshelf.ViewModels
     public partial class SignUpVM : ViewModelBase
     {
         readonly IUserServices userService;
-        readonly IBooksSyncServices booksSyncServices;
 
         string name;
 
@@ -35,25 +34,21 @@ namespace Bookshelf.ViewModels
         public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { btnCreateUserIsEnabled = value; OnPropertyChanged(); } } }
 
 
-        public SignUpVM(IUserServices _userService, IBooksSyncServices _booksSyncServices)
+        public SignUpVM(IUserServices _userService)
         {
             userService = _userService;
-            booksSyncServices = _booksSyncServices;
         }
 
-        private bool VerifyFileds()
+        private async Task<bool> VerifyFileds()
         {
             bool validInformation = true;
 
             if (string.IsNullOrEmpty(Name))
-            {
                 validInformation = false;
-            }
+
 
             if (string.IsNullOrEmpty(Email))
-            {
                 validInformation = false;
-            }
             else if (!Validations.ValidateEmail(Email))
             {
                 _ = Application.Current.MainPage.DisplayAlert("Aviso", "Digite um email válido", null, "Ok");
@@ -61,26 +56,17 @@ namespace Bookshelf.ViewModels
             }
 
             if (string.IsNullOrEmpty(Password))
-            {
                 validInformation = false;
-            }
             else if (Password.Length < 4)
-            {
                 validInformation = false;
-            }
+
             if (string.IsNullOrEmpty(ConfirmPassword))
-            {
                 validInformation = false;
-            }
-            if (ConfirmPassword.ToUpper() != Password.ToUpper())
-            {
+            else if (ConfirmPassword.ToUpper() != Password.ToUpper())
                 validInformation = false;
-            }
 
             if (!validInformation)
-            {
-                _ = Application.Current.MainPage.DisplayAlert("Aviso", "Preencha os campos e confirme a senha corretamente", null, "Ok");
-            }
+                await Application.Current.MainPage.DisplayAlert("Aviso", "Preencha os campos e confirme a senha corretamente", null, "Ok");
 
             return validInformation;
         }
@@ -93,7 +79,7 @@ namespace Bookshelf.ViewModels
                 return;
             }
 
-            if (VerifyFileds())
+            if (await VerifyFileds())
             {
                 BtnCreateUserIsEnabled = false;
 
