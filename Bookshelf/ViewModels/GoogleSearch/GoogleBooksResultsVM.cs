@@ -7,17 +7,10 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.GoogleSearch
 {
-    public class GoogleBooksResultsVM : ViewModelBase//, IQueryAttributable
+    public class GoogleBooksResultsVM : ViewModelBase, IQueryAttributable
     {
 
         string pageTitle = "Busca";
-
-        string urlteste = "http://books.google.com/books/content?id=6RCcBAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api";
-
-        public string Urlteste
-        {
-            get => urlteste; set { if (urlteste != value) { urlteste = value; OnPropertyChanged(); } }
-        }
 
         public string PageTitle
         {
@@ -29,32 +22,40 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
         public ObservableCollection<UIGoogleBook> GoogleBooksList { get; } = new();
 
+        //UIGoogleBook listItem;
 
-        UIGoogleBook listItem;
+        //public UIGoogleBook ListItem
+        //{
+        //    get => listItem;
+        //    set
+        //    {
+        //        if (listItem != value)
+        //        {
+        //            listItem = value;
 
-        public UIGoogleBook ListItem
+        //            if (listItem is not null)
+        //            {
+        //                Shell.Current.GoToAsync($"{nameof(AddBook)}?GoogleKey={listItem.Id}", true);
+        //                //if (SituationIndex == -1)
+        //                //    Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={bookItem.Key}", true);
+        //                //else
+        //                //    Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={bookItem.Key}", true);
+
+        //                //bookItem = null;
+        //            }
+        //            OnPropertyChanged();
+        //        }
+        //    }
+        //}
+
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            get => listItem;
-            set
-            {
-                if (listItem != value)
-                {
-                    listItem = value;
-                    if (listItem is not null)
-                    {
-                        Shell.Current.GoToAsync($"{nameof(AddBook)}?GoogleKey={listItem.Id}", true);
-                        //if (SituationIndex == -1)
-                        //    Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={bookItem.Key}", true);
-                        //else
-                        //    Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={bookItem.Key}", true);
+            if (GoogleBooksList.Count > 0)
+                GoogleBooksList.Clear();
 
-                        //bookItem = null;
-                    }
-                    OnPropertyChanged();
-                }
-            }
+            LoadGoogleBooks(0);
         }
-
 
         public bool SearchingBookList { get; set; }
 
@@ -79,6 +80,10 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
         public ICommand LoadMoreCommand => new Command(() => { CurrentPage++; LoadGoogleBooks(CurrentPage); });
 
+        public GoogleBooksResultsVM()
+        {
+        }
+
         /// <summary>
         /// is necessary the config: android:usesCleartextTraffic="true"
         /// </summary>
@@ -96,7 +101,6 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
             if (pageNumber > 0)
                 startIndex = pageNumber * 10;
-
 
             if (startIndex == 0 || startIndex < TotalItems)
             {
@@ -136,7 +140,7 @@ namespace Bookshelf.ViewModels.GoogleSearch
                         SearchingBookList = false;
                     }
                     catch (Exception ex)
-                    { throw ex; }
+                    { throw; }
                 }
             }
         }

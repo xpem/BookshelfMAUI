@@ -52,7 +52,7 @@ namespace BookshelfServices.Books.GoogleBooksApi
             try
             {
                 HttpResponseMessage response = await new HttpClient().GetAsync($"https://www.googleapis.com/books/v1/volumes/{googleId}");
-                Item array = JsonConvert.DeserializeObject<Item>(await response.Content.ReadAsStringAsync());
+                Item? array = JsonConvert.DeserializeObject<Item>(await response.Content.ReadAsStringAsync());
 
                 var item = BuildUIGoogleBook(array);
                 return item;
@@ -130,7 +130,7 @@ namespace BookshelfServices.Books.GoogleBooksApi
 
             try
             {
-                BookshelfModels.Books.GoogleApi.GoogleApiBook array = JsonConvert.DeserializeObject<GoogleApiBook>(json);
+                BookshelfModels.Books.GoogleApi.GoogleApiBook? array = JsonConvert.DeserializeObject<GoogleApiBook>(json);
                 List<Item> items = array.items;
                 totalItems = array.totalItems;
 

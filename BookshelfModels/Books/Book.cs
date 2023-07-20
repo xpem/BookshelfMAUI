@@ -2,33 +2,47 @@
 {
     public class Book
     {
-        public string? BookKey { get; set; }
+        public int? Id { get; set; }
+
+        /// <summary>
+        /// Temporary local id
+        /// </summary>
+        public string? LocalTempId { get; set; }
+
         public string? Title { get; set; }
+
         public string? SubTitle { get; set; }
+
         public string? Authors { get; set; }
-        public int Year { get; set; }
-        public string? Isbn { get; set; }
-        public string? Volume { get; set; }
+
+        public int? Volume { get; set; }
+
         public int Pages { get; set; }
+
+        public int? Year { get; set; }
+
+        public Status? Status { get; set; }
+
         public string? Genre { get; set; }
-        public DateTime LastUpdate { get; set; }
-        public Rating? Rating { get; set; }
-        public Situation? Situation { get; set; }
-        public bool Inactive { get; set; }
+
+        public string? Isbn { get; set; }
 
         public string? Cover { get; set; }
 
         public string? GoogleId { get; set; }
 
-    }
+        public int? Score { get; set; }
 
-    public class Rating
-    {
-        public int? Rate { get; set; }
         public string? Comment { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
+
+        public int? Inactive { get; set; }
     }
 
-    public enum Situation
+    public enum Status
     {
         None, IllRead, Reading, Read, Interrupted
     }

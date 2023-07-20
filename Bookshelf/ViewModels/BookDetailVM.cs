@@ -12,8 +12,10 @@ namespace Bookshelf.ViewModels
 
         #region bind variables.
 
-        public string title, authors, pages, genre, situation, bookKey, comment, subtitleAndVol, volume;
+        public string title, authors, pages, genre, situation, bookKey, comment, subtitleAndVol, volume, cover;
         public int rate;
+
+        public string Cover { get => cover; set { if (value != cover) { cover = value; OnPropertyChanged(); } } }
 
         public string Title { get => title; set { if (title != value) { title = value; OnPropertyChanged(); } } }
 
@@ -53,7 +55,7 @@ namespace Bookshelf.ViewModels
 
         public ObservableCollection<string> StatusList { get => statusList; set { if (statusList != value) { statusList = value; OnPropertyChanged(); } } }
 
-        private bool ratingBarIsVisible, lblRatingBarIsVisible, edtCommentIsVisible, lblHSituationIsVisible, btnConfIsEnabled;
+        private bool ratingBarIsVisible, lblRatingBarIsVisible, edtCommentIsVisible, lblHSituationIsVisible, btnConfIsEnabled, imgCoverIsVisible = false;
 
         public bool RatingBarIsVisible { get => ratingBarIsVisible; set { if (ratingBarIsVisible != value) { ratingBarIsVisible = value; OnPropertyChanged(); } } }
 
@@ -84,26 +86,28 @@ namespace Bookshelf.ViewModels
                 //    BtnConfIsVisible = true;
                 //}
 
-                switch ((BookshelfModels.Books.Situation)pkrStatusSelectedIndex)
+                switch ((BookshelfModels.Books.Status)pkrStatusSelectedIndex)
                 {
-                    case BookshelfModels.Books.Situation.None:
+                    case BookshelfModels.Books.Status.None:
                         RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
                         break;
-                    case BookshelfModels.Books.Situation.Reading:
-                    case BookshelfModels.Books.Situation.Interrupted:
-                    case BookshelfModels.Books.Situation.IllRead:
+                    case BookshelfModels.Books.Status.Reading:
+                    case BookshelfModels.Books.Status.Interrupted:
+                    case BookshelfModels.Books.Status.IllRead:
                         RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
                         break;
-                    case BookshelfModels.Books.Situation.Read:
+                    case BookshelfModels.Books.Status.Read:
                         EdtCommentIsVisible = RatingBarIsVisible = LblRatingBarIsVisible = true;
                         break;
                     default:
                         break;
                 }
 
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(PkrStatusSelectedIndex));
             }
         }
+
+        public bool ImgCoverIsVisible { get => imgCoverIsVisible; set { if (value != imgCoverIsVisible) { imgCoverIsVisible = value; OnPropertyChanged(); } } }
 
         #endregion
 
@@ -125,16 +129,15 @@ namespace Bookshelf.ViewModels
         public ICommand InactivateBookCommand =>
             new Command(async (e) =>
             {
-                if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir esse livro?", "Sim", "Cancelar"))
-                    if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir esse livro?", "Sim", "Cancelar"))
-                    {
-                        booksServices.InactivateBook(BookKey);
+                if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir este livro?", "Sim", "Cancelar"))
+                {
+                    booksServices.InactivateBook(BookKey);
 
-                        if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
-                        {
-                            await Shell.Current.GoToAsync("..");
-                        }
+                    if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
+                    {
+                        await Shell.Current.GoToAsync("..");
                     }
+                }
             });
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -156,39 +159,45 @@ namespace Bookshelf.ViewModels
             {
                 subtitleAndVol = book.SubTitle;
             }
-            if (!string.IsNullOrEmpty(book.SubTitle) && !string.IsNullOrEmpty(book.Volume))
+            if (!string.IsNullOrEmpty(book.SubTitle) && book.Volume != null)
             {
                 subtitleAndVol += "; ";
             }
-            if (!string.IsNullOrEmpty(book.Volume))
+            if (book.Volume != null)
             {
                 subtitleAndVol += "Vol.: " + book.Volume;
+            }
+
+            if (book.Cover != null)
+            {
+                ImgCoverIsVisible = true;
+                Cover = book.Cover;
             }
 
             Title = book.Title;
             Authors = book.Authors;
             Genre = book.Genre;
             Pages = book.Pages.ToString();
-            Comment = book.Rating.Comment;
+            Comment = book.Comment;
             SubtitleAndVol = subtitleAndVol;
 
             //LblHCommentIsVisible = false;
             LblHSituationIsVisible = true;
 
-            pkrStatusSelectedIndexOri = (int)book.Situation;
+            pkrStatusSelectedIndexOri = (int)book.Status;
 
-            if (book.Situation != BookshelfModels.Books.Situation.None)
+            if (book.Status != BookshelfModels.Books.Status.None)
             {
-                Situation = SituationOri = book.Situation.ToString();
-                Rate = RateOri = (int)book.Rating.Rate;
-                Comment = CommentOri = book.Rating.Comment;
+                Situation = SituationOri = book.Status.ToString();
+                Rate = RateOri = (int)book.Score;
+                Comment = CommentOri = book.Comment;
 
-                PkrStatusSelectedIndex = (int)book.Situation;
+                PkrStatusSelectedIndex = (int)book.Status;
 
                 UpdatesEnableds = true;
                 EdtCommentIsVisible = RatingBarIsVisible = LblRatingBarIsVisible = false;
 
-                if (book.Situation == BookshelfModels.Books.Situation.Read)
+                if (book.Status == BookshelfModels.Books.Status.Read)
                 {
                     LblRatingBarIsVisible = RatingBarIsVisible = true;
                     BuildRatingBar(Rate.Value);
@@ -245,7 +254,7 @@ namespace Bookshelf.ViewModels
 
             if (alterou)
             {
-                booksServices.UpdateBookSituation(BookKey, (BookshelfModels.Books.Situation)PkrStatusSelectedIndex, rate, Comment);
+                booksServices.UpdateBookSituation(BookKey, (BookshelfModels.Books.Status)PkrStatusSelectedIndex, rate, Comment);
 
                 if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Situação alterada", null, "Ok"))
                 {

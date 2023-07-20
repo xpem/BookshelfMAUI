@@ -21,9 +21,8 @@ namespace BookshelfRepos.Books
                     new SqliteParameter("@LastUpdate", _lastUpdate)
                 };
 
-                SqliteDataReader response = await SQLiteDB.RunSqliteCommand("select b.Title, b.Authors, b.Year, b.Volume, b.Pages, b.Genre, b.LastUpdate, b.SubTitle, b.Isbn, b.Situation, br.Rate, " +
-                    " br.comment, b.Key, b.Inactive, b.Cover, b.GoogleId from BOOK b inner join BOOKRATING br on br.BookKey = b.key where b.UserId = @UserId and" +
-                    " b.lastUpdate > @LastUpdate", parameters);
+                SqliteDataReader response = await SQLiteDB.RunSqliteCommand("select ID, LOCAL_TEMP_ID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, ISBN, GENRE, UPDATED_AT, INACTIVE, STATUS, COVER, GOOGLE_ID, SCORE, COMMENT, CREATED_AT from BOOK where UID = @UserId and" +
+                    " UPDATED_AT > @LastUpdate", parameters);
 
                 List<Book> lista = new();
 
@@ -31,21 +30,24 @@ namespace BookshelfRepos.Books
                 {
                     lista.Add(new Book()
                     {
-                        Title = response.GetWithNullableString(0),
-                        Authors = response.GetWithNullableString(1),
-                        Year = response.GetInt32(2),
-                        Volume = response.GetWithNullableString(3),
-                        Pages = response.GetInt32(4),
-                        Genre = response.GetWithNullableString(5),
-                        LastUpdate = Convert.ToDateTime(response.GetWithNullableString(6)),
-                        SubTitle = response.GetWithNullableString(7),
+                        Id = response.GetInt32(0),
+                        LocalTempId = response.GetWithNullableString(1),
+                        Title = response.GetWithNullableString(2),
+                        SubTitle = response.GetWithNullableString(3),
+                        Authors = response.GetWithNullableString(4),
+                        Year = response.GetWithNullableInt(5),
+                        Volume = response.GetWithNullableInt(6),
+                        Pages = response.GetInt32(7),
                         Isbn = response.GetWithNullableString(8),
-                        Situation = (Situation)response.GetInt32(9),
-                        Rating = new Rating() { Rate = response.GetWithNullableInt(10), Comment = response.GetWithNullableString(11) },
-                        BookKey = response.GetWithNullableString(12),
-                        Inactive = response.GetWithNullableBool(13),
-                        Cover = response.GetWithNullableString(14),
-                        GoogleId = response.GetWithNullableString(15),
+                        Genre = response.GetWithNullableString(9),
+                        UpdatedAt = Convert.ToDateTime(response.GetWithNullableString(10)),
+                        Inactive = response.GetWithNullableInt(11),
+                        Status = (Status)response.GetInt32(12),
+                        Cover = response.GetWithNullableString(13),
+                        GoogleId = response.GetWithNullableString(14),
+                        Score = response.GetWithNullableInt(15),
+                        Comment = response.GetWithNullableString(16),
+                        CreatedAt = Convert.ToDateTime(response.GetWithNullableString(17)),
                     });
                 }
 
@@ -56,29 +58,28 @@ namespace BookshelfRepos.Books
             catch (Exception ex) { throw ex; }
         }
 
-        public static void UpdateBookKey(Guid localBookKey, string bookKey, string? userId)
+        public static async Task UpdateBookId(string localTempId, string bookId, string? userId)
         {
             SQLiteDB.OpenIfClosed();
 
             List<SqliteParameter> sqliteParameters = new()
             {
-                new SqliteParameter("@Key", bookKey), new SqliteParameter("@localKey", localBookKey.ToString()), new SqliteParameter("@userId", userId),
+                new SqliteParameter("@Key", bookId), new SqliteParameter("@localKey", localTempId), new SqliteParameter("@userId", userId),
             };
 
-            _ = SQLiteDB.RunSqliteCommand("update BOOK set Key = @Key where KEY = @localKey and UserId = @userId", sqliteParameters);
-
-            _ = SQLiteDB.RunSqliteCommand("update BOOKRATING set BookKey = @Key where BookKey = @localKey", sqliteParameters);
+            await SQLiteDB.RunSqliteCommand("update BOOK set ID = @Key,LOCAL_TEMP_ID = null where LOCAL_TEMP_ID = @localKey and UID = @userId", sqliteParameters);
 
             SQLiteDB.CloseIfOpen();
         }
 
-        public static void AddBook(Book book, string? userId)
+        public static async Task AddBook(Book book, string? userId)
         {
             SQLiteDB.OpenIfClosed();
 
             List<SqliteParameter> sqliteParametersList = new()
             {
-                new SqliteParameter("@Key", book.BookKey),
+                new SqliteParameter("@Id", book.Id),
+                new SqliteParameter("@LocalTempId", book.LocalTempId),
                 new SqliteParameter("@UserId", userId),
                 new SqliteParameter("@Title", book.Title),
                 new SqliteParameter("@SubTitle", book.SubTitle),
@@ -87,28 +88,18 @@ namespace BookshelfRepos.Books
                 new SqliteParameter("@Volume", book.Volume),
                 new SqliteParameter("@Pages", book.Pages),
                 new SqliteParameter("@Genre", book.Genre),
-                new SqliteParameter("@LastUpdate", book.LastUpdate),
+                new SqliteParameter("@UpdatedAt", book.UpdatedAt),
                 new SqliteParameter("@Isbn", book.Isbn),
-                new SqliteParameter("@Situation", book.Situation),
+                new SqliteParameter("@Status", (int?)book.Status),
                 new SqliteParameter("@Cover", book.Cover),
-                new SqliteParameter("@GoogleId", book.GoogleId)
+                new SqliteParameter("@GoogleId", book.GoogleId),
+                new SqliteParameter("@Score", book.Score),
+                new SqliteParameter("@Comment", book.Comment)
             };
 
-            _ = SQLiteDB.RunSqliteCommand(
-                "insert into BOOK(Key, UserId, Title, SubTitle, Authors, Year, Volume, Pages, Genre, LastUpdate, Isbn, Situation,Cover,GoogleId) " +
-                "values (@Key, @UserId, @Title, @SubTitle, @Authors, @Year, @Volume, @Pages, @Genre, @LastUpdate,@Isbn,@Situation,@Cover,@GoogleId)",
+            await SQLiteDB.RunSqliteCommand("insert into BOOK(ID,LOCAL_TEMP_ID, UID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, GENRE, UPDATED_AT, ISBN, STATUS,COVER,GOOGLE_ID,SCORE,COMMENT) " +
+                "values (@Id, @LocalTempId, @UserId, @Title, @SubTitle, @Authors, @Year, @Volume, @Pages, @Genre, @UpdatedAt, @Isbn, @Status, @Cover, @GoogleId, @Score, @Comment)",
                 sqliteParametersList);
-
-            //BOOK RATING
-            sqliteParametersList = new() {
-                new SqliteParameter("@BookKey", book.BookKey),
-                new SqliteParameter("@Rate", book.Rating?.Rate),
-                new SqliteParameter("@Comment", book.Rating?.Comment)
-            };
-
-            _ = SQLiteDB.RunSqliteCommand("insert into BOOKRATING(BookKey,Rate,Comment)" +
-                " values (@BookKey, @Rate, @Comment)", sqliteParametersList
-               );
 
             SQLiteDB.CloseIfOpen();
         }
@@ -117,13 +108,13 @@ namespace BookshelfRepos.Books
         /// update book local
         /// </summary>
         /// <param name="book"></param>
-        public static void UpdateBook(Book book, string? userId)
+        public static async Task UpdateBook(Book book, string? userId)
         {
             SQLiteDB.OpenIfClosed();
 
             List<SqliteParameter> sqliteParameters = new()
             {
-                new SqliteParameter("@Key", book.BookKey),
+                new SqliteParameter("@Id", book.Id),
                 new SqliteParameter("@UserId", userId),
                 new SqliteParameter("@Title", book.Title),
                 new SqliteParameter("@SubTitle", book.SubTitle),
@@ -132,51 +123,40 @@ namespace BookshelfRepos.Books
                 new SqliteParameter("@Volume", book.Volume),
                 new SqliteParameter("@Pages", book.Pages),
                 new SqliteParameter("@Genre", book.Genre),
-                new SqliteParameter("@LastUpdate", book.LastUpdate),
+                new SqliteParameter("@LastUpdate", book.UpdatedAt),
                 new SqliteParameter("@Isbn", book.Isbn),
-                new SqliteParameter("@Inactive", (book.Inactive ? "1" : "0")),
-                new SqliteParameter("@Situation", book.Situation)
+                new SqliteParameter("@Inactive", book.Inactive),
+                new SqliteParameter("@Situation", book.Status),
+                new SqliteParameter("@Cover", book.Cover),
+                new SqliteParameter("@GoogleId", book.GoogleId),
+                new SqliteParameter("@Score", book.Score),
+                new SqliteParameter("@Comment", book.Comment)
             };
 
-            _ = SQLiteDB.RunSqliteCommand("update BOOK set Title = @Title, SubTitle = @SubTitle, Authors = @Authors, Year = @Year, Volume = @Volume, Pages = @Pages" +
-                         ", Genre = @Genre, LastUpdate = @LastUpdate,Isbn = @Isbn,Inactive = @Inactive,Situation = @Situation where KEY = @Key and UserId = @UserId",
-                        sqliteParameters);
-
-            sqliteParameters = new()
-            {
-                new SqliteParameter("@Key", book.BookKey),
-                new SqliteParameter("@Rate", book.Rating?.Rate),
-                new SqliteParameter("@Comment", book.Rating?.Comment)
-            };
-
-            _ = SQLiteDB.RunSqliteCommand("update BOOKRATING set Rate = @Rate,Comment = @Comment where BookKey = @Key", sqliteParameters);
+            await SQLiteDB.RunSqliteCommand("update BOOK set TITLE = @Title, SUBTITLE = @SubTitle, AUTHORS = @Authors, YEAR = @Year, VOLUME = @Volume, PAGES = @Pages" +
+                ", GENRE = @Genre, UPDATED_AT = @LastUpdate,ISBN = @Isbn, INACTIVE = @Inactive, STATUS = @Situation, COVER = @Cover, GOOGLE_ID = @GoogleId, SCORE = @Score, COMMENT = @Comment" +
+                " where ID = @Id and UID = @UserId",
+                sqliteParameters);
 
             SQLiteDB.CloseIfOpen();
         }
 
-        public static DateTime? GetLastUpdateBook(string? KEY, string? Title)
+        public static DateTime? GetLastUpdateBook(int? id, string? title)
         {
             SQLiteDB.OpenIfClosed();
-            string command = "select LastUpdate from BOOK where";
+            string command = "select UPDATED_AT from BOOK where";
 
             List<SqliteParameter> parameters = new();
 
-            if (!string.IsNullOrEmpty(KEY))
+            if (id != null)
             {
-                command += " KEY = @Key";
+                command += " ID = @Key";
+                parameters.Add(new SqliteParameter("@Key", id));
             }
             else
             {
-                command += " title = @Title";
-            }
-
-            if (!string.IsNullOrEmpty(KEY))
-            {
-                parameters.Add(new SqliteParameter("@Key", KEY));
-            }
-            else
-            {
-                parameters.Add(new SqliteParameter("@Title", Title));
+                command += " TITLE = @Title";
+                parameters.Add(new SqliteParameter("@Title", title));
             }
 
             SqliteDataReader response = Task.Run(async () => await SQLiteDB.RunSqliteCommand(command, parameters)).Result;
@@ -200,28 +180,28 @@ namespace BookshelfRepos.Books
         /// Update or create local book with the newest version of the book in the server
         /// </summary>
         /// <param name="book"></param>
-        public static void AddOrUpdateBook(Book book, string? userId)
+        public static async Task AddOrUpdateBook(Book book, string? userId)
         {
-            DateTime? lastUpdate = GetLastUpdateBook(book?.BookKey, book?.Title);
+            DateTime? lastUpdate = GetLastUpdateBook(book?.Id, book?.Title);
 
-            if (lastUpdate == null && book is not null && !book.Inactive)
-                AddBook(book, userId);
-            else if (book is not null && book.LastUpdate > lastUpdate)
-                UpdateBook(book, userId);
+            if (lastUpdate == null && book is not null && book.Inactive == 0)
+                await AddBook(book, userId);
+            else if (book is not null && book.UpdatedAt > lastUpdate)
+               await UpdateBook(book, userId);
         }
 
-        public async static Task<List<(Situation, int)>> GetBookshelfTotals(string userId)
+        public async static Task<List<(Status, int)>> GetBookshelfTotals(string userId)
         {
             SQLiteDB.OpenIfClosed();
 
-            List<(Situation, int)> booksTotalSituations = new();
+            List<(Status, int)> booksTotalSituations = new();
 
-            SqliteDataReader response = await SQLiteDB.RunSqliteCommand("select situation,count(Situation) from BOOK where UserId = @UserId and (Inactive is null or Inactive = '0')  group by situation",
+            SqliteDataReader response = await SQLiteDB.RunSqliteCommand("select STATUS,count(STATUS) from BOOK where UID = @UserId and (Inactive is null or Inactive = '0')  group by STATUS",
                 new List<SqliteParameter>() { new SqliteParameter("@UserId", userId) });
 
             while (response.Read())
             {
-                booksTotalSituations.Add(((Situation)response.GetInt32(0), response.GetInt32(1)));
+                booksTotalSituations.Add(((Status)response.GetInt32(0), response.GetInt32(1)));
             }
 
             SQLiteDB.CloseIfOpen();
@@ -237,33 +217,34 @@ namespace BookshelfRepos.Books
 
                 List<SqliteParameter> parameters = new()
                 {
-                    //
                     new SqliteParameter("@userId", userId),
                     new SqliteParameter("@key", bookKey)
                 };
 
-
-                SqliteDataReader response = await SQLiteDB.RunSqliteCommand("select b.key,b.title,b.Authors,b.Year,b.Volume,b.Pages,b.Genre,b.LastUpdate,b.SubTitle,b.Isbn,br.Rate,b.situation,br.comment,b.Cover,b.GoogleId" +
-                    " from BOOK b inner join BOOKRATING br on br.BookKey = b.key where b.userId = @userId and b.Key = @key", parameters);
+                SqliteDataReader response = await SQLiteDB.RunSqliteCommand("select ID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, ISBN, GENRE, UPDATED_AT, INACTIVE, STATUS," +
+                    " COVER, GOOGLE_ID, SCORE, COMMENT, CREATED_AT from BOOK where UID = @userId and ID = @key", parameters);
 
                 response.Read();
 
                 Book book = new()
                 {
-                    BookKey = response.GetWithNullableString(0),
+                    Id = response.GetInt32(0),
                     Title = response.GetWithNullableString(1),
-                    Authors = response.GetWithNullableString(2),
-                    Year = response.GetInt32(3),
-                    Volume = response.GetWithNullableString(4),
-                    Pages = response.GetInt32(5),
-                    Genre = response.GetWithNullableString(6),
-                    LastUpdate = Convert.ToDateTime(response.GetWithNullableString(7)),
-                    SubTitle = response.GetWithNullableString(8),
-                    Isbn = response.GetWithNullableString(9),
-                    Situation = (Situation)response.GetInt32(11),
-                    Rating = new Rating() { Rate = response.GetWithNullableInt(10), Comment = response.GetWithNullableString(12) },
-                    Cover = response.GetWithNullableString(13),
-                    GoogleId = response.GetWithNullableString(14),
+                    SubTitle = response.GetWithNullableString(2),
+                    Authors = response.GetWithNullableString(3),
+                    Year = response.GetWithNullableInt(4),
+                    Volume = response.GetWithNullableInt(5),
+                    Pages = response.GetInt32(6),
+                    Isbn = response.GetWithNullableString(7),
+                    Genre = response.GetWithNullableString(8),
+                    UpdatedAt = Convert.ToDateTime(response.GetWithNullableString(9)),
+                    Inactive = response.GetWithNullableInt(10),
+                    Status = (Status)response.GetInt32(11),
+                    Cover = response.GetWithNullableString(12),
+                    GoogleId = response.GetWithNullableString(13),
+                    Score = response.GetWithNullableInt(14),
+                    Comment = response.GetWithNullableString(15),
+                    CreatedAt = Convert.ToDateTime(response.GetWithNullableString(16)),
                 };
 
                 SQLiteDB.CloseIfOpen();
@@ -285,41 +266,45 @@ namespace BookshelfRepos.Books
                     new SqliteParameter("@Title", bookTitle)
                 };
 
-                StringBuilder query = new StringBuilder();
+                StringBuilder query = new();
 
-                query.Append("select b.key,b.title,b.Authors,b.Year,b.Volume,b.Pages,b.Genre,b.LastUpdate,b.SubTitle,b.Isbn,br.Rate,b.situation,br.comment,b.Cover,b.GoogleId from BOOK b inner join BOOKRATING br on br.BookKey = b.key where b.userId = @UserId and LOWER(b.title) =  @Title");
+                query.Append("select ID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, ISBN, GENRE, UPDATED_AT, INACTIVE, STATUS, COVER, GOOGLE_ID, SCORE, COMMENT, CREATED_AT from BOOK where UID = @UserId and LOWER(TITLE) =  @Title");
 
 
                 if (!string.IsNullOrEmpty(googleKey))
                 {
                     parameters.Add(new SqliteParameter("@GoogleId", googleKey));
 
-                    query.Append(" or b.GoogleId = @GoogleId");
+                    query.Append(" or GOOGLE_ID = @GoogleId");
                 }
 
                 SqliteDataReader response = await SQLiteDB.RunSqliteCommand(query.ToString(), parameters);
 
                 response.Read();
-                Book book = null;
+
+                Book? book = null;
 
                 if (response.HasRows)
                 {
                     book = new()
                     {
-                        BookKey = response.GetWithNullableString(0),
+                        Id = response.GetInt32(0),
                         Title = response.GetWithNullableString(1),
-                        Authors = response.GetWithNullableString(2),
-                        Year = response.GetInt32(3),
-                        Volume = response.GetWithNullableString(4),
-                        Pages = response.GetInt32(5),
-                        Genre = response.GetWithNullableString(6),
-                        LastUpdate = Convert.ToDateTime(response.GetWithNullableString(7)),
-                        SubTitle = response.GetWithNullableString(8),
-                        Isbn = response.GetWithNullableString(9),
-                        Situation = (Situation)response.GetInt32(11),
-                        Rating = new Rating() { Rate = response.GetWithNullableInt(10), Comment = response.GetWithNullableString(12) },
-                        Cover = response.GetWithNullableString(13),
-                        GoogleId = response.GetWithNullableString(14),
+                        SubTitle = response.GetWithNullableString(2),
+                        Authors = response.GetWithNullableString(3),
+                        Year = response.GetWithNullableInt(4),
+                        Volume = response.GetWithNullableInt(5),
+                        Pages = response.GetInt32(6),
+                        Isbn = response.GetWithNullableString(7),
+                        Genre = response.GetWithNullableString(8),
+                        UpdatedAt = Convert.ToDateTime(response.GetWithNullableString(9)),
+                        Inactive = response.GetWithNullableInt(10),
+                        Status = (Status)response.GetInt32(11),
+                        Cover = response.GetWithNullableString(12),
+                        GoogleId = response.GetWithNullableString(13),
+                        Score = response.GetWithNullableInt(14),
+                        Comment = response.GetWithNullableString(15),
+                        CreatedAt = Convert.ToDateTime(response.GetWithNullableString(16)),
                     };
                 }
 
@@ -337,19 +322,19 @@ namespace BookshelfRepos.Books
             {
                 SQLiteDB.OpenIfClosed();
 
-                string command = "select b.key,b.title,b.Authors,b.Year,b.Volume,b.Pages,b.Genre,b.LastUpdate,b.SubTitle,br.Rate,br.Comment,b.Situation,b.Cover,b.GoogleId from BOOK b inner join BOOKRATING br on br.BookKey = b.key where b.UserId = @userId";
+                string command = "select ID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, ISBN, GENRE, UPDATED_AT, INACTIVE, STATUS, COVER, GOOGLE_ID, SCORE, COMMENT, CREATED_AT from BOOK where UID = @userId";
 
                 if (Situation > 0)
                 {
-                    command += " and b.situation = @situation";
+                    command += " and STATUS = @situation";
                 }
 
                 if (!string.IsNullOrEmpty(textoBusca))
                 {
-                    command += " and LOWER(b.title) like @textoBusca";
+                    command += " and LOWER(TITLE) like @textoBusca";
                 }
 
-                command += " and (b.Inactive is null or b.Inactive = '0') order by LastUpdate desc";
+                command += " and (INACTIVE is null or INACTIVE = '0') order by UPDATED_AT desc";
 
                 List<SqliteParameter> parameters = new()
                 {
@@ -374,19 +359,23 @@ namespace BookshelfRepos.Books
                 {
                     lista.Add(new Book()
                     {
-                        BookKey = response.GetWithNullableString(0),
+                        Id = response.GetInt32(0),
                         Title = response.GetWithNullableString(1),
-                        Authors = response.GetWithNullableString(2),
-                        Year = response.GetInt32(3),
-                        Volume = response.GetWithNullableString(4),
-                        Pages = response.GetInt32(5),
-                        Genre = response.GetWithNullableString(6),
-                        LastUpdate = Convert.ToDateTime(response.GetWithNullableString(7)),
-                        SubTitle = response.GetWithNullableString(8),
-                        Rating = new Rating { Rate = response.GetWithNullableInt(9), Comment = response.GetWithNullableString(10) },
-                        Situation = (BookshelfModels.Books.Situation?)response.GetWithNullableInt(11),
+                        SubTitle = response.GetWithNullableString(2),
+                        Authors = response.GetWithNullableString(3),
+                        Year = response.GetWithNullableInt(4),
+                        Volume = response.GetWithNullableInt(5),
+                        Pages = response.GetInt32(6),
+                        Isbn = response.GetWithNullableString(7),
+                        Genre = response.GetWithNullableString(8),
+                        UpdatedAt = Convert.ToDateTime(response.GetWithNullableString(9)),
+                        Inactive = response.GetWithNullableInt(10),
+                        Status = (Status)response.GetInt32(11),
                         Cover = response.GetWithNullableString(12),
                         GoogleId = response.GetWithNullableString(13),
+                        Score = response.GetWithNullableInt(14),
+                        Comment = response.GetWithNullableString(15),
+                        CreatedAt = Convert.ToDateTime(response.GetWithNullableString(16)),
                     });
                 }
 
@@ -400,18 +389,18 @@ namespace BookshelfRepos.Books
         /// <summary>
         /// Inactivate a book in local batabase
         /// </summary>
-        public static void InactivateBook(string bookKey, string userId, DateTime lastUpdate)
+        public static async Task InactivateBook(int? bookId, string userId, DateTime lastUpdate)
         {
             SQLiteDB.OpenIfClosed();
 
             List<SqliteParameter> sqliteParameters = new()
             {
-                new SqliteParameter("@Key", bookKey),
+                new SqliteParameter("@Key", bookId),
                 new SqliteParameter("@UserId", userId),
                 new SqliteParameter("@LastUpdate", lastUpdate)
             };
 
-            _ = SQLiteDB.RunSqliteCommand("update BOOK set Inactive = '1',LastUpdate = @LastUpdate where KEY = @Key and UserId = @UserId",
+            await SQLiteDB.RunSqliteCommand("update BOOK set Inactive = '1',UPDATED_AT = @LastUpdate where ID = @Key and UID = @UserId",
                  sqliteParameters);
 
             SQLiteDB.CloseIfOpen();

@@ -8,16 +8,17 @@ namespace BookshelfRepos.BuildDb
         /// <summary>
         /// create or update the structure of SQLite tables by actual version defined
         /// </summary>
-        public static void BuildDb()
+        public static async Task BuildDb()
         {
             SQLiteDB.OpenIfClosed();
 
-            UpdateSQLiteTablesByVersions();
+            await UpdateSQLiteTablesByVersions();
 
-            _ = SQLiteDB.RunSqliteCommand("create table if not exists USER (Id integer primary key autoincrement, EMAIL text, UID text,TOKEN text,Password text, lastUpdate datetime);");
-            _ = SQLiteDB.RunSqliteCommand("create table if not exists BOOK (Key text, UserId text, Title text, SubTitle text, Authors text, Year integer, Volume text, Pages integer, Isbn text, Genre text, LastUpdate DATETIME,Inactive integer,Situation integer,Cover TEXT,GoogleId TEXT);");
-            _ = SQLiteDB.RunSqliteCommand("create table if not exists BOOKRATING (BookKey text, Rate integer, Comment text);");
-            _ = SQLiteDB.RunSqliteCommand("create table if not exists VERSIONDB (USER integer,BOOK integer);");
+            await SQLiteDB.RunSqliteCommand("create table if not exists USER (ID integer primary key autoincrement,NAME text, EMAIL text, UID text, TOKEN text,PASSWORD text, LASTUPDATE datetime);");
+            await SQLiteDB.RunSqliteCommand("create table if not exists BOOK (ID integer,LOCAL_TEMP_ID text, UID text, TITLE text, SUBTITLE text, AUTHORS text, " +
+                "YEAR integer, VOLUME text, PAGES integer, ISBN text, GENRE text, UPDATED_AT datetime, INACTIVE integer, STATUS integer," +
+                " COVER text, GOOGLE_ID text, SCORE integer, COMMENT text, CREATED_AT datetime);");
+            await SQLiteDB.RunSqliteCommand("create table if not exists VERSIONDB (USER integer, BOOK integer);");
 
             SQLiteDB.CloseIfOpen();
         }
@@ -25,10 +26,10 @@ namespace BookshelfRepos.BuildDb
         /// <summary>
         /// delete tables of old versions and recreate it
         /// </summary>
-        private static async void UpdateSQLiteTablesByVersions()
+        private static async Task UpdateSQLiteTablesByVersions()
         {
 
-            _ = SQLiteDB.RunSqliteCommand("create table if not exists VERSIONSTABLES (Key integer, USER integer,BOOK integer);");
+            await SQLiteDB.RunSqliteCommand("create table if not exists VERSIONSTABLES (Key integer, USER integer,BOOK integer);");
 
             VersionsDbTables versionsDbTables;
 
@@ -43,7 +44,6 @@ namespace BookshelfRepos.BuildDb
                         USER = Retorno.GetWithNullableInt(0),
                         BOOK = Retorno.GetWithNullableInt(1)
                     };
-
                 }
                 else
                 {
@@ -52,7 +52,7 @@ namespace BookshelfRepos.BuildDb
                         USER = 0,
                         BOOK = 0
                     };
-                    AddorUpdateVersionDb(false, versionsDbTables);
+                    await AddorUpdateVersionDb(false, versionsDbTables);
                 }
             }
 
@@ -60,23 +60,22 @@ namespace BookshelfRepos.BuildDb
 
             if ((versionsDbTables.BOOK < SQLiteDB.ActualVersionsDbTables.BOOK) || (versionsDbTables.USER < SQLiteDB.ActualVersionsDbTables.USER))
             {
-                _ = SQLiteDB.RunSqliteCommand("drop table if exists USER");
+                await SQLiteDB.RunSqliteCommand("drop table if exists USER");
 
                 updateVersionDb = true;
             }
             if (versionsDbTables.BOOK < SQLiteDB.ActualVersionsDbTables.BOOK)
             {
-                _ = SQLiteDB.RunSqliteCommand("drop table if exists BOOK");
-                _ = SQLiteDB.RunSqliteCommand("drop table if exists BOOKRATING");
+                await SQLiteDB.RunSqliteCommand("drop table if exists BOOK");
 
                 updateVersionDb = true;
             }
 
             if (updateVersionDb)
-                AddorUpdateVersionDb(true, SQLiteDB.ActualVersionsDbTables);
+                await AddorUpdateVersionDb(true, SQLiteDB.ActualVersionsDbTables);
         }
 
-        private static void AddorUpdateVersionDb(bool isUpdate, VersionsDbTables versionsDbTables)
+        private static async Task AddorUpdateVersionDb(bool isUpdate, VersionsDbTables versionsDbTables)
         {
             string command;
 
@@ -95,7 +94,7 @@ namespace BookshelfRepos.BuildDb
                 new SqliteParameter("@BOOK", versionsDbTables.BOOK)
             };
 
-            _ = SQLiteDB.RunSqliteCommand(command, parameters);
+            await SQLiteDB.RunSqliteCommand(command, parameters);
         }
 
     }

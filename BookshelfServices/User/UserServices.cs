@@ -1,37 +1,49 @@
-﻿using BookshelfRepos.User;
-using BookshelfServices.User.AuthServices;
+﻿using BookshelfModels.User;
+using BookshelfRepos.User;
+using BookshelfServices.User.Api;
 
 namespace BookshelfServices.User
 {
     public class UserServices : IUserServices
     {
-        private readonly IUserAuthServices userAuthServices;
-
-        public UserServices(IUserAuthServices _userAuthServices)
-        {
-            userAuthServices = _userAuthServices;
-        }
-
         /// <summary>
         /// get user in the static var
         /// </summary>
         /// <returns></returns>
-        public BookshelfModels.User.User? GetUserLocal() => UserRepos.GetUser();
+        public async Task<BookshelfModels.User.User?> GetUserLocal() => await UserRepos.GetUser();
 
-        public async Task<BookshelfModels.User.User?> RefreshUserToken(BookshelfModels.User.User? user)
+        public async Task<BookshelfModels.User.User?> RefreshUserToken(BookshelfModels.User.User user)
         {
-            (BookshelfModels.User.User? userResponse, bool Success) = await userAuthServices.RefreshUserToken(user);
-
-            if (Success && userResponse is not null)
+            try
             {
-                UserRepos.UpdateToken(userResponse.Id, userResponse.Token);
-            }
+                BookshelfModels.User.User userResponse = user;
 
-            return userResponse;
+                if (!string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.Password))
+                {
+                    (bool success, string? res) = await UserApiService.GetUserToken(user.Email, user.Password);
+
+                    if (success && res != null)
+                    {
+                        await UserRepos.UpdateToken(user.Id, res);
+                        userResponse.Token = res;
+                    }
+                    else
+                    {
+                        if (res != null)
+                            userResponse.Error = ErrorType.WrongEmailOrPassword;
+                    }
+                    return userResponse;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex) { throw ex; }
         }
 
         /// <summary>
-        /// Get user in fb and add him in sqlite
+        /// Get user and add in sqlite
         /// </summary>
         /// <param name="email"></param>
         /// <param name="password"></param>
@@ -40,44 +52,21 @@ namespace BookshelfServices.User
         {
             try
             {
-                BookshelfModels.User.User? user = await userAuthServices.SignInWithEmailAndPassword(email, password);
+                BookshelfModels.User.User user = await UserApiService.GetUser(email, password);
 
-                if (user is not null)
+                if (user.Error is null)
                 {
-                    if (user.Error != null)
-                        return false;
-                    else
-                    {
-                        UserRepos.InsertUser(user);
-                        return true;
-                    }
+                    UserRepos.InsertUser(user);
+                    return true;
                 }
                 else
                     return false;
             }
-            catch { throw; }
+            catch (Exception) { throw; }
         }
 
-        public async Task<BookshelfModels.User.User> InsertUser(string email, string password)
-        {
-            BookshelfModels.User.User? user = await userAuthServices.CreateUser(email, password);
+        public static Task CleanUserDatabase() => UserRepos.CleanUserDatabase();
 
-            if (user != null)
-            {
-                if (user.Error != null)
-                {
-                    return user;
-                }
-                else
-                {
-                    BookshelfRepos.User.UserRepos.InsertUser(user);
-                    return user;
-                }
-            }
-            else
-                return null;
-        }
-
-        public static void CleanUserDatabase() => UserRepos.CleanUserDatabase();
+        public async Task<BookshelfModels.User.User> SignUp(string name, string email, string password) => await UserApiService.SignUp(name, email, password);
     }
 }

@@ -6,7 +6,6 @@ using BookshelfServices.Books;
 using BookshelfServices.Books.Api;
 using BookshelfServices.Books.Sync;
 using BookshelfServices.User;
-using BookshelfServices.User.AuthServices;
 using CommunityToolkit.Maui;
 
 namespace Bookshelf;
@@ -15,9 +14,11 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        //todo
+        //criar uma branch para o desenvolvimento da timeline
+        //criar branch para o desenvolvimento da abstração da camada dal.
 
         var builder = MauiApp.CreateBuilder();
-
 
         builder.UseMauiApp<App>().UseMauiCommunityToolkit();
 
@@ -46,11 +47,11 @@ public static class MauiProgram
         builder.Services.AddTransient<Main>();
         builder.Services.AddTransient<MainVM>();
 
-        builder.Services.AddTransient<Login>();
-        builder.Services.AddTransient<LoginVM>();
+        builder.Services.AddTransient<SignIn>();
+        builder.Services.AddTransient<SignInVM>();
 
-        builder.Services.AddTransient<AddUser>();
-        builder.Services.AddTransient<AddUserVM>();
+        builder.Services.AddTransient<SignUp>();
+        builder.Services.AddTransient<SignUpVM>();
 
         builder.Services.AddTransient<UpdatePassword>();
         builder.Services.AddTransient<UpdatePasswordVM>();
@@ -67,7 +68,6 @@ public static class MauiProgram
         builder.Services.AddTransient<GoogleBooksResults>();
         builder.Services.AddTransient<GoogleBooksResultsVM>();
 
-        builder.Services.AddScoped<IUserAuthServices, UserAuthServices>();
         builder.Services.AddScoped<IUserServices, UserServices>();
 
         builder.Services.AddScoped<IBooksApiServices, BooksApiServices>();

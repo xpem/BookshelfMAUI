@@ -13,13 +13,15 @@ public partial class AppShell : Shell
 
         Routing.RegisterRoute(nameof(BookDetail), typeof(BookDetail));
 
-        Routing.RegisterRoute(nameof(AddUser), typeof(AddUser));
+        Routing.RegisterRoute(nameof(SignUp), typeof(SignUp));
 
         Routing.RegisterRoute(nameof(UpdatePassword), typeof(UpdatePassword));
 
         Routing.RegisterRoute(nameof(BookList), typeof(BookList));
 
         Routing.RegisterRoute(nameof(GoogleBooksResults), typeof(GoogleBooksResults));
+
+        Routing.RegisterRoute(nameof(Timeline), typeof(Timeline));
 
         //Routing.RegisterRoute(nameof(Main), typeof(Main));
     }

@@ -7,29 +7,25 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class LoginVM : ViewModelBase
+    public class SignInVM : ViewModelBase
     {
 
-        string email;
+        string email, password, signInText;
 
         public string Email { get => email; set { if (email != value) { email = value; OnPropertyChanged(); } } }
 
-        string password;
-
         public string Password { get => password; set { if (password != value) { password = value; OnPropertyChanged(); } } }
-
-        string signInText;
 
         public string SignInText { get => signInText; set { if (signInText != value) { signInText = value; OnPropertyChanged(); } } }
 
-        bool btnSignEnabled;
+        bool btnSignEnabled = true;
 
         public bool BtnSignEnabled { get => btnSignEnabled; set { if (btnSignEnabled != value) { btnSignEnabled = value; OnPropertyChanged(); } } }
 
         readonly IUserServices userServices;
         readonly IBooksSyncServices booksSyncServices;
 
-        public LoginVM(IUserServices _userServices, IBooksSyncServices _booksSyncServices)
+        public SignInVM(IUserServices _userServices, IBooksSyncServices _booksSyncServices)
         {
             userServices = _userServices;
             booksSyncServices = _booksSyncServices;
@@ -84,7 +80,7 @@ namespace Bookshelf.ViewModels
 
          });
 
-        public ICommand CreateUserCommand => new Command(async () => await Shell.Current.GoToAsync($"{nameof(AddUser)}"));
+        public ICommand CreateUserCommand => new Command(async () => await Shell.Current.GoToAsync($"{nameof(SignUp)}"));
 
         public ICommand UpdatePasswordCommand => new Command(async () => await Shell.Current.GoToAsync($"{nameof(UpdatePassword)}"));
 

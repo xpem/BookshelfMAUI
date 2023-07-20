@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net6.0-tizen</TargetFrameworks> -->
 		<OutputType>Exe</OutputType>
@@ -22,7 +22,7 @@
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
@@ -58,6 +58,7 @@
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Italic.ttf" />
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Medium.ttf" />
 	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Regular.ttf" />
+	  <None Remove="Resources\Images\cover.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -83,7 +84,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="CommunityToolkit.Maui" Version="1.2.0" />
+	  <PackageReference Include="CommunityToolkit.Maui" Version="5.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -91,11 +92,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Views\AddUser.xaml.cs">
-	    <DependentUpon>AddUser.xaml</DependentUpon>
+	  <Compile Update="Components\BorderedNumericEntry.xaml.cs">
+	    <DependentUpon>BorderedNumericEntry.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\Login.xaml.cs">
-	    <DependentUpon>Login.xaml</DependentUpon>
+	  <Compile Update="Views\SignUp.xaml.cs">
+	    <DependentUpon>SignUp.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\SignIn.xaml.cs">
+	    <DependentUpon>SignIn.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\BookDetail.xaml.cs">
 	    <DependentUpon>BookDetail.xaml</DependentUpon>
@@ -106,10 +110,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Components\BorderedNumericEntry.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Components\BorderedEntry.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\GoogleSearch\GoogleBooksResults.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\Login.xaml">
+	  <MauiXaml Update="Views\SignIn.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\BookDetail.xaml">
@@ -121,10 +131,13 @@
 	  <MauiXaml Update="Views\AddBook.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\AddUser.xaml">
+	  <MauiXaml Update="Views\SignUp.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Main.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Timeline.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\UpdatePassword.xaml">

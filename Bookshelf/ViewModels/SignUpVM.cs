@@ -9,10 +9,13 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public partial class AddUserVM : ViewModelBase
+    public partial class SignUpVM : ViewModelBase
     {
         readonly IUserServices userService;
-        readonly IBooksSyncServices booksSyncServices;
+
+        string name;
+
+        public string Name { get => name; set { if (name != value) { name = value; OnPropertyChanged(); } } }
 
         string email;
 
@@ -22,32 +25,30 @@ namespace Bookshelf.ViewModels
 
         public string Password { get => password; set { if (password != value) { password = value; OnPropertyChanged(); } } }
 
-
         string confirmPassword;
 
         public string ConfirmPassword { get => confirmPassword; set { if (confirmPassword != value) { confirmPassword = value; OnPropertyChanged(); } } }
-
-
 
         bool btnCreateUserIsEnabled = true;
 
         public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { btnCreateUserIsEnabled = value; OnPropertyChanged(); } } }
 
 
-        public AddUserVM( IUserServices _userService, IBooksSyncServices _booksSyncServices)
+        public SignUpVM(IUserServices _userService)
         {
             userService = _userService;
-            booksSyncServices = _booksSyncServices;
         }
 
-        private bool VerifyFileds()
+        private async Task<bool> VerifyFileds()
         {
             bool validInformation = true;
 
-            if (string.IsNullOrEmpty(Email))
-            {
+            if (string.IsNullOrEmpty(Name))
                 validInformation = false;
-            }
+
+
+            if (string.IsNullOrEmpty(Email))
+                validInformation = false;
             else if (!Validations.ValidateEmail(Email))
             {
                 _ = Application.Current.MainPage.DisplayAlert("Aviso", "Digite um email válido", null, "Ok");
@@ -55,31 +56,22 @@ namespace Bookshelf.ViewModels
             }
 
             if (string.IsNullOrEmpty(Password))
-            {
                 validInformation = false;
-            }
             else if (Password.Length < 4)
-            {
                 validInformation = false;
-            }
+
             if (string.IsNullOrEmpty(ConfirmPassword))
-            {
                 validInformation = false;
-            }
-            if (ConfirmPassword.ToUpper() != Password.ToUpper())
-            {
+            else if (ConfirmPassword.ToUpper() != Password.ToUpper())
                 validInformation = false;
-            }
 
             if (!validInformation)
-            {
-                _ = Application.Current.MainPage.DisplayAlert("Aviso", "Preencha os campos e confirme a senha corretamente", null, "Ok");
-            }
+                await Application.Current.MainPage.DisplayAlert("Aviso", "Preencha os campos e confirme a senha corretamente", null, "Ok");
 
             return validInformation;
         }
 
-        public ICommand AddUserCommand => new Command(async () =>
+        public ICommand SignUpCommand => new Command(async () =>
         {
             if (!CrossConnectivity.Current.IsConnected)
             {
@@ -87,12 +79,12 @@ namespace Bookshelf.ViewModels
                 return;
             }
 
-            if (VerifyFileds())
+            if (await VerifyFileds())
             {
                 BtnCreateUserIsEnabled = false;
 
                 //
-                User user = await userService.InsertUser(email, password);
+                User user = await userService.SignUp(name, email, password);
 
                 if (user != null)
                 {

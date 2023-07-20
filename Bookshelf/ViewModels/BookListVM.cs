@@ -16,29 +16,30 @@ namespace Bookshelf.ViewModels
 
         public ObservableCollection<UIBookItem> BooksList { get; } = new();
 
-        UIBookItem bookItem;
+        //UIBookItem bookItem;
 
-        public UIBookItem BookItem
-        {
-            get => bookItem;
-            set
-            {
-                if (bookItem != value)
-                {
-                    bookItem = value;
-                    if (bookItem is not null)
-                    {
-                        if (SituationIndex == -1)
-                            Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={bookItem.Key}", true);
-                        else
-                            Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={bookItem.Key}", true);
+        //public UIBookItem BookItem
+        //{
+        //    get => bookItem;
+        //    set
+        //    {
+        //        if (bookItem != value)
+        //        {
+        //            bookItem = value;
+                   
+        //            if (bookItem is not null)
+        //            {
+        //                if (SituationIndex == -1)
+        //                    Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={bookItem.Key}", true);
+        //                else
+        //                    Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={bookItem.Key}", true);
 
-                        bookItem = null;
-                    }
-                    OnPropertyChanged();
-                }
-            }
-        }
+        //                bookItem = null;
+        //            }
+        //            OnPropertyChanged();
+        //        }
+        //    }
+        //}
 
         string pageTitle;
 
@@ -70,7 +71,6 @@ namespace Bookshelf.ViewModels
         public int? SituationIndex { get; set; }
 
         public int CurrentPage { get; set; }
-
 
         #endregion
 
@@ -128,7 +128,12 @@ namespace Bookshelf.ViewModels
 
             foreach (UIBookItem bookItem in booksList)
             {
+                if(bookItem.Cover is null)
+                {
+                    bookItem.Cover = "cover.jpg";
+                }
                 BooksList.Add(bookItem);
+
             }
 
             //Definição do título da interface

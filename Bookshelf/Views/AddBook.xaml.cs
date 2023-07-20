@@ -9,6 +9,5 @@ public partial class AddBook : ContentPage
         InitializeComponent();
 
         BindingContext = addBookVM;
-
     }
 }

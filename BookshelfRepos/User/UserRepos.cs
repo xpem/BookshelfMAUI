@@ -11,32 +11,37 @@ namespace BookshelfRepos.User
 
             List<SqliteParameter> parameters = new()
             {
-                new SqliteParameter("@TOKEN", user.Token), new SqliteParameter("@EMAIL", user.Email),
-                new SqliteParameter("@PASSWORD", user.Password), new SqliteParameter("@LASTUPDATE", DateTime.MinValue),
+                new SqliteParameter("@TOKEN", user.Token),
+                new SqliteParameter("@NAME", user.Name),
+                new SqliteParameter("@EMAIL", user.Email),
+                new SqliteParameter("@PASSWORD", user.Password),
+                new SqliteParameter("@LASTUPDATE", DateTime.MinValue),
             };
 
-            _ = SQLiteDB.RunSqliteCommand("insert into USER (TOKEN,EMAIL,PASSWORD,LASTUPDATE) values (@TOKEN,@EMAIL,@PASSWORD,@LASTUPDATE)", parameters);
+            _ = SQLiteDB.RunSqliteCommand("delete from USER");
+
+            _ = SQLiteDB.RunSqliteCommand("insert into USER (TOKEN,NAME,EMAIL,PASSWORD,LASTUPDATE) values (@TOKEN,@NAME,@EMAIL,@PASSWORD,@LASTUPDATE)", parameters);
 
             SQLiteDB.CloseIfOpen();
         }
 
-        public async static void CleanUserDatabase()
+        public async static Task CleanUserDatabase()
         {
             SQLiteDB.OpenIfClosed();
 
             //clean local database
             await SQLiteDB.RunSqliteCommand("delete from USER");
+
             await SQLiteDB.RunSqliteCommand("delete from BOOK");
-            await SQLiteDB.RunSqliteCommand("delete from BOOKRATING");
 
             SQLiteDB.CloseIfOpen();
         }
 
-        public static BookshelfModels.User.User? GetUser()
+        public static async Task<BookshelfModels.User.User?> GetUser()
         {
             SQLiteDB.OpenIfClosed();
 
-            SqliteDataReader ret = Task.Run(async () => await SQLiteDB.RunSqliteCommand("select Id,token,email,password,lastUpdate from USER")).Result;
+            SqliteDataReader ret = await SQLiteDB.RunSqliteCommand("select Id,token,email,password,lastUpdate from USER");
             ret.Read();
 
             if (ret.HasRows)
@@ -61,18 +66,18 @@ namespace BookshelfRepos.User
             }
         }
 
-        public static void UpdateUserLastUpdateLocal(string? id, DateTime lastUpdate)
+        public static async Task UpdateUserLastUpdateLocal(string? id, DateTime lastUpdate)
         {
             SQLiteDB.OpenIfClosed();
 
             List<SqliteParameter> parameters = new() { new SqliteParameter("@Id", id), new SqliteParameter("@LastUpdate", lastUpdate) };
 
-            _ = SQLiteDB.RunSqliteCommand("update USER set LastUpdate = @LastUpdate where Id = @Id", parameters);
+            await SQLiteDB.RunSqliteCommand("update USER set LastUpdate = @LastUpdate where Id = @Id", parameters);
 
             SQLiteDB.CloseIfOpen();
         }
 
-        public static void UpdateToken(string? Key, string? token)
+        public static async Task UpdateToken(string? Key, string? token)
         {
             try
             {
@@ -80,11 +85,11 @@ namespace BookshelfRepos.User
 
                 List<SqliteParameter> parameters = new() { new SqliteParameter("@Id", Key), new SqliteParameter("@token", token) };
 
-                _ = SQLiteDB.RunSqliteCommand("update USER set token = @token where Id = @Id", parameters);
+                await SQLiteDB.RunSqliteCommand("update USER set token = @token where Id = @Id", parameters);
 
                 SQLiteDB.CloseIfOpen();
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception) { throw; }
         }
     }
 }
