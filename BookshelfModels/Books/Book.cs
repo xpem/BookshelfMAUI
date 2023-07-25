@@ -17,7 +17,7 @@
 
         public int? Volume { get; set; }
 
-        public int Pages { get; set; }
+        public int? Pages { get; set; }
 
         public int? Year { get; set; }
 

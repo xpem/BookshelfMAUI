@@ -1,24 +1,19 @@
-﻿using BookshelfModels.Books;
+﻿using ApiDAL;
+using BookshelfModels.Books;
 using BookshelfRepos.User;
 using BookshelfServices.Books.Api;
 using Plugin.Connectivity;
 
 namespace BookshelfServices.Books
 {
-    public class BooksServices : IBooksServices
+    public class BooksBLL : IBooksBLL
     {
-        readonly IBooksApiServices booksApiServices;
-
-        public BooksServices(IBooksApiServices _booksApiServices)
-        {
-            booksApiServices = _booksApiServices;
-        }
 
         public async Task<Totals> GetBookshelfTotals()
         {
             Totals BTotals = new();
 
-            BookshelfModels.User.User? User = await UserRepos.GetUser();
+            Models.User? User = await UserRepos.GetUser();
             if (User?.Id != null)
             {
                 List<(Status, int)> list = await BookshelfRepos.Books.BooksRepos.GetBookshelfTotals(User.Id);
@@ -41,16 +36,16 @@ namespace BookshelfServices.Books
 
         public async Task<Book?> GetBook(string bookKey)
         {
-            BookshelfModels.User.User? User = await UserRepos.GetUser();
+            Models.User? User = await UserRepos.GetUser();
             if (User?.Id != null)
                 return await BookshelfRepos.Books.BooksRepos.GetBook(User.Id, bookKey);
 
             return null;
         }
 
-        public async Task<string?> UpdateBook(Book book)
+        public async Task<bool> AltBook(Book book)
         {
-            BookshelfModels.User.User? User = await UserRepos.GetUser();
+            Models.User? User = await UserRepos.GetUser();
             if (User?.Id != null)
             {
                 book.UpdatedAt = DateTime.Now;
@@ -59,29 +54,28 @@ namespace BookshelfServices.Books
                 //
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    (bool res, string? message) = await booksApiServices.UpdateBook(book, User);
+                    var resp = await BooksApiBLL.AltBook(book);
 
-                    if (!res) { return message; }
+                    return resp.Success;
                 }
             }
-            return null;
+            return false;
         }
 
-        public async Task<string?> AddBook(Book book)
+        public async Task<bool> AddBook(Book book)
         {
             book.UpdatedAt = DateTime.Now;
 
-            BookshelfModels.User.User? User = await UserRepos.GetUser();
+            Models.User? User = await UserRepos.GetUser();
 
             if (User?.Id != null)
             {
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    (bool success, string? res) = await booksApiServices.AddBook(book, User);
+                    var response = await BooksApiBLL.AddBook(book);
 
-                    if (success) { book.Id = Convert.ToInt32(res); }
-                    else return res;
-
+                    if (response.Success) { book.Id = Convert.ToInt32(response.Content); }
+                    else return false;
                 }
                 else
                 {
@@ -89,16 +83,17 @@ namespace BookshelfServices.Books
                 }
 
                 await BookshelfRepos.Books.BooksRepos.AddBook(book, User.Id);
+                return true;
             }
 
-            return null;
+            return false;
         }
 
         public async Task<bool> VerifyBookbyTitle(string title)
         {
             bool ret = false;
 
-            BookshelfModels.User.User? User = await UserRepos.GetUser();
+            Models.User? User = await UserRepos.GetUser();
             if (User?.Id != null)
             {
                 Book? _book = await BookshelfRepos.Books.BooksRepos.GetBookByTitleOrGooglekey(User.Id, title, null);
@@ -115,7 +110,7 @@ namespace BookshelfServices.Books
 
         public async Task<Book?> GetBookbyTitleAndGoogleId(string title, string googleId)
         {
-            BookshelfModels.User.User? User = await UserRepos.GetUser();
+            Models.User? User = await UserRepos.GetUser();
             if (User?.Id != null)
             {
                 Book? _book = await BookshelfRepos.Books.BooksRepos.GetBookByTitleOrGooglekey(User.Id, title, googleId);
@@ -137,7 +132,7 @@ namespace BookshelfServices.Books
             List<UIBookItem> listBooksItens = new();
             int total = 0;
 
-            BookshelfModels.User.User? User = await BookshelfRepos.User.UserRepos.GetUser();
+            Models.User? User = await BookshelfRepos.User.UserRepos.GetUser();
             if (User?.Id != null)
             {
                 int pageSize = 10;
@@ -189,11 +184,11 @@ namespace BookshelfServices.Books
             return (listBooksItens, total);
         }
 
-        public async void InactivateBook(string bookKey)
+        public async Task InactivateBook(string bookKey)
         {
             Book? book = await GetBook(bookKey);
 
-            BookshelfModels.User.User? User = await UserRepos.GetUser();
+            Models.User? User = await UserRepos.GetUser();
             if (book?.Id is not null && User?.Id is not null)
             {
                 book.UpdatedAt = DateTime.Now;
@@ -203,16 +198,16 @@ namespace BookshelfServices.Books
 
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    await booksApiServices.UpdateBook(book, User);
+                   _ = await BooksApiBLL.AltBook(book);
                 }
             }
         }
 
-        public async void UpdateBookSituation(string Key, Status status, int score, string comment)
+        public async Task UpdateBookSituation(string Key, Status status, int score, string comment)
         {
             Book? book = await GetBook(Key);
 
-            BookshelfModels.User.User? User = await UserRepos.GetUser();
+            Models.User? User = await UserRepos.GetUser();
 
             if (book is not null && User?.Id is not null)
             {
@@ -225,7 +220,7 @@ namespace BookshelfServices.Books
 
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    _ = booksApiServices.UpdateBook(book, User);
+                    _ = BooksApiBLL.AltBook(book);
                 }
             }
         }

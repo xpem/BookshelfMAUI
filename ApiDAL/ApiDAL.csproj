@@ -7,16 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Books\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.4" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BookshelfModels\Models.csproj" />
+    <ProjectReference Include="..\BookshelfRepos\BookshelfRepos.csproj" />
   </ItemGroup>
 
 </Project>

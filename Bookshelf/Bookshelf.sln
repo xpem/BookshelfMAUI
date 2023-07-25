@@ -5,11 +5,13 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bookshelf", "Bookshelf.csproj", "{B732726A-BDB4-47DC-BCEC-16F3218821E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookshelfModels", "..\BookshelfModels\BookshelfModels.csproj", "{5DFD887F-65B6-4E16-83B9-B161E73A4FC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "..\BookshelfModels\Models.csproj", "{5DFD887F-65B6-4E16-83B9-B161E73A4FC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookshelfRepos", "..\BookshelfRepos\BookshelfRepos.csproj", "{413ABFCC-B92C-44CA-A4A8-E922B2472AFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookshelfRepos", "..\BookshelfRepos\BookshelfRepos.csproj", "{413ABFCC-B92C-44CA-A4A8-E922B2472AFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookshelfServices", "..\BookshelfServices\BookshelfServices.csproj", "{05C7BFE3-AAFC-45DD-9476-04C7C19D592E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "..\BookshelfServices\BLL.csproj", "{05C7BFE3-AAFC-45DD-9476-04C7C19D592E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiDAL", "..\ApiDAL\ApiDAL.csproj", "{06BA5B4D-6A34-4EC6-B78F-5DE4C76914CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{05C7BFE3-AAFC-45DD-9476-04C7C19D592E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05C7BFE3-AAFC-45DD-9476-04C7C19D592E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05C7BFE3-AAFC-45DD-9476-04C7C19D592E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06BA5B4D-6A34-4EC6-B78F-5DE4C76914CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06BA5B4D-6A34-4EC6-B78F-5DE4C76914CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06BA5B4D-6A34-4EC6-B78F-5DE4C76914CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06BA5B4D-6A34-4EC6-B78F-5DE4C76914CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,15 +2,15 @@
 
 namespace BookshelfServices.Books
 {
-    public interface IBooksServices
+    public interface IBooksBLL
     {
         Task<Totals> GetBookshelfTotals();
 
         Task<Book?> GetBook(string bookKey);
 
-        Task<string?> UpdateBook(Book book);
+        Task<bool> AltBook(Book book);
 
-        Task<string?> AddBook(Book book);
+        Task<bool> AddBook(Book book);
 
         Task<bool> VerifyBookbyTitle(string title);
 
@@ -18,8 +18,8 @@ namespace BookshelfServices.Books
 
         Task<(List<UIBookItem>, int total)> GetBookSituationByStatus(int? page, int Situation, string? textoBusca);
 
-        void InactivateBook(string bookKey);
+        Task InactivateBook(string bookKey);
 
-        void UpdateBookSituation(string Key, Status status, int rate, string comment);
+        Task UpdateBookSituation(string Key, Status status, int rate, string comment);
     }
 }

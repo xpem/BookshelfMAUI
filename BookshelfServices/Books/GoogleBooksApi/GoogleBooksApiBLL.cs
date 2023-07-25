@@ -1,14 +1,12 @@
 ﻿using BookshelfModels.Books.GoogleApi;
 using Newtonsoft.Json;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 using static BookshelfModels.Books.GoogleApi.GoogleApiBook;
 
 namespace BookshelfServices.Books.GoogleBooksApi
 {
-    public static class GoogleBooksApiService
+    public static class GoogleBooksApiBLL
     {
 
         /// <see cref="https://developers.google.com/books/docs/v1/reference#resource_volumes"/>
@@ -131,7 +129,7 @@ namespace BookshelfServices.Books.GoogleBooksApi
             try
             {
                 BookshelfModels.Books.GoogleApi.GoogleApiBook? array = JsonConvert.DeserializeObject<GoogleApiBook>(json);
-                List<Item> items = array.items;
+                List<Item>? items = array?.items;
                 totalItems = array.totalItems;
 
                 if (totalItems > 0)

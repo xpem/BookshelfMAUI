@@ -5,17 +5,8 @@ using Plugin.Connectivity;
 
 namespace BookshelfServices.Books.Sync
 {
-    public class BooksSyncServices : IBooksSyncServices
+    public class BooksSyncBLL : IBooksSyncBLL
     {
-        private readonly IUserServices userServices;
-        private readonly IBooksApiServices booksApiServices;
-
-        public BooksSyncServices(IUserServices _userServices, IBooksApiServices _booksApiServices)
-        {
-            userServices = _userServices;
-            booksApiServices = _booksApiServices;
-        }
-
         public static SyncStatus Synchronizing { get; set; }
 
         public enum SyncStatus
@@ -23,9 +14,9 @@ namespace BookshelfServices.Books.Sync
             Processing, Sleeping, ServerOff
         }
 
-        public static Timer? _Timer;
+       public Timer? Timer { get; set; }
         readonly int Interval = 60000;
-        public static bool ThreadIsRunning = false;
+       public bool ThreadIsRunning { get; set; } = false;
 
 
         public void StartThread()
@@ -46,7 +37,7 @@ namespace BookshelfServices.Books.Sync
                 ThreadIsRunning = true;
                 SyncLocalDb(null);
 
-                _Timer = new Timer(SyncLocalDb, null, Interval, Timeout.Infinite);
+                Timer = new Timer(SyncLocalDb, null, Interval, Timeout.Infinite);
             }
         }
 
@@ -54,7 +45,7 @@ namespace BookshelfServices.Books.Sync
         {
             try
             {
-                BookshelfModels.User.User? user = await userServices.GetUserLocal();
+                Models.User? user = await UserBLL.GetUserLocal();
 
                 if (user != null && Synchronizing != SyncStatus.Processing)
                 {
@@ -73,29 +64,34 @@ namespace BookshelfServices.Books.Sync
                             if (book.LocalTempId != null)
                             {
                                 //define the key has a null for register the book in firebase
-                                (bool success, string? res) = await booksApiServices.AddBook(book, user);
+                                var addBookResp = await BooksApiBLL.AddBook(book);
 
-                                if (success && !string.IsNullOrEmpty(res))
+                                if (addBookResp.Success && addBookResp.Content is not null)
                                 {
                                     string localTempId = book.LocalTempId;
                                     book.LocalTempId = null;
-                                    await BookshelfRepos.Books.BooksRepos.UpdateBookId(localTempId, res, user.Id);
+                                    await BookshelfRepos.Books.BooksRepos.UpdateBookId(localTempId, Convert.ToString(addBookResp.Content), user.Id);
                                 }
-                                else throw new Exception($"Não foi possivel sincronizar o livro {book.Id}, res: {res}");
+                                else throw new Exception($"Não foi possivel sincronizar o livro {book.Id}, res: {addBookResp.Error}");
                             }
                             else
                                 await BookshelfRepos.Books.BooksRepos.UpdateBook(book, user.Id);
                         }
 
-                        List<Book>? BooksByLastUpdate = await booksApiServices.GetBooksByLastUpdate(user);
+                        var respGetBooksByLastUpdate = await BooksApiBLL.GetBooksByLastUpdate(user.LastUpdate);
 
-                        if (BooksByLastUpdate is not null)
+                        if (respGetBooksByLastUpdate.Success && respGetBooksByLastUpdate.Content is not null)
                         {
-                            foreach (Book book in BooksByLastUpdate)
-                            {
-                                await BookshelfRepos.Books.BooksRepos.AddOrUpdateBook(book, user.Id);
+                            List<Book>? BooksByLastUpdate = respGetBooksByLastUpdate.Content as List<Book>;
 
-                                if (LastUpdate < book.UpdatedAt) LastUpdate = book.UpdatedAt;
+                            if (BooksByLastUpdate is not null)
+                            {
+                                foreach (Book book in BooksByLastUpdate)
+                                {
+                                    await BookshelfRepos.Books.BooksRepos.AddOrUpdateBook(book, user.Id);
+
+                                    if (LastUpdate < book.UpdatedAt) LastUpdate = book.UpdatedAt;
+                                }
                             }
                         }
 
@@ -114,7 +110,7 @@ namespace BookshelfServices.Books.Sync
             catch { throw; }
             finally
             {
-                _Timer?.Change(Interval, Timeout.Infinite);
+                Timer?.Change(Interval, Timeout.Infinite);
             }
         }
     }

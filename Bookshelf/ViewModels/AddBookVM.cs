@@ -99,13 +99,13 @@ namespace Bookshelf.ViewModels
         /// </summary>
         public ICommand InsertBookCommand => new Command(async (e) => { await InsertBook(); });
 
-        readonly IBooksServices booksServices;
+        readonly IBooksBLL booksServices;
 
         #endregion
 
         #endregion
 
-        public AddBookVM(IBooksServices _booksServices)
+        public AddBookVM(IBooksBLL _booksServices)
         {
             booksServices = _booksServices;
         }
@@ -131,7 +131,7 @@ namespace Bookshelf.ViewModels
 
                 if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(GoogleKey))
                 {
-                    Book _book = await booksServices.GetBookbyTitleAndGoogleId(Title.ToLower(), GoogleKey);
+                    BookshelfModels.Books.Book _book = await booksServices.GetBookbyTitleAndGoogleId(Title.ToLower(), GoogleKey);
 
                     if (_book is not null)
                     {
@@ -157,7 +157,7 @@ namespace Bookshelf.ViewModels
 
         protected async Task GetGoogleBook()
         {
-            UIGoogleBook _googleBook = await BookshelfServices.Books.GoogleBooksApi.GoogleBooksApiService.GetBook(GoogleKey);
+            UIGoogleBook _googleBook = await BookshelfServices.Books.GoogleBooksApi.GoogleBooksApiBLL.GetBook(GoogleKey);
 
             if (_googleBook != null)
             {
@@ -179,7 +179,7 @@ namespace Bookshelf.ViewModels
 
         }
 
-        protected void BuildBook(Book book)
+        protected void BuildBook(BookshelfModels.Books.Book book)
         {
             Title = book.Title;
             SubTitle = book.SubTitle;
@@ -236,10 +236,10 @@ namespace Bookshelf.ViewModels
                 {
                     BtnInsertIsEnabled = false;
 
-                    int? _year = (!string.IsNullOrEmpty(Year) ? Convert.ToInt32(Year) : null);
+                    int? _year = !string.IsNullOrEmpty(Year) ? Convert.ToInt32(Year) : null;
                     int? _volume = (!string.IsNullOrEmpty(Volume) ? Convert.ToInt32(Volume) : null);
 
-                    Book book = new()
+                    BookshelfModels.Books.Book book = new()
                     {
                         Title = Title,
                         SubTitle = SubTitle,
@@ -283,19 +283,19 @@ namespace Bookshelf.ViewModels
                     {
                         book.Id = Convert.ToInt32(BookId);
 
-                        string res = await booksServices.UpdateBook(book);
+                        bool res = await booksServices.AltBook(book);
 
-                        if (res != null)
-                            mensagem = res;
+                        if (!res)
+                            mensagem = "Ocorreu um erro ao tentar atualizar o livro";
                         else
                             mensagem += " atualizados";
                     }
                     else
                     {
-                        string res = await booksServices.AddBook(book);
+                        bool res = await booksServices.AddBook(book);
 
-                        if (res != null)
-                            mensagem = res;
+                        if (!res)
+                            mensagem = "Ocorreu um erro ao tentar adicionar o livro";
                         else
                             mensagem += " cadastrados";
                     }
