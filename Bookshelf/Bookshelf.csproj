@@ -88,7 +88,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BookshelfServices\BLL.csproj" />
+	  <ProjectReference Include="..\BLL\BLL.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

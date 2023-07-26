@@ -52,17 +52,17 @@ namespace BookshelfModels.Books.GoogleApi
             //public string language { get; set; }
             //public string previewLink { get; set; }
 
-            public string infoLink { get; set; }
+            public string? infoLink { get; set; }
 
             //public string canonicalVolumeLink { get; set; }
 
-            public string publisher { get; set; }
+            public string? publisher { get; set; }
 
-            public string publishedDate { get; set; }
+            public string? publishedDate { get; set; }
 
             //public List<string> categories { get; set; }
 
-            public ImageLinks imageLinks { get; set; }
+            public ImageLinks? imageLinks { get; set; }
 
             //public int? averageRating { get; set; }
             //public int? ratingsCount { get; set; }
