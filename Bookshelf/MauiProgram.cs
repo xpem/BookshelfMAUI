@@ -68,11 +68,8 @@ public static class MauiProgram
         builder.Services.AddTransient<GoogleBooksResults>();
         builder.Services.AddTransient<GoogleBooksResultsVM>();
 
-        builder.Services.AddScoped<IUserServices, UserServices>();
-
-        builder.Services.AddScoped<IBooksApiServices, BooksApiServices>();
-        builder.Services.AddScoped<IBooksSyncServices, BooksSyncServices>();
-        builder.Services.AddScoped<IBooksServices, BooksServices>();
+        builder.Services.AddScoped<IBooksSyncBLL, BooksSyncBLL>();
+        builder.Services.AddScoped<IBooksBLL, BooksBLL>();
 
         #endregion
 

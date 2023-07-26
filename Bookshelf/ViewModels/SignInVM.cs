@@ -22,12 +22,10 @@ namespace Bookshelf.ViewModels
 
         public bool BtnSignEnabled { get => btnSignEnabled; set { if (btnSignEnabled != value) { btnSignEnabled = value; OnPropertyChanged(); } } }
 
-        readonly IUserServices userServices;
-        readonly IBooksSyncServices booksSyncServices;
+        readonly IBooksSyncBLL booksSyncServices;
 
-        public SignInVM(IUserServices _userServices, IBooksSyncServices _booksSyncServices)
+        public SignInVM(IBooksSyncBLL _booksSyncServices)
         {
-            userServices = _userServices;
             booksSyncServices = _booksSyncServices;
             SignInText = "Acessar";
         }
@@ -45,11 +43,9 @@ namespace Bookshelf.ViewModels
                          {
                              SignInText = "Acessando...";
                              BtnSignEnabled = false;
-                             bool resp = false;
+                            var resp = await UserBLL.GetUser(Email, Password);
 
-                             resp = await userServices.SignIn(Email, Password);
-
-                             if (resp)
+                             if (resp.Success)
                              {
                                  booksSyncServices.StartThread();
 

@@ -16,7 +16,7 @@ public partial class App : Application
 
     //<Nome do objeto><ação da interface>
     //list - listagem
-    //edit - inclusão ou update
+    //upt - inclusão ou update
     //del - exclusão
     //display - visualização
     //insert - somente inclusão
@@ -24,13 +24,13 @@ public partial class App : Application
 
     //criar um model result para os retornos de respostas
 
-    public App(IUserServices userServices, IBooksSyncServices booksSyncServices)
+    public App(IBooksSyncBLL booksSyncServices)
     {
-        BookshelfServices.BuildDbServices.BuildSQLiteDb();
+        BookshelfServices.BuildDbBLL.BuildSQLiteDb();
 
         InitializeComponent();
 
-        if (userServices.GetUserLocal().Result != null)
+        if (UserBLL.GetUserLocal().Result != null)
         {
             booksSyncServices.StartThread();
 

@@ -88,7 +88,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BookshelfServices\BookshelfServices.csproj" />
+	  <ProjectReference Include="..\BLL\BLL.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -101,10 +101,10 @@
 	  <Compile Update="Views\SignIn.xaml.cs">
 	    <DependentUpon>SignIn.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\BookDetail.xaml.cs">
+	  <Compile Update="Views\Book\BookDetail.xaml.cs">
 	    <DependentUpon>BookDetail.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\AddBook.xaml.cs">
+	  <Compile Update="Views\Book\AddBook.xaml.cs">
 	    <DependentUpon>AddBook.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
@@ -116,19 +116,22 @@
 	  <MauiXaml Update="Components\BorderedEntry.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\Book\BookHistoric.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\GoogleSearch\GoogleBooksResults.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SignIn.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\BookDetail.xaml">
+	  <MauiXaml Update="Views\Book\BookDetail.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\BookList.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\AddBook.xaml">
+	  <MauiXaml Update="Views\Book\AddBook.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SignUp.xaml">

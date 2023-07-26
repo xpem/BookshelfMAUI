@@ -1,4 +1,5 @@
 ﻿using Bookshelf.Views;
+using Bookshelf.Views.Book;
 using Bookshelf.Views.GoogleSearch;
 
 namespace Bookshelf;
@@ -22,6 +23,8 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(GoogleBooksResults), typeof(GoogleBooksResults));
 
         Routing.RegisterRoute(nameof(Timeline), typeof(Timeline));
+
+        Routing.RegisterRoute(nameof(BookHistoric), typeof(BookHistoric));
 
         //Routing.RegisterRoute(nameof(Main), typeof(Main));
     }
