@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<VerticalStackLayout xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                     x:Class="Bookshelf.Components.BorderedEntry"
-                     x:Name="this"     
-                     Margin="0,5,0,0" >
-    <Label Text="{Binding Source={x:Reference this},Path= LabelText}" Style="{StaticResource LblHEntry}" />
+<VerticalStackLayout
+    x:Class="Bookshelf.Components.BorderedEntry"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="this"
+    Margin="0,5,0,0">
+    <Label Style="{StaticResource LblHEntry}" Text="{Binding Source={x:Reference this}, Path=LabelText}" />
     <Border Style="{StaticResource EntryBorders}">
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="5" />
         </Border.StrokeShape>
         <Entry
-            Style="{StaticResource Entry}" 
-            Text="{Binding Source={x:Reference this},Path= Text}"
-            IsPassword="{Binding Source={x:Reference this},Path= IsPassword}"
-            IsEnabled="{Binding Source={x:Reference this},Path= Enabled}"
-            />
-        <!--erro no net 7 impossibilita o uso dessa função, necessário esperar fix ser publicado no net 8-->
-        <!--TextTransform="{Binding Source={x:Reference this},Path= TextTransformValue}"-->
+            IsEnabled="{Binding Source={x:Reference this}, Path=Enabled}"
+            IsPassword="{Binding Source={x:Reference this}, Path=IsPassword}"
+            Style="{StaticResource Entry}"
+            Text="{Binding Source={x:Reference this}, Path=Text}" />
+        <!--  erro no net 7 impossibilita o uso dessa função, necessário esperar fix ser publicado no net 8  -->
+        <!--  TextTransform="{Binding Source={x:Reference this},Path= TextTransformValue}"  -->
     </Border>
 </VerticalStackLayout>
