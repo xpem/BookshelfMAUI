@@ -96,7 +96,7 @@ namespace ApiDAL
                         return resp;
                 }
                 else
-                    userToken = await UserRepos.GetUserToken();
+                    userToken = await UserLocalDAL.GetUserToken();
 
                 resp = await Request(requestsType, url, userToken, jsonContent);
 
@@ -108,14 +108,14 @@ namespace ApiDAL
 
         private static async Task<(bool success, string? newToken)> RefreshToken()
         {
-            var user = await UserRepos.GetUser();
+            var user = await UserLocalDAL.GetUser();
             if (user is not null && user.Email is not null && user.Password is not null)
             {
                 (bool success, string? newToken) = await UserApiDAL.GetUserToken(user.Email, PasswordHandler.Decrypt(user.Password));
 
                 if (success && newToken is not null)
                 {
-                    await UserRepos.UpdateToken(user.Id, newToken);
+                    await UserLocalDAL.UpdateToken(user.Id, newToken);
                     return (true, newToken);
                 }
             }

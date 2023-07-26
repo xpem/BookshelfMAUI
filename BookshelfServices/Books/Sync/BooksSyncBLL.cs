@@ -55,7 +55,7 @@ namespace BookshelfServices.Books.Sync
                     {
                         DateTime LastUpdate = user.LastUpdate;
 
-                        List<Book> booksList = await BookshelfRepos.Books.BooksRepos.GetBooksByLastUpdate(user.Id, user.LastUpdate);
+                        List<Book> booksList = await BookshelfRepos.Books.BooksLocalDAL.GetBooksByLastUpdate(user.Id, user.LastUpdate);
 
                         //update api database
                         foreach (Book book in booksList)
@@ -70,12 +70,12 @@ namespace BookshelfServices.Books.Sync
                                 {
                                     string localTempId = book.LocalTempId;
                                     book.LocalTempId = null;
-                                    await BookshelfRepos.Books.BooksRepos.UpdateBookId(localTempId, Convert.ToString(addBookResp.Content), user.Id);
+                                    await BookshelfRepos.Books.BooksLocalDAL.UpdateBookId(localTempId, Convert.ToString(addBookResp.Content), user.Id);
                                 }
                                 else throw new Exception($"Não foi possivel sincronizar o livro {book.Id}, res: {addBookResp.Error}");
                             }
                             else
-                                await BookshelfRepos.Books.BooksRepos.UpdateBook(book, user.Id);
+                                await BookshelfRepos.Books.BooksLocalDAL.UpdateBook(book, user.Id);
                         }
 
                         var respGetBooksByLastUpdate = await BooksApiBLL.GetBooksByLastUpdate(user.LastUpdate);
@@ -88,14 +88,14 @@ namespace BookshelfServices.Books.Sync
                             {
                                 foreach (Book book in BooksByLastUpdate)
                                 {
-                                    await BookshelfRepos.Books.BooksRepos.AddOrUpdateBook(book, user.Id);
+                                    await BookshelfRepos.Books.BooksLocalDAL.AddOrUpdateBook(book, user.Id);
 
                                     if (LastUpdate < book.UpdatedAt) LastUpdate = book.UpdatedAt;
                                 }
                             }
                         }
 
-                        await BookshelfRepos.User.UserRepos.UpdateUserLastUpdateLocal(user.Id, LastUpdate);
+                        await BookshelfRepos.User.UserLocalDAL.UpdateUserLastUpdateLocal(user.Id, LastUpdate);
                     }
 
                     Synchronizing = SyncStatus.Sleeping;

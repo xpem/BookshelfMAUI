@@ -2,13 +2,11 @@
 
 namespace BookshelfRepos.User
 {
-    public static class UserRepos
+    public static class UserLocalDAL
     {
-
         public static void InsertUser(Models.User user)
         {
             SqliteFunctions.OpenIfClosed();
-
 
             SqliteFunctions.RunSqliteCommand("delete from USER").Wait();
 

@@ -1,4 +1,5 @@
-﻿using BookshelfModels.Books.GoogleApi;
+﻿using ApiDAL;
+using BookshelfModels.Books.GoogleApi;
 using Newtonsoft.Json;
 using System.Collections;
 using System.Text;
@@ -12,32 +13,12 @@ namespace BookshelfServices.Books.GoogleBooksApi
         /// <see cref="https://developers.google.com/books/docs/v1/reference#resource_volumes"/>
         public async static Task<(List<UIGoogleBook>, int)> GetBooks(string search, int startIndex)
         {
-            StringBuilder url = new();
-
-            url.Append($"https://www.googleapis.com/books/v1/volumes?&startIndex={startIndex}&q={search}&langRestrict=pt&printType=books");
-
-            //for a custom search
-            //switch (key)
-            //{
-            //    case 0:
-            //        url.Append("+intitle:" + buscakey);
-            //        break;
-            //    case 1:
-            //        url.Append("+inauthor:" + buscakey);
-            //        break;
-            //    case 2:
-            //        url.Append("+subject:" + buscakey);                  
-            //        break;
-            //    default:
-            //        break;
-            //}
-            //url.Append("&langRestrict=pt");
-
             try
             {
-                HttpResponseMessage response = await new HttpClient().GetAsync(url.ToString());
-
-                return BuildResult(await response.Content.ReadAsStringAsync());
+                var apiResponse = await GoogleBooksApiDAL.GetBooks(search, startIndex);
+                if (apiResponse.Success && apiResponse.Content is not null)
+                    return BuildListBooksResult(apiResponse.Content);
+                else throw new Exception($"Erro não mapeado na resposta da api do google, content: {apiResponse.Content}");
             }
             catch (Exception ex)
             {
@@ -49,11 +30,16 @@ namespace BookshelfServices.Books.GoogleBooksApi
         {
             try
             {
-                HttpResponseMessage response = await new HttpClient().GetAsync($"https://www.googleapis.com/books/v1/volumes/{googleId}");
-                Item? array = JsonConvert.DeserializeObject<Item>(await response.Content.ReadAsStringAsync());
+                var apiResponse = await GoogleBooksApiDAL.GetBook(googleId);
 
-                var item = BuildUIGoogleBook(array);
-                return item;
+                if (apiResponse.Success && apiResponse.Content is not null)
+                {
+                    Item? array = JsonConvert.DeserializeObject<Item>(apiResponse.Content);
+
+                    if (array != null)
+                        return BuildUIGoogleBook(array);
+                }
+                throw new Exception("Erro não mapeado na resposta da api do google");
             }
             catch (Exception ex)
             {
@@ -82,21 +68,16 @@ namespace BookshelfServices.Books.GoogleBooksApi
                 if (volumeInfo.imageLinks?.smallThumbnail is not null)
                     uIGoogleBook.Thumbnail = volumeInfo.imageLinks.smallThumbnail;
 
-
-
                 if (volumeInfo.publisher is not null)
                     uIGoogleBook.Publisher = volumeInfo.publisher;
 
                 if (volumeInfo.publishedDate is not null)
                 {
                     if (DateTime.TryParse((volumeInfo.publishedDate).ToString(), out DateTime publishedDate))
-                    {
                         uIGoogleBook.PublishedDate = string.Format("{0:yyyy}", publishedDate);
-                    }
+
                     else if (string.IsNullOrEmpty(volumeInfo.publishedDate))
-                    {
                         uIGoogleBook.PublishedDate = volumeInfo.publishedDate;
-                    }
                 }
 
                 if (volumeInfo.authors is not null)
@@ -105,13 +86,9 @@ namespace BookshelfServices.Books.GoogleBooksApi
                     foreach (string itnAuthors in volumeInfo.authors)
                     {
                         if (string.IsNullOrEmpty(strbdrarrays.ToString()))
-                        {
                             strbdrarrays = itnAuthors;
-                        }
                         else
-                        {
                             strbdrarrays += $"; {itnAuthors}";
-                        }
                     }
 
                     uIGoogleBook.Authors = strbdrarrays;
@@ -121,25 +98,26 @@ namespace BookshelfServices.Books.GoogleBooksApi
             return uIGoogleBook;
         }
 
-        private static (List<UIGoogleBook>, int) BuildResult(string json)
+        private static (List<UIGoogleBook>, int) BuildListBooksResult(string json)
         {
             List<UIGoogleBook> list = new();
             int totalItems;
 
             try
             {
-                BookshelfModels.Books.GoogleApi.GoogleApiBook? array = JsonConvert.DeserializeObject<GoogleApiBook>(json);
-                List<Item>? items = array?.items;
-                totalItems = array.totalItems;
+                GoogleApiBook? array = JsonConvert.DeserializeObject<GoogleApiBook>(json)
+                    ?? throw new Exception("Erro não mapeado na resposta da api do google");
 
-                if (totalItems > 0)
+                List<Item>? items = array.items;
+                                
+                totalItems = array.totalItems;
+                               
+
+                if (totalItems > 0 && items != null)
                 {
-                    if (items != null)
+                    for (int i = 0; i < ((ICollection)array.items).Count; i++)
                     {
-                        for (int i = 0; i < ((ICollection)array.items).Count; i++)
-                        {
-                            list.Add(BuildUIGoogleBook(items[i]));
-                        }
+                        list.Add(BuildUIGoogleBook(items[i]));
                     }
                 }
             }

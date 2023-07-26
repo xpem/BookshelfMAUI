@@ -69,7 +69,7 @@ namespace BookshelfServices.User
         /// get user in the static var
         /// </summary>
         /// <returns></returns>
-        public static async Task<Models.User?> GetUserLocal() => await UserRepos.GetUser();
+        public static async Task<Models.User?> GetUserLocal() => await UserLocalDAL.GetUser();
 
         //public async Task<Models.User?> RefreshUserToken(Models.User user)
         //{
@@ -128,7 +128,7 @@ namespace BookshelfServices.User
                                 Password = PasswordHandler.Encrypt(password)
                             };
 
-                            UserRepos.InsertUser(user);
+                            UserLocalDAL.InsertUser(user);
 
                             return new BLLResponse() { Success = true };
                         }
@@ -144,7 +144,7 @@ namespace BookshelfServices.User
             catch (Exception ex) { throw ex; }
         }
 
-        public static Task CleanUserDatabase() => UserRepos.CleanUserDatabase();
+        public static Task CleanUserDatabase() => UserLocalDAL.CleanUserDatabase();
 
         //public async Task<Models.User> SignUp(string name, string email, string password) => await UserApiService.SignUp(name, email, password);
     }

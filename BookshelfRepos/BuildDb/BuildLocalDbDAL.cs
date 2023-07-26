@@ -3,7 +3,7 @@ using Microsoft.Data.Sqlite;
 
 namespace BookshelfRepos.BuildDb
 {
-    public static class BuildDbRepos
+    public static class BuildLocalDbDAL
     {
         /// <summary>
         /// create or update the structure of SQLite tables by actual version defined

@@ -14,7 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ApiDAL\ApiDAL.csproj" />
     <ProjectReference Include="..\BookshelfModels\Models.csproj" />
-    <ProjectReference Include="..\BookshelfRepos\BookshelfRepos.csproj" />
+    <ProjectReference Include="..\BookshelfRepos\LocalDbDAL.csproj" />
   </ItemGroup>
 
 </Project>

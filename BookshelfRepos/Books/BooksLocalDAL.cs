@@ -1,12 +1,10 @@
 ﻿using BookshelfModels.Books;
 using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using SQLitePCL;
 using System.Text;
 
 namespace BookshelfRepos.Books
 {
-    public static class BooksRepos
+    public static class BooksLocalDAL
     {
         public static async Task<List<Book>> GetBooksByLastUpdate(int? userId, DateTime lastUpdate)
         {

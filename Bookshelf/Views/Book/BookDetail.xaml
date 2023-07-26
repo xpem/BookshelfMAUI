@@ -110,7 +110,10 @@
                         </VerticalStackLayout>
                     </toolkit:Expander.Content>
                 </toolkit:Expander>
-                <StackLayout Padding="0" VerticalOptions="Fill">
+                <StackLayout
+                    Margin="10"
+                    Padding="0"
+                    VerticalOptions="Fill">
                     <Image
                         Margin="0,0,0,5"
                         Aspect="AspectFit"
@@ -152,7 +155,7 @@
 
                     <Grid HorizontalOptions="FillAndExpand">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="20" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
