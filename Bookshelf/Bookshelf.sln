@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bookshelf", "Bookshelf.csproj", "{B732726A-BDB4-47DC-BCEC-16F3218821E0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "..\BookshelfModels\Models.csproj", "{5DFD887F-65B6-4E16-83B9-B161E73A4FC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "..\Models\Models.csproj", "{5DFD887F-65B6-4E16-83B9-B161E73A4FC6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalDbDAL", "..\BookshelfRepos\LocalDbDAL.csproj", "{413ABFCC-B92C-44CA-A4A8-E922B2472AFE}"
 EndProject
