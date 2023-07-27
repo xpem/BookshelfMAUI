@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookshelfModels.Books.GoogleApi
+namespace Models.Books.GoogleApi
 {
     public class UIGoogleBook
     {

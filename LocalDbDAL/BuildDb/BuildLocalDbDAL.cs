@@ -1,7 +1,7 @@
-﻿using BookshelfModels;
+﻿using Models;
 using Microsoft.Data.Sqlite;
 
-namespace BookshelfRepos.BuildDb
+namespace LocalDbDAL.BuildDb
 {
     public static class BuildLocalDbDAL
     {

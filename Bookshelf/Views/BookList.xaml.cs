@@ -1,5 +1,5 @@
 using Bookshelf.ViewModels;
-using BookshelfModels.Books;
+using Models.Books;
 
 namespace Bookshelf.Views;
 

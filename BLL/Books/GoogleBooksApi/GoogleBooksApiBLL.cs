@@ -1,11 +1,11 @@
 ﻿using ApiDAL;
-using BookshelfModels.Books.GoogleApi;
+using Models.Books.GoogleApi;
 using Newtonsoft.Json;
 using System.Collections;
 using System.Text;
-using static BookshelfModels.Books.GoogleApi.GoogleApiBook;
+using static Models.Books.GoogleApi.GoogleApiBook;
 
-namespace BookshelfServices.Books.GoogleBooksApi
+namespace BLL.Books.GoogleBooksApi
 {
     public static class GoogleBooksApiBLL
     {

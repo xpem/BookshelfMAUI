@@ -1,7 +1,7 @@
 ﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
-using BookshelfModels.Books;
-using BookshelfModels.Books.GoogleApi;
+using Models.Books;
+using Models.Books.GoogleApi;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 

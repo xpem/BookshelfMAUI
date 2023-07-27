@@ -1,8 +1,8 @@
 ﻿using Bookshelf.Resources.Fonts.Styles;
 using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
-using BookshelfModels.Books;
-using BookshelfModels.Books.GoogleApi;
+using Models.Books;
+using Models.Books.GoogleApi;
 using BLL.Books;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -131,7 +131,7 @@ namespace Bookshelf.ViewModels
 
                 if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(GoogleKey))
                 {
-                    BookshelfModels.Books.Book _book = await booksServices.GetBookbyTitleAndGoogleId(Title.ToLower(), GoogleKey);
+                    Models.Books.Book _book = await booksServices.GetBookbyTitleAndGoogleId(Title.ToLower(), GoogleKey);
 
                     if (_book is not null)
                     {
@@ -179,7 +179,7 @@ namespace Bookshelf.ViewModels
 
         }
 
-        protected void BuildBook(BookshelfModels.Books.Book book)
+        protected void BuildBook(Models.Books.Book book)
         {
             Title = book.Title;
             SubTitle = book.SubTitle;
@@ -239,7 +239,7 @@ namespace Bookshelf.ViewModels
                     int? _year = !string.IsNullOrEmpty(Year) ? Convert.ToInt32(Year) : null;
                     int? _volume = (!string.IsNullOrEmpty(Volume) ? Convert.ToInt32(Volume) : null);
 
-                    BookshelfModels.Books.Book book = new()
+                    Models.Books.Book book = new()
                     {
                         Title = Title,
                         SubTitle = SubTitle,

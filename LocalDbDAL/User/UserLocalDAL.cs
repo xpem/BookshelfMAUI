@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 
-namespace BookshelfRepos.User
+namespace LocalDbDAL.User
 {
     public static class UserLocalDAL
     {

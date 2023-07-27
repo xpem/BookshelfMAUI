@@ -1,4 +1,4 @@
-﻿namespace BLL
+﻿namespace ApiDAL
 {
     public static class ApiKeys
     {

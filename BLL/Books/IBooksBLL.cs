@@ -1,6 +1,6 @@
-﻿using BookshelfModels.Books;
+﻿using Models.Books;
 
-namespace BookshelfServices.Books
+namespace BLL.Books
 {
     public interface IBooksBLL
     {

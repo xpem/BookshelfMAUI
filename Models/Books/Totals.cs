@@ -1,4 +1,4 @@
-﻿namespace BookshelfModels.Books
+﻿namespace Models.Books
 {
     public class Totals
     {

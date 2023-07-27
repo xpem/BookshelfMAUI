@@ -1,4 +1,4 @@
-﻿namespace BookshelfModels
+﻿namespace Models
 {
     /// <summary>
     /// Table Versions
