@@ -282,23 +282,7 @@
                                         Color="{StaticResource Black}" />
                                 </Button.ImageSource>
                             </Button>
-                        </Grid>
-                        <Button
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Command="{Binding CallTimelineCommand}"
-                            ContentLayout="Left, 10"
-                            FontSize="12"
-                            Style="{StaticResource BtnExit}"
-                            Text="Sair">
-                            <Button.ImageSource>
-                                <FontImageSource
-                                    FontFamily="FontAwesome"
-                                    Glyph="{x:Static Icons:IconFont.Clock}"
-                                    Size="10"
-                                    Color="#000" />
-                            </Button.ImageSource>
-                        </Button>
+                        </Grid>                       
                         <Grid
                             Margin="0,5,0,0"
                             HorizontalOptions="FillAndExpand"

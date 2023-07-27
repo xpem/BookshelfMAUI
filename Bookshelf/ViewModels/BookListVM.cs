@@ -12,7 +12,7 @@ namespace Bookshelf.ViewModels
 
         #region Vars
 
-        readonly IBooksServices booksServices;
+        readonly IBooksBLL booksServices;
 
         public ObservableCollection<UIBookItem> BooksList { get; } = new();
 
@@ -74,7 +74,7 @@ namespace Bookshelf.ViewModels
 
         #endregion
 
-        public BookListVM(IBooksServices _booksServices)
+        public BookListVM(IBooksBLL _booksServices)
         {
             booksServices = _booksServices;
         }
