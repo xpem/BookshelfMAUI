@@ -2,10 +2,10 @@
 using Bookshelf.ViewModels.GoogleSearch;
 using Bookshelf.Views;
 using Bookshelf.Views.GoogleSearch;
-using BookshelfServices.Books;
-using BookshelfServices.Books.Api;
-using BookshelfServices.Books.Sync;
-using BookshelfServices.User;
+using BLL.Books;
+using BLL.Books.Api;
+using BLL.Books.Sync;
+using BLL.User;
 using CommunityToolkit.Maui;
 
 namespace Bookshelf;
