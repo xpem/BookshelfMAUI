@@ -2,8 +2,8 @@
 using Bookshelf.Views;
 using Bookshelf.Views.Book;
 using Bookshelf.Views.GoogleSearch;
-using BookshelfServices.Books;
-using BookshelfServices.Books.Sync;
+using BLL.Books;
+using BLL.Books.Sync;
 using Microsoft.Maui.Controls;
 using System.Windows.Input;
 
@@ -59,7 +59,7 @@ namespace Bookshelf.ViewModels
 
             if (resp)
             {
-                await BookshelfServices.User.UserBLL.CleanUserDatabase();
+                await BLL.User.UserBLL.CleanUserDatabase();
                 _Timer.Dispose();
                 //finalize sync thread process
                 booksSyncBLL.ThreadIsRunning = false;
@@ -109,7 +109,7 @@ namespace Bookshelf.ViewModels
                 {
                     IsConnected = Colors.Green;
 
-                    switch (BookshelfServices.Books.Sync.BooksSyncBLL.Synchronizing)
+                    switch (BLL.Books.Sync.BooksSyncBLL.Synchronizing)
                     {
                         case BooksSyncBLL.SyncStatus.Processing: IsSync = Colors.Green; break;
                         case BooksSyncBLL.SyncStatus.Sleeping:

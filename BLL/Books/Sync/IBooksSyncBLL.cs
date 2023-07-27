@@ -1,5 +1,4 @@
-﻿namespace BookshelfServices.Books.Sync
-{
+﻿namespace BLL.Books.Sync
     public interface IBooksSyncBLL
     {
         void StartThread();

@@ -1,7 +1,7 @@
 ﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using BookshelfModels.Books;
-using BookshelfServices.Books;
+using BLL.Books;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 

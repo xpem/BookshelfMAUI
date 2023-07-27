@@ -1,8 +1,8 @@
 ﻿using Bookshelf.Utils;
 using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
-using BookshelfServices.Books.Sync;
-using BookshelfServices.User;
+using BLL.Books.Sync;
+using BLL.User;
 using Models;
 using Models.Responses;
 using Plugin.Connectivity;

@@ -1,6 +1,6 @@
 ﻿using Bookshelf.Views;
-using BookshelfServices.Books.Sync;
-using BookshelfServices.User;
+using BLL.Books.Sync;
+using BLL.User;
 
 namespace Bookshelf;
 
@@ -26,7 +26,7 @@ public partial class App : Application
 
     public App(IBooksSyncBLL booksSyncServices)
     {
-        BookshelfServices.BuildDbBLL.BuildSQLiteDb();
+        BLL.BuildDbBLL.BuildSQLiteDb();
 
         InitializeComponent();
 

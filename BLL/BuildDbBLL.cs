@@ -1,6 +1,6 @@
 ﻿using BookshelfRepos.BuildDb;
 
-namespace BookshelfServices
+namespace BLL
 {
     public static class BuildDbBLL
     {

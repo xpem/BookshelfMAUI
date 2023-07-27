@@ -104,7 +104,7 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
                 if (startIndex == 0 || startIndex < TotalItems)
                 {
-                    (List<UIGoogleBook> googleBooksListResult, TotalItems) = await BookshelfServices.Books.GoogleBooksApi.GoogleBooksApiBLL.GetBooks(_searchText, startIndex);
+                    (List<UIGoogleBook> googleBooksListResult, TotalItems) = await BLL.Books.GoogleBooksApi.GoogleBooksApiBLL.GetBooks(_searchText, startIndex);
 
                     foreach (var googleBookItem in googleBooksListResult)
                     {

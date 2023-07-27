@@ -5,7 +5,7 @@ using Models;
 using Models.Responses;
 using System.Text.Json.Nodes;
 
-namespace BookshelfServices.User
+namespace BLL.User
 {
     public static class UserBLL //: IUserServices
     {

@@ -3,7 +3,7 @@ using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using BookshelfModels.Books;
 using BookshelfModels.Books.GoogleApi;
-using BookshelfServices.Books;
+using BLL.Books;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -157,7 +157,7 @@ namespace Bookshelf.ViewModels
 
         protected async Task GetGoogleBook()
         {
-            UIGoogleBook _googleBook = await BookshelfServices.Books.GoogleBooksApi.GoogleBooksApiBLL.GetBook(GoogleKey);
+            UIGoogleBook _googleBook = await BLL.Books.GoogleBooksApi.GoogleBooksApiBLL.GetBook(GoogleKey);
 
             if (_googleBook != null)
             {

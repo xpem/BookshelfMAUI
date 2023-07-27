@@ -4,7 +4,7 @@ using BookshelfModels.Books;
 using Models.Responses;
 using System.Text.Json.Nodes;
 
-namespace BookshelfServices.Books.Api
+namespace BLL.Books.Api
 {
     public static class BooksApiBLL
     {
