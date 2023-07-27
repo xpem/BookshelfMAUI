@@ -1,6 +1,7 @@
 ﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
-using BookshelfServices.Books;
+using Bookshelf.Views.Book;
+using BLL.Books;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -8,7 +9,7 @@ namespace Bookshelf.ViewModels
 {
     public class BookDetailVM : RatingBar, IQueryAttributable
     {
-        readonly IBooksServices booksServices;
+        readonly IBooksBLL booksServices;
 
         #region bind variables.
 
@@ -35,7 +36,6 @@ namespace Bookshelf.ViewModels
 
         #endregion
 
-        #region
 
         private string BookKey { get; set; }
 
@@ -46,8 +46,6 @@ namespace Bookshelf.ViewModels
         private string CommentOri { get; set; }
 
         private bool UpdatesEnableds { get; set; }
-
-        #endregion
 
         #region Ui properties
 
@@ -111,12 +109,14 @@ namespace Bookshelf.ViewModels
 
         #endregion
 
-        public BookDetailVM(IBooksServices _booksServices)
+        public BookDetailVM(IBooksBLL _booksServices)
         {
             booksServices = _booksServices;
         }
 
         public ICommand ConfirmCommand => new Command(async (e) => { await UpdateBookSituation(); });
+
+        public ICommand CallTimelineCommand => new Command(async (e) => await Shell.Current.GoToAsync($"{nameof(BookHistoric)}"));
 
         /// <summary>
         /// navigate to update book
@@ -131,7 +131,7 @@ namespace Bookshelf.ViewModels
             {
                 if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir este livro?", "Sim", "Cancelar"))
                 {
-                    booksServices.InactivateBook(BookKey);
+                    _ = booksServices.InactivateBook(BookKey);
 
                     if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
                     {

@@ -1,9 +1,9 @@
 ﻿using BookshelfModels.Books;
 using BookshelfRepos.User;
-using BookshelfServices.Books.Api;
+using BLL.Books.Api;
 using Plugin.Connectivity;
 
-namespace BookshelfServices.Books
+namespace BLL.Books
 {
     public class BooksServices : IBooksServices
     {

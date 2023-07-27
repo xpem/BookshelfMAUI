@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using static BookshelfModels.Books.GoogleApi.GoogleApiBook;
 
-namespace BookshelfServices.Books.GoogleBooksApi
+namespace BLL.Books.GoogleBooksApi
 {
     public static class GoogleBooksApiService
     {

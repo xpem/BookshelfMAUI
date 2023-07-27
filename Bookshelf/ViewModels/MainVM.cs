@@ -1,8 +1,9 @@
 ﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
+using Bookshelf.Views.Book;
 using Bookshelf.Views.GoogleSearch;
-using BookshelfServices.Books;
-using BookshelfServices.Books.Sync;
+using BLL.Books;
+using BLL.Books.Sync;
 using Microsoft.Maui.Controls;
 using System.Windows.Input;
 
@@ -16,15 +17,15 @@ namespace Bookshelf.ViewModels
 
         private Color isSync;
 
-        public string IllRead { get => illRead; set { if (illRead != value) { illRead = value; OnPropertyChanged(); } } }
+        public string IllRead { get => illRead; set { if (illRead != value) { illRead = value; OnPropertyChanged(nameof(IllRead)); } } }
 
-        public string Reading { get => reading; set { if (reading != value) { reading = value; OnPropertyChanged(); } } }
+        public string Reading { get => reading; set { if (reading != value) { reading = value; OnPropertyChanged(nameof(Reading)); } } }
 
-        public string Read { get => read; set { if (read != value) { read = value; OnPropertyChanged(); } } }
+        public string Read { get => read; set { if (read != value) { read = value; OnPropertyChanged(nameof(Read)); } } }
 
-        public string Interrupted { get => interrupted; set { if (interrupted != value) { interrupted = value; OnPropertyChanged(); } } }
+        public string Interrupted { get => interrupted; set { if (interrupted != value) { interrupted = value; OnPropertyChanged(nameof(Interrupted)); } } }
 
-        public Color IsSync { get => isSync; set { if (value != isSync) { isSync = value; OnPropertyChanged(); } } }
+        public Color IsSync { get => isSync; set { if (value != isSync) { isSync = value; OnPropertyChanged(nameof(IsSync)); } } }
 
         /// <summary>
         /// var that defines if the function that verify the synchronization is running  or not
@@ -33,23 +34,24 @@ namespace Bookshelf.ViewModels
 
         private double frmMainOpacity;
 
-        public double FrmMainOpacity { get => frmMainOpacity; set { if (frmMainOpacity != value) { frmMainOpacity = value; OnPropertyChanged(); } } }
+        public double FrmMainOpacity { get => frmMainOpacity; set { if (frmMainOpacity != value) { frmMainOpacity = value; OnPropertyChanged(nameof(FrmMainOpacity)); } } }
 
         private bool frmMainIsEnabled;
         Color isConnected;
 
-        public bool FrmMainIsEnabled { get => frmMainIsEnabled; set { if (value != frmMainIsEnabled) { frmMainIsEnabled = value; OnPropertyChanged(); } } }
+        public bool FrmMainIsEnabled { get => frmMainIsEnabled; set { if (value != frmMainIsEnabled) { frmMainIsEnabled = value; OnPropertyChanged(nameof(FrmMainIsEnabled)); } } }
 
-        public Color IsConnected { get => isConnected; set { if (value != isConnected) { isConnected = value; OnPropertyChanged(); } } }
+        public Color IsConnected { get => isConnected; set { if (value != isConnected) { isConnected = value; OnPropertyChanged(nameof(IsConnected)); } } }
 
-        readonly IBooksServices booksServices;
+        readonly IBooksBLL booksServices;
 
-        public MainVM(IBooksServices _booksServices)
+        readonly IBooksSyncBLL booksSyncBLL;
+
+        public MainVM(IBooksBLL _booksServices,IBooksSyncBLL _booksSyncBLL)
         {
             booksServices = _booksServices;
+            booksSyncBLL = _booksSyncBLL;
         }
-
-        public ICommand CallTimelineCommand => new Command(async (e) => await Shell.Current.GoToAsync($"{nameof(Timeline)}"));
 
         public ICommand LogoutCommand => new Command(async (e) =>
         {
@@ -57,12 +59,12 @@ namespace Bookshelf.ViewModels
 
             if (resp)
             {
-                await BookshelfServices.User.UserServices.CleanUserDatabase();
+                await BLL.User.UserBLL.CleanUserDatabase();
                 _Timer.Dispose();
                 //finalize sync thread process
-                BooksSyncServices.ThreadIsRunning = false;
+                booksSyncBLL.ThreadIsRunning = false;
                 ThreadIsRunning = false;
-                BooksSyncServices._Timer.Dispose();
+                booksSyncBLL.Timer.Dispose();
 
                 await Shell.Current.GoToAsync($"//{nameof(SignIn)}");
             }
@@ -107,10 +109,10 @@ namespace Bookshelf.ViewModels
                 {
                     IsConnected = Colors.Green;
 
-                    switch (BookshelfServices.Books.Sync.BooksSyncServices.Synchronizing)
+                    switch (BLL.Books.Sync.BooksSyncBLL.Synchronizing)
                     {
-                        case BooksSyncServices.SyncStatus.Processing: IsSync = Colors.Green; break;
-                        case BooksSyncServices.SyncStatus.Sleeping:
+                        case BooksSyncBLL.SyncStatus.Processing: IsSync = Colors.Green; break;
+                        case BooksSyncBLL.SyncStatus.Sleeping:
 
                             _ = GetBookshelfTotals();
 
@@ -126,7 +128,7 @@ namespace Bookshelf.ViewModels
                             else { FrmMainIsEnabled = true; }
 
                             break;
-                        case BooksSyncServices.SyncStatus.ServerOff:
+                        case BooksSyncBLL.SyncStatus.ServerOff:
                             IsSync = Colors.Red;
                             break;
                     }

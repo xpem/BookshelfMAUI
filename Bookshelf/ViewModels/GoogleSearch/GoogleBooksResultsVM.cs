@@ -91,28 +91,28 @@ namespace Bookshelf.ViewModels.GoogleSearch
         private async void LoadGoogleBooks(int pageNumber)
         {
 
-            IsBusy = true;
 
-            string _searchText = "";
             if (!string.IsNullOrEmpty(SearchText))
-                _searchText = SearchText.ToUpper();
-
-            int startIndex = 0;
-
-            if (pageNumber > 0)
-                startIndex = pageNumber * 10;
-
-            if (startIndex == 0 || startIndex < TotalItems)
             {
-                (List<UIGoogleBook> googleBooksListResult, TotalItems) = await BookshelfServices.Books.GoogleBooksApi.GoogleBooksApiService.GetBooks(_searchText, startIndex);
+                IsBusy = true;
+                string _searchText = SearchText.ToUpper();
 
-                foreach (var googleBookItem in googleBooksListResult)
+                int startIndex = 0;
+
+                if (pageNumber > 0)
+                    startIndex = pageNumber * 10;
+
+                if (startIndex == 0 || startIndex < TotalItems)
                 {
-                    GoogleBooksList.Add(googleBookItem);
-                }
-            }
+                    (List<UIGoogleBook> googleBooksListResult, TotalItems) = await BLL.Books.GoogleBooksApi.GoogleBooksApiBLL.GetBooks(_searchText, startIndex);
 
-            IsBusy = false;
+                    foreach (var googleBookItem in googleBooksListResult)
+                    {
+                        GoogleBooksList.Add(googleBookItem);
+                    }
+                }
+                IsBusy = false;
+            }
         }
 
         public ICommand CreateBookCommand => new Command(async (e) => { await Shell.Current.GoToAsync($"{nameof(AddBook)}"); });

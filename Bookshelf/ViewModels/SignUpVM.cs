@@ -1,9 +1,10 @@
 ﻿using Bookshelf.Utils;
 using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
-using BookshelfModels.User;
-using BookshelfServices.Books.Sync;
-using BookshelfServices.User;
+using BLL.Books.Sync;
+using BLL.User;
+using Models;
+using Models.Responses;
 using Plugin.Connectivity;
 using System.Windows.Input;
 
@@ -11,7 +12,6 @@ namespace Bookshelf.ViewModels
 {
     public partial class SignUpVM : ViewModelBase
     {
-        readonly IUserServices userService;
 
         string name;
 
@@ -33,11 +33,6 @@ namespace Bookshelf.ViewModels
 
         public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { btnCreateUserIsEnabled = value; OnPropertyChanged(); } } }
 
-
-        public SignUpVM(IUserServices _userService)
-        {
-            userService = _userService;
-        }
 
         private async Task<bool> VerifyFileds()
         {
@@ -84,25 +79,18 @@ namespace Bookshelf.ViewModels
                 BtnCreateUserIsEnabled = false;
 
                 //
-                User user = await userService.SignUp(name, email, password);
+                var resp = await UserBLL.AddUser(name, email, password);
 
-                if (user != null)
+                if (!resp.Success)
+                    await Application.Current.MainPage.DisplayAlert("Erro", "Não foi possível cadastrar o usuário!", null, "Ok");
+                else
                 {
-                    if (user.Error != null)
-                    {
-                        if (user.Error == ErrorType.EMAIL_EXISTS)
-                            await Application.Current.MainPage.DisplayAlert("Aviso", "Email já cadastrado!", null, "Ok");
-                        else
-                            await Application.Current.MainPage.DisplayAlert("Erro", "Não foi possível cadastrar o usuário!", null, "Ok");
-                    }
-                    else
-                    {
-                        bool res = await Application.Current.MainPage.DisplayAlert("Aviso", "Usuário cadastrado!", null, "Ok");
+                    bool res = await Application.Current.MainPage.DisplayAlert("Aviso", "Usuário cadastrado!", null, "Ok");
 
-                        if (!res)
-                            await Shell.Current.GoToAsync("..");
-                    }
+                    if (!res)
+                        await Shell.Current.GoToAsync("..");
                 }
+
             }
         });
     }

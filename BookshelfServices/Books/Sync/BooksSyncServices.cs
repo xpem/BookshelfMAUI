@@ -1,9 +1,9 @@
 ﻿using BookshelfModels.Books;
-using BookshelfServices.Books.Api;
-using BookshelfServices.User;
+using BLL.Books.Api;
+using BLL.User;
 using Plugin.Connectivity;
 
-namespace BookshelfServices.Books.Sync
+namespace BLL.Books.Sync
 {
     public class BooksSyncServices : IBooksSyncServices
     {
