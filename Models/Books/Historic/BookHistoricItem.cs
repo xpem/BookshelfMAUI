@@ -1,4 +1,4 @@
-﻿namespace BookshelfModels.Books.Historic
+﻿namespace Models.Books.Historic
 {
     public class BookHistoricItem
     {

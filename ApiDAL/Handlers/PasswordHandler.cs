@@ -1,5 +1,4 @@
-﻿using BLL;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace ApiDAL.Handlers

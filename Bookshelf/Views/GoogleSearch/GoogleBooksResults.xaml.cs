@@ -1,5 +1,5 @@
 using Bookshelf.ViewModels.GoogleSearch;
-using BookshelfModels.Books.GoogleApi;
+using Models.Books.GoogleApi;
 
 namespace Bookshelf.Views.GoogleSearch;
 

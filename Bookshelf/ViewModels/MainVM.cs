@@ -150,7 +150,7 @@ namespace Bookshelf.ViewModels
         public async Task GetBookshelfTotals()
         {
             //
-            BookshelfModels.Books.Totals totals = await booksServices.GetBookshelfTotals();
+            Models.Books.Totals totals = await booksServices.GetBookshelfTotals();
             //
             if (totals.IllRead.ToString() != IllRead) { IllRead = totals.IllRead.ToString(); }
             if (totals.Reading.ToString() != Reading) { Reading = totals.Reading.ToString(); }

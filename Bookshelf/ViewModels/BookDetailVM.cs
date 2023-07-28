@@ -84,17 +84,17 @@ namespace Bookshelf.ViewModels
                 //    BtnConfIsVisible = true;
                 //}
 
-                switch ((BookshelfModels.Books.Status)pkrStatusSelectedIndex)
+                switch ((Models.Books.Status)pkrStatusSelectedIndex)
                 {
-                    case BookshelfModels.Books.Status.None:
+                    case Models.Books.Status.None:
                         RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
                         break;
-                    case BookshelfModels.Books.Status.Reading:
-                    case BookshelfModels.Books.Status.Interrupted:
-                    case BookshelfModels.Books.Status.IllRead:
+                    case Models.Books.Status.Reading:
+                    case Models.Books.Status.Interrupted:
+                    case Models.Books.Status.IllRead:
                         RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
                         break;
-                    case BookshelfModels.Books.Status.Read:
+                    case Models.Books.Status.Read:
                         EdtCommentIsVisible = RatingBarIsVisible = LblRatingBarIsVisible = true;
                         break;
                     default:
@@ -151,7 +151,7 @@ namespace Bookshelf.ViewModels
 
         private async void GetBook(string bookKey)
         {
-            BookshelfModels.Books.Book book = await booksServices.GetBook(bookKey);
+            Models.Books.Book book = await booksServices.GetBook(bookKey);
 
             string subtitleAndVol = "";
 
@@ -186,7 +186,7 @@ namespace Bookshelf.ViewModels
 
             pkrStatusSelectedIndexOri = (int)book.Status;
 
-            if (book.Status != BookshelfModels.Books.Status.None)
+            if (book.Status != Models.Books.Status.None)
             {
                 Situation = SituationOri = book.Status.ToString();
                 Rate = RateOri = (int)book.Score;
@@ -197,7 +197,7 @@ namespace Bookshelf.ViewModels
                 UpdatesEnableds = true;
                 EdtCommentIsVisible = RatingBarIsVisible = LblRatingBarIsVisible = false;
 
-                if (book.Status == BookshelfModels.Books.Status.Read)
+                if (book.Status == Models.Books.Status.Read)
                 {
                     LblRatingBarIsVisible = RatingBarIsVisible = true;
                     BuildRatingBar(Rate.Value);
@@ -254,7 +254,7 @@ namespace Bookshelf.ViewModels
 
             if (alterou)
             {
-                booksServices.UpdateBookSituation(BookKey, (BookshelfModels.Books.Status)PkrStatusSelectedIndex, rate, Comment);
+                booksServices.UpdateBookSituation(BookKey, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
 
                 if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Situação alterada", null, "Ok"))
                 {

@@ -1,10 +1,9 @@
-﻿using ApiDAL;
-using BookshelfModels.Books;
-using BookshelfRepos.User;
-using BookshelfServices.Books.Api;
+﻿using BLL.Books.Api;
+using Models.Books;
+using LocalDbDAL.User;
 using Plugin.Connectivity;
 
-namespace BookshelfServices.Books
+namespace BLL.Books
 {
     public class BooksBLL : IBooksBLL
     {
@@ -16,7 +15,7 @@ namespace BookshelfServices.Books
             Models.User? User = await UserLocalDAL.GetUser();
             if (User?.Id != null)
             {
-                List<(Status, int)> list = await BookshelfRepos.Books.BooksLocalDAL.GetBookshelfTotals(User.Id);
+                List<(Status, int)> list = await LocalDbDAL.Books.BooksLocalDAL.GetBookshelfTotals(User.Id);
 
                 if (list.Count > 0)
                 {
@@ -38,7 +37,7 @@ namespace BookshelfServices.Books
         {
             Models.User? User = await UserLocalDAL.GetUser();
             if (User?.Id != null)
-                return await BookshelfRepos.Books.BooksLocalDAL.GetBook(User.Id, bookKey);
+                return await LocalDbDAL.Books.BooksLocalDAL.GetBook(User.Id, bookKey);
 
             return null;
         }
@@ -50,7 +49,7 @@ namespace BookshelfServices.Books
             {
                 book.UpdatedAt = DateTime.Now;
 
-                await BookshelfRepos.Books.BooksLocalDAL.UpdateBook(book, User.Id);
+                await LocalDbDAL.Books.BooksLocalDAL.UpdateBook(book, User.Id);
                 //
                 if (CrossConnectivity.Current.IsConnected)
                 {
@@ -82,7 +81,7 @@ namespace BookshelfServices.Books
                     book.LocalTempId = Guid.NewGuid().ToString();
                 }
 
-                await BookshelfRepos.Books.BooksLocalDAL.AddBook(book, User.Id);
+                await LocalDbDAL.Books.BooksLocalDAL.AddBook(book, User.Id);
                 return true;
             }
 
@@ -96,7 +95,7 @@ namespace BookshelfServices.Books
             Models.User? User = await UserLocalDAL.GetUser();
             if (User?.Id != null)
             {
-                Book? _book = await BookshelfRepos.Books.BooksLocalDAL.GetBookByTitleOrGooglekey(User.Id, title, null);
+                Book? _book = await LocalDbDAL.Books.BooksLocalDAL.GetBookByTitleOrGooglekey(User.Id, title, null);
 
                 if (_book is not null)
                 {
@@ -113,7 +112,7 @@ namespace BookshelfServices.Books
             Models.User? User = await UserLocalDAL.GetUser();
             if (User?.Id != null)
             {
-                Book? _book = await BookshelfRepos.Books.BooksLocalDAL.GetBookByTitleOrGooglekey(User.Id, title, googleId);
+                Book? _book = await LocalDbDAL.Books.BooksLocalDAL.GetBookByTitleOrGooglekey(User.Id, title, googleId);
 
                 return _book;
             }
@@ -132,12 +131,12 @@ namespace BookshelfServices.Books
             List<UIBookItem> listBooksItens = new();
             int total = 0;
 
-            Models.User? User = await BookshelfRepos.User.UserLocalDAL.GetUser();
+            Models.User? User = await LocalDbDAL.User.UserLocalDAL.GetUser();
             if (User?.Id != null)
             {
                 int pageSize = 10;
 
-                List<Book> list = (await BookshelfRepos.Books.BooksLocalDAL.GetBookSituationByStatus(status, User.Id, textoBusca));
+                List<Book> list = (await LocalDbDAL.Books.BooksLocalDAL.GetBookSituationByStatus(status, User.Id, textoBusca));
 
                 total = list.Count;
 
@@ -172,7 +171,7 @@ namespace BookshelfServices.Books
                         Cover = book.Cover,
                     };
 
-                    if ((Status)status == BookshelfModels.Books.Status.Read)
+                    if ((Status)status == Models.Books.Status.Read)
                     {
                         bookItem.Rate = book.Score > 0 ? string.Format("Avaliação pessoal: {0} de 5", book.Score.ToString()) : "";
                     }
@@ -194,7 +193,7 @@ namespace BookshelfServices.Books
                 book.UpdatedAt = DateTime.Now;
                 book.Inactive = 1;
 
-                await BookshelfRepos.Books.BooksLocalDAL.InactivateBook(book.Id, User.Id, book.UpdatedAt);
+                await LocalDbDAL.Books.BooksLocalDAL.InactivateBook(book.Id, User.Id, book.UpdatedAt);
 
                 if (CrossConnectivity.Current.IsConnected)
                 {
@@ -216,7 +215,7 @@ namespace BookshelfServices.Books
                 book.Score = score;
                 book.Comment = comment;
 
-                await BookshelfRepos.Books.BooksLocalDAL.UpdateBook(book, User.Id);
+                await LocalDbDAL.Books.BooksLocalDAL.UpdateBook(book, User.Id);
 
                 if (CrossConnectivity.Current.IsConnected)
                 {

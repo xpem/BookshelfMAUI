@@ -1,4 +1,4 @@
-﻿namespace BookshelfModels.Books.Historic
+﻿namespace Models.Books.Historic
 {
     public class BookHistoric
     {
@@ -6,9 +6,11 @@
 
         public DateTime? CreatedAt { get; set; }
 
+        public int? TypeId { get; set; }
+
         public string? Type { get; set; }
 
-        public BookHistoricItem? BookHistoricItem { get; set; }
+        public List<BookHistoricItem>? BookHistoricItems { get; set; }
 
     }
 }

@@ -1,8 +1,8 @@
-﻿using BookshelfModels.Books;
+﻿using Models.Books;
 using Microsoft.Data.Sqlite;
 using System.Text;
 
-namespace BookshelfRepos.Books
+namespace LocalDbDAL.Books
 {
     public static class BooksLocalDAL
     {
