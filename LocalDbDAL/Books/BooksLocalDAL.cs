@@ -103,10 +103,6 @@ namespace LocalDbDAL.Books
             SqliteFunctions.CloseIfOpen();
         }
 
-        /// <summary>
-        /// update book local
-        /// </summary>
-        /// <param name="book"></param>
         public static async Task UpdateBook(Book book, int? userId)
         {
             SqliteFunctions.OpenIfClosed();
@@ -212,7 +208,6 @@ namespace LocalDbDAL.Books
         {
             try
             {
-                SqliteFunctions.OpenIfClosed();
 
                 List<SqliteParameter> parameters = new()
                 {
@@ -220,6 +215,7 @@ namespace LocalDbDAL.Books
                     new SqliteParameter("@key", bookKey)
                 };
 
+                SqliteFunctions.OpenIfClosed();
                 SqliteDataReader response = await SqliteFunctions.RunSqliteCommand("select ID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, ISBN, GENRE, UPDATED_AT, INACTIVE, STATUS," +
                     " COVER, GOOGLE_ID, SCORE, COMMENT, CREATED_AT from BOOK where UID = @userId and ID = @key", parameters);
 
@@ -319,7 +315,7 @@ namespace LocalDbDAL.Books
         {
             try
             {
-                SqliteFunctions.OpenIfClosed();
+                
 
                 string command = "select ID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, ISBN, GENRE, UPDATED_AT, INACTIVE, STATUS, COVER, GOOGLE_ID, SCORE, COMMENT, CREATED_AT from BOOK where UID = @userId";
 
@@ -350,13 +346,15 @@ namespace LocalDbDAL.Books
                     parameters.Add(new SqliteParameter("@textoBusca", "%" + textoBusca + "%"));
                 }
 
+                SqliteFunctions.OpenIfClosed();
+
                 SqliteDataReader response = await SqliteFunctions.RunSqliteCommand(command, parameters);
 
-                List<Book> lista = new();
+                List<Book> list = new();
 
                 while (response.Read())
                 {
-                    lista.Add(new Book()
+                    list.Add(new Book()
                     {
                         Id = response.GetInt32(0),
                         Title = response.GetWithNullableString(1),
@@ -380,7 +378,7 @@ namespace LocalDbDAL.Books
 
                 SqliteFunctions.CloseIfOpen();
 
-                return lista;
+                return list;
             }
             catch (Exception ex) { throw ex; }
         }

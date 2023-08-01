@@ -1,7 +1,6 @@
-﻿using Bookshelf.ViewModels.Components;
-using Bookshelf.Views;
+﻿using BLL.Books;
+using Bookshelf.ViewModels.Components;
 using Models.Books;
-using BLL.Books;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -26,7 +25,7 @@ namespace Bookshelf.ViewModels
         //        if (bookItem != value)
         //        {
         //            bookItem = value;
-                   
+
         //            if (bookItem is not null)
         //            {
         //                if (SituationIndex == -1)
@@ -124,16 +123,12 @@ namespace Bookshelf.ViewModels
             if (!string.IsNullOrEmpty(SearchTitle))
                 _searchText = SearchTitle.ToLower();
 
-            (var booksList, TotalBooksItens) = await booksServices.GetBookSituationByStatus(pageNumber, SituationIndex.Value, _searchText);
+            (List<UIBookItem> booksList, TotalBooksItens) = await booksServices.GetBookSituationByStatus(pageNumber, SituationIndex.Value, _searchText);
 
             foreach (UIBookItem bookItem in booksList)
             {
-                if(bookItem.Cover is null)
-                {
-                    bookItem.Cover = "cover.jpg";
-                }
+                bookItem.Cover ??= "cover.jpg";
                 BooksList.Add(bookItem);
-
             }
 
             //Definição do título da interface

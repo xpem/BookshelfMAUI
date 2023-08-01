@@ -1,5 +1,4 @@
-﻿using BLL.Books.Api;
-using Models.Books;
+﻿using Models.Books;
 using LocalDbDAL.User;
 using Plugin.Connectivity;
 

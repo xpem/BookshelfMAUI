@@ -3,9 +3,9 @@ using Bookshelf.Views;
 using Bookshelf.Views.Book;
 using Bookshelf.Views.GoogleSearch;
 using BLL.Books;
-using BLL.Books.Sync;
 using Microsoft.Maui.Controls;
 using System.Windows.Input;
+using BLL.Sync;
 
 namespace Bookshelf.ViewModels
 {
@@ -47,30 +47,12 @@ namespace Bookshelf.ViewModels
 
         readonly IBooksSyncBLL booksSyncBLL;
 
-        public MainVM(IBooksBLL _booksServices,IBooksSyncBLL _booksSyncBLL)
+        public MainVM(IBooksBLL _booksServices, IBooksSyncBLL _booksSyncBLL)
         {
             booksServices = _booksServices;
             booksSyncBLL = _booksSyncBLL;
         }
-
-        public ICommand LogoutCommand => new Command(async (e) =>
-        {
-            bool resp = await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja sair e retornar a tela inicial?", "Sim", "Cancelar");
-
-            if (resp)
-            {
-                await BLL.User.UserBLL.CleanUserDatabase();
-                _Timer.Dispose();
-                //finalize sync thread process
-                booksSyncBLL.ThreadIsRunning = false;
-                ThreadIsRunning = false;
-                booksSyncBLL.Timer.Dispose();
-
-                await Shell.Current.GoToAsync($"//{nameof(SignIn)}");
-            }
-        });
-
-
+        
         private Timer _Timer;
         int Interval = 2000;
         bool ThreadIsRunning = false;
@@ -109,7 +91,7 @@ namespace Bookshelf.ViewModels
                 {
                     IsConnected = Colors.Green;
 
-                    switch (BLL.Books.Sync.BooksSyncBLL.Synchronizing)
+                    switch (BooksSyncBLL.Synchronizing)
                     {
                         case BooksSyncBLL.SyncStatus.Processing: IsSync = Colors.Green; break;
                         case BooksSyncBLL.SyncStatus.Sleeping:
@@ -170,6 +152,26 @@ namespace Bookshelf.ViewModels
         public ICommand IllReadCommand => new Command(async (e) => await CallBookList(1));
 
         public ICommand ArchiveCommand => new Command(async (e) => await CallBookList(0));
+
+        public ICommand LogoutCommand => new Command(async (e) =>
+        {
+            bool resp = await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja sair e retornar a tela inicial?", "Sim", "Cancelar");
+
+            if (resp)
+            {
+                await BLL.User.UserBLL.CleanDatabase();
+                _Timer.Dispose();
+                //finalize sync thread process
+                booksSyncBLL.ThreadIsRunning = false;
+                ThreadIsRunning = false;
+
+                if (booksSyncBLL.Timer is not null)
+                    booksSyncBLL.Timer.Dispose();
+
+                await Shell.Current.GoToAsync($"//{nameof(SignIn)}");
+            }
+        });
+
 
         private async Task CallBookList(int BookSituation) =>
             await Shell.Current.GoToAsync($"{nameof(BookList)}?Situation={BookSituation}", true);

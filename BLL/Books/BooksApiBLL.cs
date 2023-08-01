@@ -4,7 +4,7 @@ using Models.Books;
 using Models.Responses;
 using System.Text.Json.Nodes;
 
-namespace BLL.Books.Api
+namespace BLL.Books
 {
     public static class BooksApiBLL
     {
@@ -56,7 +56,7 @@ namespace BLL.Books.Api
         {
             var resp = await BookApiDAL.GetBooksByLastUpdate(lastUpdate);
 
-            return ApiResponseHandler.Handler<List<Book>>(resp);          
+            return ApiResponseHandler.Handler<List<Book>>(resp);
         }
     }
 }

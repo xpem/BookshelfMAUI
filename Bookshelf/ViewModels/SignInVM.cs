@@ -1,9 +1,9 @@
 ﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
-using BLL.Books.Sync;
 using BLL.User;
 using Plugin.Connectivity;
 using System.Windows.Input;
+using BLL.Sync;
 
 namespace Bookshelf.ViewModels
 {

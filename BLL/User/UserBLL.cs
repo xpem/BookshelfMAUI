@@ -1,5 +1,6 @@
 ﻿using ApiDAL;
 using ApiDAL.Handlers;
+using LocalDbDAL.BuildDb;
 using LocalDbDAL.User;
 using Models;
 using Models.Responses;
@@ -144,7 +145,7 @@ namespace BLL.User
             catch (Exception ex) { throw ex; }
         }
 
-        public static Task CleanUserDatabase() => UserLocalDAL.CleanUserDatabase();
+        public static Task CleanDatabase() => BuildLocalDbDAL.CleanDatabase();
 
         //public async Task<Models.User> SignUp(string name, string email, string password) => await UserApiService.SignUp(name, email, password);
     }

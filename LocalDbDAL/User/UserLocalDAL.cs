@@ -24,18 +24,6 @@ namespace LocalDbDAL.User
             SqliteFunctions.CloseIfOpen();
         }
 
-        public async static Task CleanUserDatabase()
-        {
-            SqliteFunctions.OpenIfClosed();
-
-            //clean local database
-            await SqliteFunctions.RunSqliteCommand("delete from USER");
-
-            await SqliteFunctions.RunSqliteCommand("delete from BOOK");
-
-            SqliteFunctions.CloseIfOpen();
-        }
-
         public static async Task<Models.User?> GetUser()
         {
             SqliteFunctions.OpenIfClosed();
@@ -91,7 +79,7 @@ namespace LocalDbDAL.User
             catch (Exception) { throw; }
         }
 
-        public static async Task<string> GetUserToken()
+        public static async Task<string?> GetUserToken()
         {
             SqliteFunctions.OpenIfClosed();
 

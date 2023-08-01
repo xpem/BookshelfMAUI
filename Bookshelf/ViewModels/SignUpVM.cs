@@ -1,10 +1,6 @@
-﻿using Bookshelf.Utils;
+﻿using BLL.User;
+using Bookshelf.Utils;
 using Bookshelf.ViewModels.Components;
-using Bookshelf.Views;
-using BLL.Books.Sync;
-using BLL.User;
-using Models;
-using Models.Responses;
 using Plugin.Connectivity;
 using System.Windows.Input;
 
