@@ -1,5 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Models;
+using System;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace LocalDbDAL.BuildDb
 {
@@ -12,11 +14,13 @@ namespace LocalDbDAL.BuildDb
         {
             SqliteFunctions.OpenIfClosed();
 
+
             await CreateTableVersions();
+
+            await CreateUserTable();
 
             await UpdateSQLiteTablesByVersions();
 
-            await SqliteFunctions.RunSqliteCommand("create table if not exists USER (ID integer primary key autoincrement,NAME text, EMAIL text, UID text, TOKEN text,PASSWORD text, LASTUPDATE datetime);");
 
             await SqliteFunctions.RunSqliteCommand("create table if not exists BOOK (ID integer,LOCAL_TEMP_ID text, UID text, TITLE text, SUBTITLE text, AUTHORS text, " +
                 "YEAR integer, VOLUME text, PAGES integer, ISBN text, GENRE text, UPDATED_AT datetime, INACTIVE integer, STATUS integer," +
@@ -24,11 +28,14 @@ namespace LocalDbDAL.BuildDb
 
             await SqliteFunctions.RunSqliteCommand("create table if not exists BOOK_HISTORIC(ID integer, CREATED_AT datetime, BOOK_ID integer, TYPE_ID integer, TYPE text, UID text);");
 
-            await SqliteFunctions.RunSqliteCommand("create table if not exists BOOK_HISTORIC_ITEM(ID integer, CREATED_AT datetime, BOOK_FIELD_NAME text, UPDATED_FROM integer," +
+            await SqliteFunctions.RunSqliteCommand("create table if not exists BOOK_HISTORIC_ITEM(ID integer, CREATED_AT datetime, BOOK_FIELD_ID text, BOOK_FIELD_NAME text, UPDATED_FROM integer," +
                 " UPDATED_TO text, UID text, BOOK_HISTORIC_ID integer);");
 
             SqliteFunctions.CloseIfOpen();
         }
+
+        private static async Task CreateUserTable() => await SqliteFunctions.RunSqliteCommand("create table if not exists USER (ID integer primary key autoincrement,NAME text, EMAIL text, UID text, TOKEN text,PASSWORD text, LASTUPDATE datetime);");
+
 
         private static async Task CreateTableVersions()
         {
@@ -100,13 +107,6 @@ namespace LocalDbDAL.BuildDb
         {
             bool updateVersionDb = false;
 
-            if ((versionsDbTables.USER < SqliteFunctions.ActualVersionsDbTables.USER))
-            {
-                await SqliteFunctions.RunSqliteCommand("drop table if exists USER");
-
-                updateVersionDb = true;
-            }
-
             if (versionsDbTables.BOOK < SqliteFunctions.ActualVersionsDbTables.BOOK)
             {
                 await SqliteFunctions.RunSqliteCommand("drop table if exists BOOK");
@@ -123,7 +123,37 @@ namespace LocalDbDAL.BuildDb
 
             if (versionsDbTables.BOOK_HISTORIC_ITEM < SqliteFunctions.ActualVersionsDbTables.BOOK_HISTORIC_ITEM)
             {
+                //have a dependencie
+                await SqliteFunctions.RunSqliteCommand("drop table if exists BOOK_HISTORIC");
+
                 await SqliteFunctions.RunSqliteCommand("drop table if exists BOOK_HISTORIC_ITEM");
+
+                updateVersionDb = true;
+            }
+
+            if (updateVersionDb)
+            {
+                using (SqliteDataReader Retorno = await SqliteFunctions.RunSqliteCommand("select ID from USER"))
+                {
+                    Retorno.Read();
+
+                    if (Retorno.HasRows)
+                    {
+                        int uid = Retorno.GetInt32(0);
+                        //to resync updated tables.
+                        string command = "update USER set LASTUPDATE = @MinDate WHERE ID = @Uid";
+                        List<SqliteParameter> parameters = new() { new SqliteParameter("@MinDate", DateTime.MinValue), new SqliteParameter("@Uid", uid) };
+
+                        await SqliteFunctions.RunSqliteCommand(command, parameters);
+                    }
+                }
+            }
+
+            if ((versionsDbTables.USER < SqliteFunctions.ActualVersionsDbTables.USER))
+            {
+                await SqliteFunctions.RunSqliteCommand("drop table if exists USER");
+
+                await CreateUserTable();
 
                 updateVersionDb = true;
             }

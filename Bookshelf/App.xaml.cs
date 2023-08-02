@@ -24,13 +24,13 @@ public partial class App : Application
 
     //criar um model result para os retornos de respostas
 
-    public App(IBooksSyncBLL booksSyncServices)
+    public App(IBooksSyncBLL booksSyncServices,IUserBLL userBLL)
     {
         BLL.BuildDbBLL.BuildSQLiteDb();
 
         InitializeComponent();
 
-        if (UserBLL.GetUserLocal().Result != null)
+        if (userBLL.GetUserLocal().Result != null)
         {
             booksSyncServices.StartThread();
 

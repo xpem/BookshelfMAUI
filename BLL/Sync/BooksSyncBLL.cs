@@ -1,7 +1,8 @@
 ﻿using BLL.Books;
-using BLL.Books.Historic;
+using BLL.Books.Historic.Interfaces;
 using BLL.User;
 using LocalDbDAL.Books.BookHistoric;
+using LocalDbDAL.User;
 using Models.Books;
 using Models.Books.Historic;
 using Plugin.Connectivity;
@@ -19,11 +20,17 @@ namespace BLL.Sync
 
         private readonly IBookHistoricLocalDAL BookHistoricLocalDAL;
         readonly IBookHistoricApiBLL BookHistoricApiBLL;
+        readonly IBooksApiBLL BooksApiBLL;
+        readonly IUserBLL UserBLL;
+        IUserLocalDAL UserLocalDAL;
 
-        public BooksSyncBLL(IBookHistoricLocalDAL bookHistoricLocalDAL, IBookHistoricApiBLL bookHistoricApiBLL)
+        public BooksSyncBLL(IBookHistoricLocalDAL bookHistoricLocalDAL, IBookHistoricApiBLL bookHistoricApiBLL, IBooksApiBLL booksApiBLL, IUserBLL userBLL, IUserLocalDAL userLocalDAL)
         {
             BookHistoricLocalDAL = bookHistoricLocalDAL;
             BookHistoricApiBLL = bookHistoricApiBLL;
+            BooksApiBLL = booksApiBLL;
+            UserBLL = userBLL;
+            UserLocalDAL = userLocalDAL;
         }
 
         public Timer? Timer { get; set; }
@@ -128,7 +135,7 @@ namespace BLL.Sync
                                 }
                         }
 
-                        await LocalDbDAL.User.UserLocalDAL.UpdateUserLastUpdateLocal(user.Id, LastUpdate);
+                        await UserLocalDAL.UpdateUserLastUpdateLocal(user.Id, LastUpdate);
                     }
 
                     Synchronizing = SyncStatus.Sleeping;

@@ -6,6 +6,7 @@ using BLL.Books;
 using Microsoft.Maui.Controls;
 using System.Windows.Input;
 using BLL.Sync;
+using BLL.User;
 
 namespace Bookshelf.ViewModels
 {
@@ -47,10 +48,13 @@ namespace Bookshelf.ViewModels
 
         readonly IBooksSyncBLL booksSyncBLL;
 
-        public MainVM(IBooksBLL _booksServices, IBooksSyncBLL _booksSyncBLL)
+        IUserBLL UserBLL;
+
+        public MainVM(IBooksBLL _booksServices, IBooksSyncBLL _booksSyncBLL, IUserBLL userBLL)
         {
             booksServices = _booksServices;
             booksSyncBLL = _booksSyncBLL;
+            UserBLL = userBLL;
         }
         
         private Timer _Timer;
@@ -159,7 +163,7 @@ namespace Bookshelf.ViewModels
 
             if (resp)
             {
-                await BLL.User.UserBLL.CleanDatabase();
+                await UserBLL.CleanDatabase();
                 _Timer.Dispose();
                 //finalize sync thread process
                 booksSyncBLL.ThreadIsRunning = false;

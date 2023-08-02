@@ -1,4 +1,4 @@
-﻿using BLL.Books.Historic;
+﻿using BLL.Books.Historic.Interfaces;
 using Bookshelf.Resources.Fonts.Styles;
 using Bookshelf.UIModels;
 using Bookshelf.ViewModels.Components;
@@ -6,6 +6,7 @@ using Models.Books;
 using Models.Books.Historic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.Book
 {
@@ -25,12 +26,13 @@ namespace Bookshelf.ViewModels.Book
             BookHistoricBLL = bookHistoricBLL;
         }
 
+
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             //    SituationIndex = Convert.ToInt16(query["Situation"].ToString());
 
-            //if (BooksList.Count > 0)
-            //    BooksList.Clear();
+            if (UIBookHistoricList.Count > 0)
+                UIBookHistoricList.Clear();
 
             CurrentPage++;
             LoadList(CurrentPage);
@@ -38,37 +40,78 @@ namespace Bookshelf.ViewModels.Book
 
         private async void LoadList(int? pageNumber)
         {
-            //PageTitle = "Carregando lista...";
             IsBusy = true;
 
-            Models.Books.Historic.BookHistoricList bookHistoricList = await BookHistoricBLL.GetBookHistoricByBookId(pageNumber, 209);
+            Models.Books.Historic.BookHistoricList bookHistoricList = await BookHistoricBLL.GetBookHistoricByBookId(pageNumber, 216);
 
             foreach (var bookHistoricObj in bookHistoricList.List)
             {
                 StringBuilder bookHistoricText = new();
+                string bookHistoricIcon, updatedFrom, updatedTo;
+                int bookStatusId = 8;
 
-                bookHistoricText.Append($"<strong>{bookHistoricObj.Type}</strong>");
-
-
-                if(bookHistoricObj.BookHistoricItems.Count > 0)
+                if (bookHistoricObj.TypeId == 1)
                 {
-                    foreach(var bookHistoricItemObj in bookHistoricObj.BookHistoricItems)
+
+                    bookHistoricText.Append($"<strong>Livro Adicionado!</strong>");
+                    bookHistoricIcon = IconFont.Plus;
+                }
+                else
+                {
+                    bookHistoricIcon = IconFont.Pen;
+                    bookHistoricText.Append($"<strong>Alteração</strong><br>");
+
+
+                    if (bookHistoricObj.BookHistoricItems.Count > 0)
                     {
-                        bookHistoricText.Append($"<br> <strong>{bookHistoricItemObj.BookFieldName}</strong>: de {bookHistoricItemObj.UpdatedFrom} para {bookHistoricItemObj.UpdatedTo}");
+                        foreach (var bookHistoricItemObj in bookHistoricObj.BookHistoricItems)
+                        {
+                            if (bookHistoricItemObj.BookFieldId == bookStatusId)
+                            {
+                                updatedFrom = BuildStatusText(Convert.ToInt32(bookHistoricItemObj.UpdatedFrom));
+                                updatedTo = BuildStatusText(Convert.ToInt32(bookHistoricItemObj.UpdatedTo));
+                            }
+                            else
+                            {
+                                updatedFrom = bookHistoricItemObj.UpdatedFrom;
+                                updatedTo = bookHistoricItemObj.UpdatedTo;
+                            }
+
+                            bookHistoricText.Append($"<br> <strong>{bookHistoricItemObj.BookFieldName}</strong>: de {updatedFrom} para {updatedTo};");
+                        }
                     }
                 }
-
                 UIBookHistoric uIBookHistoric = new()
                 {
                     Id = bookHistoricObj.Id.Value,
-                    HistoricDate = string.Format("Em {0:dd/MM/yyyy} as {0:hh:mm}", bookHistoricObj.CreatedAt),
-                    BookHistoricIcon = IconFont.Plus,
+                    HistoricDate = string.Format("Em {0:dd/MM/yyyy} as {0:H:mm}", bookHistoricObj.CreatedAt),
+                    BookHistoricIcon = bookHistoricIcon,
                     BookHistoricText = bookHistoricText.ToString(),
                 };
                 UIBookHistoricList.Add(uIBookHistoric);
             }
 
             IsBusy = false;
+        }
+
+        public ICommand LoadMoreCommand => new Command(() =>
+        {
+            CurrentPage++;
+            LoadList(CurrentPage);
+        });
+
+
+        private static string BuildStatusText(int statusId)
+        {
+            return statusId switch
+            {
+                0 => "'Nenhum'",
+                1 => "'Vou ler'",
+                2 => "'Lendo'",
+                3 => "'Lido'",
+                4 => "'Interrompido'",
+                _ => "Desconhecido",
+            };
         }
 
     }

@@ -254,7 +254,7 @@ namespace Bookshelf.ViewModels
 
             if (alterou)
             {
-                booksServices.UpdateBookSituation(BookKey, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
+                _ = booksServices.UpdateBookSituation(BookKey, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
 
                 if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Situação alterada", null, "Ok"))
                 {

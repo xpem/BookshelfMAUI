@@ -211,7 +211,7 @@ namespace Bookshelf.ViewModels
             }
             else
             {
-                RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = BtnInsertIsVisible = false;
+                RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
                 Situation = "0";
                 Rate = null;
                 Comment = "";
@@ -219,6 +219,7 @@ namespace Bookshelf.ViewModels
 
             BtnAddBookImageSourceGlyph = IconFont.Edit;
             BtnInsertText = "Alterar";
+            BtnInsertIsVisible = true;
             IsUpdate = true;
         }
 

@@ -63,11 +63,12 @@ namespace LocalDbDAL.Books.BookHistoric
                         new SqliteParameter("@UpdatedFrom", bookHistoricItem.UpdatedFrom),
                         new SqliteParameter("@UpdatedTo", bookHistoricItem.UpdatedTo),
                         new SqliteParameter("@UserId", userId),
-                        new SqliteParameter("@BookHistoricId", bookHistoric.Id)
+                        new SqliteParameter("@BookHistoricId", bookHistoric.Id),
+                        new SqliteParameter("@BookFieldId", bookHistoricItem.BookFieldId),
                     };
 
-                    await SqliteFunctions.RunSqliteCommand("insert into BOOK_HISTORIC_ITEM(ID, CREATED_AT, BOOK_FIELD_NAME, UPDATED_FROM, UPDATED_TO, UID, BOOK_HISTORIC_ID)" +
-                        " values (@Id, @CreatedAt, @BookFieldName, @UpdatedFrom, @UpdatedTo, @UserId, @BookHistoricId)",
+                    await SqliteFunctions.RunSqliteCommand("insert into BOOK_HISTORIC_ITEM(ID, CREATED_AT, BOOK_FIELD_ID, BOOK_FIELD_NAME, UPDATED_FROM, UPDATED_TO, UID, BOOK_HISTORIC_ID)" +
+                        " values (@Id, @CreatedAt, @BookFieldId, @BookFieldName, @UpdatedFrom, @UpdatedTo, @UserId, @BookHistoricId)",
                         sqliteParametersList);
                 }
 
@@ -86,7 +87,7 @@ namespace LocalDbDAL.Books.BookHistoric
 
                 string command = "select h.id as historic_id, h.created_at as hist_created_at, h.book_id," +
                     " h.type_id, h.TYPE as type_name, i.id as item_id, i.updated_from, i.updated_to," +
-                    " i.book_historic_id, i.created_at as item_created_at, i.BOOK_FIELD_NAME as field_name" +
+                    " i.book_historic_id, i.created_at as item_created_at, i.BOOK_FIELD_NAME as field_name,i.BOOK_FIELD_ID as field_id" +
                     " from book_historic h left join book_historic_item i on h.id = i.book_historic_id where" +
                     " h.uid = @Uid and h.book_id = @BookId";
 
@@ -114,7 +115,8 @@ namespace LocalDbDAL.Books.BookHistoric
                                 BookFieldName = response.GetWithNullableString(10),
                                 CreatedAt = Convert.ToDateTime(response.GetWithNullableString(9)),
                                 UpdatedFrom = response.GetWithNullableString(6),
-                                UpdatedTo = response.GetWithNullableString(7)
+                                UpdatedTo = response.GetWithNullableString(7),
+                                BookFieldId = response.GetInt32(11),
                             });
                         }
                     }
@@ -138,7 +140,8 @@ namespace LocalDbDAL.Books.BookHistoric
                                 BookFieldName = response.GetWithNullableString(10),
                                 CreatedAt = Convert.ToDateTime(response.GetWithNullableString(9)),
                                 UpdatedFrom = response.GetWithNullableString(6),
-                                UpdatedTo = response.GetWithNullableString(7)
+                                UpdatedTo = response.GetWithNullableString(7),
+                                BookFieldId = response.GetInt32(11),
                             });
                         }
 

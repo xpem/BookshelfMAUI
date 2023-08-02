@@ -23,11 +23,13 @@ namespace Bookshelf.ViewModels
         public bool BtnSignEnabled { get => btnSignEnabled; set { if (btnSignEnabled != value) { btnSignEnabled = value; OnPropertyChanged(); } } }
 
         readonly IBooksSyncBLL booksSyncServices;
+        IUserBLL UserBLL;
 
-        public SignInVM(IBooksSyncBLL _booksSyncServices)
+        public SignInVM(IBooksSyncBLL _booksSyncServices, IUserBLL userBLL)
         {
             booksSyncServices = _booksSyncServices;
             SignInText = "Acessar";
+            UserBLL = userBLL;
         }
 
         public ICommand SignInCommand => new Command(async () =>

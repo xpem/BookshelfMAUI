@@ -1,4 +1,6 @@
-﻿using Models.Books.Historic;
+﻿using BLL.Books.Historic.Interfaces;
+using LocalDbDAL.User;
+using Models.Books.Historic;
 
 namespace BLL.Books.Historic
 {
@@ -6,10 +8,12 @@ namespace BLL.Books.Historic
     {
 
         LocalDbDAL.Books.BookHistoric.IBookHistoricLocalDAL BookHistoricLocalDAL;
+        IUserLocalDAL UserLocalDAL;
 
-        public BookHistoricBLL(LocalDbDAL.Books.BookHistoric.IBookHistoricLocalDAL bookHistoricLocalDAL)
+        public BookHistoricBLL(LocalDbDAL.Books.BookHistoric.IBookHistoricLocalDAL bookHistoricLocalDAL, IUserLocalDAL userLocalDAL)
         {
             BookHistoricLocalDAL = bookHistoricLocalDAL;
+            UserLocalDAL = userLocalDAL;
         }
 
         public async Task<BookHistoricList> GetBookHistoricByBookId(int? page, int bookId)
@@ -18,7 +22,7 @@ namespace BLL.Books.Historic
 
             int total = 0;
 
-            Models.User? User = await LocalDbDAL.User.UserLocalDAL.GetUser();
+            Models.User? User = await UserLocalDAL.GetUser();
 
             if (User?.Id != null)
             {

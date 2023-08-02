@@ -28,6 +28,15 @@
             <Setter Property="FontFamily" Value="EBGaramondRegular" />
             <Setter Property="FontSize" Value="20" />
         </Style>
+        <Style x:Key="ExpanderButton" TargetType="Button">
+            <Setter Property="ContentLayout" Value="Top,0" />
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="HeightRequest" Value="40" />
+            <Setter Property="WidthRequest" Value="40" />
+            <Setter Property="HorizontalOptions" Value="End" />
+            <Setter Property="Opacity" Value="0.9" />
+            <Setter Property="VerticalOptions" Value="Start" />
+        </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
         <ScrollView Padding="0" VerticalOptions="StartAndExpand">
@@ -37,7 +46,8 @@
                     BackgroundColor="Transparent"
                     Direction="Down"
                     HorizontalOptions="End"
-                    VerticalOptions="StartAndExpand">
+                    VerticalOptions="StartAndExpand"
+                    ZIndex="2">
                     <toolkit:Expander.Header>
                         <Button
                             BackgroundColor="{StaticResource SecondaryInfoColor}"
@@ -45,6 +55,7 @@
                             CornerRadius="20"
                             HeightRequest="40"
                             HorizontalOptions="End"
+                            Opacity="0.9"
                             VerticalOptions="End"
                             WidthRequest="40">
                             <Button.ImageSource>
@@ -61,11 +72,7 @@
                             <Button
                                 BackgroundColor="{StaticResource MainItemColor}"
                                 Command="{Binding CallTimelineCommand}"
-                                ContentLayout="Top,0"
-                                CornerRadius="20"
-                                HeightRequest="40"
-                                HorizontalOptions="End"
-                                VerticalOptions="Start">
+                                Style="{StaticResource ExpanderButton}">
                                 <Button.ImageSource>
                                     <FontImageSource
                                         FontFamily="FontAwesome"
@@ -77,11 +84,7 @@
                             <Button
                                 BackgroundColor="{StaticResource MainItemColor}"
                                 Command="{Binding NavToUpdateBookCommand}"
-                                ContentLayout="Top,0"
-                                CornerRadius="20"
-                                HeightRequest="40"
-                                HorizontalOptions="End"
-                                VerticalOptions="Start">
+                                Style="{StaticResource ExpanderButton}">
                                 <Button.ImageSource>
                                     <FontImageSource
                                         FontFamily="FontAwesome"
@@ -93,11 +96,7 @@
                             <Button
                                 BackgroundColor="{StaticResource MainItemColor}"
                                 Command="{Binding InactivateBookCommand}"
-                                ContentLayout="Top,0"
-                                CornerRadius="20"
-                                HeightRequest="40"
-                                HorizontalOptions="End"
-                                VerticalOptions="Start">
+                                Style="{StaticResource ExpanderButton}">
                                 <Button.ImageSource>
                                     <FontImageSource
                                         FontFamily="FontAwesome"

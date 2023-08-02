@@ -2,13 +2,13 @@
 
 namespace LocalDbDAL.User
 {
-    public static class UserLocalDAL
+    public class UserLocalDAL : IUserLocalDAL
     {
-        public static void InsertUser(Models.User user)
+        public async Task InsertUser(Models.User user)
         {
             SqliteFunctions.OpenIfClosed();
 
-            SqliteFunctions.RunSqliteCommand("delete from USER").Wait();
+            await SqliteFunctions.RunSqliteCommand("delete from USER");
 
             List<SqliteParameter> parameters = new()
             {
@@ -19,12 +19,12 @@ namespace LocalDbDAL.User
                 new SqliteParameter("@LASTUPDATE", DateTime.MinValue),
             };
 
-            SqliteFunctions.RunSqliteCommand("insert into USER (TOKEN,NAME,EMAIL,PASSWORD,LASTUPDATE) values (@TOKEN,@NAME,@EMAIL,@PASSWORD,@LASTUPDATE)", parameters).Wait();
+            await SqliteFunctions.RunSqliteCommand("insert into USER (TOKEN,NAME,EMAIL,PASSWORD,LASTUPDATE) values (@TOKEN,@NAME,@EMAIL,@PASSWORD,@LASTUPDATE)", parameters);
 
             SqliteFunctions.CloseIfOpen();
         }
 
-        public static async Task<Models.User?> GetUser()
+        public async Task<Models.User?> GetUser()
         {
             SqliteFunctions.OpenIfClosed();
 
@@ -53,7 +53,7 @@ namespace LocalDbDAL.User
             }
         }
 
-        public static async Task UpdateUserLastUpdateLocal(int? id, DateTime lastUpdate)
+        public async Task UpdateUserLastUpdateLocal(int? id, DateTime lastUpdate)
         {
             SqliteFunctions.OpenIfClosed();
 
@@ -64,7 +64,7 @@ namespace LocalDbDAL.User
             SqliteFunctions.CloseIfOpen();
         }
 
-        public static async Task UpdateToken(int? id, string? token)
+        public async Task UpdateToken(int? id, string? token)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace LocalDbDAL.User
             catch (Exception) { throw; }
         }
 
-        public static async Task<string?> GetUserToken()
+        public async Task<string?> GetUserToken()
         {
             SqliteFunctions.OpenIfClosed();
 

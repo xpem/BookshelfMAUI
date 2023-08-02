@@ -1,5 +1,5 @@
-﻿using ApiDAL;
-using ApiDAL.Handlers;
+﻿using ApiDAL.Handlers;
+using ApiDAL.Interfaces;
 using LocalDbDAL.BuildDb;
 using LocalDbDAL.User;
 using Models;
@@ -8,9 +8,14 @@ using System.Text.Json.Nodes;
 
 namespace BLL.User
 {
-    public static class UserBLL //: IUserServices
+    public class UserBLL : IUserBLL
     {
-        public static async Task<BLLResponse> AddUser(string name, string email, string password)
+        IUserApiDAL UserApiDAL;
+        IUserLocalDAL UserLocalDAL;
+
+        public UserBLL(IUserApiDAL userApiDAL, IUserLocalDAL userLocalDAL) { UserApiDAL = userApiDAL; UserLocalDAL = userLocalDAL; }
+
+        public async Task<BLLResponse> AddUser(string name, string email, string password)
         {
             email = email.ToLower();
             ApiResponse? resp = await UserApiDAL.AddUser(name, email, password);
@@ -20,7 +25,7 @@ namespace BLL.User
                 JsonNode? jResp = JsonNode.Parse(resp.Content);
                 if (jResp is not null)
                 {
-                  Models.User user = new()
+                    Models.User user = new()
                     {
                         Id = jResp["id"]?.GetValue<int>() ?? 0,
                         Name = jResp["name"]?.GetValue<string>(),
@@ -35,7 +40,7 @@ namespace BLL.User
             return new BLLResponse() { Success = false, Content = null };
         }
 
-        public static async Task<string?> RecoverPassword(string email)
+        public async Task<string?> RecoverPassword(string email)
         {
             email = email.ToLower();
             ApiResponse? resp = await UserApiDAL.RecoverPassword(email);
@@ -52,7 +57,7 @@ namespace BLL.User
             return null;
         }
 
-        public static async Task<(bool, string?)> GetUserToken(string email, string password)
+        public async Task<(bool, string?)> GetUserToken(string email, string password)
         {
             try
             {
@@ -70,7 +75,7 @@ namespace BLL.User
         /// get user in the static var
         /// </summary>
         /// <returns></returns>
-        public static async Task<Models.User?> GetUserLocal() => await UserLocalDAL.GetUser();
+        public async Task<Models.User?> GetUserLocal() => await UserLocalDAL.GetUser();
 
         //public async Task<Models.User?> RefreshUserToken(Models.User user)
         //{
@@ -102,7 +107,7 @@ namespace BLL.User
         //    catch (Exception ex) { throw ex; }
         //}
 
-        public static async Task<BLLResponse> GetUser(string email, string password)
+        public async Task<BLLResponse> GetUser(string email, string password)
         {
             try
             {
@@ -120,7 +125,7 @@ namespace BLL.User
 
                         if (userResponse is not null)
                         {
-                           Models.User? user = new()
+                            Models.User? user = new()
                             {
                                 Id = userResponse["id"]?.GetValue<int>() ?? 0,
                                 Name = userResponse["name"]?.GetValue<string>(),
@@ -129,7 +134,7 @@ namespace BLL.User
                                 Password = PasswordHandler.Encrypt(password)
                             };
 
-                            UserLocalDAL.InsertUser(user);
+                          await  UserLocalDAL.InsertUser(user);
 
                             return new BLLResponse() { Success = true };
                         }
@@ -145,7 +150,7 @@ namespace BLL.User
             catch (Exception ex) { throw ex; }
         }
 
-        public static Task CleanDatabase() => BuildLocalDbDAL.CleanDatabase();
+        public Task CleanDatabase() => BuildLocalDbDAL.CleanDatabase();
 
         //public async Task<Models.User> SignUp(string name, string email, string password) => await UserApiService.SignUp(name, email, password);
     }

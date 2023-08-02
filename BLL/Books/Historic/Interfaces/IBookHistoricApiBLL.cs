@@ -1,6 +1,6 @@
 ﻿using Models.Responses;
 
-namespace BLL.Books.Historic
+namespace BLL.Books.Historic.Interfaces
 {
     public interface IBookHistoricApiBLL
     {

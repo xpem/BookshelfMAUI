@@ -29,6 +29,9 @@ namespace Bookshelf.ViewModels
 
         public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { btnCreateUserIsEnabled = value; OnPropertyChanged(); } } }
 
+        IUserBLL UserBLL;
+
+        public SignUpVM(IUserBLL userBLL) { UserBLL = userBLL; }
 
         private async Task<bool> VerifyFileds()
         {
