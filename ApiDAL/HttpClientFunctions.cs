@@ -1,14 +1,24 @@
 ﻿using ApiDAL.Handlers;
+using ApiDAL.Interfaces;
 using LocalDbDAL.User;
 using Models.Responses;
 using System.Net;
 using System.Text;
+using System.Text.Json.Nodes;
+using System.Text.Json;
 
 namespace ApiDAL
 {
-    public class HttpClientFunctions : HttpClient
+    public class HttpClientFunctions : HttpClient, IHttpClientFunctions
     {
-        public static async Task<bool> CheckServer()
+        readonly IUserLocalDAL UserLocalDAL;
+
+        public HttpClientFunctions(IUserLocalDAL userLocalDAL)
+        {
+            UserLocalDAL = userLocalDAL;
+        }
+
+        public async Task<bool> CheckServer()
         {
             try
             {
@@ -22,7 +32,7 @@ namespace ApiDAL
             catch (Exception ex) { throw ex; }// return false; }
         }
 
-        public static async Task<ApiResponse> Request(RequestsTypes requestsType, string url, string? userToken = null, string? jsonContent = null)
+        public async Task<ApiResponse> Request(RequestsTypes requestsType, string url, string? userToken = null, string? jsonContent = null)
         {
             try
             {
@@ -76,7 +86,7 @@ namespace ApiDAL
             }
         }
 
-        public static async Task<ApiResponse> AuthRequest(RequestsTypes requestsType, string url, string? jsonContent = null)
+        public async Task<ApiResponse> AuthRequest(RequestsTypes requestsType, string url, string? jsonContent = null)
         {
             bool retry = true;
             ApiResponse? resp = null;
@@ -105,24 +115,7 @@ namespace ApiDAL
             throw new Exception($"Erro ao tentar AuthRequest de tipo {requestsType} na url: {url}");
         }
 
-        private static async Task<(bool success, string? newToken)> RefreshToken()
-        {
-            var user = await UserLocalDAL.GetUser();
-            if (user is not null && user.Email is not null && user.Password is not null)
-            {
-                (bool success, string? newToken) = await UserApiDAL.GetUserToken(user.Email, PasswordHandler.Decrypt(user.Password));
-
-                if (success && newToken is not null)
-                {
-                    await UserLocalDAL.UpdateToken(user.Id, newToken);
-                    return (true, newToken);
-                }
-            }
-
-            return (false, null);
-        }
-
-        public static async Task<ApiResponse> GetAsync(string uri, string userToken)
+        public async Task<ApiResponse> GetAsync(string uri, string userToken)
         {
             try
             {
@@ -146,8 +139,7 @@ namespace ApiDAL
             }
         }
 
-
-        public static async Task<ApiResponse> PostAsync(string uri, string jsonContent, string? userToken = null)
+        public async Task<ApiResponse> PostAsync(string uri, string jsonContent, string? userToken = null)
         {
             try
             {
@@ -169,7 +161,7 @@ namespace ApiDAL
             }
         }
 
-        public static async Task<ApiResponse> PutAsync(string uri, string jsonContent, string? userToken = null)
+        public async Task<ApiResponse> PutAsync(string uri, string jsonContent, string? userToken = null)
         {
             try
             {
@@ -191,7 +183,7 @@ namespace ApiDAL
             }
         }
 
-        public static async Task<ApiResponse> DeleteAsync(string uri, string? userToken = null)
+        public async Task<ApiResponse> DeleteAsync(string uri, string? userToken = null)
         {
             try
             {
@@ -211,6 +203,49 @@ namespace ApiDAL
             }
         }
 
+        private async Task<(bool success, string? newToken)> RefreshToken()
+        {
+            Models.User? user = await UserLocalDAL.GetUser();
+            if (user is not null && user.Email is not null && user.Password is not null)
+            {
+                (bool success, string? newToken) = await GetUserToken(user.Email, PasswordHandler.Decrypt(user.Password));
+
+                if (success && newToken is not null)
+                {
+                    await UserLocalDAL.UpdateToken(user.Id, newToken);
+                    return (true, newToken);
+                }
+            }
+
+            return (false, null);
+        }
+
+        public async Task<(bool, string?)> GetUserToken(string email, string password)
+        {
+            try
+            {
+                string json = JsonSerializer.Serialize(new { email, password });
+
+                var resp = await Request(RequestsTypes.Post, ApiKeys.ApiUri + "/user/session", null, json);
+
+                if (resp is not null && resp.Content is not null)
+                {
+                    JsonNode? jResp = JsonNode.Parse(resp.Content);
+
+                    if (resp.Success && jResp is not null && jResp["token"]?.GetValue<string>() is not null)
+                        return (true, jResp["token"]?.GetValue<string>());
+                    else if (!resp.Success && jResp is not null && jResp["error"]?.GetValue<string>() is not null)
+                        return (false, jResp["error"]?.GetValue<string>());
+                    else throw new Exception("Response nao mapeado: " + resp.Content);
+                }
+
+                return (false, null);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 }

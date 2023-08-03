@@ -4,113 +4,107 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
+    xmlns:behaviors="clr-namespace:Bookshelf.Utils.Behaviors"
+    xmlns:model="clr-namespace:Bookshelf.UIModels;assembly=Bookshelf"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:vm="clr-namespace:Bookshelf.ViewModels.Book"
     Title="Histórico"
+    x:DataType="vm:BookHistoricVM"
     Style="{StaticResource ContentPage}">
-    <VerticalStackLayout>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="8*" />
-            </Grid.ColumnDefinitions>
-            <Button
-                Grid.Row="1"
-                Margin="10,0,0,0"
-                BackgroundColor="{StaticResource Gray300}"
-                ContentLayout="Top,0"
-                CornerRadius="20"
-                HeightRequest="40"
-                HorizontalOptions="End"
-                VerticalOptions="End"
-                WidthRequest="40">
-                <Button.ImageSource>
-                    <FontImageSource
-                        FontFamily="FontAwesome"
-                        Glyph="{x:Static Icons:IconFont.Plus}"
-                        Size="15"
-                        Color="Black" />
-                </Button.ImageSource>
-            </Button>
-            <Label
-                Grid.Row="1"
-                Grid.Column="1"
-                Margin="10,10,0,0"
-                FontAttributes="Italic"
-                Text="Em 24/07/2023 as 21:05" />
-            <Border
-                Grid.Column="1"
-                Margin="0,10,0,0"
-                Padding="20,10"
-                BackgroundColor="WhiteSmoke"
-                HorizontalOptions="FillAndExpand"
-                Stroke="Gray"
-                StrokeShape="RoundRectangle 20,20,0,20"
-                VerticalOptions="Start">
-                <Label
-                    Padding="5"
-                    FontSize="18"
-                    HorizontalOptions="Center"
-                    Text="&lt;strong&gt;Livro Adicionado&lt;/strong&gt;"
-                    TextColor="Black"
-                    TextType="Html" />
-            </Border>
-        </Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="8*" />
-            </Grid.ColumnDefinitions>
-            <Button
-                Grid.Row="1"
-                Margin="10,0,0,0"
-                BackgroundColor="{StaticResource Gray300}"
-                ContentLayout="Top,0"
-                CornerRadius="20"
-                HeightRequest="40"
-                HorizontalOptions="End"
-                VerticalOptions="End"
-                WidthRequest="40">
-                <Button.ImageSource>
-                    <FontImageSource
-                        FontFamily="FontAwesome"
-                        Glyph="{x:Static Icons:IconFont.Pen}"
-                        Size="15"
-                        Color="Black" />
-                </Button.ImageSource>
-            </Button>
-            <Label
-                Grid.Row="1"
-                Grid.Column="1"
-                Margin="10,10,0,0"
-                FontAttributes="Italic"
-                Text="Em 24/07/2023 as 12:18" />
-            <Border
-                Grid.Column="1"
-                Margin="0,10,0,0"
-                Padding="20,10"
-                BackgroundColor="WhiteSmoke"
-                HorizontalOptions="FillAndExpand"
-                Stroke="Gray"
-                StrokeShape="RoundRectangle 20,20,0,20"
-                VerticalOptions="Start">
-                <Label
-                    Padding="5"
-                    FontSize="18"
-                    HorizontalOptions="Center"
-                    Text="&lt;strong&gt;Livro Atualizado.&lt;/strong&gt;&lt;strong&gt;&#10;Páginas:&lt;/strong&gt; de 230 para 240&lt;strong&gt;&#10;Volume:&lt;/strong&gt; de 2 para 3"
-                    TextColor="Black"
-                    TextType="Html" />
-            </Border>
-        </Grid>
-        <!--<Frame
+    <ContentPage.Content>
+        <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
+            <Frame
+                Margin="5"
+                Padding="5"
+                BackgroundColor="Transparent"
+                CornerRadius="10"
+                VerticalOptions="FillAndExpand">
+                <ScrollView>
+                    <ListView
+                        CachingStrategy="RecycleElement"
+                        HasUnevenRows="True"
+                        ItemsSource="{Binding UIBookHistoricList}"
+                        SelectionMode="None">
+                        <ListView.Behaviors>
+                            <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
+                        </ListView.Behaviors>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="model:UIBookHistoric">
+                                <ViewCell>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="8*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Button
+                                            Grid.Row="1"
+                                            Margin="10,0,0,0"
+                                            BackgroundColor="{StaticResource Gray300}"
+                                            ContentLayout="Top,0"
+                                            CornerRadius="20"
+                                            HeightRequest="40"
+                                            HorizontalOptions="End"
+                                            VerticalOptions="End"
+                                            WidthRequest="40">
+                                            <Button.ImageSource>
+                                                <FontImageSource
+                                                    FontFamily="FontAwesome"
+                                                    Glyph="{Binding BookHistoricIcon}"
+                                                    Size="15"
+                                                    Color="Black" />
+                                            </Button.ImageSource>
+                                        </Button>
+                                        <Label
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Margin="10,10,0,0"
+                                            FontAttributes="Italic"
+                                            Text="{Binding HistoricDate}"
+                                            TextColor="White" />
+                                        <Border
+                                            Grid.Column="1"
+                                            Margin="0,10,0,0"
+                                            Padding="20,10"
+                                            BackgroundColor="WhiteSmoke"
+                                            HorizontalOptions="FillAndExpand"
+                                            Stroke="Gray"
+                                            StrokeShape="RoundRectangle 20,20,0,20"
+                                            VerticalOptions="Start">
+                                            <Label
+                                                Padding="5"
+                                                FontSize="18"
+                                                HorizontalOptions="Start"
+                                                Text="{Binding BookHistoricText}"
+                                                TextColor="Black"
+                                                TextType="Html" />
+                                        </Border>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Footer>
+                            <Grid Padding="6" IsVisible="{Binding IsBusy}">
+                                <Grid.Triggers>
+                                    <Trigger TargetType="Grid" Property="IsVisible" Value="False">
+                                        <Setter Property="HeightRequest" Value="0" />
+                                    </Trigger>
+                                </Grid.Triggers>
+                                <ActivityIndicator
+                                    HorizontalOptions="Center"
+                                    IsRunning="{Binding IsBusy}"
+                                    IsVisible="{Binding IsBusy}"
+                                    VerticalOptions="Center"
+                                    Color="#2196F3" />
+                            </Grid>
+                        </ListView.Footer>
+                    </ListView>
+                </ScrollView>
+            </Frame>
+            <!--<Frame
             Margin="0,0,0,5"
             BackgroundColor="WhiteSmoke"
             BorderColor="Gray"
@@ -123,5 +117,6 @@
                     TextColor="Black" />
             </StackLayout>
         </Frame>-->
-    </VerticalStackLayout>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

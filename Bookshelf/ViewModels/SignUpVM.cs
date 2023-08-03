@@ -1,10 +1,6 @@
-﻿using Bookshelf.Utils;
+﻿using BLL.User;
+using Bookshelf.Utils;
 using Bookshelf.ViewModels.Components;
-using Bookshelf.Views;
-using BLL.Books.Sync;
-using BLL.User;
-using Models;
-using Models.Responses;
 using Plugin.Connectivity;
 using System.Windows.Input;
 
@@ -33,6 +29,9 @@ namespace Bookshelf.ViewModels
 
         public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { btnCreateUserIsEnabled = value; OnPropertyChanged(); } } }
 
+        IUserBLL UserBLL;
+
+        public SignUpVM(IUserBLL userBLL) { UserBLL = userBLL; }
 
         private async Task<bool> VerifyFileds()
         {

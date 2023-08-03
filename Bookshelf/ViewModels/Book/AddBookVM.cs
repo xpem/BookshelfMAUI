@@ -59,7 +59,7 @@ namespace Bookshelf.ViewModels
 
         public bool ImgCoverIsVisible { get => imgCoverIsVisible; set { if (value != imgCoverIsVisible) { imgCoverIsVisible = value; OnPropertyChanged(nameof(ImgCoverIsVisible)); } } }
 
-        private int pkrStatusSelectedIndex = 0;
+        private int pkrStatusSelectedIndex = 1;
 
         public int PkrStatusSelectedIndex
         {
@@ -173,6 +173,7 @@ namespace Bookshelf.ViewModels
                     ImgCoverIsVisible = true;
                     LblTitleIsEnabled = false;
                 }
+                
             }
             else
                 GoogleKey = null;
@@ -211,7 +212,7 @@ namespace Bookshelf.ViewModels
             }
             else
             {
-                RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = BtnInsertIsVisible = false;
+                RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
                 Situation = "0";
                 Rate = null;
                 Comment = "";
@@ -219,6 +220,7 @@ namespace Bookshelf.ViewModels
 
             BtnAddBookImageSourceGlyph = IconFont.Edit;
             BtnInsertText = "Alterar";
+            BtnInsertIsVisible = true;
             IsUpdate = true;
         }
 

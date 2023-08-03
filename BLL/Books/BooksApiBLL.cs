@@ -1,14 +1,18 @@
-﻿using ApiDAL;
+﻿using ApiDAL.Interfaces;
 using BLL.Handlers;
 using Models.Books;
 using Models.Responses;
 using System.Text.Json.Nodes;
 
-namespace BLL.Books.Api
+namespace BLL.Books
 {
-    public static class BooksApiBLL
+    public class BooksApiBLL: IBooksApiBLL
     {
-        public static async Task<BLLResponse> AddBook(Book book)
+        IBookApiDAL BookApiDAL;
+
+        public BooksApiBLL(IBookApiDAL bookApiDAL) { BookApiDAL = bookApiDAL; }
+
+        public async Task<BLLResponse> AddBook(Book book)
         {
             var resp = await BookApiDAL.AddBook(book);
 
@@ -29,7 +33,7 @@ namespace BLL.Books.Api
             return new BLLResponse() { Success = false, Content = null };
         }
 
-        public static async Task<BLLResponse> AltBook(Book book)
+        public async Task<BLLResponse> AltBook(Book book)
         {
             var resp = await BookApiDAL.AltBook(book);
 
@@ -52,11 +56,11 @@ namespace BLL.Books.Api
             return new BLLResponse() { Success = false, Content = null };
         }
 
-        public static async Task<BLLResponse> GetBooksByLastUpdate(DateTime lastUpdate)
+        public async Task<BLLResponse> GetBooksByLastUpdate(DateTime lastUpdate)
         {
             var resp = await BookApiDAL.GetBooksByLastUpdate(lastUpdate);
 
-            return ApiResponseHandler.Handler<List<Book>>(resp);          
+            return ApiResponseHandler.Handler<List<Book>>(resp);
         }
     }
 }

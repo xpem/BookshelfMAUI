@@ -1,9 +1,13 @@
-﻿using Models.Books;
-using BLL.Books.Api;
+﻿using BLL.Books;
+using BLL.Books.Historic.Interfaces;
 using BLL.User;
+using LocalDbDAL.Books.BookHistoric;
+using LocalDbDAL.User;
+using Models.Books;
+using Models.Books.Historic;
 using Plugin.Connectivity;
 
-namespace BLL.Books.Sync
+namespace BLL.Sync
 {
     public class BooksSyncBLL : IBooksSyncBLL
     {
@@ -14,9 +18,27 @@ namespace BLL.Books.Sync
             Processing, Sleeping, ServerOff
         }
 
-       public Timer? Timer { get; set; }
-        readonly int Interval = 60000;
-       public bool ThreadIsRunning { get; set; } = false;
+        private readonly IBookHistoricLocalDAL BookHistoricLocalDAL;
+        readonly IBookHistoricApiBLL BookHistoricApiBLL;
+        readonly IBooksApiBLL BooksApiBLL;
+        readonly IUserBLL UserBLL;
+        IUserLocalDAL UserLocalDAL;
+
+        public BooksSyncBLL(IBookHistoricLocalDAL bookHistoricLocalDAL, IBookHistoricApiBLL bookHistoricApiBLL, IBooksApiBLL booksApiBLL, IUserBLL userBLL, IUserLocalDAL userLocalDAL)
+        {
+            BookHistoricLocalDAL = bookHistoricLocalDAL;
+            BookHistoricApiBLL = bookHistoricApiBLL;
+            BooksApiBLL = booksApiBLL;
+            UserBLL = userBLL;
+            UserLocalDAL = userLocalDAL;
+        }
+
+        public Timer? Timer { get; set; }
+
+        //30 secs
+        readonly int Interval = 40000;
+
+        public bool ThreadIsRunning { get; set; } = false;
 
 
         public void StartThread()
@@ -53,6 +75,7 @@ namespace BLL.Books.Sync
 
                     if (CrossConnectivity.Current.IsConnected)
                     {
+
                         DateTime LastUpdate = user.LastUpdate;
 
                         List<Book> booksList = await LocalDbDAL.Books.BooksLocalDAL.GetBooksByLastUpdate(user.Id, user.LastUpdate);
@@ -64,7 +87,7 @@ namespace BLL.Books.Sync
                             if (book.LocalTempId != null)
                             {
                                 //define the key has a null for register the book in firebase
-                                var addBookResp = await BooksApiBLL.AddBook(book);
+                                Models.Responses.BLLResponse addBookResp = await BooksApiBLL.AddBook(book);
 
                                 if (addBookResp.Success && addBookResp.Content is not null)
                                 {
@@ -78,7 +101,8 @@ namespace BLL.Books.Sync
                                 await LocalDbDAL.Books.BooksLocalDAL.UpdateBook(book, user.Id);
                         }
 
-                        var respGetBooksByLastUpdate = await BooksApiBLL.GetBooksByLastUpdate(user.LastUpdate);
+                        //update local database
+                        Models.Responses.BLLResponse respGetBooksByLastUpdate = await BooksApiBLL.GetBooksByLastUpdate(user.LastUpdate);
 
                         if (respGetBooksByLastUpdate.Success && respGetBooksByLastUpdate.Content is not null)
                         {
@@ -95,7 +119,23 @@ namespace BLL.Books.Sync
                             }
                         }
 
-                        await LocalDbDAL.User.UserLocalDAL.UpdateUserLastUpdateLocal(user.Id, LastUpdate);
+                        //  var respGetBookHistoricListByCreatedAt = await BookHistoricApiBLL.GetBookHistoricByLastCreatedAt(user.LastUpdate);
+
+                        Models.Responses.BLLResponse respGetBookHistoricListByCreatedAt = await BookHistoricApiBLL.GetBookHistoricByLastCreatedAt(DateTime.MinValue);
+
+                        if (respGetBookHistoricListByCreatedAt.Success && respGetBookHistoricListByCreatedAt.Content is not null)
+                        {
+                            List<BookHistoric>? bookHistoricsList = respGetBookHistoricListByCreatedAt.Content as List<BookHistoric>;
+
+                            if (bookHistoricsList is not null)
+                                foreach (BookHistoric bookHistoric in bookHistoricsList)
+                                {
+                                    if (!await BookHistoricLocalDAL.CheckBookHistoricById(bookHistoric.Id))
+                                        await BookHistoricLocalDAL.AddBookHistoric(bookHistoric, user.Id);
+                                }
+                        }
+
+                        await UserLocalDAL.UpdateUserLastUpdateLocal(user.Id, LastUpdate);
                     }
 
                     Synchronizing = SyncStatus.Sleeping;

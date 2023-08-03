@@ -12,9 +12,11 @@ namespace Bookshelf.ViewModels
 
         public string Email { get => email; set { if (email != value) { email = value; OnPropertyChanged(); } } }
 
+        IUserBLL UserBLL;
 
-        public UpdatePasswordVM()
+        public UpdatePasswordVM(IUserBLL userBLL)
         {
+            UserBLL = userBLL;
         }
 
         public ICommand UpdatePasswordCommand => new Command(async () =>

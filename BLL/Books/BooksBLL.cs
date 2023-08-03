@@ -1,5 +1,4 @@
-﻿using BLL.Books.Api;
-using Models.Books;
+﻿using Models.Books;
 using LocalDbDAL.User;
 using Plugin.Connectivity;
 
@@ -7,6 +6,14 @@ namespace BLL.Books
 {
     public class BooksBLL : IBooksBLL
     {
+        IBooksApiBLL BooksApiBLL;
+        IUserLocalDAL UserLocalDAL;
+
+        public BooksBLL(IBooksApiBLL booksApiBLL, IUserLocalDAL userLocalDAL)
+        {
+            BooksApiBLL = booksApiBLL;
+            UserLocalDAL = userLocalDAL;
+        }
 
         public async Task<Totals> GetBookshelfTotals()
         {
@@ -57,6 +64,7 @@ namespace BLL.Books
 
                     return resp.Success;
                 }
+                else return true;
             }
             return false;
         }
@@ -131,7 +139,7 @@ namespace BLL.Books
             List<UIBookItem> listBooksItens = new();
             int total = 0;
 
-            Models.User? User = await LocalDbDAL.User.UserLocalDAL.GetUser();
+            Models.User? User = await UserLocalDAL.GetUser();
             if (User?.Id != null)
             {
                 int pageSize = 10;
@@ -197,31 +205,35 @@ namespace BLL.Books
 
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                   _ = await BooksApiBLL.AltBook(book);
+                    _ = await BooksApiBLL.AltBook(book);
                 }
             }
         }
 
         public async Task UpdateBookSituation(string Key, Status status, int score, string comment)
         {
-            Book? book = await GetBook(Key);
-
-            Models.User? User = await UserLocalDAL.GetUser();
-
-            if (book is not null && User?.Id is not null)
+            try
             {
-                book.UpdatedAt = DateTime.Now;
-                book.Status = status;
-                book.Score = score;
-                book.Comment = comment;
+                Book? book = await GetBook(Key);
 
-                await LocalDbDAL.Books.BooksLocalDAL.UpdateBook(book, User.Id);
+                Models.User? User = await UserLocalDAL.GetUser();
 
-                if (CrossConnectivity.Current.IsConnected)
+                if (book is not null && User?.Id is not null)
                 {
-                    _ = BooksApiBLL.AltBook(book);
+                    book.UpdatedAt = DateTime.Now;
+                    book.Status = status;
+                    book.Score = score;
+                    book.Comment = comment;
+
+                    await LocalDbDAL.Books.BooksLocalDAL.UpdateBook(book, User.Id);
+
+                    if (CrossConnectivity.Current.IsConnected)
+                    {
+                        _ = BooksApiBLL.AltBook(book);
+                    }
                 }
             }
+            catch (Exception ex) { throw ex; }
         }
     }
 }
