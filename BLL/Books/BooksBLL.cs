@@ -64,6 +64,7 @@ namespace BLL.Books
 
                     return resp.Success;
                 }
+                else return true;
             }
             return false;
         }

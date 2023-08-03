@@ -2,8 +2,6 @@
 using Bookshelf.Resources.Fonts.Styles;
 using Bookshelf.UIModels;
 using Bookshelf.ViewModels.Components;
-using Models.Books;
-using Models.Books.Historic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
@@ -15,6 +13,8 @@ namespace Bookshelf.ViewModels.Book
         #region Vars
 
         readonly IBookHistoricBLL BookHistoricBLL;
+
+        private int BookId { get; set; }
 
         public ObservableCollection<UIBookHistoric> UIBookHistoricList { get; } = new();
 
@@ -29,7 +29,7 @@ namespace Bookshelf.ViewModels.Book
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            //    SituationIndex = Convert.ToInt16(query["Situation"].ToString());
+            BookId = Convert.ToInt32(query["BookId"]);
 
             if (UIBookHistoricList.Count > 0)
                 UIBookHistoricList.Clear();
@@ -42,7 +42,7 @@ namespace Bookshelf.ViewModels.Book
         {
             IsBusy = true;
 
-            Models.Books.Historic.BookHistoricList bookHistoricList = await BookHistoricBLL.GetBookHistoricByBookId(pageNumber, 216);
+            Models.Books.Historic.BookHistoricList bookHistoricList = await BookHistoricBLL.GetBookHistoricByBookId(pageNumber, BookId);
 
             foreach (var bookHistoricObj in bookHistoricList.List)
             {
@@ -59,25 +59,31 @@ namespace Bookshelf.ViewModels.Book
                 else
                 {
                     bookHistoricIcon = IconFont.Pen;
-                    bookHistoricText.Append($"<strong>Alteração</strong><br>");
-
 
                     if (bookHistoricObj.BookHistoricItems.Count > 0)
                     {
                         foreach (var bookHistoricItemObj in bookHistoricObj.BookHistoricItems)
                         {
+                            if (bookHistoricText.Length > 0) bookHistoricText.Append("<br>");
+
                             if (bookHistoricItemObj.BookFieldId == bookStatusId)
                             {
-                                updatedFrom = BuildStatusText(Convert.ToInt32(bookHistoricItemObj.UpdatedFrom));
-                                updatedTo = BuildStatusText(Convert.ToInt32(bookHistoricItemObj.UpdatedTo));
+                                if (!string.IsNullOrEmpty(bookHistoricItemObj.UpdatedFrom))
+                                    updatedFrom = $"de '{BuildStatusText(Convert.ToInt32(bookHistoricItemObj.UpdatedFrom))}'";
+                                else updatedFrom = "";
+
+                                updatedTo = $"'{BuildStatusText(Convert.ToInt32(bookHistoricItemObj.UpdatedTo))}'";
                             }
                             else
                             {
-                                updatedFrom = bookHistoricItemObj.UpdatedFrom;
-                                updatedTo = bookHistoricItemObj.UpdatedTo;
+                                if (!string.IsNullOrEmpty(bookHistoricItemObj.UpdatedFrom))
+                                    updatedFrom = $"de '{bookHistoricItemObj.UpdatedFrom}'";
+                                else updatedFrom = "";
+
+                                updatedTo = $"'{bookHistoricItemObj.UpdatedTo}'";
                             }
 
-                            bookHistoricText.Append($"<br> <strong>{bookHistoricItemObj.BookFieldName}</strong>: de {updatedFrom} para {updatedTo};");
+                            bookHistoricText.Append($"<strong>{bookHistoricItemObj.BookFieldName}</strong>: {updatedFrom} para {updatedTo};");
                         }
                     }
                 }
@@ -100,16 +106,15 @@ namespace Bookshelf.ViewModels.Book
             LoadList(CurrentPage);
         });
 
-
         private static string BuildStatusText(int statusId)
         {
             return statusId switch
             {
-                0 => "'Nenhum'",
-                1 => "'Vou ler'",
-                2 => "'Lendo'",
-                3 => "'Lido'",
-                4 => "'Interrompido'",
+                0 => "Nenhum",
+                1 => "Vou ler",
+                2 => "Lendo",
+                3 => "Lido",
+                4 => "Interrompido",
                 _ => "Desconhecido",
             };
         }

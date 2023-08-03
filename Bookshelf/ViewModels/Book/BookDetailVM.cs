@@ -37,7 +37,7 @@ namespace Bookshelf.ViewModels
         #endregion
 
 
-        private string BookKey { get; set; }
+        private string BookId { get; set; }
 
         private string SituationOri { get; set; }
 
@@ -116,12 +116,12 @@ namespace Bookshelf.ViewModels
 
         public ICommand ConfirmCommand => new Command(async (e) => { await UpdateBookSituation(); });
 
-        public ICommand CallTimelineCommand => new Command(async (e) => await Shell.Current.GoToAsync($"{nameof(BookHistoric)}"));
+        public ICommand CallTimelineCommand => new Command(async (e) => await Shell.Current.GoToAsync($"{nameof(BookHistoric)}?BookId={BookId}"));
 
         /// <summary>
         /// navigate to update book
         /// </summary>
-        public ICommand NavToUpdateBookCommand => new Command(async (e) => { await Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={BookKey}", true); });
+        public ICommand NavToUpdateBookCommand => new Command(async (e) => { await Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={BookId}", true); });
 
         /// <summary>
         /// inactivate book
@@ -131,7 +131,7 @@ namespace Bookshelf.ViewModels
             {
                 if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir este livro?", "Sim", "Cancelar"))
                 {
-                    _ = booksServices.InactivateBook(BookKey);
+                    _ = booksServices.InactivateBook(BookId);
 
                     if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
                     {
@@ -142,11 +142,11 @@ namespace Bookshelf.ViewModels
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            BookKey = query["Key"].ToString();
+            BookId = query["Key"].ToString();
             situation = "0";
             rate = 0;
 
-            GetBook(BookKey);
+            GetBook(BookId);
         }
 
         private async void GetBook(string bookKey)
@@ -254,7 +254,7 @@ namespace Bookshelf.ViewModels
 
             if (alterou)
             {
-                _ = booksServices.UpdateBookSituation(BookKey, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
+                _ = booksServices.UpdateBookSituation(BookId, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
 
                 if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Situação alterada", null, "Ok"))
                 {

@@ -36,7 +36,7 @@ namespace BLL.Sync
         public Timer? Timer { get; set; }
 
         //30 secs
-        readonly int Interval = 30000;
+        readonly int Interval = 40000;
 
         public bool ThreadIsRunning { get; set; } = false;
 
