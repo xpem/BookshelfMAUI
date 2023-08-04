@@ -3,8 +3,11 @@ using ApiDAL.Interfaces;
 using BLL.Books;
 using BLL.Books.Historic;
 using BLL.Books.Historic.Interfaces;
+using BLL.Books.Historic.Sync;
+using BLL.Books.Sync;
 using BLL.Sync;
 using BLL.User;
+using Bookshelf.Services.Sync;
 using Bookshelf.ViewModels;
 using Bookshelf.ViewModels.Book;
 using Bookshelf.ViewModels.GoogleSearch;
@@ -12,6 +15,7 @@ using Bookshelf.Views;
 using Bookshelf.Views.Book;
 using Bookshelf.Views.GoogleSearch;
 using CommunityToolkit.Maui;
+using LocalDbDAL.Books;
 using LocalDbDAL.Books.BookHistoric;
 using LocalDbDAL.User;
 
@@ -50,6 +54,7 @@ public static class MauiProgram
 
         #region Dependency injections
 
+        #region UIs
 
         builder.Services.AddTransient<Main>();
         builder.Services.AddTransient<MainVM>();
@@ -78,20 +83,33 @@ public static class MauiProgram
         builder.Services.AddTransient<BookHistoric>();
         builder.Services.AddTransient<BookHistoricVM>();
 
+        #endregion
+
+        #region UIServices
+
+        builder.Services.AddSingleton<ISyncServices, SyncServices>();
+
+        #endregion;
+
         #region BLL
 
-        builder.Services.AddScoped<IBooksSyncBLL, BooksSyncBLL>();
         builder.Services.AddScoped<IBookHistoricApiBLL, BookHistoricApiBLL>();
         builder.Services.AddScoped<IBookHistoricBLL, BookHistoricBLL>();
         builder.Services.AddScoped<IBooksBLL, BooksBLL>();
         builder.Services.AddScoped<IBooksApiBLL, BooksApiBLL>();
         builder.Services.AddScoped<IUserBLL, UserBLL>();
+
+        builder.Services.AddScoped<IBookHistoricSyncBLL, BookHistoricSyncBLL>();
+        builder.Services.AddScoped<IBookSyncBLL, BookSyncBLL>();       
+
         #endregion
 
         #region LocalDAL
 
         builder.Services.AddScoped<IBookHistoricLocalDAL, BookHistoricLocalDAL>();
         builder.Services.AddScoped<IUserLocalDAL, UserLocalDAL>();
+        builder.Services.AddScoped<IBookLocalDAL, BookLocalDAL>();
+
         #endregion;
 
         #region ApiDAL

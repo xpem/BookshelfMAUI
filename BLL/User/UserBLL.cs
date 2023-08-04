@@ -2,7 +2,6 @@
 using ApiDAL.Interfaces;
 using LocalDbDAL.BuildDb;
 using LocalDbDAL.User;
-using Models;
 using Models.Responses;
 using System.Text.Json.Nodes;
 
@@ -10,8 +9,8 @@ namespace BLL.User
 {
     public class UserBLL : IUserBLL
     {
-        IUserApiDAL UserApiDAL;
-        IUserLocalDAL UserLocalDAL;
+        readonly IUserApiDAL UserApiDAL;
+        readonly IUserLocalDAL UserLocalDAL;
 
         public UserBLL(IUserApiDAL userApiDAL, IUserLocalDAL userLocalDAL) { UserApiDAL = userApiDAL; UserLocalDAL = userLocalDAL; }
 
@@ -134,7 +133,7 @@ namespace BLL.User
                                 Password = PasswordHandler.Encrypt(password)
                             };
 
-                          await  UserLocalDAL.InsertUser(user);
+                            await UserLocalDAL.InsertUser(user);
 
                             return new BLLResponse() { Success = true };
                         }
@@ -151,6 +150,11 @@ namespace BLL.User
         }
 
         public Task CleanDatabase() => BuildLocalDbDAL.CleanDatabase();
+
+        public async Task UpdateLocalUserLastUpdate(int uid, DateTime lastUpdate)
+        {
+            await UserLocalDAL.UpdateUserLastUpdateLocal(uid, lastUpdate);
+        }
 
         //public async Task<Models.User> SignUp(string name, string email, string password) => await UserApiService.SignUp(name, email, password);
     }

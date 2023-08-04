@@ -7,8 +7,8 @@ namespace BLL.Books.Historic
     public class BookHistoricBLL : IBookHistoricBLL
     {
 
-        LocalDbDAL.Books.BookHistoric.IBookHistoricLocalDAL BookHistoricLocalDAL;
-        IUserLocalDAL UserLocalDAL;
+        readonly LocalDbDAL.Books.BookHistoric.IBookHistoricLocalDAL BookHistoricLocalDAL;
+        readonly IUserLocalDAL UserLocalDAL;
 
         public BookHistoricBLL(LocalDbDAL.Books.BookHistoric.IBookHistoricLocalDAL bookHistoricLocalDAL, IUserLocalDAL userLocalDAL)
         {

@@ -1,6 +1,7 @@
 ﻿using Bookshelf.Views;
 using BLL.User;
 using BLL.Sync;
+using Bookshelf.Services.Sync;
 
 namespace Bookshelf;
 
@@ -24,7 +25,7 @@ public partial class App : Application
 
     //criar um model result para os retornos de respostas
 
-    public App(IBooksSyncBLL booksSyncServices,IUserBLL userBLL)
+    public App(ISyncServices syncServices,IUserBLL userBLL)
     {
         BLL.BuildDbBLL.BuildSQLiteDb();
 
@@ -32,7 +33,7 @@ public partial class App : Application
 
         if (userBLL.GetUserLocal().Result != null)
         {
-            booksSyncServices.StartThread();
+            syncServices.StartThread();
 
             MainPage = new AppShell();
             Shell.Current.GoToAsync($"//{nameof(Main)}");

@@ -15,5 +15,7 @@ namespace BLL.User
         Task<BLLResponse> GetUser(string email, string password);
 
         Task CleanDatabase();
+
+        Task UpdateLocalUserLastUpdate(int uid, DateTime lastUpdate);
     }
 }

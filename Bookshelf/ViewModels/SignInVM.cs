@@ -4,6 +4,7 @@ using BLL.User;
 using Plugin.Connectivity;
 using System.Windows.Input;
 using BLL.Sync;
+using Bookshelf.Services.Sync;
 
 namespace Bookshelf.ViewModels
 {
@@ -22,12 +23,12 @@ namespace Bookshelf.ViewModels
 
         public bool BtnSignEnabled { get => btnSignEnabled; set { if (btnSignEnabled != value) { btnSignEnabled = value; OnPropertyChanged(); } } }
 
-        readonly IBooksSyncBLL booksSyncServices;
+        readonly ISyncServices SyncServices;
         IUserBLL UserBLL;
 
-        public SignInVM(IBooksSyncBLL _booksSyncServices, IUserBLL userBLL)
+        public SignInVM(ISyncServices syncServices, IUserBLL userBLL)
         {
-            booksSyncServices = _booksSyncServices;
+            SyncServices = syncServices;
             SignInText = "Acessar";
             UserBLL = userBLL;
         }
@@ -49,7 +50,7 @@ namespace Bookshelf.ViewModels
 
                              if (resp.Success)
                              {
-                                 booksSyncServices.StartThread();
+                                 SyncServices.StartThread();
 
                                  await Shell.Current.GoToAsync($"//{nameof(Main)}");
 

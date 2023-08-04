@@ -4,9 +4,9 @@ using System.Text;
 
 namespace LocalDbDAL.Books
 {
-    public static class BooksLocalDAL
+    public class BookLocalDAL : IBookLocalDAL
     {
-        public static async Task<List<Book>> GetBooksByLastUpdate(int? userId, DateTime lastUpdate)
+        public async Task<List<Book>> GetBooksByLastUpdate(int? userId, DateTime lastUpdate)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace LocalDbDAL.Books
             catch (Exception ex) { throw ex; }
         }
 
-        public static async Task UpdateBookId(string localTempId, string? bookId, int? userId)
+        public async Task UpdateBookId(string localTempId, string? bookId, int? userId)
         {
             SqliteFunctions.OpenIfClosed();
 
@@ -71,7 +71,7 @@ namespace LocalDbDAL.Books
             SqliteFunctions.CloseIfOpen();
         }
 
-        public static async Task AddBook(Book book, int? userId)
+        public async Task AddBook(Book book, int? userId)
         {
             SqliteFunctions.OpenIfClosed();
 
@@ -103,7 +103,7 @@ namespace LocalDbDAL.Books
             SqliteFunctions.CloseIfOpen();
         }
 
-        public static async Task UpdateBook(Book book, int? userId)
+        public async Task UpdateBook(Book book, int? userId)
         {
             SqliteFunctions.OpenIfClosed();
 
@@ -136,7 +136,7 @@ namespace LocalDbDAL.Books
             SqliteFunctions.CloseIfOpen();
         }
 
-        public static DateTime? GetLastUpdateBook(int? id, string? title)
+        public DateTime? GetLastUpdateBook(int? id, string? title)
         {
             SqliteFunctions.OpenIfClosed();
             string command = "select UPDATED_AT from BOOK where";
@@ -175,17 +175,17 @@ namespace LocalDbDAL.Books
         /// Update or create local book with the newest version of the book in the server
         /// </summary>
         /// <param name="book"></param>
-        public static async Task AddOrUpdateBook(Book book, int? userId)
+        public async Task AddOrUpdateBook(Book book, int? userId)
         {
             DateTime? lastUpdate = GetLastUpdateBook(book?.Id, book?.Title);
 
             if (lastUpdate == null && book is not null && book.Inactive == 0)
                 await AddBook(book, userId);
             else if (book is not null && book.UpdatedAt > lastUpdate)
-               await UpdateBook(book, userId);
+                await UpdateBook(book, userId);
         }
 
-        public async static Task<List<(Status, int)>> GetBookshelfTotals(int userId)
+        public async Task<List<(Status, int)>> GetBookshelfTotals(int userId)
         {
             SqliteFunctions.OpenIfClosed();
 
@@ -204,7 +204,7 @@ namespace LocalDbDAL.Books
             return booksTotalSituations;
         }
 
-        public async static Task<Book> GetBook(int userId, string bookKey)
+        public async Task<Book> GetBook(int userId, string bookKey)
         {
             try
             {
@@ -249,7 +249,7 @@ namespace LocalDbDAL.Books
             catch (Exception ex) { throw ex; }
         }
 
-        public async static Task<Book?> GetBookByTitleOrGooglekey(int userId, string bookTitle, string? googleKey)
+        public async Task<Book?> GetBookByTitleOrGooglekey(int userId, string bookTitle, string? googleKey)
         {
             try
             {
@@ -311,11 +311,11 @@ namespace LocalDbDAL.Books
             catch (Exception ex) { throw ex; }
         }
 
-        public static async Task<List<Book>> GetBookSituationByStatus(int Situation, int UserId, string? textoBusca)
+        public async Task<List<Book>> GetBookSituationByStatus(int Situation, int UserId, string? textoBusca)
         {
             try
             {
-                
+
 
                 string command = "select ID, TITLE, SUBTITLE, AUTHORS, YEAR, VOLUME, PAGES, ISBN, GENRE, UPDATED_AT, INACTIVE, STATUS, COVER, GOOGLE_ID, SCORE, COMMENT, CREATED_AT from BOOK where UID = @userId";
 
@@ -386,7 +386,7 @@ namespace LocalDbDAL.Books
         /// <summary>
         /// Inactivate a book in local batabase
         /// </summary>
-        public static async Task InactivateBook(int? bookId, int userId, DateTime lastUpdate)
+        public async Task InactivateBook(int? bookId, int userId, DateTime lastUpdate)
         {
             SqliteFunctions.OpenIfClosed();
 

@@ -7,6 +7,8 @@ using Microsoft.Maui.Controls;
 using System.Windows.Input;
 using BLL.Sync;
 using BLL.User;
+using Bookshelf.Services.Sync;
+using Models;
 
 namespace Bookshelf.ViewModels
 {
@@ -46,15 +48,18 @@ namespace Bookshelf.ViewModels
 
         readonly IBooksBLL booksServices;
 
-        readonly IBooksSyncBLL booksSyncBLL;
+        //readonly IBookSyncBLL booksSyncBLL;
 
-        IUserBLL UserBLL;
+        readonly ISyncServices SyncService;
 
-        public MainVM(IBooksBLL _booksServices, IBooksSyncBLL _booksSyncBLL, IUserBLL userBLL)
+        readonly IUserBLL UserBLL;
+
+        public MainVM(IBooksBLL _booksServices, IUserBLL userBLL, ISyncServices syncService)
         {
             booksServices = _booksServices;
-            booksSyncBLL = _booksSyncBLL;
             UserBLL = userBLL;
+            SyncService = syncService;
+
         }
         
         private Timer _Timer;
@@ -95,10 +100,10 @@ namespace Bookshelf.ViewModels
                 {
                     IsConnected = Colors.Green;
 
-                    switch (BooksSyncBLL.Synchronizing)
+                    switch (SyncService.Synchronizing)
                     {
-                        case BooksSyncBLL.SyncStatus.Processing: IsSync = Colors.Green; break;
-                        case BooksSyncBLL.SyncStatus.Sleeping:
+                        case SyncStatus.Processing: IsSync = Colors.Green; break;
+                        case SyncStatus.Sleeping:
 
                             _ = GetBookshelfTotals();
 
@@ -114,7 +119,7 @@ namespace Bookshelf.ViewModels
                             else { FrmMainIsEnabled = true; }
 
                             break;
-                        case BooksSyncBLL.SyncStatus.ServerOff:
+                        case SyncStatus.ServerOff:
                             IsSync = Colors.Red;
                             break;
                     }
@@ -166,11 +171,10 @@ namespace Bookshelf.ViewModels
                 await UserBLL.CleanDatabase();
                 _Timer.Dispose();
                 //finalize sync thread process
-                booksSyncBLL.ThreadIsRunning = false;
+                SyncService.ThreadIsRunning = false;
                 ThreadIsRunning = false;
 
-                if (booksSyncBLL.Timer is not null)
-                    booksSyncBLL.Timer.Dispose();
+                SyncService.Timer?.Dispose();
 
                 await Shell.Current.GoToAsync($"//{nameof(SignIn)}");
             }

@@ -1,11 +1,11 @@
 ﻿namespace BLL.Sync
 {
-    public interface IBooksSyncBLL
+    public interface _IBooksSyncBLL
     {
-        void StartThread();
+        //void StartThread();
 
-        Timer? Timer { get; set; }
+        //Timer? Timer { get; set; }
 
-        bool ThreadIsRunning { get; set; }
+        //bool ThreadIsRunning { get; set; }
     }
 }

@@ -1,18 +1,21 @@
 ﻿using Models.Books;
 using LocalDbDAL.User;
 using Plugin.Connectivity;
+using LocalDbDAL.Books;
 
 namespace BLL.Books
 {
     public class BooksBLL : IBooksBLL
     {
-        IBooksApiBLL BooksApiBLL;
-        IUserLocalDAL UserLocalDAL;
+        readonly IBooksApiBLL BooksApiBLL;
+        readonly IUserLocalDAL UserLocalDAL;
+        readonly IBookLocalDAL BookLocalDAL;
 
-        public BooksBLL(IBooksApiBLL booksApiBLL, IUserLocalDAL userLocalDAL)
+        public BooksBLL(IBooksApiBLL booksApiBLL, IUserLocalDAL userLocalDAL, IBookLocalDAL bookLocalDAL)
         {
             BooksApiBLL = booksApiBLL;
             UserLocalDAL = userLocalDAL;
+            BookLocalDAL = bookLocalDAL;
         }
 
         public async Task<Totals> GetBookshelfTotals()
@@ -22,7 +25,7 @@ namespace BLL.Books
             Models.User? User = await UserLocalDAL.GetUser();
             if (User?.Id != null)
             {
-                List<(Status, int)> list = await LocalDbDAL.Books.BooksLocalDAL.GetBookshelfTotals(User.Id);
+                List<(Status, int)> list = await BookLocalDAL.GetBookshelfTotals(User.Id);
 
                 if (list.Count > 0)
                 {
@@ -44,7 +47,7 @@ namespace BLL.Books
         {
             Models.User? User = await UserLocalDAL.GetUser();
             if (User?.Id != null)
-                return await LocalDbDAL.Books.BooksLocalDAL.GetBook(User.Id, bookKey);
+                return await BookLocalDAL.GetBook(User.Id, bookKey);
 
             return null;
         }
@@ -56,7 +59,7 @@ namespace BLL.Books
             {
                 book.UpdatedAt = DateTime.Now;
 
-                await LocalDbDAL.Books.BooksLocalDAL.UpdateBook(book, User.Id);
+                await BookLocalDAL.UpdateBook(book, User.Id);
                 //
                 if (CrossConnectivity.Current.IsConnected)
                 {
@@ -89,7 +92,7 @@ namespace BLL.Books
                     book.LocalTempId = Guid.NewGuid().ToString();
                 }
 
-                await LocalDbDAL.Books.BooksLocalDAL.AddBook(book, User.Id);
+                await BookLocalDAL.AddBook(book, User.Id);
                 return true;
             }
 
@@ -103,7 +106,7 @@ namespace BLL.Books
             Models.User? User = await UserLocalDAL.GetUser();
             if (User?.Id != null)
             {
-                Book? _book = await LocalDbDAL.Books.BooksLocalDAL.GetBookByTitleOrGooglekey(User.Id, title, null);
+                Book? _book = await BookLocalDAL.GetBookByTitleOrGooglekey(User.Id, title, null);
 
                 if (_book is not null)
                 {
@@ -120,7 +123,7 @@ namespace BLL.Books
             Models.User? User = await UserLocalDAL.GetUser();
             if (User?.Id != null)
             {
-                Book? _book = await LocalDbDAL.Books.BooksLocalDAL.GetBookByTitleOrGooglekey(User.Id, title, googleId);
+                Book? _book = await BookLocalDAL.GetBookByTitleOrGooglekey(User.Id, title, googleId);
 
                 return _book;
             }
@@ -144,7 +147,7 @@ namespace BLL.Books
             {
                 int pageSize = 10;
 
-                List<Book> list = (await LocalDbDAL.Books.BooksLocalDAL.GetBookSituationByStatus(status, User.Id, textoBusca));
+                List<Book> list = (await BookLocalDAL.GetBookSituationByStatus(status, User.Id, textoBusca));
 
                 total = list.Count;
 
@@ -201,7 +204,7 @@ namespace BLL.Books
                 book.UpdatedAt = DateTime.Now;
                 book.Inactive = 1;
 
-                await LocalDbDAL.Books.BooksLocalDAL.InactivateBook(book.Id, User.Id, book.UpdatedAt);
+                await BookLocalDAL.InactivateBook(book.Id, User.Id, book.UpdatedAt);
 
                 if (CrossConnectivity.Current.IsConnected)
                 {
@@ -225,7 +228,7 @@ namespace BLL.Books
                     book.Score = score;
                     book.Comment = comment;
 
-                    await LocalDbDAL.Books.BooksLocalDAL.UpdateBook(book, User.Id);
+                    await BookLocalDAL.UpdateBook(book, User.Id);
 
                     if (CrossConnectivity.Current.IsConnected)
                     {
