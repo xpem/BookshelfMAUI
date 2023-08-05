@@ -4,14 +4,13 @@ using LocalDbDAL.User;
 using Models.Responses;
 using System.Net;
 using System.Text;
-using System.Text.Json.Nodes;
-using System.Text.Json;
 
 namespace ApiDAL
 {
     public class HttpClientFunctions : HttpClient, IHttpClientFunctions
     {
         readonly IUserLocalDAL UserLocalDAL;
+        HttpClient httpClient = new();
 
         public HttpClientFunctions(IUserLocalDAL userLocalDAL)
         {
@@ -21,8 +20,7 @@ namespace ApiDAL
         public async Task<bool> CheckServer()
         {
             try
-            {
-                using HttpClient httpClient = new();
+            {                
                 HttpResponseMessage httpResponse = await httpClient.GetAsync(ApiKeys.ApiUri + "/imalive");
 
                 if (httpResponse != null && httpResponse.IsSuccessStatusCode && !string.IsNullOrEmpty(await httpResponse.Content.ReadAsStringAsync())) return true;
@@ -36,8 +34,6 @@ namespace ApiDAL
         {
             try
             {
-                using HttpClient httpClient = new();
-
                 if (userToken is not null)
                     httpClient.DefaultRequestHeaders.Add("authorization", "bearer " + userToken);
 
@@ -82,6 +78,7 @@ namespace ApiDAL
             {
                 if (ex.InnerException is not null && (ex.InnerException.Message == "Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente." || ex.InnerException.Message.Contains("Este host não é conhecido.")))
                     return new ApiResponse() { Success = false, Content = null, Error = ErrorTypes.ServerUnavaliable };
+
                 throw ex;
             }
         }
@@ -103,9 +100,14 @@ namespace ApiDAL
 
                     if (!refreshTokenSuccess || userToken is null)
                         return resp;
+
+                    //refresh DefaultRequestHeaders
+                    httpClient = new HttpClient();
                 }
                 else
+                {
                     userToken = await UserLocalDAL.GetUserToken();
+                }
 
                 resp = await Request(requestsType, url, userToken, jsonContent);
 
@@ -115,103 +117,20 @@ namespace ApiDAL
             throw new Exception($"Erro ao tentar AuthRequest de tipo {requestsType} na url: {url}");
         }
 
-        public async Task<ApiResponse> GetAsync(string uri, string userToken)
-        {
-            try
-            {
-                using HttpClient httpClient = new();
-                httpClient.DefaultRequestHeaders.Add("authorization", "bearer " + userToken);
-                HttpResponseMessage httpResponse = await httpClient.GetAsync(uri);
-
-                return new ApiResponse()
-                {
-                    Success = httpResponse.IsSuccessStatusCode,
-                    Error = httpResponse.StatusCode == HttpStatusCode.Unauthorized ? ErrorTypes.Unauthorized : null,
-                    Content = await httpResponse.Content.ReadAsStringAsync()
-                };
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException is not null && (ex.InnerException.Message == "Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente." || ex.InnerException.Message.Contains("Este host não é conhecido.")))
-                    return new ApiResponse() { Success = false, Content = null, Error = ErrorTypes.ServerUnavaliable };
-
-                throw ex;
-            }
-        }
-
-        public async Task<ApiResponse> PostAsync(string uri, string jsonContent, string? userToken = null)
-        {
-            try
-            {
-                StringContent data = new(jsonContent, Encoding.UTF8, "application/json");
-
-                using HttpClient httpClient = new();
-                if (userToken is not null)
-                    httpClient.DefaultRequestHeaders.Add("authorization", "bearer " + userToken);
-
-                HttpResponseMessage? httpResponse = await httpClient.PostAsync(uri, data);
-                return new ApiResponse() { Success = httpResponse.IsSuccessStatusCode, Content = await httpResponse.Content.ReadAsStringAsync() };
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException is not null && ex.InnerException.Message == "Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.")
-                    return new ApiResponse() { Success = false, Content = null, Error = ErrorTypes.ServerUnavaliable };
-
-                throw ex;
-            }
-        }
-
-        public async Task<ApiResponse> PutAsync(string uri, string jsonContent, string? userToken = null)
-        {
-            try
-            {
-                StringContent data = new(jsonContent, Encoding.UTF8, "application/json");
-
-                using HttpClient httpClient = new();
-                if (userToken is not null)
-                    httpClient.DefaultRequestHeaders.Add("authorization", "bearer " + userToken);
-
-                HttpResponseMessage? httpResponse = await httpClient.PutAsync(uri, data);
-                return new ApiResponse() { Success = httpResponse.IsSuccessStatusCode, Content = await httpResponse.Content.ReadAsStringAsync() };
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException is not null && ex.InnerException.Message == "Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.")
-                    return new ApiResponse() { Success = false, Content = null, Error = ErrorTypes.ServerUnavaliable };
-
-                throw ex;
-            }
-        }
-
-        public async Task<ApiResponse> DeleteAsync(string uri, string? userToken = null)
-        {
-            try
-            {
-                using HttpClient httpClient = new();
-                if (userToken is not null)
-                    httpClient.DefaultRequestHeaders.Add("authorization", "bearer " + userToken);
-
-                HttpResponseMessage? httpResponse = await httpClient.DeleteAsync(uri);
-                return new ApiResponse() { Success = httpResponse.IsSuccessStatusCode, Content = await httpResponse.Content.ReadAsStringAsync() };
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException is not null && ex.InnerException.Message == "Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente.")
-                    return new ApiResponse() { Success = false, Content = null, Error = ErrorTypes.ServerUnavaliable };
-
-                throw ex;
-            }
-        }
-
         private async Task<(bool success, string? newToken)> RefreshToken()
         {
             Models.User? user = await UserLocalDAL.GetUser();
+
             if (user is not null && user.Email is not null && user.Password is not null)
             {
-                (bool success, string? newToken) = await GetUserToken(user.Email, PasswordHandler.Decrypt(user.Password));
+                UsersManagement.IUserService userService = new UsersManagement.UserService(ApiKeys.ApiUri);
 
-                if (success && newToken is not null)
+                var resp = await userService.GetUserTokenAsync(user.Email, PasswordHandler.Decrypt(user.Password));
+
+                if (resp.Success && resp.Content is not null)
                 {
+                    string newToken = resp.Content;
+
                     await UserLocalDAL.UpdateToken(user.Id, newToken);
                     return (true, newToken);
                 }
@@ -219,33 +138,5 @@ namespace ApiDAL
 
             return (false, null);
         }
-
-        public async Task<(bool, string?)> GetUserToken(string email, string password)
-        {
-            try
-            {
-                string json = JsonSerializer.Serialize(new { email, password });
-
-                var resp = await Request(RequestsTypes.Post, ApiKeys.ApiUri + "/user/session", null, json);
-
-                if (resp is not null && resp.Content is not null)
-                {
-                    JsonNode? jResp = JsonNode.Parse(resp.Content);
-
-                    if (resp.Success && jResp is not null && jResp["token"]?.GetValue<string>() is not null)
-                        return (true, jResp["token"]?.GetValue<string>());
-                    else if (!resp.Success && jResp is not null && jResp["error"]?.GetValue<string>() is not null)
-                        return (false, jResp["error"]?.GetValue<string>());
-                    else throw new Exception("Response nao mapeado: " + resp.Content);
-                }
-
-                return (false, null);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
     }
 }

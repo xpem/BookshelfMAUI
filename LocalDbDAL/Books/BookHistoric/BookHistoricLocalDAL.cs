@@ -89,7 +89,7 @@ namespace LocalDbDAL.Books.BookHistoric
                     " h.type_id, h.TYPE as type_name, i.id as item_id, i.updated_from, i.updated_to," +
                     " i.book_historic_id, i.created_at as item_created_at, i.BOOK_FIELD_NAME as field_name,i.BOOK_FIELD_ID as field_id" +
                     " from book_historic h left join book_historic_item i on h.id = i.book_historic_id where" +
-                    " h.uid = @Uid and h.book_id = @BookId";
+                    " h.uid = @Uid and h.book_id = @BookId order by hist_created_at desc";
 
                 SqliteFunctions.OpenIfClosed();
 

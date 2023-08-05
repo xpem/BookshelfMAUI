@@ -82,7 +82,9 @@ namespace Bookshelf.Services.Sync
             catch { throw; }
             finally
             {
-                Timer?.Change(Interval, Timeout.Infinite);
+                if (Timer != null)
+                    Timer.Change(Interval, Timeout.Infinite);
+
                 Synchronizing = SyncStatus.Sleeping;
             }
         }

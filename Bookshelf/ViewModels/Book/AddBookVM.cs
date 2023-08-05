@@ -172,12 +172,10 @@ namespace Bookshelf.ViewModels
                 {
                     ImgCoverIsVisible = true;
                     LblTitleIsEnabled = false;
-                }
-                
+                }                
             }
             else
                 GoogleKey = null;
-
         }
 
         protected void BuildBook(Models.Books.Book book)

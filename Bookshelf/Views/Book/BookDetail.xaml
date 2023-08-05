@@ -329,7 +329,7 @@
                         <Button.ImageSource>
                             <FontImageSource
                                 FontFamily="FontAwesome"
-                                Glyph="{x:Static Icons:IconFont.Pen}"
+                                Glyph="{x:Static Icons:IconFont.Edit}"
                                 Size="15"
                                 Color="#EDEDED" />
                         </Button.ImageSource>

@@ -35,10 +35,10 @@ namespace Bookshelf.ViewModels.Book
                 UIBookHistoricList.Clear();
 
             CurrentPage++;
-            LoadList(CurrentPage);
+            _ = LoadListAsync(CurrentPage);
         }
 
-        private async void LoadList(int? pageNumber)
+        private async Task LoadListAsync(int? pageNumber)
         {
             IsBusy = true;
 
@@ -52,7 +52,6 @@ namespace Bookshelf.ViewModels.Book
 
                 if (bookHistoricObj.TypeId == 1)
                 {
-
                     bookHistoricText.Append($"<strong>Livro Adicionado!</strong>");
                     bookHistoricIcon = IconFont.Plus;
                 }
@@ -103,7 +102,7 @@ namespace Bookshelf.ViewModels.Book
         public ICommand LoadMoreCommand => new Command(() =>
         {
             CurrentPage++;
-            LoadList(CurrentPage);
+            _ = LoadListAsync(CurrentPage);
         });
 
         private static string BuildStatusText(int statusId)
