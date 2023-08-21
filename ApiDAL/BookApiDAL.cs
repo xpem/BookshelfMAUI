@@ -19,7 +19,7 @@ namespace ApiDAL
             {
                 var json = JsonSerializer.Serialize(book);
 
-                return await HttpClientFunctions.AuthRequest(RequestsTypes.Post, ApiKeys.ApiUri + "/book", json);
+                return await HttpClientFunctions.AuthRequest(RequestsTypes.Post, ApiKeys.ApiAddress + "/book", json);
             }
             catch (Exception ex) { throw ex; }
         }
@@ -30,13 +30,13 @@ namespace ApiDAL
             {
                 string json = JsonSerializer.Serialize(book);
 
-                return await HttpClientFunctions.AuthRequest(RequestsTypes.Put, ApiKeys.ApiUri + "/Book/" + book.Id, json);
+                return await HttpClientFunctions.AuthRequest(RequestsTypes.Put, ApiKeys.ApiAddress + "/Book/" + book.Id, json);
             }
             catch (Exception ex) { throw ex; }
         }
 
         public async Task<ApiResponse> GetBooksByLastUpdate(DateTime lastUpdate) =>
-            await HttpClientFunctions.AuthRequest(RequestsTypes.Get, ApiKeys.ApiUri + "/book/byupdatedat/" + lastUpdate.ToString("yyyy-MM-ddThh:mm:ss.fff"));
+            await HttpClientFunctions.AuthRequest(RequestsTypes.Get, ApiKeys.ApiAddress + "/book/byupdatedat/" + lastUpdate.ToString("yyyy-MM-ddThh:mm:ss.fff"));
 
     }
 }

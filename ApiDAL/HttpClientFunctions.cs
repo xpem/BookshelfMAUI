@@ -10,7 +10,6 @@ namespace ApiDAL
     public class HttpClientFunctions : HttpClient, IHttpClientFunctions
     {
         readonly IUserLocalDAL UserLocalDAL;
-        HttpClient httpClient = new();
 
         public HttpClientFunctions(IUserLocalDAL userLocalDAL)
         {
@@ -20,8 +19,10 @@ namespace ApiDAL
         public async Task<bool> CheckServer()
         {
             try
-            {                
-                HttpResponseMessage httpResponse = await httpClient.GetAsync(ApiKeys.ApiUri + "/imalive");
+            {
+                HttpClient httpClient = new();
+
+                HttpResponseMessage httpResponse = await httpClient.GetAsync(ApiKeys.ApiAddress + "/imalive");
 
                 if (httpResponse != null && httpResponse.IsSuccessStatusCode && !string.IsNullOrEmpty(await httpResponse.Content.ReadAsStringAsync())) return true;
 
@@ -34,6 +35,8 @@ namespace ApiDAL
         {
             try
             {
+                HttpClient httpClient = new();
+
                 if (userToken is not null)
                     httpClient.DefaultRequestHeaders.Add("authorization", "bearer " + userToken);
 
@@ -100,9 +103,6 @@ namespace ApiDAL
 
                     if (!refreshTokenSuccess || userToken is null)
                         return resp;
-
-                    //refresh DefaultRequestHeaders
-                    httpClient = new HttpClient();
                 }
                 else
                 {
@@ -123,9 +123,9 @@ namespace ApiDAL
 
             if (user is not null && user.Email is not null && user.Password is not null)
             {
-                UsersManagement.IUserService userService = new UsersManagement.UserService(ApiKeys.ApiUri);
+                UsersManagement.IUserService userService = new UsersManagement.UserService(ApiKeys.ApiAddress);
 
-                var resp = await userService.GetUserTokenAsync(user.Email, PasswordHandler.Decrypt(user.Password));
+                UsersManagement.Model.ApiResponse resp = await userService.GetUserTokenAsync(user.Email, PasswordHandler.Decrypt(user.Password));
 
                 if (resp.Success && resp.Content is not null)
                 {
