@@ -214,7 +214,8 @@ namespace Bookshelf.ViewModels
                 Situation = "0";
                 Rate = 0;
                 Comment = "";
-                UpdatesEnableds = false;
+                UpdatesEnableds = true;
+                //UpdatesEnableds = false;
             }
         }
 

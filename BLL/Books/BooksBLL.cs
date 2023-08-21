@@ -202,7 +202,7 @@ namespace BLL.Books
             if (book?.Id is not null && User?.Id is not null)
             {
                 book.UpdatedAt = DateTime.Now;
-                book.Inactive = 1;
+                book.Inactive = true;
 
                 await BookLocalDAL.InactivateBook(book.Id, User.Id, book.UpdatedAt);
 

@@ -40,7 +40,7 @@ namespace LocalDbDAL.Books
                         Isbn = response.GetWithNullableString(8),
                         Genre = response.GetWithNullableString(9),
                         UpdatedAt = Convert.ToDateTime(response.GetWithNullableString(10)),
-                        Inactive = response.GetWithNullableInt(11),
+                        Inactive = response.GetWithNullableBool(11),
                         Status = (Status)response.GetInt32(12),
                         Cover = response.GetWithNullableString(13),
                         GoogleId = response.GetWithNullableString(14),
@@ -179,7 +179,7 @@ namespace LocalDbDAL.Books
         {
             DateTime? lastUpdate = GetLastUpdateBook(book?.Id, book?.Title);
 
-            if (lastUpdate == null && book is not null && book.Inactive == 0)
+            if (lastUpdate == null && book is not null && !book.Inactive)
                 await AddBook(book, userId);
             else if (book is not null && book.UpdatedAt > lastUpdate)
                 await UpdateBook(book, userId);
@@ -233,7 +233,7 @@ namespace LocalDbDAL.Books
                     Isbn = response.GetWithNullableString(7),
                     Genre = response.GetWithNullableString(8),
                     UpdatedAt = Convert.ToDateTime(response.GetWithNullableString(9)),
-                    Inactive = response.GetWithNullableInt(10),
+                    Inactive = response.GetBoolean(10),
                     Status = (Status)response.GetInt32(11),
                     Cover = response.GetWithNullableString(12),
                     GoogleId = response.GetWithNullableString(13),
@@ -293,7 +293,7 @@ namespace LocalDbDAL.Books
                         Isbn = response.GetWithNullableString(7),
                         Genre = response.GetWithNullableString(8),
                         UpdatedAt = Convert.ToDateTime(response.GetWithNullableString(9)),
-                        Inactive = response.GetWithNullableInt(10),
+                        Inactive = response.GetBoolean(10),
                         Status = (Status)response.GetInt32(11),
                         Cover = response.GetWithNullableString(12),
                         GoogleId = response.GetWithNullableString(13),
@@ -366,7 +366,7 @@ namespace LocalDbDAL.Books
                         Isbn = response.GetWithNullableString(7),
                         Genre = response.GetWithNullableString(8),
                         UpdatedAt = Convert.ToDateTime(response.GetWithNullableString(9)),
-                        Inactive = response.GetWithNullableInt(10),
+                        Inactive = response.GetWithNullableBool(10),
                         Status = (Status)response.GetInt32(11),
                         Cover = response.GetWithNullableString(12),
                         GoogleId = response.GetWithNullableString(13),

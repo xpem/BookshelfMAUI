@@ -122,7 +122,7 @@ namespace Bookshelf.ViewModels
             Situation = "0";
             BtnInsertText = "Cadastrar";
             BtnAddBookImageSourceGlyph = IconFont.Plus;
-            pkrStatusSelectedIndex = 0;
+            pkrStatusSelectedIndex = 1;
 
             if (string.IsNullOrEmpty(BookId))
             {

@@ -39,7 +39,7 @@
 
         public DateTime UpdatedAt { get; set; }
 
-        public int? Inactive { get; set; }
+        public bool Inactive { get; set; }
     }
 
     public enum Status
