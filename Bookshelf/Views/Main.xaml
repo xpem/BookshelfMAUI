@@ -6,14 +6,13 @@
     xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels"
-    Title="Coleção"
     x:DataType="viewmodels:MainVM"
     Style="{StaticResource ContentPage}">
     <ContentPage.Resources>
         <!--  carditens  -->
         <Style x:Key="FrameCardItem" TargetType="Frame">
-            <Setter Property="BackgroundColor" Value="#4D7176" />
-            <Setter Property="BorderColor" Value="#4D7176" />
+            <Setter Property="BackgroundColor" Value="#101923" />
+            <Setter Property="BorderColor" Value="#51555B" />
             <Setter Property="CornerRadius" Value="10" />
         </Style>
         <Style x:Key="GridCardItem" TargetType="Frame">
@@ -55,8 +54,9 @@
         <Style x:Key="BtnExit" TargetType="Button">
             <Setter Property="VerticalOptions" Value="Center" />
             <Setter Property="HorizontalOptions" Value="Start" />
-            <Setter Property="BackgroundColor" Value="#7B96A3" />
-            <Setter Property="TextColor" Value="Black" />
+            <Setter Property="BorderColor" Value="{StaticResource PrimaryColor}" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="TextColor" Value="{StaticResource PrimaryColor}" />
             <Setter Property="HeightRequest" Value="35" />
             <Setter Property="CornerRadius" Value="5" />
             <Setter Property="FontFamily" Value="EBGaramondRegular" />
@@ -253,9 +253,9 @@
                             <Button
                                 Command="{Binding GoogleSearchCommand}"
                                 ContentLayout="Left, 10"
-                                FontSize="12"
+                                FontSize="15"
                                 HorizontalOptions="FillAndExpand"
-                                Style="{StaticResource BtnInfoSecondary}"
+                                Style="{StaticResource BtnPrimary}"
                                 Text="Adicionar">
                                 <Button.ImageSource>
                                     <FontImageSource
@@ -272,7 +272,7 @@
                                 ContentLayout="Left, 10"
                                 FontSize="15"
                                 HorizontalOptions="FillAndExpand"
-                                Style="{StaticResource BtnInfoSecondary}"
+                                Style="{StaticResource BtnPrimary}"
                                 Text="Listar Todos">
                                 <Button.ImageSource>
                                     <FontImageSource
@@ -282,7 +282,7 @@
                                         Color="{StaticResource Black}" />
                                 </Button.ImageSource>
                             </Button>
-                        </Grid>                       
+                        </Grid>
                         <Grid
                             Margin="0,5,0,0"
                             HorizontalOptions="FillAndExpand"
@@ -308,7 +308,7 @@
                                         FontFamily="FontAwesome"
                                         Glyph="{x:Static Icons:IconFont.SignOutAlt}"
                                         Size="10"
-                                        Color="#000" />
+                                        Color="{StaticResource PrimaryColor}" />
                                 </Button.ImageSource>
                             </Button>
                             <Label

@@ -7,6 +7,7 @@
     xmlns:behaviors="clr-namespace:Bookshelf.Utils.Behaviors"
     xmlns:components="clr-namespace:Bookshelf.Components"
     xmlns:model="clr-namespace:Models.Books.GoogleApi;assembly=Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:Bookshelf.ViewModels.GoogleSearch"
     Title="{Binding PageTitle}"
     x:DataType="vm:GoogleBooksResultsVM"
@@ -46,8 +47,8 @@
                                 <ViewCell>
                                     <Frame
                                         Margin="0,0,0,5"
-                                        BackgroundColor="GhostWhite"
-                                        BorderColor="Gray"
+                                        BackgroundColor="#101923"
+                                        BorderColor="#51555B"
                                         CornerRadius="10">
                                         <StackLayout HorizontalOptions="FillAndExpand" Orientation="Vertical">
                                             <Label
@@ -56,10 +57,7 @@
                                                 LineBreakMode="TailTruncation"
                                                 MaxLines="1"
                                                 Text="{Binding Title}"
-                                                TextColor="Black"
-                                                TextDecorations="Underline"
-                                                VerticalOptions="StartAndExpand"
-                                                VerticalTextAlignment="Start" />
+                                                TextColor="#98BDD3" />
                                             <Grid HeightRequest="150" HorizontalOptions="FillAndExpand">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="20" />
@@ -83,7 +81,7 @@
                                                     HorizontalTextAlignment="Start"
                                                     LineBreakMode="TailTruncation"
                                                     Text="{Binding Authors}"
-                                                    TextColor="#4e4e4e"
+                                                    TextColor="#98BDD3"
                                                     VerticalTextAlignment="Start" />
                                                 <Label
                                                     Grid.Row="1"
@@ -93,7 +91,7 @@
                                                     HorizontalTextAlignment="Start"
                                                     LineBreakMode="TailTruncation"
                                                     Text="{Binding PageCount, StringFormat='Páginas: {0:F0}'}"
-                                                    TextColor="Black"
+                                                    TextColor="White"
                                                     VerticalTextAlignment="Start" />
                                                 <!--<Label
                                                     Text="Ano:"
@@ -140,19 +138,19 @@
                     </ListView>
                     <Button
                         Grid.Row="0"
-                        BackgroundColor="{StaticResource Success}"
                         Command="{Binding CreateBookCommand}"
                         ContentLayout="Top,0"
                         CornerRadius="20"
                         HeightRequest="40"
                         HorizontalOptions="End"
+                        Style="{StaticResource BtnPrimary}"
                         VerticalOptions="End">
                         <Button.ImageSource>
                             <FontImageSource
                                 FontFamily="FontAwesome"
                                 Glyph="{x:Static Icons:IconFont.Plus}"
                                 Size="20"
-                                Color="#EDEDED" />
+                                Color="Black" />
                         </Button.ImageSource>
                     </Button>
                 </Grid>

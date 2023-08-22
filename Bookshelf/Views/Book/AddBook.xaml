@@ -216,14 +216,14 @@
                         ContentLayout="Left, 10"
                         IsEnabled="{Binding BtnInsertIsEnabled}"
                         IsVisible="{Binding BtnInsertIsVisible}"
-                        Style="{StaticResource BtnSuccess}"
+                        Style="{StaticResource BtnPrimary}"
                         Text="{Binding BtnInsertText}">
                         <Button.ImageSource>
                             <FontImageSource
                                 FontFamily="FontAwesome"
                                 Glyph="{Binding BtnAddBookImageSourceGlyph}"
                                 Size="20"
-                                Color="#EDEDED" />
+                                Color="Black" />
                         </Button.ImageSource>
                     </Button>
                 </StackLayout>

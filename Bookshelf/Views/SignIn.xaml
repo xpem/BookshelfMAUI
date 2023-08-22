@@ -48,7 +48,7 @@
                                 FontFamily="FontAwesome"
                                 Glyph="{x:Static Icons:IconFont.SignInAlt}"
                                 Size="15"
-                                Color="#EDEDED" />
+                                Color="Black" />
                         </Button.ImageSource>
                     </Button>
                     <HorizontalStackLayout>
@@ -61,7 +61,7 @@
                             FontFamily="EBGaramondBold"
                             HorizontalOptions="Start"
                             Text="Criar Conta"
-                            TextColor="{StaticResource InfoColor}"
+                            TextColor="{StaticResource PrimaryColor}"
                             TextDecorations="Underline">
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding CreateUserCommand}" />
@@ -78,7 +78,7 @@
                             FontFamily="EBGaramondBold"
                             HorizontalOptions="Start"
                             Text="Atualizar senha"
-                            TextColor="{StaticResource InfoColor}"
+                            TextColor="{StaticResource PrimaryColor}"
                             TextDecorations="Underline">
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding UpdatePasswordCommand}" />

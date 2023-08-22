@@ -172,7 +172,7 @@ namespace Bookshelf.ViewModels
                 {
                     ImgCoverIsVisible = true;
                     LblTitleIsEnabled = false;
-                }                
+                }
             }
             else
                 GoogleKey = null;
@@ -292,10 +292,14 @@ namespace Bookshelf.ViewModels
                     }
                     else
                     {
-                        bool res = await booksServices.AddBook(book);
+                        var addRes = await booksServices.AddBook(book);
 
-                        if (!res)
-                            mensagem = "Ocorreu um erro ao tentar adicionar o livro";
+                        if (!addRes.Success)
+                        {
+                            if (addRes.Content is not null)
+                                mensagem = addRes.Content as string;
+                            else mensagem = "Ocorreu um erro ao cadastrar o livro";
+                        }
                         else
                             mensagem += " cadastrados";
                     }
@@ -331,7 +335,7 @@ namespace Bookshelf.ViewModels
                     if (pages <= 0)
                         ValidInfo = false;
                 }
-                else                
+                else
                     ValidInfo = false;
             }
             //if (string.IsNullOrEmpty(Genre))

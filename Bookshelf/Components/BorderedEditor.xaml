@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary
+    x:Class="Bookshelf.Components.BorderedEditor"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <!--<Label
+          IsVisible="{Binding EdtCommentIsVisible}"
+          Style="{StaticResource LblHEntry}"
+          Text="*Comentários" />
+    <Editor
+          HeightRequest="70"
+          HorizontalOptions="FillAndExpand"
+          IsVisible="{Binding EdtCommentIsVisible}"
+          Keyboard="Chat"
+          MaxLength="200"
+          MinimumWidthRequest="250"
+          Style="{StaticResource Entry}"
+          Text="{Binding Comment}" />-->
+</ResourceDictionary>

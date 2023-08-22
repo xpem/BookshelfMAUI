@@ -40,14 +40,14 @@
                         Command="{Binding SignUpCommand}"
                         ContentLayout="Left, 10"
                         IsEnabled="{Binding BtnCreateUserIsEnabled}"
-                        Style="{StaticResource BtnSuccess}"
+                        Style="{StaticResource BtnPrimary}"
                         Text="Cadastrar">
                         <Button.ImageSource>
                             <FontImageSource
                                 FontFamily="FontAwesome"
                                 Glyph="{x:Static Icons:IconFont.UserPlus}"
                                 Size="15"
-                                Color="#EDEDED" />
+                                Color="Black" />
                         </Button.ImageSource>
                     </Button>
                 </VerticalStackLayout>

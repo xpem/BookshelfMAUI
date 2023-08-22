@@ -2,6 +2,7 @@
 using LocalDbDAL.User;
 using Plugin.Connectivity;
 using LocalDbDAL.Books;
+using Models.Responses;
 
 namespace BLL.Books
 {
@@ -72,31 +73,45 @@ namespace BLL.Books
             return false;
         }
 
-        public async Task<bool> AddBook(Book book)
+        public async Task<BLLResponse> AddBook(Book book)
         {
             book.UpdatedAt = DateTime.Now;
 
             Models.User? User = await UserLocalDAL.GetUser();
 
+            //verificar se o livro já existe no bd
+            //componentizar labels
+
             if (User?.Id != null)
             {
-                if (CrossConnectivity.Current.IsConnected)
-                {
-                    var response = await BooksApiBLL.AddBook(book);
+                var bookResponse = await BookLocalDAL.GetBookByTitleOrGooglekey(User.Id, book.Title, null);
 
-                    if (response.Success) { book.Id = Convert.ToInt32(response.Content); }
-                    else return false;
-                }
-                else
+                if (bookResponse == null)
                 {
-                    book.LocalTempId = Guid.NewGuid().ToString();
-                }
+                    if (CrossConnectivity.Current.IsConnected)
+                    {
+                        var response = await BooksApiBLL.AddBook(book);
 
-                await BookLocalDAL.AddBook(book, User.Id);
-                return true;
+                        if (response.Success) { book.Id = Convert.ToInt32(response.Content); }
+                        else
+                        {
+                            if (response.Content is not null)
+                                return new BLLResponse() { Success = false, Content = response.Content.ToString() };
+                            else return new BLLResponse() { Success = false };
+                        }
+                    }
+                    else
+                    {
+                        book.LocalTempId = Guid.NewGuid().ToString();
+                    }
+
+                    await BookLocalDAL.AddBook(book, User.Id);
+                    return new BLLResponse() { Success = true };
+                }
+                else return new BLLResponse() { Success = false, Content = "Livro com este título já cadastrado." };
             }
 
-            return false;
+            return new BLLResponse() { Success = false }; ;
         }
 
         public async Task<bool> VerifyBookbyTitle(string title)

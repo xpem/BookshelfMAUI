@@ -1,6 +1,5 @@
 ﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
-using Models.Books;
 using Models.Books.GoogleApi;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -22,39 +21,12 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
         public ObservableCollection<UIGoogleBook> GoogleBooksList { get; } = new();
 
-        //UIGoogleBook listItem;
-
-        //public UIGoogleBook ListItem
-        //{
-        //    get => listItem;
-        //    set
-        //    {
-        //        if (listItem != value)
-        //        {
-        //            listItem = value;
-
-        //            if (listItem is not null)
-        //            {
-        //                Shell.Current.GoToAsync($"{nameof(AddBook)}?GoogleKey={listItem.Id}", true);
-        //                //if (SituationIndex == -1)
-        //                //    Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={bookItem.Key}", true);
-        //                //else
-        //                //    Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={bookItem.Key}", true);
-
-        //                //bookItem = null;
-        //            }
-        //            OnPropertyChanged();
-        //        }
-        //    }
-        //}
-
-
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             if (GoogleBooksList.Count > 0)
                 GoogleBooksList.Clear();
 
-            LoadGoogleBooks(0);
+            _ = LoadGoogleBooksAsync(0);
         }
 
         public bool SearchingBookList { get; set; }
@@ -72,26 +44,20 @@ namespace Bookshelf.ViewModels.GoogleSearch
                 if (searchText != value)
                 {
                     searchText = value;
-                    SearchBookList();
+                    _ = SearchBookList();
                     OnPropertyChanged();
                 }
             }
         }
 
-        public ICommand LoadMoreCommand => new Command(() => { CurrentPage++; LoadGoogleBooks(CurrentPage); });
-
-        public GoogleBooksResultsVM()
-        {
-        }
+        public ICommand LoadMoreCommand => new Command(() => { CurrentPage++; _ = LoadGoogleBooksAsync(CurrentPage); });
 
         /// <summary>
         /// is necessary the config: android:usesCleartextTraffic="true"
         /// </summary>
         /// <param name="pageNumber"></param>
-        private async void LoadGoogleBooks(int pageNumber)
+        private async Task LoadGoogleBooksAsync(int pageNumber)
         {
-
-
             if (!string.IsNullOrEmpty(SearchText))
             {
                 IsBusy = true;
@@ -117,7 +83,7 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
         public ICommand CreateBookCommand => new Command(async (e) => { await Shell.Current.GoToAsync($"{nameof(AddBook)}"); });
 
-        private async void SearchBookList()
+        private async Task SearchBookList()
         {
             //
             if (!SearchingBookList)
@@ -135,14 +101,14 @@ namespace Bookshelf.ViewModels.GoogleSearch
                             GoogleBooksList.Clear();
 
                         CurrentPage = 0;
-                        LoadGoogleBooks(CurrentPage);
+                        await LoadGoogleBooksAsync(CurrentPage);
 
                         SearchingBookList = false;
                     }
-                    catch (Exception ex)
-                    { throw; }
+                    catch { throw; }
                 }
             }
+            OnPropertyChanged();
         }
     }
 }

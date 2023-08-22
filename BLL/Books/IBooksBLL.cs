@@ -1,4 +1,5 @@
 ﻿using Models.Books;
+using Models.Responses;
 
 namespace BLL.Books
 {
@@ -10,7 +11,7 @@ namespace BLL.Books
 
         Task<bool> AltBook(Book book);
 
-        Task<bool> AddBook(Book book);
+        Task<BLLResponse> AddBook(Book book);
 
         Task<bool> VerifyBookbyTitle(string title);
 
