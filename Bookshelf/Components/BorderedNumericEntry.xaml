@@ -7,7 +7,7 @@
     x:Name="this"
     Margin="0,5,0,0">
     <Label Style="{StaticResource LblHEntry}" Text="{Binding Source={x:Reference this}, Path=LabelText}" />
-    <Border HorizontalOptions="StartAndExpand" Style="{StaticResource EntryBorders}">
+    <Border Style="{StaticResource EntryBorders}">
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="5" />
         </Border.StrokeShape>

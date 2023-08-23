@@ -122,6 +122,9 @@
 	  <MauiXaml Update="Components\BorderedEntry.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Components\RatingBar.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\Book\BookHistoric.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

@@ -55,6 +55,7 @@
             <Setter Property="VerticalOptions" Value="Center" />
             <Setter Property="HorizontalOptions" Value="Start" />
             <Setter Property="BorderColor" Value="{StaticResource PrimaryColor}" />
+            <Setter Property="BorderWidth" Value="1" />
             <Setter Property="BackgroundColor" Value="Transparent" />
             <Setter Property="TextColor" Value="{StaticResource PrimaryColor}" />
             <Setter Property="HeightRequest" Value="35" />
@@ -300,14 +301,13 @@
                                 Grid.Column="0"
                                 Command="{Binding LogoutCommand}"
                                 ContentLayout="Left, 10"
-                                FontSize="12"
                                 Style="{StaticResource BtnExit}"
                                 Text="Sair">
                                 <Button.ImageSource>
                                     <FontImageSource
                                         FontFamily="FontAwesome"
                                         Glyph="{x:Static Icons:IconFont.SignOutAlt}"
-                                        Size="10"
+                                        Size="15"
                                         Color="{StaticResource PrimaryColor}" />
                                 </Button.ImageSource>
                             </Button>

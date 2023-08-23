@@ -9,8 +9,11 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class AddBookVM : RatingBar, IQueryAttributable
+    public class AddBookVM : ViewModelBase, IQueryAttributable
     {
+        private int? rate;
+
+        public int? Rate { get => rate; set { rate = value; OnPropertyChanged(nameof(Rate)); } }
 
         #region Properties
 
@@ -205,7 +208,7 @@ namespace Bookshelf.ViewModels
                 Situation = book.Status.ToString();
                 Rate = book.Score.Value;
                 if (book.Score.HasValue)
-                    BuildRatingBar(book.Score.Value);
+                    Rate = book.Score.Value;
                 Comment = book.Comment;
             }
             else

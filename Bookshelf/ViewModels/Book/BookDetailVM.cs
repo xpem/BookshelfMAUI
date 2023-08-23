@@ -7,14 +7,16 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class BookDetailVM : RatingBar, IQueryAttributable
+    public class BookDetailVM : ViewModelBase, IQueryAttributable
     {
         readonly IBooksBLL booksServices;
 
         #region bind variables.
 
         public string title, authors, pages, genre, situation, bookKey, comment, subtitleAndVol, volume, cover;
-        public int rate;
+        private int? rate;
+
+        public int? Rate { get => rate; set { rate = value; OnPropertyChanged(nameof(Rate)); } }
 
         public string Cover { get => cover; set { if (value != cover) { cover = value; OnPropertyChanged(); } } }
 
@@ -35,7 +37,6 @@ namespace Bookshelf.ViewModels
         public string Comment { get => comment; set { if (comment != value) { comment = value; OnPropertyChanged(); } } }
 
         #endregion
-
 
         private string BookId { get; set; }
 
@@ -200,7 +201,6 @@ namespace Bookshelf.ViewModels
                 if (book.Status == Models.Books.Status.Read)
                 {
                     LblRatingBarIsVisible = RatingBarIsVisible = true;
-                    BuildRatingBar(Rate.Value);
 
                     if (!string.IsNullOrEmpty(Comment))
                         edtCommentIsVisible = true;

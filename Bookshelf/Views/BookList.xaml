@@ -45,14 +45,13 @@
                                 <Frame
                                     Margin="0,0,0,5"
                                     BackgroundColor="#101923"
-                                    BorderColor="#51555B"
+                                    BorderColor="#2B659B"
                                     CornerRadius="10">
                                     <StackLayout HorizontalOptions="FillAndExpand" Orientation="Vertical">
                                         <Label
                                             Padding="0,0,0,10"
                                             FontFamily="EBGaramondSemiBold"
                                             FontSize="20"
-                                            HeightRequest="30"
                                             LineBreakMode="TailTruncation"
                                             MaxLines="1"
                                             Text="{Binding Title}"
@@ -61,7 +60,7 @@
                                             VerticalTextAlignment="Start" />
                                         <Label
                                             FontFamily="EBGaramondItalic"
-                                            FontSize="12"
+                                            FontSize="15"
                                             LineBreakMode="TailTruncation"
                                             MaxLines="2"
                                             Text="{Binding SubtitleAndVol, StringFormat='{0}'}"
