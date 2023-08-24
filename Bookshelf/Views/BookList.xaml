@@ -44,8 +44,8 @@
                             <ViewCell>
                                 <Frame
                                     Margin="0,0,0,5"
-                                    BackgroundColor="WhiteSmoke"
-                                    BorderColor="Gray"
+                                    BackgroundColor="#101923"
+                                    BorderColor="#2B659B"
                                     CornerRadius="10">
                                     <StackLayout HorizontalOptions="FillAndExpand" Orientation="Vertical">
                                         <Label
@@ -55,17 +55,16 @@
                                             LineBreakMode="TailTruncation"
                                             MaxLines="1"
                                             Text="{Binding Title}"
-                                            TextColor="Black"
-                                            TextDecorations="Underline"
+                                            TextColor="White"
                                             VerticalOptions="StartAndExpand"
                                             VerticalTextAlignment="Start" />
                                         <Label
                                             FontFamily="EBGaramondItalic"
-                                            FontSize="12"
+                                            FontSize="15"
                                             LineBreakMode="TailTruncation"
                                             MaxLines="2"
                                             Text="{Binding SubtitleAndVol, StringFormat='{0}'}"
-                                            TextColor="Black"
+                                            TextColor="White"
                                             VerticalOptions="StartAndExpand"
                                             VerticalTextAlignment="Start" />
                                         <Grid HeightRequest="150" HorizontalOptions="FillAndExpand">
@@ -92,7 +91,7 @@
                                                 HorizontalTextAlignment="Start"
                                                 LineBreakMode="TailTruncation"
                                                 Text="{Binding Authors}"
-                                                TextColor="#4e4e4e"
+                                                TextColor="#98BDD3"
                                                 VerticalTextAlignment="Start" />
                                             <Label
                                                 Grid.Row="1"
@@ -102,7 +101,7 @@
                                                 HorizontalTextAlignment="Start"
                                                 LineBreakMode="TailTruncation"
                                                 Text="{Binding Pages, StringFormat='Páginas: {0:F0}'}"
-                                                TextColor="Black"
+                                                TextColor="White"
                                                 VerticalTextAlignment="Start" />
                                             <Label
                                                 Grid.Row="3"
@@ -112,7 +111,7 @@
                                                 HorizontalOptions="Fill"
                                                 HorizontalTextAlignment="Start"
                                                 Text="{Binding Rate}"
-                                                TextColor="Black"
+                                                TextColor="White"
                                                 VerticalOptions="End" />
                                         </Grid>
                                     </StackLayout>

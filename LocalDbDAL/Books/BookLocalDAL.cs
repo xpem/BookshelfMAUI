@@ -233,7 +233,7 @@ namespace LocalDbDAL.Books
                     Isbn = response.GetWithNullableString(7),
                     Genre = response.GetWithNullableString(8),
                     UpdatedAt = Convert.ToDateTime(response.GetWithNullableString(9)),
-                    Inactive = response.GetBoolean(10),
+                    Inactive = response.GetWithNullableBool(10),
                     Status = (Status)response.GetInt32(11),
                     Cover = response.GetWithNullableString(12),
                     GoogleId = response.GetWithNullableString(13),

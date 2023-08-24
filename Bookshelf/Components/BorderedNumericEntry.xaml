@@ -16,8 +16,7 @@
             Keyboard="Numeric"
             MaxLength="{Binding Source={x:Reference this}, Path=MaxLength}"
             Style="{StaticResource Entry}"
-            Text="{Binding Source={x:Reference this}, Path=Text}"
-            WidthRequest="80">
+            Text="{Binding Source={x:Reference this}, Path=Text}">
             <Entry.Behaviors>
                 <behaviors:NumericValidationBehavior />
             </Entry.Behaviors>

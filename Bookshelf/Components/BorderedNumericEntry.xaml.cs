@@ -7,10 +7,10 @@ public partial class BorderedNumericEntry : VerticalStackLayout
         InitializeComponent();
     }
 
-
     public static readonly BindableProperty TextProperty = BindableProperty.Create(
         propertyName: nameof(Text), returnType: typeof(string),
-        declaringType: typeof(BorderedEntry), defaultValue: null, defaultBindingMode: BindingMode.TwoWay);
+        declaringType: typeof(BorderedNumericEntry),
+        defaultValue: null, defaultBindingMode: BindingMode.TwoWay);
 
     public string Text { get => (string)GetValue(TextProperty); set { SetValue(TextProperty, value); } }
 

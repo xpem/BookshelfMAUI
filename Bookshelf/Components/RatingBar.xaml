@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<VerticalStackLayout
+    x:Class="Bookshelf.Components.RatingBar"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="this"
+    IsVisible="{Binding Source={x:Reference this}, Path=RatingBarIsVisible}">
+    <Label IsVisible="false" Text="{Binding Source={x:Reference this}, Path=Rate}" />
+    <Border
+        Margin="0,5,0,5"
+        Padding="10,0,10,0"
+        BackgroundColor="#101923"
+        HorizontalOptions="CenterAndExpand"
+        Stroke="#92CBFF">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="5" />
+        </Border.StrokeShape>
+        <Grid Margin="0,10,0,10" HorizontalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="0,0,3,0"
+                HeightRequest="30"
+                HorizontalOptions="Center"
+                Source="{Binding Source={x:Reference this}, Path=ImgStar1}">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={x:Reference this}, Path=ImgStar1ClickCommand}" NumberOfTapsRequired="1" />
+                </Image.GestureRecognizers>
+            </Image>
+            <Image
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="0,0,3,0"
+                HeightRequest="30"
+                HorizontalOptions="Center"
+                Source="{Binding Source={x:Reference this}, Path=ImgStar2}">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={x:Reference this}, Path=ImgStar2ClickCommand}" NumberOfTapsRequired="1" />
+                </Image.GestureRecognizers>
+            </Image>
+            <Image
+                Grid.Row="0"
+                Grid.Column="2"
+                Margin="0,0,3,0"
+                HeightRequest="30"
+                HorizontalOptions="Center"
+                Source="{Binding Source={x:Reference this}, Path=ImgStar3}">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={x:Reference this}, Path=ImgStar3ClickCommand}" NumberOfTapsRequired="1" />
+                </Image.GestureRecognizers>
+            </Image>
+            <Image
+                Grid.Row="0"
+                Grid.Column="3"
+                Margin="0,0,3,0"
+                HeightRequest="30"
+                HorizontalOptions="Center"
+                Source="{Binding Source={x:Reference this}, Path=ImgStar4}">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={x:Reference this}, Path=ImgStar4ClickCommand}" NumberOfTapsRequired="1" />
+                </Image.GestureRecognizers>
+            </Image>
+            <Image
+                Grid.Row="0"
+                Grid.Column="4"
+                HeightRequest="30"
+                HorizontalOptions="Center"
+                Source="{Binding Source={x:Reference this}, Path=ImgStar5}">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={x:Reference this}, Path=ImgStar5ClickCommand}" NumberOfTapsRequired="1" />
+                </Image.GestureRecognizers>
+            </Image>
+        </Grid>
+    </Border>
+</VerticalStackLayout>

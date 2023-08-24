@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
+    xmlns:components="clr-namespace:Bookshelf.Components"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels"
     x:DataType="viewmodels:BookDetailVM"
@@ -12,7 +13,7 @@
     <ContentPage.Resources>
         <!--  carditens  -->
         <Style x:Key="LblHeader" TargetType="Label">
-            <Setter Property="TextColor" Value="White" />
+            <Setter Property="TextColor" Value="#98BDD3" />
             <Setter Property="FontAttributes" Value="Bold" />
             <Setter Property="FontFamily" Value="EBGaramondRegular" />
             <Setter Property="Margin" Value="0,0,5,0" />
@@ -50,7 +51,7 @@
                     ZIndex="2">
                     <toolkit:Expander.Header>
                         <Button
-                            BackgroundColor="{StaticResource SecondaryInfoColor}"
+                            BackgroundColor="{StaticResource PrimaryColor}"
                             ContentLayout="Top,0"
                             CornerRadius="20"
                             HeightRequest="40"
@@ -63,14 +64,14 @@
                                     FontFamily="FontAwesome"
                                     Glyph="{x:Static Icons:IconFont.EllipsisV}"
                                     Size="20"
-                                    Color="White" />
+                                    Color="Black" />
                             </Button.ImageSource>
                         </Button>
                     </toolkit:Expander.Header>
                     <toolkit:Expander.Content>
                         <VerticalStackLayout Margin="0,10,0,0" Spacing="10">
                             <Button
-                                BackgroundColor="{StaticResource MainItemColor}"
+                                BackgroundColor="{StaticResource PrimaryColor}"
                                 Command="{Binding CallTimelineCommand}"
                                 Style="{StaticResource ExpanderButton}">
                                 <Button.ImageSource>
@@ -78,11 +79,11 @@
                                         FontFamily="FontAwesome"
                                         Glyph="{x:Static Icons:IconFont.History}"
                                         Size="15"
-                                        Color="#EDEDED" />
+                                        Color="Black" />
                                 </Button.ImageSource>
                             </Button>
                             <Button
-                                BackgroundColor="{StaticResource MainItemColor}"
+                                BackgroundColor="{StaticResource PrimaryColor}"
                                 Command="{Binding NavToUpdateBookCommand}"
                                 Style="{StaticResource ExpanderButton}">
                                 <Button.ImageSource>
@@ -90,11 +91,11 @@
                                         FontFamily="FontAwesome"
                                         Glyph="{x:Static Icons:IconFont.Pen}"
                                         Size="15"
-                                        Color="#EDEDED" />
+                                        Color="Black" />
                                 </Button.ImageSource>
                             </Button>
                             <Button
-                                BackgroundColor="{StaticResource MainItemColor}"
+                                BackgroundColor="{StaticResource PrimaryColor}"
                                 Command="{Binding InactivateBookCommand}"
                                 Style="{StaticResource ExpanderButton}">
                                 <Button.ImageSource>
@@ -102,7 +103,7 @@
                                         FontFamily="FontAwesome"
                                         Glyph="{x:Static Icons:IconFont.Trash}"
                                         Size="15"
-                                        Color="#EDEDED" />
+                                        Color="Black" />
                                 </Button.ImageSource>
                             </Button>
 
@@ -122,12 +123,10 @@
                     <Label
                         Padding="0,0,0,0"
                         FontFamily="EBGaramondSemiBold"
-                        FontSize="20"
+                        FontSize="22"
                         HorizontalOptions="CenterAndExpand"
                         Style="{StaticResource LblHeader}"
-                        Text="{Binding Title}"
-                        TextDecorations="Underline" />
-
+                        Text="{Binding Title}" />
                     <Label
                         Padding="0,0,0,5"
                         FontFamily="EBGaramondRegular"
@@ -135,23 +134,35 @@
                         HorizontalOptions="CenterAndExpand"
                         Text="{Binding SubtitleAndVol}"
                         TextColor="White" />
-
+                    <BoxView
+                        Margin="0,10,0,10"
+                        BackgroundColor="White"
+                        HeightRequest="1"
+                        HorizontalOptions="FillAndExpand"
+                        Color="White" />
                     <Label
                         HorizontalOptions="Start"
                         HorizontalTextAlignment="Start"
                         Style="{StaticResource LblEntry}"
                         Text="Autores:"
                         VerticalTextAlignment="Start" />
-
-                    <Label
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        HorizontalOptions="Start"
-                        HorizontalTextAlignment="Start"
-                        Style="{StaticResource LblText}"
-                        Text="{Binding Authors}"
-                        VerticalTextAlignment="Start" />
-
+                    <Border
+                        Padding="8"
+                        Background="#101923"
+                        HorizontalOptions="FillAndExpand"
+                        Stroke="#2B659B">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="5" />
+                        </Border.StrokeShape>
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            HorizontalOptions="Start"
+                            HorizontalTextAlignment="Start"
+                            Style="{StaticResource LblText}"
+                            Text="{Binding Authors}"
+                            VerticalTextAlignment="Start" />
+                    </Border>
                     <Grid HorizontalOptions="FillAndExpand">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -170,15 +181,23 @@
                             Style="{StaticResource LblEntry}"
                             Text="Páginas:"
                             VerticalTextAlignment="Start" />
-
-                        <Label
+                        <Border
                             Grid.Row="1"
                             Grid.Column="0"
-                            HorizontalTextAlignment="Start"
-                            Style="{StaticResource LblText}"
-                            Text="{Binding Pages}"
-                            VerticalTextAlignment="Start" />
-
+                            Margin="0,0,10,0"
+                            Padding="8"
+                            Background="#101923"
+                            HorizontalOptions="FillAndExpand"
+                            Stroke="#2B659B">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="5" />
+                            </Border.StrokeShape>
+                            <Label
+                                HorizontalTextAlignment="Start"
+                                Style="{StaticResource LblText}"
+                                Text="{Binding Pages}"
+                                VerticalTextAlignment="Start" />
+                        </Border>
                         <!--    -->
                         <Label
                             Grid.Row="0"
@@ -187,14 +206,22 @@
                             Style="{StaticResource LblEntry}"
                             Text="Categoria:"
                             VerticalTextAlignment="Start" />
-
-                        <Label
+                        <Border
                             Grid.Row="1"
                             Grid.Column="1"
-                            HorizontalTextAlignment="Start"
-                            Style="{StaticResource LblText}"
-                            Text="{Binding Genre}"
-                            VerticalTextAlignment="Start" />
+                            Padding="8"
+                            Background="#101923"
+                            HorizontalOptions="FillAndExpand"
+                            Stroke="#2B659B">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="5" />
+                            </Border.StrokeShape>
+                            <Label
+                                HorizontalTextAlignment="Start"
+                                Style="{StaticResource LblText}"
+                                Text="{Binding Genre}"
+                                VerticalTextAlignment="Start" />
+                        </Border>
                     </Grid>
 
                     <BoxView
@@ -217,108 +244,22 @@
                     <!--    -->
                     <Border
                         Margin="0,5,0,5"
+                        BackgroundColor="#101923"
                         HorizontalOptions="CenterAndExpand"
-                        Stroke="White">
+                        Stroke="#92CBFF">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="5" />
                         </Border.StrokeShape>
                         <Picker ItemsSource="{Binding StatusList}" SelectedIndex="{Binding PkrStatusSelectedIndex}" />
                     </Border>
-                    <!--  Rate  -->
-                    <Border
-                        Margin="0,5,0,5"
-                        Padding="10,0,10,0"
-                        BackgroundColor="White"
-                        HorizontalOptions="CenterAndExpand"
-                        IsVisible="{Binding RatingBarIsVisible}"
-                        Stroke="Gray">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="5" />
-                        </Border.StrokeShape>
-                        <Grid Margin="0,10,0,10" HorizontalOptions="Center">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Image
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Margin="0,0,3,0"
-                                HeightRequest="30"
-                                HorizontalOptions="Center"
-                                Source="{Binding ImgStar1}">
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding ImgStar1ClickCommand}" NumberOfTapsRequired="1" />
-                                </Image.GestureRecognizers>
-                            </Image>
-                            <Image
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Margin="0,0,3,0"
-                                HeightRequest="30"
-                                HorizontalOptions="Center"
-                                Source="{Binding ImgStar2}">
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding ImgStar2ClickCommand}" NumberOfTapsRequired="1" />
-                                </Image.GestureRecognizers>
-                            </Image>
-                            <Image
-                                Grid.Row="0"
-                                Grid.Column="2"
-                                Margin="0,0,3,0"
-                                HeightRequest="30"
-                                HorizontalOptions="Center"
-                                Source="{Binding ImgStar3}">
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding ImgStar3ClickCommand}" NumberOfTapsRequired="1" />
-                                </Image.GestureRecognizers>
-                            </Image>
-                            <Image
-                                Grid.Row="0"
-                                Grid.Column="3"
-                                Margin="0,0,3,0"
-                                HeightRequest="30"
-                                HorizontalOptions="Center"
-                                Source="{Binding ImgStar4}">
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding ImgStar4ClickCommand}" NumberOfTapsRequired="1" />
-                                </Image.GestureRecognizers>
-                            </Image>
-                            <Image
-                                Grid.Row="0"
-                                Grid.Column="4"
-                                HeightRequest="30"
-                                HorizontalOptions="Center"
-                                Source="{Binding ImgStar5}">
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding ImgStar5ClickCommand}" NumberOfTapsRequired="1" />
-                                </Image.GestureRecognizers>
-                            </Image>
-                        </Grid>
-                    </Border>
-                    <!--    -->
+
+                    <components:RatingBar Rate="{Binding Rate}" RatingBarIsVisible="{Binding RatingBarIsVisible}" />
 
                     <!--  Comment  -->
-                    <Label
-                        IsVisible="{Binding EdtCommentIsVisible}"
-                        Style="{StaticResource LblEntry}"
-                        Text="Comentários:" />
-                    <Editor
-                        HeightRequest="70"
-                        HorizontalOptions="FillAndExpand"
-                        IsVisible="{Binding EdtCommentIsVisible}"
-                        Keyboard="Chat"
-                        MaxLength="200"
-                        MinimumWidthRequest="250"
-                        Style="{StaticResource Entry}"
+                    <components:BorderedEditor
+                        EditorIsVisible="{Binding EdtCommentIsVisible}"
+                        LabelText="*Comentários"
                         Text="{Binding Comment}" />
-                    <!--    -->
 
                     <Button
                         Margin="0,10,0,0"
@@ -331,7 +272,7 @@
                                 FontFamily="FontAwesome"
                                 Glyph="{x:Static Icons:IconFont.Edit}"
                                 Size="15"
-                                Color="#EDEDED" />
+                                Color="#000" />
                         </Button.ImageSource>
                     </Button>
                 </StackLayout>

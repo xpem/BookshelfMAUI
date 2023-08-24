@@ -21,7 +21,6 @@ namespace LocalDbDAL.BuildDb
 
             await UpdateSQLiteTablesByVersions();
 
-
             await SqliteFunctions.RunSqliteCommand("create table if not exists BOOK (ID integer,LOCAL_TEMP_ID text, UID text, TITLE text, SUBTITLE text, AUTHORS text, " +
                 "YEAR integer, VOLUME text, PAGES integer, ISBN text, GENRE text, UPDATED_AT datetime, INACTIVE integer, STATUS integer," +
                 " COVER text, GOOGLE_ID text, SCORE integer, COMMENT text, CREATED_AT datetime);");

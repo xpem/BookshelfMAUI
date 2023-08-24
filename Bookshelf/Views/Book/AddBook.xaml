@@ -41,7 +41,7 @@
                         </Grid.ColumnDefinitions>
                         <StackLayout
                             Padding="0"
-                            HorizontalOptions="Fill"
+                            HorizontalOptions="FillAndExpand"
                             VerticalOptions="Start">
                             <components:BorderedNumericEntry
                                 LabelText="*Volume"
@@ -51,7 +51,7 @@
                         <StackLayout
                             Grid.Column="1"
                             Padding="0"
-                            HorizontalOptions="Start"
+                            HorizontalOptions="FillAndExpand"
                             VerticalOptions="Start">
                             <components:BorderedNumericEntry
                                 LabelText="*Ano"
@@ -108,8 +108,9 @@
                         VerticalOptions="Fill" />
                     <Border
                         Margin="0,5,0,5"
+                        BackgroundColor="#101923"
                         HorizontalOptions="CenterAndExpand"
-                        Stroke="White">
+                        Stroke="#92CBFF">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="5" />
                         </Border.StrokeShape>
@@ -119,111 +120,26 @@
                             Style="{StaticResource Picker}" />
                     </Border>
 
-                    <Border
-                        Margin="0,5,0,5"
-                        Padding="10,0,10,0"
-                        BackgroundColor="White"
-                        HorizontalOptions="CenterAndExpand"
-                        IsVisible="{Binding RatingBarIsVisible}"
-                        Stroke="Gray">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="5" />
-                        </Border.StrokeShape>
-                        <Grid Margin="0,10,0,10" HorizontalOptions="Center">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Image
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Margin="0,0,3,0"
-                                HeightRequest="30"
-                                HorizontalOptions="Center"
-                                Source="{Binding ImgStar1}">
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding ImgStar1ClickCommand}" NumberOfTapsRequired="1" />
-                                </Image.GestureRecognizers>
-                            </Image>
-                            <Image
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Margin="0,0,3,0"
-                                HeightRequest="30"
-                                HorizontalOptions="Center"
-                                Source="{Binding ImgStar2}">
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding ImgStar2ClickCommand}" NumberOfTapsRequired="1" />
-                                </Image.GestureRecognizers>
-                            </Image>
-                            <Image
-                                Grid.Row="0"
-                                Grid.Column="2"
-                                Margin="0,0,3,0"
-                                HeightRequest="30"
-                                HorizontalOptions="Center"
-                                Source="{Binding ImgStar3}">
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding ImgStar3ClickCommand}" NumberOfTapsRequired="1" />
-                                </Image.GestureRecognizers>
-                            </Image>
-                            <Image
-                                Grid.Row="0"
-                                Grid.Column="3"
-                                Margin="0,0,3,0"
-                                HeightRequest="30"
-                                HorizontalOptions="Center"
-                                Source="{Binding ImgStar4}">
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding ImgStar4ClickCommand}" NumberOfTapsRequired="1" />
-                                </Image.GestureRecognizers>
-                            </Image>
-                            <Image
-                                Grid.Row="0"
-                                Grid.Column="4"
-                                HeightRequest="30"
-                                HorizontalOptions="Center"
-                                Source="{Binding ImgStar5}">
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding ImgStar5ClickCommand}" NumberOfTapsRequired="1" />
-                                </Image.GestureRecognizers>
-                            </Image>
-                        </Grid>
-                    </Border>
-                    <Label
-                        IsVisible="{Binding EdtCommentIsVisible}"
-                        Style="{StaticResource LblHEntry}"
-                        Text="*Comentários" />
-                    <Editor
-                        HeightRequest="70"
-                        HorizontalOptions="FillAndExpand"
-                        IsVisible="{Binding EdtCommentIsVisible}"
-                        Keyboard="Chat"
-                        MaxLength="200"
-                        MinimumWidthRequest="250"
-                        Style="{StaticResource Entry}"
-                        Text="{Binding Comment}" />
+                    <components:RatingBar Rate="{Binding Rate}" RatingBarIsVisible="{Binding RatingBarIsVisible}" />
 
+                    <components:BorderedEditor
+                        EditorIsVisible="{Binding EdtCommentIsVisible}"
+                        LabelText="*Comentários"
+                        Text="{Binding Comment}" />
                     <Button
                         Margin="0,10,0,0"
                         Command="{Binding InsertBookCommand}"
                         ContentLayout="Left, 10"
                         IsEnabled="{Binding BtnInsertIsEnabled}"
                         IsVisible="{Binding BtnInsertIsVisible}"
-                        Style="{StaticResource BtnSuccess}"
+                        Style="{StaticResource BtnPrimary}"
                         Text="{Binding BtnInsertText}">
                         <Button.ImageSource>
                             <FontImageSource
                                 FontFamily="FontAwesome"
                                 Glyph="{Binding BtnAddBookImageSourceGlyph}"
                                 Size="20"
-                                Color="#EDEDED" />
+                                Color="Black" />
                         </Button.ImageSource>
                     </Button>
                 </StackLayout>

@@ -6,7 +6,7 @@ using System.Text.Json.Nodes;
 
 namespace BLL.Books
 {
-    public class BooksApiBLL: IBooksApiBLL
+    public class BooksApiBLL : IBooksApiBLL
     {
         IBookApiDAL BookApiDAL;
 
@@ -16,20 +16,34 @@ namespace BLL.Books
         {
             var resp = await BookApiDAL.AddBook(book);
 
-            if (resp is not null && resp.Success && resp.Content is not null)
+            if (resp is not null)
             {
-                var jResp = JsonNode.Parse(resp.Content);
-                if (jResp is not null)
+                if (resp.Success && resp.Content is not null)
                 {
-                    int? addedBookId = null;
-                    if (jResp != null)
-                        addedBookId = jResp["Id"]?.GetValue<int>();
+                    var jResp = JsonNode.Parse(resp.Content);
+                    if (jResp is not null)
+                    {
+                        int? addedBookId = null;
+                        if (jResp != null)
+                            addedBookId = jResp["Id"]?.GetValue<int>();
 
-                    return new BLLResponse() { Success = resp.Success, Content = addedBookId };
+                        return new BLLResponse() { Success = resp.Success, Content = addedBookId };
+                    }
+                    else return new BLLResponse() { Success = false, Content = resp.Content };
                 }
-                else return new BLLResponse() { Success = false, Content = resp.Content };
+                else
+                {
+                    if (resp.Content is not null)
+                    {
+                        var jResp = JsonNode.Parse(resp.Content);
+                        if (jResp is not null)
+                        {
+                            string? error = jResp["error"]?.GetValue<string>();
+                            return new BLLResponse() { Success = false, Content = error };
+                        }
+                    }
+                }
             }
-
             return new BLLResponse() { Success = false, Content = null };
         }
 

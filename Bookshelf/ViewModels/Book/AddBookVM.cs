@@ -9,8 +9,11 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class AddBookVM : RatingBar, IQueryAttributable
+    public class AddBookVM : ViewModelBase, IQueryAttributable
     {
+        private int? rate;
+
+        public int? Rate { get => rate; set { rate = value; OnPropertyChanged(nameof(Rate)); } }
 
         #region Properties
 
@@ -172,7 +175,7 @@ namespace Bookshelf.ViewModels
                 {
                     ImgCoverIsVisible = true;
                     LblTitleIsEnabled = false;
-                }                
+                }
             }
             else
                 GoogleKey = null;
@@ -205,7 +208,7 @@ namespace Bookshelf.ViewModels
                 Situation = book.Status.ToString();
                 Rate = book.Score.Value;
                 if (book.Score.HasValue)
-                    BuildRatingBar(book.Score.Value);
+                    Rate = book.Score.Value;
                 Comment = book.Comment;
             }
             else
@@ -292,10 +295,14 @@ namespace Bookshelf.ViewModels
                     }
                     else
                     {
-                        bool res = await booksServices.AddBook(book);
+                        var addRes = await booksServices.AddBook(book);
 
-                        if (!res)
-                            mensagem = "Ocorreu um erro ao tentar adicionar o livro";
+                        if (!addRes.Success)
+                        {
+                            if (addRes.Content is not null)
+                                mensagem = addRes.Content as string;
+                            else mensagem = "Ocorreu um erro ao cadastrar o livro";
+                        }
                         else
                             mensagem += " cadastrados";
                     }
@@ -331,7 +338,7 @@ namespace Bookshelf.ViewModels
                     if (pages <= 0)
                         ValidInfo = false;
                 }
-                else                
+                else
                     ValidInfo = false;
             }
             //if (string.IsNullOrEmpty(Genre))
