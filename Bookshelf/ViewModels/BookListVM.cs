@@ -170,8 +170,8 @@ namespace Bookshelf.ViewModels
 
                         SearchingBookList = false;
                     }
-                    catch (Exception ex)
-                    { throw ex; }
+                    catch
+                    { throw; }
                 }
             }
         }
