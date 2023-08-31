@@ -1,22 +1,23 @@
-﻿using Models.Books;
-using Models;
-using LocalDbDAL.Books;
+﻿using DBContextDAL;
+using Models.Books;
 
 namespace BLL.Books.Sync
 {
     public class BookSyncBLL : IBookSyncBLL
     {
-        readonly IBooksApiBLL BooksApiBLL;
-        readonly IBookLocalDAL BookLocalDAL;
+        readonly IBookApiBLL BooksApiBLL;
+        private readonly BookshelfDbContext bookshelfDbContext;
 
-        public BookSyncBLL(IBooksApiBLL booksApiBLL, IBookLocalDAL booksLocalDAL)
+        public BookSyncBLL(IBookApiBLL booksApiBLL, BookshelfDbContext bookshelfDbContext)
         {
             BooksApiBLL = booksApiBLL;
-            BookLocalDAL = booksLocalDAL;
+            this.bookshelfDbContext = bookshelfDbContext;
         }
 
-        public async Task ApiToLocalSync(int uid, DateTime lastUpdate)
+        public async Task<(int added, int updated)> ApiToLocalSync(int uid, DateTime lastUpdate)
         {
+            int added = 0, updated = 0;
+
             //update local database
             Models.Responses.BLLResponse respGetBooksByLastUpdate = await BooksApiBLL.GetBooksByLastUpdate(lastUpdate);
 
@@ -26,14 +27,39 @@ namespace BLL.Books.Sync
 
                 if (BooksByLastUpdate is not null)
                 {
+                    DateTime? bookLastUpdate = null;
+
                     foreach (Book book in BooksByLastUpdate)
                     {
-                        await BookLocalDAL.AddOrUpdateBook(book, uid);
+                        if (book is null) { throw new ArgumentNullException(nameof(book)); }
+                        book.UserId = uid;
+
+                        if (book.Id is not null)
+                            bookLastUpdate = bookshelfDbContext.Book.Where(x => x.Id.Equals(book.Id)).FirstOrDefault()?.UpdatedAt;
+                        else throw new ArgumentNullException(nameof(book.Id));
+
+                        //else if (!string.IsNullOrEmpty(book.Title))
+                        //    bookLastUpdate = (await BooksDbDAL.GetBookByTitle(book.Title))?.UpdatedAt;
+
+                        if (bookLastUpdate == null && !book.Inactive)
+                        {
+                            await bookshelfDbContext.Book.AddAsync(book);
+                            added++;
+                        }
+                        else if (book.UpdatedAt > bookLastUpdate)
+                        {
+                            bookshelfDbContext.Book.Update(book);
+                            updated++;
+                        }
+
+                        await bookshelfDbContext.SaveChangesAsync();
 
                         if (lastUpdate < book.UpdatedAt) lastUpdate = book.UpdatedAt;
                     }
                 }
             }
+
+            return (added, updated);
         }
 
         /// <summary>
@@ -43,30 +69,43 @@ namespace BLL.Books.Sync
         /// <param name="lastUpdate"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task LocalToApiSync(int uid, DateTime lastUpdate)
+        public async Task<(int added, int updated)> LocalToApiSync(int uid, DateTime lastUpdate)
         {
-            List<Book> booksList = await BookLocalDAL.GetBooksByLastUpdate(uid, lastUpdate);
+            int added = 0, updated = 0;
+
+            List<Book> booksList = bookshelfDbContext.Book.Where(x => x.UserId == uid && x.UpdatedAt > lastUpdate).ToList();
 
             //update api database
             foreach (Book book in booksList)
             {
-                //if the book has a local temporary Guid key, register it in the firebase
                 if (book.LocalTempId != null)
                 {
-                    //define the key has a null for register the book in firebase
                     Models.Responses.BLLResponse addBookResp = await BooksApiBLL.AddBook(book);
 
                     if (addBookResp.Success && addBookResp.Content is not null)
                     {
-                        string localTempId = book.LocalTempId;
                         book.LocalTempId = null;
-                        await BookLocalDAL.UpdateBookId(localTempId, Convert.ToString(addBookResp.Content), uid);
+                        book.Id = Convert.ToInt32(addBookResp.Content);
+
+                        bookshelfDbContext.Book.Update(book);
+                        added++;
                     }
                     else throw new Exception($"Não foi possivel sincronizar o livro {book.Id}, res: {addBookResp.Error}");
                 }
                 else
-                    await BookLocalDAL.UpdateBook(book, uid);
+                {
+                    var response = await BooksApiBLL.UpdateBook(book);
+                    if (response.Success)
+                        updated++;
+                }
+
+                await bookshelfDbContext.SaveChangesAsync();
+
             }
+
+            return (added, updated);
+
+
         }
     }
 }

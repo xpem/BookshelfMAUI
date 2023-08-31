@@ -6,7 +6,7 @@ using System.Text.Json.Nodes;
 
 namespace BLL.Books
 {
-    public class BooksApiBLL : IBooksApiBLL
+    public class BooksApiBLL : IBookApiBLL
     {
         IBookApiDAL BookApiDAL;
 
@@ -47,9 +47,9 @@ namespace BLL.Books
             return new BLLResponse() { Success = false, Content = null };
         }
 
-        public async Task<BLLResponse> AltBook(Book book)
+        public async Task<BLLResponse> UpdateBook(Book book)
         {
-            var resp = await BookApiDAL.AltBook(book);
+            var resp = await BookApiDAL.UpdateBook(book);
 
             if (resp is not null && resp.Content is not null)
             {

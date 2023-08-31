@@ -1,7 +1,7 @@
-﻿using Bookshelf.Views;
+﻿using BLL;
 using BLL.User;
-using BLL.Sync;
 using Bookshelf.Services.Sync;
+using Bookshelf.Views;
 
 namespace Bookshelf;
 
@@ -25,22 +25,31 @@ public partial class App : Application
 
     //criar um model result para os retornos de respostas
 
-    public App(ISyncServices syncServices,IUserBLL userBLL)
+    public App(ISyncServices syncServices, IUserBLL userBLL, IBuildDbBLL buildDbBLL)
     {
-        BLL.BuildDbBLL.BuildSQLiteDb();
-
-        InitializeComponent();
-
-        if (userBLL.GetUserLocal().Result != null)
+        try
         {
-            syncServices.StartThread();
+            //talvez implementar o versionamento do banco p rodar o clean no init em caso de necessidade?
+            //Task.Run(buildDbBLL.CleanLocalDatabase).Wait();
 
-            MainPage = new AppShell();
-            Shell.Current.GoToAsync($"//{nameof(Main)}");
+            Task.Run(buildDbBLL.Init).Wait();
+
+            InitializeComponent();
+
+            Models.User user = userBLL.GetUserLocal().Result;
+
+            if (user != null)
+            {
+                syncServices.StartThread();
+
+                MainPage = new AppShell();
+                Shell.Current.GoToAsync($"//{nameof(Main)}");
+            }
+            else
+            {
+                MainPage = new AppShell();
+            }
         }
-        else
-        {
-            MainPage = new AppShell();
-        }
+        catch (Exception ex) { throw ex; }
     }
 }

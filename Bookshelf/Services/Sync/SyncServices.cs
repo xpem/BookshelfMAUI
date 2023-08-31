@@ -53,7 +53,7 @@ namespace Bookshelf.Services.Sync
         {
             try
             {
-                Models.User user = await UserBLL.GetUserLocal();
+                Models.User user = UserBLL.GetUserLocal().Result;
 
                 if (user != null && Synchronizing != SyncStatus.Processing)
                 {
@@ -67,7 +67,7 @@ namespace Bookshelf.Services.Sync
 
                         await BookHistoricSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
 
-                        await UserBLL.UpdateLocalUserLastUpdate(user.Id, user.LastUpdate);
+                        await UserBLL.UpdateLocalUserLastUpdate(user);
                     }
 
                     Synchronizing = SyncStatus.Sleeping;

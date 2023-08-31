@@ -2,8 +2,8 @@
 {
     public interface IBookSyncBLL
     {
-        Task LocalToApiSync(int uid, DateTime lastUpdate);
+        Task<(int added, int updated)> LocalToApiSync(int uid, DateTime lastUpdate);
 
-        Task ApiToLocalSync(int uid, DateTime lastUpdate);
+        Task<(int added, int updated)> ApiToLocalSync(int uid, DateTime lastUpdate);
     }
 }

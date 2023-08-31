@@ -4,12 +4,11 @@
     {
         public int? Id { get; set; }
 
-        /// <summary>
-        /// Temporary local id
-        /// </summary>
+        public int UserId { get; set; }
+
         public string? LocalTempId { get; set; }
 
-        public string Title { get; set; }
+        public required string Title { get; set; }
 
         public string? SubTitle { get; set; }
 

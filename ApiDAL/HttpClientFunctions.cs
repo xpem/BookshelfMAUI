@@ -1,6 +1,6 @@
 ﻿using ApiDAL.Handlers;
 using ApiDAL.Interfaces;
-using LocalDbDAL.User;
+using DBContextDAL;
 using Models.Responses;
 using System.Net;
 using System.Text;
@@ -9,11 +9,11 @@ namespace ApiDAL
 {
     public class HttpClientFunctions : HttpClient, IHttpClientFunctions
     {
-        readonly IUserLocalDAL UserLocalDAL;
+        private readonly BookshelfDbContext bookshelfDbContext;
 
-        public HttpClientFunctions(IUserLocalDAL userLocalDAL)
+        public HttpClientFunctions(BookshelfDbContext bookshelfDbContext)
         {
-            UserLocalDAL = userLocalDAL;
+            this.bookshelfDbContext = bookshelfDbContext;
         }
 
         public async Task<bool> CheckServer()
@@ -106,7 +106,9 @@ namespace ApiDAL
                 }
                 else
                 {
-                    userToken = await UserLocalDAL.GetUserToken();
+                    userToken = bookshelfDbContext.User.FirstOrDefault()?.Token;
+
+                    if (userToken is null) throw new ArgumentNullException(nameof(userToken));
                 }
 
                 resp = await Request(requestsType, url, userToken, jsonContent);
@@ -119,7 +121,7 @@ namespace ApiDAL
 
         private async Task<(bool success, string? newToken)> RefreshToken()
         {
-            Models.User? user = await UserLocalDAL.GetUser();
+            Models.User? user = bookshelfDbContext.User.FirstOrDefault();
 
             if (user is not null && user.Email is not null && user.Password is not null)
             {
@@ -131,7 +133,11 @@ namespace ApiDAL
                 {
                     string newToken = resp.Content;
 
-                    await UserLocalDAL.UpdateToken(user.Id, newToken);
+                    user.Token = newToken;
+
+                    bookshelfDbContext.Update(user);
+                    await bookshelfDbContext.SaveChangesAsync();
+
                     return (true, newToken);
                 }
             }

@@ -1,9 +1,8 @@
-﻿using Bookshelf.Resources.Fonts.Styles;
+﻿using BLL.Books;
+using Bookshelf.Resources.Fonts.Styles;
 using Bookshelf.ViewModels.Components;
-using Bookshelf.Views;
 using Models.Books;
 using Models.Books.GoogleApi;
-using BLL.Books;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -134,7 +133,7 @@ namespace Bookshelf.ViewModels
 
                 if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(GoogleKey))
                 {
-                    Models.Books.Book _book = await booksServices.GetBookbyTitleAndGoogleId(Title.ToLower(), GoogleKey);
+                    Models.Books.Book _book = booksServices.GetBookbyTitleOrGoogleId(Title.ToLower(), GoogleKey);
 
                     if (_book is not null)
                     {
@@ -155,7 +154,7 @@ namespace Bookshelf.ViewModels
                 }
             }
             else
-                _ = Task.Run(() => GetBook(BookId));
+                _ = Task.Run(() => GetBook(Convert.ToInt32(BookId)));
         }
 
         protected async Task GetGoogleBook()
@@ -229,7 +228,7 @@ namespace Bookshelf.ViewModels
         /// get book by book key
         /// </summary>
         /// <param name="BookKey"></param>
-        protected async void GetBook(string BookKey) => BuildBook(await booksServices.GetBook(BookKey));
+        protected async Task GetBook(int bookId) => BuildBook(await booksServices.GetBook(bookId));
 
         private async Task InsertBook()
         {
@@ -286,16 +285,20 @@ namespace Bookshelf.ViewModels
                     {
                         book.Id = Convert.ToInt32(BookId);
 
-                        bool res = await booksServices.AltBook(book);
+                        Models.Responses.BLLResponse uptRes = await booksServices.UpdateBook(book);
 
-                        if (!res)
-                            mensagem = "Ocorreu um erro ao tentar atualizar o livro";
+                        if (!uptRes.Success)
+                        {
+                            if (uptRes.Content is not null)
+                                mensagem = uptRes.Content as string;
+                            else mensagem = "Ocorreu um erro ao atualizar o livro";
+                        }
                         else
                             mensagem += " atualizados";
                     }
                     else
                     {
-                        var addRes = await booksServices.AddBook(book);
+                        Models.Responses.BLLResponse addRes = await booksServices.AddBook(book);
 
                         if (!addRes.Success)
                         {
@@ -347,22 +350,8 @@ namespace Bookshelf.ViewModels
             //}
 
             if (!ValidInfo)
-            {
                 await Application.Current.MainPage.DisplayAlert("Aviso", "Preencha os campos obrigatórios", null, "Ok");
-            }
-            else
-            {
-                if (!IsUpdate)
-                {
-                    if (await booksServices.VerifyBookbyTitle(Title))
-                        ValidInfo = false;
-                }
 
-                if (!ValidInfo)
-                {
-                    await Application.Current.MainPage.DisplayAlert("Aviso", "Livro já cadastrados", null, "Ok");
-                }
-            }
             return ValidInfo;
 
         }

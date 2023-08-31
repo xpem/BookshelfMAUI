@@ -24,7 +24,7 @@ namespace ApiDAL
             catch (Exception ex) { throw ex; }
         }
 
-        public async Task<ApiResponse> AltBook(Book book)
+        public async Task<ApiResponse> UpdateBook(Book book)
         {
             try
             {

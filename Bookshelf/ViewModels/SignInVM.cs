@@ -1,10 +1,9 @@
-﻿using Bookshelf.ViewModels.Components;
+﻿using BLL.User;
+using Bookshelf.Services.Sync;
+using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
-using BLL.User;
 using Plugin.Connectivity;
 using System.Windows.Input;
-using BLL.Sync;
-using Bookshelf.Services.Sync;
 
 namespace Bookshelf.ViewModels
 {
@@ -24,7 +23,7 @@ namespace Bookshelf.ViewModels
         public bool BtnSignEnabled { get => btnSignEnabled; set { if (btnSignEnabled != value) { btnSignEnabled = value; OnPropertyChanged(); } } }
 
         readonly ISyncServices SyncServices;
-        IUserBLL UserBLL;
+        readonly IUserBLL UserBLL;
 
         public SignInVM(ISyncServices syncServices, IUserBLL userBLL)
         {
@@ -46,7 +45,7 @@ namespace Bookshelf.ViewModels
                          {
                              SignInText = "Acessando...";
                              BtnSignEnabled = false;
-                            var resp = await UserBLL.GetUser(Email, Password);
+                             Models.Responses.BLLResponse resp = await UserBLL.SignIn(Email, Password);
 
                              if (resp.Success)
                              {

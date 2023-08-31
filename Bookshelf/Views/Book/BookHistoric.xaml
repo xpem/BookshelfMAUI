@@ -19,18 +19,19 @@
                 BackgroundColor="Transparent"
                 CornerRadius="10"
                 VerticalOptions="FillAndExpand">
-                <ScrollView>
-                    <ListView
-                        CachingStrategy="RecycleElement"
-                        HasUnevenRows="True"
-                        ItemsSource="{Binding UIBookHistoricList}"
-                        SelectionMode="None">
-                        <ListView.Behaviors>
-                            <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
-                        </ListView.Behaviors>
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="model:UIBookHistoric">
-                                <ViewCell>
+                <ListView
+                    Margin="0"
+                    CachingStrategy="RecycleElement"
+                    HasUnevenRows="True"
+                    ItemsSource="{Binding UIBookHistoricList}"
+                    SelectionMode="None">
+                    <ListView.Behaviors>
+                        <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
+                    </ListView.Behaviors>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="model:UIBookHistoric">
+                            <ViewCell>
+                                <Frame Margin="0,0,0,5" BackgroundColor="Transparent">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -83,26 +84,26 @@
                                                 TextType="Html" />
                                         </Border>
                                     </Grid>
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                        <ListView.Footer>
-                            <Grid Padding="6" IsVisible="{Binding IsBusy}">
-                                <Grid.Triggers>
-                                    <Trigger TargetType="Grid" Property="IsVisible" Value="False">
-                                        <Setter Property="HeightRequest" Value="0" />
-                                    </Trigger>
-                                </Grid.Triggers>
-                                <ActivityIndicator
-                                    HorizontalOptions="Center"
-                                    IsRunning="{Binding IsBusy}"
-                                    IsVisible="{Binding IsBusy}"
-                                    VerticalOptions="Center"
-                                    Color="#2196F3" />
-                            </Grid>
-                        </ListView.Footer>
-                    </ListView>
-                </ScrollView>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.Footer>
+                        <Grid Padding="6" IsVisible="{Binding IsBusy}">
+                            <Grid.Triggers>
+                                <Trigger TargetType="Grid" Property="IsVisible" Value="False">
+                                    <Setter Property="HeightRequest" Value="0" />
+                                </Trigger>
+                            </Grid.Triggers>
+                            <ActivityIndicator
+                                HorizontalOptions="Center"
+                                IsRunning="{Binding IsBusy}"
+                                IsVisible="{Binding IsBusy}"
+                                VerticalOptions="Center"
+                                Color="#2196F3" />
+                        </Grid>
+                    </ListView.Footer>
+                </ListView>
             </Frame>
             <!--<Frame
             Margin="0,0,0,5"

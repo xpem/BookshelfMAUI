@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LocalDbDAL\LocalDbDAL.csproj" />
+    <ProjectReference Include="..\DBContextDAL\DbContextDAL.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 

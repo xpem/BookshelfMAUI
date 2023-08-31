@@ -111,7 +111,8 @@ namespace LocalDbDAL.Books.BookHistoric
                         {
                             list.Last().BookHistoricItems?.Add(new BookHistoricItem()
                             {
-                                Id = itemId,
+                                Id = itemId.Value,
+                                BookHistoricId = bookHistoricId,
                                 BookFieldName = response.GetWithNullableString(10),
                                 CreatedAt = Convert.ToDateTime(response.GetWithNullableString(9)),
                                 UpdatedFrom = response.GetWithNullableString(6),
@@ -136,7 +137,8 @@ namespace LocalDbDAL.Books.BookHistoric
                         {
                             bookHistoricRow.BookHistoricItems?.Add(new BookHistoricItem()
                             {
-                                Id = itemId,
+                                Id = itemId.Value,
+                                BookHistoricId = bookHistoricId,
                                 BookFieldName = response.GetWithNullableString(10),
                                 CreatedAt = Convert.ToDateTime(response.GetWithNullableString(9)),
                                 UpdatedFrom = response.GetWithNullableString(6),

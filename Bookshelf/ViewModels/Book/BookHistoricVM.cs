@@ -42,7 +42,7 @@ namespace Bookshelf.ViewModels.Book
         {
             IsBusy = true;
 
-            Models.Books.Historic.BookHistoricList bookHistoricList = await BookHistoricBLL.GetBookHistoricByBookId(pageNumber, BookId);
+            Models.Books.Historic.BookHistoricList bookHistoricList = BookHistoricBLL.GetBookHistoricByBookId(pageNumber, BookId);
 
             foreach (var bookHistoricObj in bookHistoricList.List)
             {

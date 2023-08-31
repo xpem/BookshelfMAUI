@@ -13,7 +13,7 @@ namespace ApiDAL.Interfaces
     {
         Task<ApiResponse> AddBook(Book book);
 
-        Task<ApiResponse> AltBook(Book book);
+        Task<ApiResponse> UpdateBook(Book book);
 
         Task<ApiResponse> GetBooksByLastUpdate(DateTime lastUpdate);
     }
