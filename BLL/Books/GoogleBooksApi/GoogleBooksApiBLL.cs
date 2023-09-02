@@ -109,9 +109,9 @@ namespace BLL.Books.GoogleBooksApi
                     ?? throw new Exception("Erro não mapeado na resposta da api do google");
 
                 List<Item>? items = array.items;
-                                
+
                 totalItems = array.totalItems;
-                               
+
 
                 if (totalItems > 0 && items != null)
                 {
@@ -121,7 +121,7 @@ namespace BLL.Books.GoogleBooksApi
                     }
                 }
             }
-            catch (Exception ex) { throw ex; }
+            catch { throw; }
 
             return (list, totalItems);
         }

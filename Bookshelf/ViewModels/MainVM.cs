@@ -1,14 +1,13 @@
-﻿using Bookshelf.ViewModels.Components;
-using Bookshelf.Views;
-using Bookshelf.Views.Book;
-using Bookshelf.Views.GoogleSearch;
+﻿using BLL;
 using BLL.Books;
-using Microsoft.Maui.Controls;
-using System.Windows.Input;
-using BLL.Sync;
 using BLL.User;
 using Bookshelf.Services.Sync;
+using Bookshelf.ViewModels.Components;
+using Bookshelf.Views;
+using Bookshelf.Views.GoogleSearch;
 using Models;
+using System.Runtime.CompilerServices;
+using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
@@ -51,17 +50,17 @@ namespace Bookshelf.ViewModels
         //readonly IBookSyncBLL booksSyncBLL;
 
         readonly ISyncServices SyncService;
-
+        private readonly IBuildDbBLL buildDbBLL;
         readonly IUserBLL UserBLL;
 
-        public MainVM(IBooksBLL _booksServices, IUserBLL userBLL, ISyncServices syncService)
+        public MainVM(IBooksBLL _booksServices, IUserBLL userBLL, ISyncServices syncService, IBuildDbBLL buildDbBLL)
         {
             booksServices = _booksServices;
             UserBLL = userBLL;
             SyncService = syncService;
-
+            this.buildDbBLL = buildDbBLL;
         }
-        
+
         private Timer _Timer;
         int Interval = 2000;
         bool ThreadIsRunning = false;
@@ -88,7 +87,7 @@ namespace Bookshelf.ViewModels
         /// <summary>
         /// parallel operation that checks if the system is synchronizyng.
         /// </summary>
-        private void CheckSync(object state)
+        private async void CheckSync(object state)
         {
             try
             {
@@ -105,7 +104,7 @@ namespace Bookshelf.ViewModels
                         case SyncStatus.Processing: IsSync = Colors.Green; break;
                         case SyncStatus.Sleeping:
 
-                            _ = GetBookshelfTotals();
+                            Task.Run(() => GetBookshelfTotals()).Wait();
 
                             IsSync = Colors.Gray;
 
@@ -138,10 +137,11 @@ namespace Bookshelf.ViewModels
             }
         }
 
-        public async Task GetBookshelfTotals()
+        public void GetBookshelfTotals()
         {
+
             //
-            Models.Books.Totals totals = await booksServices.GetBookshelfTotals();
+            Models.Books.Totals totals = booksServices.GetBookshelfTotals();
             //
             if (totals.IllRead.ToString() != IllRead) { IllRead = totals.IllRead.ToString(); }
             if (totals.Reading.ToString() != Reading) { Reading = totals.Reading.ToString(); }
@@ -168,7 +168,8 @@ namespace Bookshelf.ViewModels
 
             if (resp)
             {
-                await UserBLL.CleanDatabase();
+                await buildDbBLL.CleanLocalDatabase();
+
                 _Timer.Dispose();
                 //finalize sync thread process
                 SyncService.ThreadIsRunning = false;

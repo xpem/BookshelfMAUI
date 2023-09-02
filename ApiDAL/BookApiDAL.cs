@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace ApiDAL
 {
-    public class BookApiDAL: IBookApiDAL
+    public class BookApiDAL : IBookApiDAL
     {
 
         readonly IHttpClientFunctions HttpClientFunctions;
@@ -17,14 +17,14 @@ namespace ApiDAL
         {
             try
             {
-                var json = JsonSerializer.Serialize(book);
+                string json = JsonSerializer.Serialize(book);
 
                 return await HttpClientFunctions.AuthRequest(RequestsTypes.Post, ApiKeys.ApiAddress + "/book", json);
             }
             catch (Exception ex) { throw ex; }
         }
 
-        public async Task<ApiResponse> AltBook(Book book)
+        public async Task<ApiResponse> UpdateBook(Book book)
         {
             try
             {

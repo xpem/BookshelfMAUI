@@ -1,7 +1,6 @@
 ﻿using ApiDAL.Handlers;
 using ApiDAL.Interfaces;
-using LocalDbDAL.BuildDb;
-using LocalDbDAL.User;
+using DBContextDAL;
 using Models.Responses;
 using System.Text.Json.Nodes;
 
@@ -10,9 +9,13 @@ namespace BLL.User
     public class UserBLL : IUserBLL
     {
         readonly IUserApiDAL UserApiDAL;
-        readonly IUserLocalDAL UserLocalDAL;
+        private readonly BookshelfDbContext bookshelfDbContext;
 
-        public UserBLL(IUserApiDAL userApiDAL, IUserLocalDAL userLocalDAL) { UserApiDAL = userApiDAL; UserLocalDAL = userLocalDAL; }
+        public UserBLL(IUserApiDAL userApiDAL, BookshelfDbContext bookshelfDBContext)
+        {
+            UserApiDAL = userApiDAL;
+            this.bookshelfDbContext = bookshelfDBContext;
+        }
 
         public async Task<BLLResponse> AddUser(string name, string email, string password)
         {
@@ -48,9 +51,7 @@ namespace BLL.User
             {
                 JsonNode? jResp = JsonNode.Parse(resp.Content);
                 if (jResp is not null)
-                {
                     return jResp["Mensagem"]?.GetValue<string>();
-                }
             }
 
             return null;
@@ -60,53 +61,14 @@ namespace BLL.User
         {
             try
             {
-                email = email.ToLower();
-
-                return await UserApiDAL.GetUserToken(email, password);
+                return await UserApiDAL.GetUserToken(email.ToLower(), password);
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            catch { throw; }
         }
 
-        /// <summary>
-        /// get user in the static var
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Models.User?> GetUserLocal() => await UserLocalDAL.GetUser();
+        public Task<Models.User?> GetUserLocal() => Task.Run(() => bookshelfDbContext.User.FirstOrDefault());
 
-        //public async Task<Models.User?> RefreshUserToken(Models.User user)
-        //{
-        //    try
-        //    {
-        //        Models.User userResponse = user;
-
-        //        if (!string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.Password))
-        //        {
-        //            (bool success, string? res) = await UserApiService.GetUserToken(user.Email, user.Password);
-
-        //            if (success && res != null)
-        //            {
-        //                await UserRepos.UpdateToken(user.Id, res);
-        //                userResponse.Token = res;
-        //            }
-        //            else
-        //            {
-        //                if (res != null)
-        //                    userResponse.Error = ErrorType.WrongEmailOrPassword;
-        //            }
-        //            return userResponse;
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //    catch (Exception ex) { throw ex; }
-        //}
-
-        public async Task<BLLResponse> GetUser(string email, string password)
+        public async Task<BLLResponse> SignIn(string email, string password)
         {
             try
             {
@@ -133,7 +95,10 @@ namespace BLL.User
                                 Password = PasswordHandler.Encrypt(password)
                             };
 
-                            await UserLocalDAL.InsertUser(user);
+                            bookshelfDbContext.ChangeTracker?.Clear();
+
+                            await bookshelfDbContext.User.AddAsync(user);
+                            await bookshelfDbContext.SaveChangesAsync();
 
                             return new BLLResponse() { Success = true };
                         }
@@ -149,13 +114,12 @@ namespace BLL.User
             catch (Exception ex) { throw ex; }
         }
 
-        public Task CleanDatabase() => BuildLocalDbDAL.CleanDatabase();
-
-        public async Task UpdateLocalUserLastUpdate(int uid, DateTime lastUpdate)
+        public async Task UpdateLocalUserLastUpdate(Models.User user)
         {
-            await UserLocalDAL.UpdateUserLastUpdateLocal(uid, lastUpdate);
-        }
+            user.LastUpdate = DateTime.Now;
 
-        //public async Task<Models.User> SignUp(string name, string email, string password) => await UserApiService.SignUp(name, email, password);
+            bookshelfDbContext.Update(user);
+            await bookshelfDbContext.SaveChangesAsync();
+        }
     }
 }

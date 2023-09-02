@@ -5,22 +5,22 @@ namespace BLL.Books
 {
     public interface IBooksBLL
     {
-        Task<Totals> GetBookshelfTotals();
+        Totals GetBookshelfTotals();
 
-        Task<Book?> GetBook(string bookKey);
+        Task<Book?> GetBook(int bookId);
 
-        Task<bool> AltBook(Book book);
+        Task<BLLResponse> UpdateBook(Book book);
 
         Task<BLLResponse> AddBook(Book book);
 
-        Task<bool> VerifyBookbyTitle(string title);
+        //bool VerifyBookbyTitle(string title);
 
-        Task<Book?> GetBookbyTitleAndGoogleId(string title, string googleId);
+        Book? GetBookbyTitleOrGoogleId(string title, string googleId);
 
         Task<(List<UIBookItem>, int total)> GetBookSituationByStatus(int? page, int Situation, string? textoBusca);
 
-        Task InactivateBook(string bookKey);
+        Task InactivateBook(int bookId);
 
-        Task UpdateBookSituation(string Key, Status status, int rate, string comment);
+        Task UpdateBookSituation(int bookId, Status status, int rate, string comment);
     }
 }

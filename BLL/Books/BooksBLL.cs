@@ -1,150 +1,147 @@
-﻿using Models.Books;
-using LocalDbDAL.User;
-using Plugin.Connectivity;
-using LocalDbDAL.Books;
+﻿using DBContextDAL;
+using Microsoft.EntityFrameworkCore;
+using Models.Books;
 using Models.Responses;
+using Plugin.Connectivity;
 
 namespace BLL.Books
 {
     public class BooksBLL : IBooksBLL
     {
-        readonly IBooksApiBLL BooksApiBLL;
-        readonly IUserLocalDAL UserLocalDAL;
-        readonly IBookLocalDAL BookLocalDAL;
+        readonly IBookApiBLL BooksApiBLL;
+        private readonly BookshelfDbContext bookshelfDbContext;
+        readonly Models.User User;
 
-        public BooksBLL(IBooksApiBLL booksApiBLL, IUserLocalDAL userLocalDAL, IBookLocalDAL bookLocalDAL)
+        public BooksBLL(IBookApiBLL booksApiBLL, BookshelfDbContext bookshelfDbContext)
         {
             BooksApiBLL = booksApiBLL;
-            UserLocalDAL = userLocalDAL;
-            BookLocalDAL = bookLocalDAL;
+            this.bookshelfDbContext = bookshelfDbContext;
+
+            User = bookshelfDbContext.User.First();
         }
 
-        public async Task<Totals> GetBookshelfTotals()
+        public Totals GetBookshelfTotals()
         {
             Totals BTotals = new();
 
-            Models.User? User = await UserLocalDAL.GetUser();
-            if (User?.Id != null)
-            {
-                List<(Status, int)> list = await BookLocalDAL.GetBookshelfTotals(User.Id);
+            var list = bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Inactive == false).GroupBy(x => x.Status).Select(x => new { status = x.Key, count = x.Count() }).ToList();
 
-                if (list.Count > 0)
-                {
-                    BTotals.IllRead = list.Where(a => a.Item1 == Status.IllRead).FirstOrDefault().Item2;
-                    BTotals.Reading = list.Where(a => a.Item1 == Status.Reading).FirstOrDefault().Item2;
-                    BTotals.Read = list.Where(a => a.Item1 == Status.Read).FirstOrDefault().Item2;
-                    BTotals.Interrupted = list.Where(a => a.Item1 == Status.Interrupted).FirstOrDefault().Item2;
-                }
-                else
-                {
-                    BTotals.IllRead = BTotals.Reading = BTotals.Read = BTotals.Interrupted = 0;
-                }
+            if (list.Count > 0)
+            {
+                var illRead = list.FirstOrDefault(x => x.status == Status.IllRead);
+                var reading = list.FirstOrDefault(x => x.status == Status.Reading);
+                var read = list.FirstOrDefault(x => x.status == Status.Read);
+                var interrupted = list.FirstOrDefault(x => x.status == Status.Interrupted);
+
+                BTotals.IllRead = illRead is not null ? illRead.count : 0;
+                BTotals.Reading = reading is not null ? reading.count : 0;
+                BTotals.Read = read is not null ? read.count : 0;
+                BTotals.Interrupted = interrupted is not null ? interrupted.count : 0;
+            }
+            else
+            {
+                BTotals.IllRead = BTotals.Reading = BTotals.Read = BTotals.Interrupted = 0;
             }
 
             return BTotals;
         }
 
-        public async Task<Book?> GetBook(string bookKey)
-        {
-            Models.User? User = await UserLocalDAL.GetUser();
-            if (User?.Id != null)
-                return await BookLocalDAL.GetBook(User.Id, bookKey);
+        public async Task<Book?> GetBook(int bookId) => await bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Id == bookId).FirstOrDefaultAsync();
 
-            return null;
-        }
-
-        public async Task<bool> AltBook(Book book)
+        public async Task<BLLResponse> UpdateBook(Book book)
         {
-            Models.User? User = await UserLocalDAL.GetUser();
-            if (User?.Id != null)
+            Book? bookResponse = Task.Run(() => GetBookByTitle(book.Title)).Result;
+
+            if (bookResponse == null)
             {
                 book.UpdatedAt = DateTime.Now;
+                book.UserId = User.Id;
 
-                await BookLocalDAL.UpdateBook(book, User.Id);
+                bookshelfDbContext.Update(book);
+                await bookshelfDbContext.SaveChangesAsync();
+
                 //
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    var resp = await BooksApiBLL.AltBook(book);
+                    BLLResponse resp = await BooksApiBLL.UpdateBook(book);
 
-                    return resp.Success;
+                    if (resp.Success) { book.Id = Convert.ToInt32(resp.Content); }
+                    else
+                    {
+                        if (resp.Content is not null)
+                            return new BLLResponse() { Success = false, Content = resp.Content.ToString() };
+                        else return new BLLResponse() { Success = false };
+                    }
                 }
-                else return true;
+
+                return new BLLResponse() { Success = true };
             }
-            return false;
+            else return new BLLResponse() { Success = false, Content = "Livro com este título já cadastrado." };
+
         }
+
+        private Book? GetBookByTitle(string title) => bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Title != null && x.Title.ToLower().Equals(title.ToLower())).FirstOrDefault();
 
         public async Task<BLLResponse> AddBook(Book book)
         {
             book.UpdatedAt = DateTime.Now;
 
-            Models.User? User = await UserLocalDAL.GetUser();
+            Book? bookResponse = Task.Run(() => GetBookByTitle(book.Title)).Result;
 
-            //verificar se o livro já existe no bd
-            //componentizar labels
-
-            if (User?.Id != null)
+            if (bookResponse == null)
             {
-                var bookResponse = await BookLocalDAL.GetBookByTitleOrGooglekey(User.Id, book.Title, null);
-
-                if (bookResponse == null)
+                if (CrossConnectivity.Current.IsConnected)
                 {
-                    if (CrossConnectivity.Current.IsConnected)
-                    {
-                        var response = await BooksApiBLL.AddBook(book);
+                    BLLResponse response = await BooksApiBLL.AddBook(book);
 
-                        if (response.Success) { book.Id = Convert.ToInt32(response.Content); }
-                        else
-                        {
-                            if (response.Content is not null)
-                                return new BLLResponse() { Success = false, Content = response.Content.ToString() };
-                            else return new BLLResponse() { Success = false };
-                        }
-                    }
+                    if (response.Success) { book.Id = Convert.ToInt32(response.Content); }
                     else
                     {
-                        book.LocalTempId = Guid.NewGuid().ToString();
+                        if (response.Content is not null)
+                            return new BLLResponse() { Success = false, Content = response.Content.ToString() };
+                        else return new BLLResponse() { Success = false };
                     }
-
-                    await BookLocalDAL.AddBook(book, User.Id);
-                    return new BLLResponse() { Success = true };
                 }
-                else return new BLLResponse() { Success = false, Content = "Livro com este título já cadastrado." };
-            }
-
-            return new BLLResponse() { Success = false }; ;
-        }
-
-        public async Task<bool> VerifyBookbyTitle(string title)
-        {
-            bool ret = false;
-
-            Models.User? User = await UserLocalDAL.GetUser();
-            if (User?.Id != null)
-            {
-                Book? _book = await BookLocalDAL.GetBookByTitleOrGooglekey(User.Id, title, null);
-
-                if (_book is not null)
+                else
                 {
-                    ret = true;
+                    book.LocalTempId = Guid.NewGuid().ToString();
                 }
 
+                book.UserId = User.Id;
+                bookshelfDbContext.Add(book);
+                bookshelfDbContext.SaveChanges();
+
+                return new BLLResponse() { Success = true };
             }
-            return ret;
+            else return new BLLResponse() { Success = false, Content = "Livro com este título já cadastrado." };
 
         }
 
-        public async Task<Book?> GetBookbyTitleAndGoogleId(string title, string googleId)
+        //public bool VerifyBookbyTitle(string title)
+        //{
+        //    bool ret = false;
+
+        //    Models.User? User = bookshelfDbContext.User.FirstOrDefault();
+        //    if (User?.Id != null)
+        //    {
+        //        Book? _book = bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Title != null && x.Title.Equals(title, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+        //        if (_book is not null)
+        //            ret = true;
+        //    }
+
+        //    return ret;
+
+        //}
+
+        public Book? GetBookbyTitleOrGoogleId(string title, string googleId)
         {
-            Models.User? User = await UserLocalDAL.GetUser();
-            if (User?.Id != null)
+            try
             {
-                Book? _book = await BookLocalDAL.GetBookByTitleOrGooglekey(User.Id, title, googleId);
-
-                return _book;
+                return bookshelfDbContext.Book.Where(x => x.UserId == User.Id && ((x.Title != null &&
+                   x.Title.ToLower().Equals(title.ToLower())) || (x.GoogleId != null && x.GoogleId.Equals(googleId)))).FirstOrDefault();
             }
-
-            return null;
-
+            catch (Exception ex) { throw ex; }
         }
 
         /// <summary>
@@ -157,84 +154,81 @@ namespace BLL.Books
             List<UIBookItem> listBooksItens = new();
             int total = 0;
 
-            Models.User? User = await UserLocalDAL.GetUser();
-            if (User?.Id != null)
+            int pageSize = 10;
+            List<Book> list = new();
+
+            if (status > 0)
+                list = await bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Status == (Status)status && x.Inactive == false).OrderBy(x => x.UpdatedAt).ToListAsync();
+            else
+                list = await bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Inactive == false).OrderBy(x => x.UpdatedAt).ToListAsync();
+
+            if (list.Count > 0 && !string.IsNullOrEmpty(textoBusca))
+                list = list.Where(x => x.Title != null && x.Title.ToLower().Equals(textoBusca.ToLower())).ToList();
+
+            total = list.Count;
+
+            if (page != null)
+                list = list.Skip((page.Value - 1) * pageSize).Take(pageSize).ToList();
+
+            string SubtitleAndVol;
+
+            foreach (Book book in list)
             {
-                int pageSize = 10;
+                SubtitleAndVol = "";
 
-                List<Book> list = (await BookLocalDAL.GetBookSituationByStatus(status, User.Id, textoBusca));
+                if (!string.IsNullOrEmpty(book.SubTitle))
+                    SubtitleAndVol = book.SubTitle;
+                if (!string.IsNullOrEmpty(book.SubTitle) && book.Volume != null)
+                    SubtitleAndVol += "; ";
+                if (book.Volume != null)
+                    SubtitleAndVol += "Vol.: " + book.Volume;
 
-                total = list.Count;
-
-                if (page != null)
-                    list = list.Skip((page.Value - 1) * pageSize).Take(pageSize).ToList();
-
-                string SubtitleAndVol;
-
-                foreach (Book book in list)
+                UIBookItem bookItem = new()
                 {
-                    SubtitleAndVol = "";
-                    if (!string.IsNullOrEmpty(book.SubTitle))
-                    {
-                        SubtitleAndVol = book.SubTitle;
-                    }
-                    if (!string.IsNullOrEmpty(book.SubTitle) && book.Volume != null)
-                    {
-                        SubtitleAndVol += "; ";
-                    }
-                    if (book.Volume != null)
-                    {
-                        SubtitleAndVol += "Vol.: " + book.Volume;
-                    }
+                    Key = book.Id.ToString(),
+                    Title = book.Title,
+                    Authors = book.Authors,// + "; Ano: " + book.Year,
+                    Pages = book.Pages.ToString(),
+                    SubtitleAndVol = SubtitleAndVol,
+                    Cover = book.Cover,
+                };
 
-                    UIBookItem bookItem = new()
-                    {
-                        Key = book.Id.ToString(),
-                        Title = book.Title,
-                        Authors = book.Authors,// + "; Ano: " + book.Year,
-                        Pages = book.Pages.ToString(),
-                        SubtitleAndVol = SubtitleAndVol,
-                        Cover = book.Cover,
-                    };
-
-                    if ((Status)status == Models.Books.Status.Read)
-                    {
-                        bookItem.Rate = book.Score > 0 ? string.Format("Avaliação pessoal: {0} de 5", book.Score.ToString()) : "";
-                    }
-
-                    listBooksItens.Add(bookItem);
+                if ((Status)status == Models.Books.Status.Read)
+                {
+                    bookItem.Rate = book.Score > 0 ? string.Format("Avaliação pessoal: {0} de 5", book.Score.ToString()) : "";
                 }
+
+                listBooksItens.Add(bookItem);
             }
+
 
             return (listBooksItens, total);
         }
 
-        public async Task InactivateBook(string bookKey)
+        public async Task InactivateBook(int bookId)
         {
-            Book? book = await GetBook(bookKey);
+            Book? book = await GetBook(bookId);
 
-            Models.User? User = await UserLocalDAL.GetUser();
-            if (book?.Id is not null && User?.Id is not null)
+            if (book?.Id is not null)
             {
                 book.UpdatedAt = DateTime.Now;
+                book.UserId = User.Id;
                 book.Inactive = true;
 
-                await BookLocalDAL.InactivateBook(book.Id, User.Id, book.UpdatedAt);
+                bookshelfDbContext.Update(book);
+
+                bookshelfDbContext.SaveChanges();
 
                 if (CrossConnectivity.Current.IsConnected)
-                {
-                    _ = await BooksApiBLL.AltBook(book);
-                }
+                    await BooksApiBLL.UpdateBook(book);
             }
         }
 
-        public async Task UpdateBookSituation(string Key, Status status, int score, string comment)
+        public async Task UpdateBookSituation(int bookId, Status status, int score, string comment)
         {
             try
             {
-                Book? book = await GetBook(Key);
-
-                Models.User? User = await UserLocalDAL.GetUser();
+                Book? book = await GetBook(bookId);
 
                 if (book is not null && User?.Id is not null)
                 {
@@ -242,12 +236,15 @@ namespace BLL.Books
                     book.Status = status;
                     book.Score = score;
                     book.Comment = comment;
+                    book.UserId = User.Id;
 
-                    await BookLocalDAL.UpdateBook(book, User.Id);
+                    bookshelfDbContext.Update(book);
+
+                    await bookshelfDbContext.SaveChangesAsync();
 
                     if (CrossConnectivity.Current.IsConnected)
                     {
-                        _ = BooksApiBLL.AltBook(book);
+                        _ = BooksApiBLL.UpdateBook(book);
                     }
                 }
             }

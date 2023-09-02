@@ -86,13 +86,13 @@ namespace Bookshelf.ViewModels
                 BooksList.Clear();
 
             CurrentPage++;
-            LoadBooks(CurrentPage);
+            _ = LoadBooks(CurrentPage);
         }
 
         public ICommand LoadMoreCommand => new Command(() =>
         {
             CurrentPage++;
-            LoadBooks(CurrentPage);
+            _ = LoadBooks(CurrentPage);
         });
 
         public ICommand OnAppearingCommand => new Command((e) =>
@@ -101,8 +101,7 @@ namespace Bookshelf.ViewModels
                 BooksList.Clear();
 
             CurrentPage = 1;
-            LoadBooks(CurrentPage);
-
+            _ = LoadBooks(CurrentPage);
         });
 
 
@@ -114,7 +113,7 @@ namespace Bookshelf.ViewModels
         /// <summary>
         /// Get books by status
         /// </summary>
-        private async void LoadBooks(int? pageNumber)
+        private async Task LoadBooks(int? pageNumber)
         {
             PageTitle = "Carregando lista...";
             IsBusy = true;

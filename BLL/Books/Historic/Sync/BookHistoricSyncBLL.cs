@@ -1,5 +1,5 @@
 ﻿using BLL.Books.Historic.Interfaces;
-using LocalDbDAL.Books.BookHistoric;
+using DBContextDAL;
 using Models.Books.Historic;
 
 namespace BLL.Books.Historic.Sync
@@ -8,12 +8,12 @@ namespace BLL.Books.Historic.Sync
     {
 
         readonly IBookHistoricApiBLL BookHistoricApiBLL;
-        readonly IBookHistoricLocalDAL BookHistoricLocalDAL;
+        private readonly BookshelfDbContext bookshelfDbContext;
 
-        public BookHistoricSyncBLL(IBookHistoricApiBLL bookHistoricApiBLL, IBookHistoricLocalDAL bookHistoricLocalDAL)
+        public BookHistoricSyncBLL(IBookHistoricApiBLL bookHistoricApiBLL, BookshelfDbContext bookshelfDbContext)
         {
             BookHistoricApiBLL = bookHistoricApiBLL;
-            BookHistoricLocalDAL = bookHistoricLocalDAL;
+            this.bookshelfDbContext = bookshelfDbContext;
         }
 
         public async Task ApiToLocalSync(int uid, DateTime lastUpdate)
@@ -27,8 +27,21 @@ namespace BLL.Books.Historic.Sync
                 if (bookHistoricsList is not null)
                     foreach (BookHistoric bookHistoric in bookHistoricsList)
                     {
-                        if (!await BookHistoricLocalDAL.CheckBookHistoricById(bookHistoric.Id))
-                            await BookHistoricLocalDAL.AddBookHistoric(bookHistoric, uid);
+                        if ((bookshelfDbContext.BookHistoric.Where(x => x.Id == bookHistoric.Id).ToList().Count) == 0)
+                        {
+                            bookHistoric.Uid = uid;
+
+                            bookshelfDbContext.Add(bookHistoric);
+
+                            if (bookHistoric.BookHistoricItems is not null)
+                                foreach (var _bookHistoricItem in bookHistoric.BookHistoricItems)
+                                {
+                                    _bookHistoricItem.Uid = uid;
+                                    bookshelfDbContext.Add(_bookHistoricItem);
+                                }
+
+                            bookshelfDbContext.SaveChanges();
+                        }
                     }
             }
         }

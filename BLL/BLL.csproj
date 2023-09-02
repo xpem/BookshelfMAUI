@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApiDAL\ApiDAL.csproj" />
-    <ProjectReference Include="..\LocalDbDAL\LocalDbDAL.csproj" />
+    <ProjectReference Include="..\DBContextDAL\DbContextDAL.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 

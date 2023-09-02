@@ -2,15 +2,17 @@
 {
     public class BookHistoric
     {
-        public int? Id { get; set; }
+        public required int? Id { get; set; }
+
+        public int? Uid { get; set; }
 
         public DateTime? CreatedAt { get; set; }
 
-        public int BookId { get; set; }
+        public required int BookId { get; set; }
 
         public int? TypeId { get; set; }
 
-        public string? Type { get; set; }
+        public string? TypeName { get; set; }
 
         public List<BookHistoricItem>? BookHistoricItems { get; set; }
 

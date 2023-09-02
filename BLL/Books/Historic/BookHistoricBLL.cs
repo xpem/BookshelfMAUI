@@ -1,34 +1,36 @@
 ﻿using BLL.Books.Historic.Interfaces;
-using LocalDbDAL.User;
+using BLL.User;
+using DBContextDAL;
+using Microsoft.EntityFrameworkCore;
 using Models.Books.Historic;
 
 namespace BLL.Books.Historic
 {
     public class BookHistoricBLL : IBookHistoricBLL
     {
+        private readonly IUserBLL userBLL;
+        private readonly BookshelfDbContext bookshelfDbContext;
 
-        readonly LocalDbDAL.Books.BookHistoric.IBookHistoricLocalDAL BookHistoricLocalDAL;
-        readonly IUserLocalDAL UserLocalDAL;
-
-        public BookHistoricBLL(LocalDbDAL.Books.BookHistoric.IBookHistoricLocalDAL bookHistoricLocalDAL, IUserLocalDAL userLocalDAL)
+        public BookHistoricBLL(IUserBLL userBLL, BookshelfDbContext bookshelfDbContext)
         {
-            BookHistoricLocalDAL = bookHistoricLocalDAL;
-            UserLocalDAL = userLocalDAL;
+            this.userBLL = userBLL;
+            this.bookshelfDbContext = bookshelfDbContext;
         }
 
-        public async Task<BookHistoricList> GetBookHistoricByBookId(int? page, int bookId)
+        public BookHistoricList GetBookHistoricByBookId(int? page, int bookId)
         {
             List<BookHistoric> list = new();
 
             int total = 0;
 
-            Models.User? User = await UserLocalDAL.GetUser();
+            Models.User? User = userBLL.GetUserLocal().Result;
 
             if (User?.Id != null)
             {
                 int pageSize = 10;
 
-                list = (await BookHistoricLocalDAL.GetBookHistoricByBookId(User.Id, bookId));
+                list = bookshelfDbContext.BookHistoric.Where(x => x.Uid == User.Id && x.BookId == bookId)
+                .Include(x => x.BookHistoricItems).OrderByDescending(x => x.CreatedAt).ToList();
 
                 total = list.Count;
 

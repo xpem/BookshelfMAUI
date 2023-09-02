@@ -2,7 +2,11 @@
 {
     public class BookHistoricItem
     {
-        public int? Id { get; set; }
+        public required int Id { get; set; }
+
+        public int BookHistoricId { get; set; }
+
+        public int? Uid { get; set; }
 
         public DateTime? CreatedAt { get; set; }
 

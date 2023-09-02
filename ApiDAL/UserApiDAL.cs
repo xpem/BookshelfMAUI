@@ -1,7 +1,5 @@
 ﻿using ApiDAL.Interfaces;
 using Models.Responses;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 
 namespace ApiDAL
 {
@@ -13,23 +11,23 @@ namespace ApiDAL
         {
             try
             {
-                var resp = await userService.AddUserAsync(name, email, password);
+                UsersManagement.Model.ApiResponse resp = await userService.AddUserAsync(name, email, password);
 
-                return new() { Success = resp.Success,Content = resp.Content,Error = (ErrorTypes?)resp.Error };
+                return new() { Success = resp.Success, Content = resp.Content, Error = (ErrorTypes?)resp.Error };
             }
             catch { throw; }
         }
 
         public async Task<ApiResponse> RecoverPassword(string email)
         {
-            var resp = await userService.RecoverPasswordAsync(email);
+            UsersManagement.Model.ApiResponse resp = await userService.RecoverPasswordAsync(email);
 
             return new() { Success = resp.Success, Content = resp.Content, Error = (ErrorTypes?)resp.Error };
         }
 
         public async Task<(bool, string?)> GetUserToken(string email, string password)
         {
-            var resp = await userService.GetUserTokenAsync(email, password);
+            UsersManagement.Model.ApiResponse resp = await userService.GetUserTokenAsync(email, password);
 
             return (resp.Success, resp.Content);
         }
@@ -38,7 +36,7 @@ namespace ApiDAL
         {
             try
             {
-                var resp = await userService.GetUserAsync(token);
+                UsersManagement.Model.ApiResponse resp = await userService.GetUserAsync(token);
 
                 return new() { Success = resp.Success, Content = resp.Content, Error = (ErrorTypes?)resp.Error };
             }

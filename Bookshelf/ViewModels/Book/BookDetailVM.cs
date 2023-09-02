@@ -38,7 +38,7 @@ namespace Bookshelf.ViewModels
 
         #endregion
 
-        private string BookId { get; set; }
+        private int BookId { get; set; }
 
         private string SituationOri { get; set; }
 
@@ -143,37 +143,39 @@ namespace Bookshelf.ViewModels
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            BookId = query["Key"].ToString();
+            BookId = Convert.ToInt32(query["Key"]);
             situation = "0";
             rate = 0;
 
-            GetBook(BookId);
+            _ = GetBook(Convert.ToInt32(BookId));
         }
 
-        private async void GetBook(string bookKey)
+        private async Task GetBook(int bookId)
         {
-            Models.Books.Book book = await booksServices.GetBook(bookKey);
+            Models.Books.Book book = await booksServices.GetBook(bookId);
 
             string subtitleAndVol = "";
 
             if (!string.IsNullOrEmpty(book.SubTitle))
-            {
                 subtitleAndVol = book.SubTitle;
-            }
+
             if (!string.IsNullOrEmpty(book.SubTitle) && book.Volume != null)
-            {
                 subtitleAndVol += "; ";
-            }
+
             if (book.Volume != null)
-            {
                 subtitleAndVol += "Vol.: " + book.Volume;
-            }
+
+            // ImgCoverIsVisible = true;
 
             if (book.Cover != null)
             {
                 ImgCoverIsVisible = true;
                 Cover = book.Cover;
             }
+            //else
+            //{
+            //    Cover = "cover.jpg";
+            //}
 
             Title = book.Title;
             Authors = book.Authors;
