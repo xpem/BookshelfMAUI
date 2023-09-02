@@ -1,7 +1,6 @@
 ﻿using ApiDAL.Handlers;
 using ApiDAL.Interfaces;
 using DBContextDAL;
-using Microsoft.EntityFrameworkCore;
 using Models.Responses;
 using System.Text.Json.Nodes;
 

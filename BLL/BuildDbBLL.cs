@@ -18,9 +18,9 @@ namespace BLL
 
             await bookshelfDBContext.Database.EnsureCreatedAsync();
 
-            var actualVesionDbTables = await bookshelfDBContext.VersionDbTables.FirstOrDefaultAsync();
+            VersionDbTables? actualVesionDbTables = await bookshelfDBContext.VersionDbTables.FirstOrDefaultAsync();
 
-            var newVersionDbTables = new VersionDbTables() { Id = 0, VERSION = 1 };
+            VersionDbTables newVersionDbTables = new() { Id = 0, VERSION = 1 };
 
             if (actualVesionDbTables != null)
             {

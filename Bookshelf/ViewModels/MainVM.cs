@@ -6,6 +6,7 @@ using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using Bookshelf.Views.GoogleSearch;
 using Models;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
@@ -86,7 +87,7 @@ namespace Bookshelf.ViewModels
         /// <summary>
         /// parallel operation that checks if the system is synchronizyng.
         /// </summary>
-        private void CheckSync(object state)
+        private async void CheckSync(object state)
         {
             try
             {
@@ -103,7 +104,7 @@ namespace Bookshelf.ViewModels
                         case SyncStatus.Processing: IsSync = Colors.Green; break;
                         case SyncStatus.Sleeping:
 
-                            Task.Run(() => GetBookshelfTotals());
+                            Task.Run(() => GetBookshelfTotals()).Wait();
 
                             IsSync = Colors.Gray;
 

@@ -1,8 +1,8 @@
 ﻿using BLL.Books.Historic.Interfaces;
 using BLL.User;
 using DBContextDAL;
-using Models.Books.Historic;
 using Microsoft.EntityFrameworkCore;
+using Models.Books.Historic;
 
 namespace BLL.Books.Historic
 {
@@ -11,7 +11,7 @@ namespace BLL.Books.Historic
         private readonly IUserBLL userBLL;
         private readonly BookshelfDbContext bookshelfDbContext;
 
-        public BookHistoricBLL(IUserBLL userBLL,BookshelfDbContext bookshelfDbContext)
+        public BookHistoricBLL(IUserBLL userBLL, BookshelfDbContext bookshelfDbContext)
         {
             this.userBLL = userBLL;
             this.bookshelfDbContext = bookshelfDbContext;

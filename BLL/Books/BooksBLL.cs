@@ -50,7 +50,7 @@ namespace BLL.Books
 
         public async Task<BLLResponse> UpdateBook(Book book)
         {
-            var bookResponse = Task.Run(() => bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Id != book.Id && x.Title != null && x.Title.Equals(book.Title, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()).Result;
+            Book? bookResponse = Task.Run(() => GetBookByTitle(book.Title)).Result;
 
             if (bookResponse == null)
             {
@@ -63,7 +63,7 @@ namespace BLL.Books
                 //
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    var resp = await BooksApiBLL.UpdateBook(book);
+                    BLLResponse resp = await BooksApiBLL.UpdateBook(book);
 
                     if (resp.Success) { book.Id = Convert.ToInt32(resp.Content); }
                     else
@@ -80,17 +80,19 @@ namespace BLL.Books
 
         }
 
+        private Book? GetBookByTitle(string title) => bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Title != null && x.Title.ToLower().Equals(title.ToLower())).FirstOrDefault();
+
         public async Task<BLLResponse> AddBook(Book book)
         {
             book.UpdatedAt = DateTime.Now;
 
-            var bookResponse = bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Title != null && x.Title.Equals(book.Title, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            Book? bookResponse = Task.Run(() => GetBookByTitle(book.Title)).Result;
 
             if (bookResponse == null)
             {
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    var response = await BooksApiBLL.AddBook(book);
+                    BLLResponse response = await BooksApiBLL.AddBook(book);
 
                     if (response.Success) { book.Id = Convert.ToInt32(response.Content); }
                     else
@@ -132,9 +134,15 @@ namespace BLL.Books
 
         //}
 
-        public Book? GetBookbyTitleOrGoogleId(string title, string googleId) =>
-            bookshelfDbContext.Book.Where(x => x.UserId == User.Id && ((x.Title != null &&
-            x.Title.Equals(title, StringComparison.OrdinalIgnoreCase)) || (x.GoogleId != null && x.GoogleId.Equals(googleId)))).FirstOrDefault();
+        public Book? GetBookbyTitleOrGoogleId(string title, string googleId)
+        {
+            try
+            {
+                return bookshelfDbContext.Book.Where(x => x.UserId == User.Id && ((x.Title != null &&
+                   x.Title.ToLower().Equals(title.ToLower())) || (x.GoogleId != null && x.GoogleId.Equals(googleId)))).FirstOrDefault();
+            }
+            catch (Exception ex) { throw ex; }
+        }
 
         /// <summary>
         /// Get books situations by status
@@ -155,7 +163,7 @@ namespace BLL.Books
                 list = await bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Inactive == false).OrderBy(x => x.UpdatedAt).ToListAsync();
 
             if (list.Count > 0 && !string.IsNullOrEmpty(textoBusca))
-                list.Where(x => x.Title != null && x.Title.Equals(textoBusca, StringComparison.OrdinalIgnoreCase));
+                list = list.Where(x => x.Title != null && x.Title.ToLower().Equals(textoBusca.ToLower())).ToList();
 
             total = list.Count;
 
@@ -167,18 +175,13 @@ namespace BLL.Books
             foreach (Book book in list)
             {
                 SubtitleAndVol = "";
+
                 if (!string.IsNullOrEmpty(book.SubTitle))
-                {
                     SubtitleAndVol = book.SubTitle;
-                }
                 if (!string.IsNullOrEmpty(book.SubTitle) && book.Volume != null)
-                {
                     SubtitleAndVol += "; ";
-                }
                 if (book.Volume != null)
-                {
                     SubtitleAndVol += "Vol.: " + book.Volume;
-                }
 
                 UIBookItem bookItem = new()
                 {
@@ -217,9 +220,7 @@ namespace BLL.Books
                 bookshelfDbContext.SaveChanges();
 
                 if (CrossConnectivity.Current.IsConnected)
-                {
-                    _ = await BooksApiBLL.UpdateBook(book);
-                }
+                    await BooksApiBLL.UpdateBook(book);
             }
         }
 
@@ -238,6 +239,7 @@ namespace BLL.Books
                     book.UserId = User.Id;
 
                     bookshelfDbContext.Update(book);
+
                     await bookshelfDbContext.SaveChangesAsync();
 
                     if (CrossConnectivity.Current.IsConnected)

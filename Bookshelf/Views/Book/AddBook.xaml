@@ -114,10 +114,7 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="5" />
                         </Border.StrokeShape>
-                        <Picker
-                            ItemsSource="{Binding StatusList}"
-                            SelectedIndex="{Binding PkrStatusSelectedIndex}"
-                            Style="{StaticResource Picker}" />
+                        <Picker ItemsSource="{Binding StatusList}" SelectedIndex="{Binding PkrStatusSelectedIndex}" />
                     </Border>
 
                     <components:RatingBar Rate="{Binding Rate}" RatingBarIsVisible="{Binding RatingBarIsVisible}" />

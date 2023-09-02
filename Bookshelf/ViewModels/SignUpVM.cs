@@ -9,11 +9,9 @@ namespace Bookshelf.ViewModels
     public partial class SignUpVM : ViewModelBase
     {
 
-        string name;
+        string name, email;
 
         public string Name { get => name; set { if (name != value) { name = value; OnPropertyChanged(); } } }
-
-        string email;
 
         public string Email { get => email; set { if (email != value) { email = value; OnPropertyChanged(); } } }
 
@@ -29,7 +27,7 @@ namespace Bookshelf.ViewModels
 
         public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { btnCreateUserIsEnabled = value; OnPropertyChanged(); } } }
 
-        IUserBLL UserBLL;
+        readonly IUserBLL UserBLL;
 
         public SignUpVM(IUserBLL userBLL) { UserBLL = userBLL; }
 
@@ -49,15 +47,11 @@ namespace Bookshelf.ViewModels
                 return false;
             }
 
-            if (string.IsNullOrEmpty(Password))
-                validInformation = false;
-            else if (Password.Length < 4)
-                validInformation = false;
+            if (string.IsNullOrEmpty(Password)) validInformation = false;
+            else if (Password.Length < 4) validInformation = false;
 
-            if (string.IsNullOrEmpty(ConfirmPassword))
-                validInformation = false;
-            else if (ConfirmPassword.ToUpper() != Password.ToUpper())
-                validInformation = false;
+            if (string.IsNullOrEmpty(ConfirmPassword)) validInformation = false;
+            else if (ConfirmPassword.ToUpper() != Password.ToUpper()) validInformation = false;
 
             if (!validInformation)
                 await Application.Current.MainPage.DisplayAlert("Aviso", "Preencha os campos e confirme a senha corretamente", null, "Ok");

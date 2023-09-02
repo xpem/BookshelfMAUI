@@ -157,23 +157,25 @@ namespace Bookshelf.ViewModels
             string subtitleAndVol = "";
 
             if (!string.IsNullOrEmpty(book.SubTitle))
-            {
                 subtitleAndVol = book.SubTitle;
-            }
+
             if (!string.IsNullOrEmpty(book.SubTitle) && book.Volume != null)
-            {
                 subtitleAndVol += "; ";
-            }
+
             if (book.Volume != null)
-            {
                 subtitleAndVol += "Vol.: " + book.Volume;
-            }
+
+            // ImgCoverIsVisible = true;
 
             if (book.Cover != null)
             {
                 ImgCoverIsVisible = true;
                 Cover = book.Cover;
             }
+            //else
+            //{
+            //    Cover = "cover.jpg";
+            //}
 
             Title = book.Title;
             Authors = book.Authors;

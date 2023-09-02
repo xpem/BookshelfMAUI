@@ -94,7 +94,7 @@ namespace BLL.Books.Sync
                 }
                 else
                 {
-                    var response = await BooksApiBLL.UpdateBook(book);
+                    Models.Responses.BLLResponse response = await BooksApiBLL.UpdateBook(book);
                     if (response.Success)
                         updated++;
                 }

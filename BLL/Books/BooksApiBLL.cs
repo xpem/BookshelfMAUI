@@ -8,19 +8,19 @@ namespace BLL.Books
 {
     public class BooksApiBLL : IBookApiBLL
     {
-        IBookApiDAL BookApiDAL;
+        readonly IBookApiDAL BookApiDAL;
 
         public BooksApiBLL(IBookApiDAL bookApiDAL) { BookApiDAL = bookApiDAL; }
 
         public async Task<BLLResponse> AddBook(Book book)
         {
-            var resp = await BookApiDAL.AddBook(book);
+            ApiResponse? resp = await BookApiDAL.AddBook(book);
 
             if (resp is not null)
             {
                 if (resp.Success && resp.Content is not null)
                 {
-                    var jResp = JsonNode.Parse(resp.Content);
+                    JsonNode? jResp = JsonNode.Parse(resp.Content);
                     if (jResp is not null)
                     {
                         int? addedBookId = null;
@@ -35,7 +35,7 @@ namespace BLL.Books
                 {
                     if (resp.Content is not null)
                     {
-                        var jResp = JsonNode.Parse(resp.Content);
+                        JsonNode? jResp = JsonNode.Parse(resp.Content);
                         if (jResp is not null)
                         {
                             string? error = jResp["error"]?.GetValue<string>();
@@ -49,13 +49,13 @@ namespace BLL.Books
 
         public async Task<BLLResponse> UpdateBook(Book book)
         {
-            var resp = await BookApiDAL.UpdateBook(book);
+            ApiResponse? resp = await BookApiDAL.UpdateBook(book);
 
             if (resp is not null && resp.Content is not null)
             {
                 if (resp.Success)
                 {
-                    var jResp = JsonNode.Parse(resp.Content);
+                    JsonNode? jResp = JsonNode.Parse(resp.Content);
                     if (jResp is not null)
                     {
                         int bookId = jResp["Id"]?.GetValue<int>() ?? 0;
@@ -72,7 +72,7 @@ namespace BLL.Books
 
         public async Task<BLLResponse> GetBooksByLastUpdate(DateTime lastUpdate)
         {
-            var resp = await BookApiDAL.GetBooksByLastUpdate(lastUpdate);
+            ApiResponse resp = await BookApiDAL.GetBooksByLastUpdate(lastUpdate);
 
             return ApiResponseHandler.Handler<List<Book>>(resp);
         }
