@@ -1,6 +1,7 @@
 ﻿using ApiDAL.Handlers;
 using ApiDAL.Interfaces;
 using DBContextDAL;
+using Microsoft.EntityFrameworkCore;
 using Models.Responses;
 using System.Text.Json.Nodes;
 
@@ -68,6 +69,8 @@ namespace BLL.User
 
         public Task<Models.User?> GetUserLocal() => Task.Run(() => bookshelfDbContext.User.FirstOrDefault());
 
+        public Task<int> GetUid() => Task.Run(() => bookshelfDbContext.User.Select(x => x.Id).First());
+
         public async Task<BLLResponse> SignIn(string email, string password)
         {
             try
@@ -95,7 +98,7 @@ namespace BLL.User
                                 Password = PasswordHandler.Encrypt(password)
                             };
 
-                            bookshelfDbContext.ChangeTracker?.Clear();
+                            bookshelfDbContext.ChangeTracker.Clear();
 
                             await bookshelfDbContext.User.AddAsync(user);
                             await bookshelfDbContext.SaveChangesAsync();
@@ -117,6 +120,8 @@ namespace BLL.User
         public async Task UpdateLocalUserLastUpdate(Models.User user)
         {
             user.LastUpdate = DateTime.Now;
+
+            bookshelfDbContext.ChangeTracker?.Clear();
 
             bookshelfDbContext.Update(user);
             await bookshelfDbContext.SaveChangesAsync();

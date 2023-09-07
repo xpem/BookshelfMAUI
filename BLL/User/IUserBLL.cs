@@ -12,6 +12,8 @@ namespace BLL.User
 
         Task<Models.User?> GetUserLocal();
 
+        Task<int> GetUid();
+
         Task<BLLResponse> SignIn(string email, string password);
 
         Task UpdateLocalUserLastUpdate(Models.User user);

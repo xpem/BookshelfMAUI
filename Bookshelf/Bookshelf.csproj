@@ -103,6 +103,9 @@
 	  <Compile Update="Components\BorderedNumericEntry.xaml.cs">
 	    <DependentUpon>BorderedNumericEntry.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\FirstSyncProcess.xaml.cs">
+	    <DependentUpon>FirstSyncProcess.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\SignUp.xaml.cs">
 	    <DependentUpon>SignUp.xaml</DependentUpon>
 	  </Compile>
@@ -131,6 +134,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Book\BookHistoric.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\FirstSyncProcess.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\GoogleSearch\GoogleBooksResults.xaml">

@@ -1,5 +1,6 @@
 ﻿using DBContextDAL;
 using Models.Books;
+using Models.Books.Historic;
 
 namespace BLL.Books.Sync
 {
@@ -29,32 +30,34 @@ namespace BLL.Books.Sync
                 {
                     DateTime? bookLastUpdate = null;
 
-                    foreach (Book book in BooksByLastUpdate)
-                    {
-                        if (book is null) { throw new ArgumentNullException(nameof(book)); }
-                        book.UserId = uid;
+                    //bookshelfDbContext.ChangeTracker.Clear();
 
-                        if (book.Id is not null)
-                            bookLastUpdate = bookshelfDbContext.Book.Where(x => x.Id.Equals(book.Id)).FirstOrDefault()?.UpdatedAt;
-                        else throw new ArgumentNullException(nameof(book.Id));
+                    foreach (Book apiBook in BooksByLastUpdate)
+                    {
+                        if (apiBook is null) { throw new ArgumentNullException(nameof(apiBook)); }
+                        apiBook.UserId = uid;
+
+                        if (apiBook.Id is not null)
+                            bookLastUpdate = bookshelfDbContext.Book.Where(x => x.Id.Equals(apiBook.Id)).FirstOrDefault()?.UpdatedAt;
+                        else throw new ArgumentNullException(nameof(apiBook.Id));
 
                         //else if (!string.IsNullOrEmpty(book.Title))
                         //    bookLastUpdate = (await BooksDbDAL.GetBookByTitle(book.Title))?.UpdatedAt;
 
-                        if (bookLastUpdate == null && !book.Inactive)
+                        if (bookLastUpdate == null && !apiBook.Inactive)
                         {
-                            await bookshelfDbContext.Book.AddAsync(book);
+                            await bookshelfDbContext.Book.AddAsync(apiBook);
                             added++;
                         }
-                        else if (book.UpdatedAt > bookLastUpdate)
+                        else if (apiBook.UpdatedAt > bookLastUpdate)
                         {
-                            bookshelfDbContext.Book.Update(book);
+                            bookshelfDbContext.Book.Update(apiBook);
                             updated++;
                         }
 
                         await bookshelfDbContext.SaveChangesAsync();
 
-                        if (lastUpdate < book.UpdatedAt) lastUpdate = book.UpdatedAt;
+                        if (lastUpdate < apiBook.UpdatedAt) lastUpdate = apiBook.UpdatedAt;
                     }
                 }
             }
@@ -86,7 +89,6 @@ namespace BLL.Books.Sync
                     {
                         book.LocalTempId = null;
                         book.Id = Convert.ToInt32(addBookResp.Content);
-
                         bookshelfDbContext.Book.Update(book);
                         added++;
                     }

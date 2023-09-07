@@ -45,13 +45,14 @@ namespace Bookshelf.ViewModels
 
         public Color IsConnected { get => isConnected; set { if (value != isConnected) { isConnected = value; OnPropertyChanged(nameof(IsConnected)); } } }
 
-        readonly IBooksBLL booksServices;
-
-        //readonly IBookSyncBLL booksSyncBLL;
-
-        readonly ISyncServices SyncService;
+        private readonly IBooksBLL booksServices;
+        private readonly ISyncServices SyncService;
         private readonly IBuildDbBLL buildDbBLL;
-        readonly IUserBLL UserBLL;
+        private readonly IUserBLL UserBLL;
+        
+        private Timer _Timer;
+        private int Interval = 2000;
+        private bool ThreadIsRunning = false;
 
         public MainVM(IBooksBLL _booksServices, IUserBLL userBLL, ISyncServices syncService, IBuildDbBLL buildDbBLL)
         {
@@ -61,13 +62,15 @@ namespace Bookshelf.ViewModels
             this.buildDbBLL = buildDbBLL;
         }
 
-        private Timer _Timer;
-        int Interval = 2000;
-        bool ThreadIsRunning = false;
 
         public ICommand OnAppearingCommand => new Command((e) =>
         {
             IsSync = Colors.Gray;
+
+            IllRead = Reading = Read = Interrupted = "...";
+
+            Task.Run(GetBookshelfTotals).Wait();
+
             SetTimer();
         });
 
@@ -75,7 +78,6 @@ namespace Bookshelf.ViewModels
         {
             if (!ThreadIsRunning)
             {
-                IllRead = Reading = Read = Interrupted = "...";
                 FrmMainOpacity = 0.5;
 
                 ThreadIsRunning = true;
@@ -92,9 +94,7 @@ namespace Bookshelf.ViewModels
             try
             {
                 if (!(Connectivity.NetworkAccess == NetworkAccess.Internet))
-                {
                     IsConnected = Colors.Red;
-                }
                 else
                 {
                     IsConnected = Colors.Green;
@@ -104,7 +104,7 @@ namespace Bookshelf.ViewModels
                         case SyncStatus.Processing: IsSync = Colors.Green; break;
                         case SyncStatus.Sleeping:
 
-                            Task.Run(() => GetBookshelfTotals()).Wait();
+                            await Task.Run(GetBookshelfTotals);
 
                             IsSync = Colors.Gray;
 
@@ -139,7 +139,6 @@ namespace Bookshelf.ViewModels
 
         public void GetBookshelfTotals()
         {
-
             //
             Models.Books.Totals totals = booksServices.GetBookshelfTotals();
             //
@@ -168,8 +167,6 @@ namespace Bookshelf.ViewModels
 
             if (resp)
             {
-                await buildDbBLL.CleanLocalDatabase();
-
                 _Timer.Dispose();
                 //finalize sync thread process
                 SyncService.ThreadIsRunning = false;
@@ -177,10 +174,12 @@ namespace Bookshelf.ViewModels
 
                 SyncService.Timer?.Dispose();
 
+                await buildDbBLL.CleanLocalDatabase();
+
+
                 await Shell.Current.GoToAsync($"//{nameof(SignIn)}");
             }
         });
-
 
         private async Task CallBookList(int BookSituation) =>
             await Shell.Current.GoToAsync($"{nameof(BookList)}?Situation={BookSituation}", true);

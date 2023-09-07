@@ -1,7 +1,14 @@
-﻿namespace Models.Books.Historic
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace Models.Books.Historic
 {
     public class BookHistoric
     {
+        [Key]
+        public int? LocalId { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public required int? Id { get; set; }
 
         public int? Uid { get; set; }

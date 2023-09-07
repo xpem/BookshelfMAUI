@@ -76,7 +76,7 @@ namespace Bookshelf.Services.Sync
             catch (HttpRequestException ex)
             {
                 if (ex.InnerException != null && ex.InnerException.Message.Contains("No connection could be made because the target machine actively refused it."))
-                { Synchronizing = SyncStatus.ServerOff; }
+                    Synchronizing = SyncStatus.ServerOff;
                 else throw ex;
             }
             catch { throw; }

@@ -1,4 +1,7 @@
-﻿using BLL.Books;
+﻿using ApiDAL;
+using ApiDAL.Interfaces;
+using BLL.Books;
+using BLL.User;
 using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -104,7 +107,9 @@ namespace BLL.Books.Tests
 
             var bookApiBLL = new Mock<IBookApiBLL>();
 
-            IBooksBLL booksBLL = new BooksBLL(bookApiBLL.Object, mockContext.Object);
+            var userAPIDAL = new Mock<IUserApiDAL>();
+            IUserBLL userBLL = new UserBLL(userAPIDAL.Object, mockContext.Object);
+            IBooksBLL booksBLL = new BooksBLL(bookApiBLL.Object, mockContext.Object, userBLL);
 
             var result = booksBLL.GetBookshelfTotals();
 
@@ -162,8 +167,10 @@ namespace BLL.Books.Tests
             mockContext.Setup(m => m.Book).Returns(mockSetBook.Object);
 
             var bookApiBLL = new Mock<IBookApiBLL>();
+            var userAPIDAL = new Mock<IUserApiDAL>();
+            IUserBLL userBLL = new UserBLL(userAPIDAL.Object, mockContext.Object);
 
-            IBooksBLL booksBLL = new BooksBLL(bookApiBLL.Object, mockContext.Object);
+            IBooksBLL booksBLL = new BooksBLL(bookApiBLL.Object, mockContext.Object,userBLL);
 
             Book UptBook = new()
             {

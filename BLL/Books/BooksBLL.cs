@@ -1,4 +1,5 @@
-﻿using DBContextDAL;
+﻿using BLL.User;
+using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
 using Models.Books;
 using Models.Responses;
@@ -10,21 +11,22 @@ namespace BLL.Books
     {
         readonly IBookApiBLL BooksApiBLL;
         private readonly BookshelfDbContext bookshelfDbContext;
-        readonly Models.User User;
+        private readonly IUserBLL userBLL;
 
-        public BooksBLL(IBookApiBLL booksApiBLL, BookshelfDbContext bookshelfDbContext)
+        public BooksBLL(IBookApiBLL booksApiBLL, BookshelfDbContext bookshelfDbContext, IUserBLL userBLL)
         {
             BooksApiBLL = booksApiBLL;
             this.bookshelfDbContext = bookshelfDbContext;
-
-            User = bookshelfDbContext.User.First();
+            this.userBLL = userBLL;
         }
 
         public Totals GetBookshelfTotals()
         {
             Totals BTotals = new();
 
-            var list = bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Inactive == false).GroupBy(x => x.Status).Select(x => new { status = x.Key, count = x.Count() }).ToList();
+            int uid = userBLL.GetUid().Result;
+
+            var list = bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).GroupBy(x => x.Status).Select(x => new { status = x.Key, count = x.Count() }).ToList();
 
             if (list.Count > 0)
             {
@@ -46,7 +48,7 @@ namespace BLL.Books
             return BTotals;
         }
 
-        public async Task<Book?> GetBook(int bookId) => await bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Id == bookId).FirstOrDefaultAsync();
+        public async Task<Book?> GetBook(int bookId) => await bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && x.Id == bookId).FirstOrDefaultAsync();
 
         public async Task<BLLResponse> UpdateBook(Book book)
         {
@@ -55,7 +57,7 @@ namespace BLL.Books
             if (bookResponse == null)
             {
                 book.UpdatedAt = DateTime.Now;
-                book.UserId = User.Id;
+                book.UserId = bookshelfDbContext.User.Select(x => x.Id).First();
 
                 bookshelfDbContext.Update(book);
                 await bookshelfDbContext.SaveChangesAsync();
@@ -80,7 +82,8 @@ namespace BLL.Books
 
         }
 
-        private Book? GetBookByTitle(string title) => bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Title != null && x.Title.ToLower().Equals(title.ToLower())).FirstOrDefault();
+        private Book? GetBookByTitle(string title) => bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && x.Title != null && x.Title.ToLower().Equals(title.ToLower())).FirstOrDefault();
+
 
         public async Task<BLLResponse> AddBook(Book book)
         {
@@ -107,7 +110,7 @@ namespace BLL.Books
                     book.LocalTempId = Guid.NewGuid().ToString();
                 }
 
-                book.UserId = User.Id;
+                book.UserId = userBLL.GetUid().Result;
                 bookshelfDbContext.Add(book);
                 bookshelfDbContext.SaveChanges();
 
@@ -117,28 +120,11 @@ namespace BLL.Books
 
         }
 
-        //public bool VerifyBookbyTitle(string title)
-        //{
-        //    bool ret = false;
-
-        //    Models.User? User = bookshelfDbContext.User.FirstOrDefault();
-        //    if (User?.Id != null)
-        //    {
-        //        Book? _book = bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Title != null && x.Title.Equals(title, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-
-        //        if (_book is not null)
-        //            ret = true;
-        //    }
-
-        //    return ret;
-
-        //}
-
         public Book? GetBookbyTitleOrGoogleId(string title, string googleId)
         {
             try
             {
-                return bookshelfDbContext.Book.Where(x => x.UserId == User.Id && ((x.Title != null &&
+                return bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && ((x.Title != null &&
                    x.Title.ToLower().Equals(title.ToLower())) || (x.GoogleId != null && x.GoogleId.Equals(googleId)))).FirstOrDefault();
             }
             catch (Exception ex) { throw ex; }
@@ -158,9 +144,9 @@ namespace BLL.Books
             List<Book> list = new();
 
             if (status > 0)
-                list = await bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Status == (Status)status && x.Inactive == false).OrderBy(x => x.UpdatedAt).ToListAsync();
+                list = await bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && x.Status == (Status)status && x.Inactive == false).OrderBy(x => x.UpdatedAt).ToListAsync();
             else
-                list = await bookshelfDbContext.Book.Where(x => x.UserId == User.Id && x.Inactive == false).OrderBy(x => x.UpdatedAt).ToListAsync();
+                list = await bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && x.Inactive == false).OrderBy(x => x.UpdatedAt).ToListAsync();
 
             if (list.Count > 0 && !string.IsNullOrEmpty(textoBusca))
                 list = list.Where(x => x.Title != null && x.Title.ToLower().Equals(textoBusca.ToLower())).ToList();
@@ -212,7 +198,7 @@ namespace BLL.Books
             if (book?.Id is not null)
             {
                 book.UpdatedAt = DateTime.Now;
-                book.UserId = User.Id;
+                book.UserId = userBLL.GetUid().Result;
                 book.Inactive = true;
 
                 bookshelfDbContext.Update(book);
@@ -230,13 +216,13 @@ namespace BLL.Books
             {
                 Book? book = await GetBook(bookId);
 
-                if (book is not null && User?.Id is not null)
+                if (book is not null)
                 {
                     book.UpdatedAt = DateTime.Now;
                     book.Status = status;
                     book.Score = score;
                     book.Comment = comment;
-                    book.UserId = User.Id;
+                    book.UserId = userBLL.GetUid().Result;
 
                     bookshelfDbContext.Update(book);
 

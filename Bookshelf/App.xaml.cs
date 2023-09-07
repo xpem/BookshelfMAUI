@@ -17,16 +17,12 @@ public partial class App : Application
 
             Models.User user = userBLL.GetUserLocal().Result;
 
+            MainPage = new AppShell();
+
             if (user != null)
             {
                 syncServices.StartThread();
-
-                MainPage = new AppShell();
                 Shell.Current.GoToAsync($"//{nameof(Main)}");
-            }
-            else
-            {
-                MainPage = new AppShell();
             }
         }
         catch (Exception ex) { throw ex; }
