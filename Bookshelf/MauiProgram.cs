@@ -81,6 +81,9 @@ public static class MauiProgram
         builder.Services.AddTransient<BookHistoric>();
         builder.Services.AddTransient<BookHistoricVM>();
 
+        builder.Services.AddTransient<FirstSyncProcess>();
+        builder.Services.AddTransient<FirstSyncProcessVM>();
+
         #endregion
 
         #region UIServices

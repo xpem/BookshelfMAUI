@@ -24,23 +24,28 @@ namespace BLL.Books.Historic.Sync
             {
                 List<BookHistoric>? bookHistoricsList = respGetBookHistoricListByCreatedAt.Content as List<BookHistoric>;
 
+                //bookshelfDbContext.ChangeTracker.Clear();
+
                 if (bookHistoricsList is not null)
                     foreach (BookHistoric bookHistoric in bookHistoricsList)
                     {
-                        if ((bookshelfDbContext.BookHistoric.Where(x => x.Id == bookHistoric.Id).ToList().Count) == 0)
+                        if (bookshelfDbContext.BookHistoric.Where(x => x.Id == bookHistoric.Id).ToList().Count == 0)
                         {
                             bookHistoric.Uid = uid;
 
-                            bookshelfDbContext.Add(bookHistoric);
+                            bookshelfDbContext.BookHistoric.Add(bookHistoric);
 
                             if (bookHistoric.BookHistoricItems is not null)
                                 foreach (var _bookHistoricItem in bookHistoric.BookHistoricItems)
                                 {
-                                    _bookHistoricItem.Uid = uid;
-                                    bookshelfDbContext.Add(_bookHistoricItem);
+                                    if ((bookshelfDbContext.BookHistoricItem.Where(x => x.Id == _bookHistoricItem.Id).ToList().Count) == 0)
+                                    {
+                                        _bookHistoricItem.Uid = uid;
+                                        bookshelfDbContext.BookHistoricItem.Add(_bookHistoricItem);
+                                    }
                                 }
 
-                            bookshelfDbContext.SaveChanges();
+                            await bookshelfDbContext.SaveChangesAsync();
                         }
                     }
             }

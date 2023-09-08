@@ -44,7 +44,7 @@
                                         <Button
                                             Grid.Row="1"
                                             Margin="10,0,0,0"
-                                            BackgroundColor="#92CBFF"
+                                            BackgroundColor="{StaticResource ActiveColor}"
                                             ContentLayout="Top,0"
                                             CornerRadius="20"
                                             HeightRequest="40"
@@ -100,7 +100,7 @@
                                 IsRunning="{Binding IsBusy}"
                                 IsVisible="{Binding IsBusy}"
                                 VerticalOptions="Center"
-                                Color="#2196F3" />
+                                Color="{StaticResource ActiveColor}" />
                         </Grid>
                     </ListView.Footer>
                 </ListView>

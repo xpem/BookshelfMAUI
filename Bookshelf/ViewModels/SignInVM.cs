@@ -1,4 +1,5 @@
-﻿using BLL.User;
+﻿using BLL;
+using BLL.User;
 using Bookshelf.Services.Sync;
 using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
@@ -12,24 +13,26 @@ namespace Bookshelf.ViewModels
 
         string email, password, signInText;
 
+        bool btnSignEnabled = true;
+
         public string Email { get => email; set { if (email != value) { email = value; OnPropertyChanged(); } } }
 
         public string Password { get => password; set { if (password != value) { password = value; OnPropertyChanged(); } } }
 
         public string SignInText { get => signInText; set { if (signInText != value) { signInText = value; OnPropertyChanged(); } } }
 
-        bool btnSignEnabled = true;
-
         public bool BtnSignEnabled { get => btnSignEnabled; set { if (btnSignEnabled != value) { btnSignEnabled = value; OnPropertyChanged(); } } }
 
         readonly ISyncServices SyncServices;
         readonly IUserBLL UserBLL;
+        private readonly IBuildDbBLL BuildDbBLL;
 
-        public SignInVM(ISyncServices syncServices, IUserBLL userBLL)
+        public SignInVM(ISyncServices syncServices, IUserBLL userBLL, IBuildDbBLL buildDbBLL)
         {
             SyncServices = syncServices;
-            SignInText = "Acessar";
             UserBLL = userBLL;
+            this.BuildDbBLL = buildDbBLL;
+            SignInText = "Acessar";
         }
 
         public ICommand SignInCommand => new Command(async () =>
@@ -45,13 +48,17 @@ namespace Bookshelf.ViewModels
                          {
                              SignInText = "Acessando...";
                              BtnSignEnabled = false;
+
+                             //Task.Run(BuildDbBLL.Init).Wait();
+
                              Models.Responses.BLLResponse resp = await UserBLL.SignIn(Email, Password);
+
 
                              if (resp.Success)
                              {
                                  SyncServices.StartThread();
 
-                                 await Shell.Current.GoToAsync($"//{nameof(Main)}");
+                                 await Shell.Current.GoToAsync($"{nameof(FirstSyncProcess)}");
 
                                  //Application.Current.MainPage = new NavigationPage();
                                  //_ = (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<Main>(), true);

@@ -1,7 +1,14 @@
-﻿namespace Models.Books
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace Models.Books
 {
     public class Book
     {
+        [Key]
+        public int? LocalId { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int? Id { get; set; }
 
         public int UserId { get; set; }

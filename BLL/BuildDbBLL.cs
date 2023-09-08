@@ -1,5 +1,6 @@
 ﻿using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Models;
 
 namespace BLL
@@ -15,12 +16,11 @@ namespace BLL
 
         public async Task Init()
         {
-
             await bookshelfDBContext.Database.EnsureCreatedAsync();
 
             VersionDbTables? actualVesionDbTables = await bookshelfDBContext.VersionDbTables.FirstOrDefaultAsync();
 
-            VersionDbTables newVersionDbTables = new() { Id = 0, VERSION = 1 };
+            VersionDbTables newVersionDbTables = new() { Id = 0, VERSION = 6 };
 
             if (actualVesionDbTables != null)
             {
@@ -41,12 +41,12 @@ namespace BLL
 
         public async Task CleanLocalDatabase()
         {
-            //uma alternativa é criar um campo que define se o usuario está logado localmente ou n. vinculado ao uid externo dele(seria necessário a api passá-lo)
-            //assim na troca de usuário ou signout, as informações sincronizadas nao seriam perdidas, mas para isso é necessário verificar a necessidade dessa função
-            //no simples, só esvazia o banco msm p ser recriado no signin novo.
+            bookshelfDBContext.Book.RemoveRange(bookshelfDBContext.Book);
+            bookshelfDBContext.User.RemoveRange(bookshelfDBContext.User);
+            bookshelfDBContext.BookHistoric.RemoveRange(bookshelfDBContext.BookHistoric);
+            bookshelfDBContext.BookHistoricItem.RemoveRange(bookshelfDBContext.BookHistoricItem);
 
-            await bookshelfDBContext.Database.EnsureDeletedAsync();
-
+            await bookshelfDBContext.SaveChangesAsync();
         }
     }
 }

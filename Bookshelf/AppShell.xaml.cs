@@ -26,6 +26,8 @@ public partial class AppShell : Shell
 
         Routing.RegisterRoute(nameof(BookHistoric), typeof(BookHistoric));
 
+        Routing.RegisterRoute(nameof(FirstSyncProcess), typeof(FirstSyncProcess));
+
         //Routing.RegisterRoute(nameof(Main), typeof(Main));
     }
 }

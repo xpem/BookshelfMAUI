@@ -23,20 +23,18 @@ namespace BLL.Books.Historic
 
             int total = 0;
 
-            Models.User? User = userBLL.GetUserLocal().Result;
+            int uid = userBLL.GetUid().Result;
 
-            if (User?.Id != null)
-            {
-                int pageSize = 10;
+            int pageSize = 10;
 
-                list = bookshelfDbContext.BookHistoric.Where(x => x.Uid == User.Id && x.BookId == bookId)
-                .Include(x => x.BookHistoricItems).OrderByDescending(x => x.CreatedAt).ToList();
+            list = bookshelfDbContext.BookHistoric.Where(x => x.Uid == uid && x.BookId == bookId)
+            .Include(x => x.BookHistoricItems).OrderByDescending(x => x.CreatedAt).ToList();
 
-                total = list.Count;
+            total = list.Count;
 
-                if (page != null)
-                    list = list.Skip((page.Value - 1) * pageSize).Take(pageSize).ToList();
-            }
+            if (page != null)
+                list = list.Skip((page.Value - 1) * pageSize).Take(pageSize).ToList();
+
 
             return new BookHistoricList() { List = list, Total = total };
         }

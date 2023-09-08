@@ -7,7 +7,7 @@
         ApplyToDerivedTypes="True"
         TargetType="ContentPage">
         <Setter Property="Padding" Value="0" />
-        <Setter Property="BackgroundColor" Value="#1B2D3E" />
+        <Setter Property="BackgroundColor" Value="{StaticResource MainBackgroundColor}" />
     </Style>
 
     <!--  Main StackLayout  -->
@@ -102,7 +102,7 @@
         <Setter Property="Padding" Value="5,0,0,0" />
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
         <Setter Property="BackgroundColor" Value="#101923" />
-        <Setter Property="Stroke" Value="#92CBFF" />
+        <Setter Property="Stroke" Value="{StaticResource ActiveColor}" />
         <Setter Property="StrokeThickness" Value="2" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>

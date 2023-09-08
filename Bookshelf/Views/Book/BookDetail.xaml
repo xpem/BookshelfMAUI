@@ -246,7 +246,7 @@
                         Margin="0,5,0,5"
                         BackgroundColor="#101923"
                         HorizontalOptions="CenterAndExpand"
-                        Stroke="#92CBFF">
+                        Stroke="{StaticResource ActiveColor}">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="5" />
                         </Border.StrokeShape>
