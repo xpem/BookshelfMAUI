@@ -36,7 +36,7 @@ namespace BLL.Books.Historic.Sync
                             bookshelfDbContext.BookHistoric.Add(bookHistoric);
 
                             if (bookHistoric.BookHistoricItems is not null)
-                                foreach (var _bookHistoricItem in bookHistoric.BookHistoricItems)
+                                foreach (BookHistoricItem _bookHistoricItem in bookHistoric.BookHistoricItems)
                                 {
                                     if ((bookshelfDbContext.BookHistoricItem.Where(x => x.Id == _bookHistoricItem.Id).ToList().Count) == 0)
                                     {

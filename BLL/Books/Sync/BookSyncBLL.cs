@@ -1,6 +1,5 @@
 ﻿using DBContextDAL;
 using Models.Books;
-using Models.Books.Historic;
 
 namespace BLL.Books.Sync
 {

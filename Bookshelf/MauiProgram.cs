@@ -27,7 +27,7 @@ public static class MauiProgram
         //criar uma branch para o desenvolvimento da timeline
         //criar branch para o desenvolvimento da abstração da camada dal.
 
-        var builder = MauiApp.CreateBuilder();
+        MauiAppBuilder builder = MauiApp.CreateBuilder();
 
         builder.UseMauiApp<App>().UseMauiCommunityToolkit();
 

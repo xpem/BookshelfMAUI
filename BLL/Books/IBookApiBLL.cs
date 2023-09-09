@@ -5,7 +5,7 @@ namespace BLL.Books
 {
     public interface IBookApiBLL
     {
-         Task<BLLResponse> AddBook(Book book);
+        Task<BLLResponse> AddBook(Book book);
 
         Task<BLLResponse> UpdateBook(Book book);
 

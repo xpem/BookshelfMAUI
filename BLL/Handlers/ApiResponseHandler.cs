@@ -41,12 +41,12 @@ namespace BLL.Handlers
         {
             try
             {
-                var options = new JsonSerializerOptions
+                JsonSerializerOptions options = new()
                 {
                     PropertyNameCaseInsensitive = true
                 };
 
-                var item = JsonSerializer.Deserialize<TModel>(content, options);
+                TModel? item = JsonSerializer.Deserialize<TModel>(content, options);
                 if (item is not null)
                     return item;
                 else throw new Exception("item nulo");

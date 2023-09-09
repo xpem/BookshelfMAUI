@@ -2,7 +2,6 @@
 using Models.Books.GoogleApi;
 using Newtonsoft.Json;
 using System.Collections;
-using System.Text;
 using static Models.Books.GoogleApi.GoogleApiBook;
 
 namespace BLL.Books.GoogleBooksApi
@@ -15,7 +14,7 @@ namespace BLL.Books.GoogleBooksApi
         {
             try
             {
-                var apiResponse = await GoogleBooksApiDAL.GetBooks(search, startIndex);
+                Models.Responses.ApiResponse apiResponse = await GoogleBooksApiDAL.GetBooks(search, startIndex);
                 if (apiResponse.Success && apiResponse.Content is not null)
                     return BuildListBooksResult(apiResponse.Content);
                 else throw new Exception($"Erro não mapeado na resposta da api do google, content: {apiResponse.Content}");
@@ -30,7 +29,7 @@ namespace BLL.Books.GoogleBooksApi
         {
             try
             {
-                var apiResponse = await GoogleBooksApiDAL.GetBook(googleId);
+                Models.Responses.ApiResponse apiResponse = await GoogleBooksApiDAL.GetBook(googleId);
 
                 if (apiResponse.Success && apiResponse.Content is not null)
                 {

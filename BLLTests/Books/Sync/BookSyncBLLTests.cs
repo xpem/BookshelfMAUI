@@ -1,11 +1,9 @@
-﻿using BLL.Books.Sync;
-using DBContextDAL;
+﻿using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Models.Books;
 using Models.Responses;
 using Moq;
-using System.Net.Sockets;
 
 namespace BLL.Books.Sync.Tests
 {
@@ -127,8 +125,8 @@ namespace BLL.Books.Sync.Tests
 
             mockContext.Setup(m => m.Book).Returns(mockSetBook.Object);
 
-            var bookApiBLL = new Mock<IBookApiBLL>();
-            var bLLResponse = new BLLResponse() { Success = true, Content = apiResultBooks };
+            Mock<IBookApiBLL> bookApiBLL = new();
+            BLLResponse bLLResponse = new() { Success = true, Content = apiResultBooks };
 
             bookApiBLL.Setup(x => x.GetBooksByLastUpdate(lastUpdate)).ReturnsAsync(() => bLLResponse);
 
@@ -265,8 +263,8 @@ namespace BLL.Books.Sync.Tests
 
             mockContext.Setup(m => m.Book).Returns(mockSetBook.Object);
 
-            var bookApiBLL = new Mock<IBookApiBLL>();
-            var bLLResponse = new BLLResponse() { Success = true, Content = apiResultBooks };
+            Mock<IBookApiBLL> bookApiBLL = new();
+            BLLResponse bLLResponse = new() { Success = true, Content = apiResultBooks };
 
             bookApiBLL.Setup(x => x.GetBooksByLastUpdate(lastUpdate)).ReturnsAsync(() => bLLResponse);
 
@@ -287,7 +285,7 @@ namespace BLL.Books.Sync.Tests
 
             DateTime lastUpdate = DateTime.Now.AddDays(-3);
 
-            Book bookForAddInApi1 = new Book()
+            Book bookForAddInApi1 = new()
             {
                 Title = "Teste de Título 6",
                 Authors = "Emanuel Teste",
@@ -299,7 +297,7 @@ namespace BLL.Books.Sync.Tests
                 LocalTempId = "Temp1"
             };
 
-            Book bookForAddInApi2 = new Book()
+            Book bookForAddInApi2 = new()
             {
                 Title = "Teste de Título 2",
                 Authors = "Emanuel Teste",
@@ -353,10 +351,10 @@ namespace BLL.Books.Sync.Tests
 
             mockContext.Setup(m => m.Book).Returns(mockSetBook.Object);
 
-            var bookApiBLL = new Mock<IBookApiBLL>();
+            Mock<IBookApiBLL> bookApiBLL = new();
 
-            var bLLResponse1 = new BLLResponse() { Success = true, Content = 1 };
-            var bLLResponse2 = new BLLResponse() { Success = true, Content = 2 };
+            BLLResponse bLLResponse1 = new() { Success = true, Content = 1 };
+            BLLResponse bLLResponse2 = new() { Success = true, Content = 2 };
 
             bookApiBLL.Setup(x => x.AddBook(bookForAddInApi1)).ReturnsAsync(() => bLLResponse1);
             bookApiBLL.Setup(x => x.AddBook(bookForAddInApi2)).ReturnsAsync(() => bLLResponse2);
@@ -379,7 +377,7 @@ namespace BLL.Books.Sync.Tests
 
             DateTime lastUpdate = DateTime.Now.AddDays(-3);
 
-            Book bookForAddInApi1 = new Book()
+            Book bookForAddInApi1 = new()
             {
                 Title = "Teste de Título 6",
                 Authors = "Emanuel Teste",
@@ -391,7 +389,7 @@ namespace BLL.Books.Sync.Tests
                 LocalTempId = "Temp1"
             };
 
-            Book bookForUptInApi1 = new Book()
+            Book bookForUptInApi1 = new()
             {
                 Title = "Teste de Título 2",
                 Authors = "Emanuel Teste",
@@ -402,7 +400,7 @@ namespace BLL.Books.Sync.Tests
                 Id = 2,
             };
 
-            Book bookForUptInApi2 = new Book()
+            Book bookForUptInApi2 = new()
             {
                 Title = "Teste de Título Alterado",
                 Authors = "Emanuel Teste",
@@ -447,11 +445,11 @@ namespace BLL.Books.Sync.Tests
 
             mockContext.Setup(m => m.Book).Returns(mockSetBook.Object);
 
-            var bookApiBLL = new Mock<IBookApiBLL>();
+            Mock<IBookApiBLL> bookApiBLL = new();
 
-            var bLLResponse1 = new BLLResponse() { Success = true, Content = 1 };
-            var bLLResponse2 = new BLLResponse() { Success = true, Content = 2 };
-            var bLLResponse3 = new BLLResponse() { Success = true, Content = 3 };
+            BLLResponse bLLResponse1 = new() { Success = true, Content = 1 };
+            BLLResponse bLLResponse2 = new() { Success = true, Content = 2 };
+            BLLResponse bLLResponse3 = new() { Success = true, Content = 3 };
 
             bookApiBLL.Setup(x => x.AddBook(bookForAddInApi1)).ReturnsAsync(() => bLLResponse1);
             bookApiBLL.Setup(x => x.UpdateBook(bookForUptInApi1)).ReturnsAsync(() => bLLResponse2);

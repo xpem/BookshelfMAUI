@@ -6,7 +6,6 @@ using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using Bookshelf.Views.GoogleSearch;
 using Models;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
@@ -49,7 +48,7 @@ namespace Bookshelf.ViewModels
         private readonly ISyncServices SyncService;
         private readonly IBuildDbBLL buildDbBLL;
         private readonly IUserBLL UserBLL;
-        
+
         private Timer _Timer;
         private int Interval = 2000;
         private bool ThreadIsRunning = false;

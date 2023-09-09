@@ -1,4 +1,3 @@
-using BLL.Books;
 using Bookshelf.ViewModels.Book;
 
 namespace Bookshelf.Views.Book;

@@ -72,7 +72,7 @@ namespace Bookshelf.ViewModels.GoogleSearch
                 {
                     (List<UIGoogleBook> googleBooksListResult, TotalItems) = await BLL.Books.GoogleBooksApi.GoogleBooksApiBLL.GetBooks(_searchText, startIndex);
 
-                    foreach (var googleBookItem in googleBooksListResult)
+                    foreach (UIGoogleBook googleBookItem in googleBooksListResult)
                     {
                         GoogleBooksList.Add(googleBookItem);
                     }

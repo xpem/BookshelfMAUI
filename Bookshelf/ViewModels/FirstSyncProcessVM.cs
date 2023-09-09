@@ -3,13 +3,6 @@ using BLL.Books.Sync;
 using BLL.User;
 using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
-using DBContextDAL;
-using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bookshelf.ViewModels
 {
@@ -42,7 +35,7 @@ namespace Bookshelf.ViewModels
                 if (user != null)
                 {
                     if (Connectivity.NetworkAccess == NetworkAccess.Internet)
-                    {                     
+                    {
 
                         await BooksSyncBLL.LocalToApiSync(user.Id, user.LastUpdate);
 

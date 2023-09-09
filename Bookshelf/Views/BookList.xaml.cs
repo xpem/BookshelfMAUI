@@ -14,7 +14,7 @@ public partial class BookList : ContentPage
 
     private void ListView_ItemTapped(object sender, ItemTappedEventArgs e)
     {
-        var TappedItem = e.Item as UIBookItem;
+        UIBookItem TappedItem = e.Item as UIBookItem;
         Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={TappedItem.Key}", true);
     }
 }

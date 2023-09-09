@@ -1,6 +1,4 @@
-﻿using Models.Responses;
-
-namespace Models
+﻿namespace Models
 {
     public class User
     {

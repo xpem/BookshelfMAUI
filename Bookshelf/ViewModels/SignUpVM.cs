@@ -72,7 +72,7 @@ namespace Bookshelf.ViewModels
                 BtnCreateUserIsEnabled = false;
 
                 //
-                var resp = await UserBLL.AddUser(name, email, password);
+                Models.Responses.BLLResponse resp = await UserBLL.AddUser(name, email, password);
 
                 if (!resp.Success)
                     await Application.Current.MainPage.DisplayAlert("Erro", "Não foi possível cadastrar o usuário!", null, "Ok");

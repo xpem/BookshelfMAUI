@@ -4,9 +4,9 @@ namespace Bookshelf.Views;
 
 public partial class BookDetail : ContentPage
 {
-	public BookDetail(BookDetailVM bookDetailVM)
-	{
-		InitializeComponent();
-		BindingContext = bookDetailVM;
-	}
+    public BookDetail(BookDetailVM bookDetailVM)
+    {
+        InitializeComponent();
+        BindingContext = bookDetailVM;
+    }
 }

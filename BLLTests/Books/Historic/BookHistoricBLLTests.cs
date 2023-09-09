@@ -118,7 +118,7 @@ namespace BLL.Books.Historic.Tests
             mockContext.Setup(m => m.BookHistoric).Returns(mockSetBookHistorics.Object);
             mockContext.Setup(m => m.User).Returns(mockSetUser.Object);
 
-            var userAPIDAL = new Mock<IUserApiDAL>();
+            Mock<IUserApiDAL> userAPIDAL = new();
 
             IUserBLL userBLL = new UserBLL(userAPIDAL.Object, mockContext.Object);
 

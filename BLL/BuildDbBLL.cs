@@ -1,6 +1,5 @@
 ﻿using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Models;
 
 namespace BLL

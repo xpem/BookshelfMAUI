@@ -1,4 +1,3 @@
-using CommunityToolkit.Maui.Views;
 using System.Windows.Input;
 
 namespace Bookshelf.Components;
@@ -38,7 +37,7 @@ public partial class RatingBar : VerticalStackLayout
     {
         get
         {
-            var _rate = (int)GetValue(RateProperty);
+            int _rate = (int)GetValue(RateProperty);
             BuildRatingBar(_rate);
             return (int)GetValue(RateProperty);
         }

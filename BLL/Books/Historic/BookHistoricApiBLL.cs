@@ -9,11 +9,11 @@ namespace BLL.Books.Historic
     {
         readonly IBookHistoricApiDAL BookHistoricApiDAL;
 
-        public BookHistoricApiBLL(IBookHistoricApiDAL bookHistoricApiDAL) { BookHistoricApiDAL = bookHistoricApiDAL;  }
+        public BookHistoricApiBLL(IBookHistoricApiDAL bookHistoricApiDAL) { BookHistoricApiDAL = bookHistoricApiDAL; }
 
         public async Task<BLLResponse> GetBookHistoricByLastCreatedAt(DateTime lastCreatedAt)
         {
-            var resp = await BookHistoricApiDAL.GetBooksHistoricByLastCreatedAt(lastCreatedAt);
+            ApiResponse resp = await BookHistoricApiDAL.GetBooksHistoricByLastCreatedAt(lastCreatedAt);
 
             return ApiResponseHandler.Handler<List<Models.Books.Historic.BookHistoric>>(resp);
         }

@@ -44,7 +44,7 @@ namespace Bookshelf.ViewModels.Book
 
             Models.Books.Historic.BookHistoricList bookHistoricList = BookHistoricBLL.GetBookHistoricByBookId(pageNumber, BookId);
 
-            foreach (var bookHistoricObj in bookHistoricList.List)
+            foreach (Models.Books.Historic.BookHistoric bookHistoricObj in bookHistoricList.List)
             {
                 StringBuilder bookHistoricText = new();
                 string bookHistoricIcon, updatedFrom, updatedTo;
@@ -61,7 +61,7 @@ namespace Bookshelf.ViewModels.Book
 
                     if (bookHistoricObj.BookHistoricItems.Count > 0)
                     {
-                        foreach (var bookHistoricItemObj in bookHistoricObj.BookHistoricItems)
+                        foreach (Models.Books.Historic.BookHistoricItem bookHistoricItemObj in bookHistoricObj.BookHistoricItems)
                         {
                             if (bookHistoricText.Length > 0) bookHistoricText.Append("<br>");
 

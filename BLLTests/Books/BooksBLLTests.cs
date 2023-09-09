@@ -1,6 +1,4 @@
-﻿using ApiDAL;
-using ApiDAL.Interfaces;
-using BLL.Books;
+﻿using ApiDAL.Interfaces;
 using BLL.User;
 using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
@@ -105,13 +103,13 @@ namespace BLL.Books.Tests
 
             mockContext.Setup(m => m.User).Returns(mockSetUser.Object);
 
-            var bookApiBLL = new Mock<IBookApiBLL>();
+            Mock<IBookApiBLL> bookApiBLL = new();
 
-            var userAPIDAL = new Mock<IUserApiDAL>();
+            Mock<IUserApiDAL> userAPIDAL = new();
             IUserBLL userBLL = new UserBLL(userAPIDAL.Object, mockContext.Object);
             IBooksBLL booksBLL = new BooksBLL(bookApiBLL.Object, mockContext.Object, userBLL);
 
-            var result = booksBLL.GetBookshelfTotals();
+            Totals? result = booksBLL.GetBookshelfTotals();
 
             if (result is not null && result.IllRead == 1 && result.Reading == 2 && result.Read == 3 && result.Interrupted == 0)
                 Assert.IsTrue(true);
@@ -166,11 +164,11 @@ namespace BLL.Books.Tests
 
             mockContext.Setup(m => m.Book).Returns(mockSetBook.Object);
 
-            var bookApiBLL = new Mock<IBookApiBLL>();
-            var userAPIDAL = new Mock<IUserApiDAL>();
+            Mock<IBookApiBLL> bookApiBLL = new();
+            Mock<IUserApiDAL> userAPIDAL = new();
             IUserBLL userBLL = new UserBLL(userAPIDAL.Object, mockContext.Object);
 
-            IBooksBLL booksBLL = new BooksBLL(bookApiBLL.Object, mockContext.Object,userBLL);
+            IBooksBLL booksBLL = new BooksBLL(bookApiBLL.Object, mockContext.Object, userBLL);
 
             Book UptBook = new()
             {
@@ -184,7 +182,7 @@ namespace BLL.Books.Tests
                 LocalTempId = "Temp1"
             };
 
-            var result = booksBLL.UpdateBook(UptBook).Result;
+            Models.Responses.BLLResponse? result = booksBLL.UpdateBook(UptBook).Result;
 
             if (result is not null && result.Success == false && result.Content is not null && ((string)result.Content) == "Livro com este título já cadastrado.")
                 Assert.IsTrue(true);
