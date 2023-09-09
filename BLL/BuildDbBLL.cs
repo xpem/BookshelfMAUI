@@ -35,7 +35,6 @@ namespace BLL
                 bookshelfDBContext.VersionDbTables.Add(newVersionDbTables);
                 await bookshelfDBContext.SaveChangesAsync();
             }
-
         }
 
         public async Task CleanLocalDatabase()

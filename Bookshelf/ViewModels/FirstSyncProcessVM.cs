@@ -54,6 +54,7 @@ namespace Bookshelf.ViewModels
                         Progress = 1;
 
                         _ = Shell.Current.GoToAsync($"//{nameof(Main)}");
+
                     }
                 }
             }

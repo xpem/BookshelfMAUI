@@ -82,8 +82,7 @@ namespace BLL.Books
 
         }
 
-        private Book? GetBookByTitle(string title) => bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && x.Title != null && x.Title.ToLower().Equals(title.ToLower())).FirstOrDefault();
-
+        private Book? GetBookByTitle(string title) => bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && x.Title != null && x.Title.ToLower().Contains(title.ToLower())).FirstOrDefault();
 
         public async Task<BLLResponse> AddBook(Book book)
         {
@@ -149,7 +148,7 @@ namespace BLL.Books
                 list = await bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && x.Inactive == false).OrderBy(x => x.UpdatedAt).ToListAsync();
 
             if (list.Count > 0 && !string.IsNullOrEmpty(textoBusca))
-                list = list.Where(x => x.Title != null && x.Title.ToLower().Equals(textoBusca.ToLower())).ToList();
+                list = list.Where(x => x.Title != null && x.Title.ToLower().Contains(textoBusca.ToLower())).ToList();
 
             total = list.Count;
 

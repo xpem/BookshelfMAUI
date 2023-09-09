@@ -6,6 +6,7 @@
     xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
     xmlns:vm="clr-namespace:Bookshelf.ViewModels"
     x:DataType="vm:FirstSyncProcessVM"
+    NavigationPage.HasBackButton="False"
     Style="{StaticResource ContentPage}">
     <ContentPage.Resources>
         <Style x:Key="Icon" TargetType="Label">

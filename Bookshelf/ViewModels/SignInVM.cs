@@ -58,7 +58,7 @@ namespace Bookshelf.ViewModels
                              {
                                  SyncServices.StartThread();
 
-                                 await Shell.Current.GoToAsync($"{nameof(FirstSyncProcess)}");
+                                 await Shell.Current.GoToAsync($"{nameof(FirstSyncProcess)}",false);
 
                                  //Application.Current.MainPage = new NavigationPage();
                                  //_ = (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<Main>(), true);
