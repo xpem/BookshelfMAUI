@@ -26,7 +26,6 @@ namespace Bookshelf.ViewModels.Book
             BookHistoricBLL = bookHistoricBLL;
         }
 
-
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             BookId = Convert.ToInt32(query["BookId"]);
@@ -35,6 +34,7 @@ namespace Bookshelf.ViewModels.Book
                 UIBookHistoricList.Clear();
 
             CurrentPage++;
+
             _ = LoadListAsync(CurrentPage);
         }
 
@@ -86,6 +86,7 @@ namespace Bookshelf.ViewModels.Book
                         }
                     }
                 }
+
                 UIBookHistoric uIBookHistoric = new()
                 {
                     Id = bookHistoricObj.Id.Value,
@@ -93,6 +94,7 @@ namespace Bookshelf.ViewModels.Book
                     BookHistoricIcon = bookHistoricIcon,
                     BookHistoricText = bookHistoricText.ToString(),
                 };
+
                 UIBookHistoricList.Add(uIBookHistoric);
             }
 
@@ -102,7 +104,7 @@ namespace Bookshelf.ViewModels.Book
         public ICommand LoadMoreCommand => new Command(() =>
         {
             CurrentPage++;
-            _ = LoadListAsync(CurrentPage);
+            Task.Run(() => LoadListAsync(CurrentPage));
         });
 
         private static string BuildStatusText(int statusId)

@@ -34,11 +34,14 @@ namespace BLL.Books.Sync
                     foreach (Book apiBook in BooksByLastUpdate)
                     {
                         if (apiBook is null) { throw new ArgumentNullException(nameof(apiBook)); }
+
                         apiBook.UserId = uid;
 
                         if (apiBook.Id is not null)
                             bookLastUpdate = bookshelfDbContext.Book.Where(x => x.Id.Equals(apiBook.Id)).FirstOrDefault()?.UpdatedAt;
-                        else throw new ArgumentNullException(nameof(apiBook.Id));
+                        else
+                            throw new ArgumentNullException(nameof(apiBook.Id));
+                        
 
                         //else if (!string.IsNullOrEmpty(book.Title))
                         //    bookLastUpdate = (await BooksDbDAL.GetBookByTitle(book.Title))?.UpdatedAt;

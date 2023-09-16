@@ -165,7 +165,7 @@ namespace Bookshelf.ViewModels
                             BooksList.Clear();
 
                         CurrentPage = 1;
-                        LoadBooks(CurrentPage);
+                        _ = LoadBooks(CurrentPage);
 
                         SearchingBookList = false;
                     }

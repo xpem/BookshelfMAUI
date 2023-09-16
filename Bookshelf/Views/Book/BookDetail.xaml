@@ -72,7 +72,7 @@
                         <VerticalStackLayout Margin="0,10,0,0" Spacing="10">
                             <Button
                                 BackgroundColor="{StaticResource PrimaryColor}"
-                                Command="{Binding CallTimelineCommand}"
+                                Command="{Binding CallHistoricCommand}"
                                 Style="{StaticResource ExpanderButton}">
                                 <Button.ImageSource>
                                     <FontImageSource
