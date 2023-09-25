@@ -119,7 +119,7 @@ namespace Bookshelf.ViewModels
 
         public ICommand ConfirmCommand => new Command(async (e) => { await UpdateBookSituation(); });
 
-        public ICommand CallHistoricCommand => new Command(async (e) => await Shell.Current.GoToAsync($"{nameof(BookHistoric)}?BookId={ExternalId}"));
+        public ICommand CallHistoricCommand => new Command(async (e) => await Shell.Current.GoToAsync($"{nameof(BookHistoric)}?BookId={(ExternalId)}"));
 
         /// <summary>
         /// navigate to update book

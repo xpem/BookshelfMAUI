@@ -1,12 +1,13 @@
 ﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
+using Microsoft.Maui;
 using Models.Books.GoogleApi;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.GoogleSearch
 {
-    public class GoogleBooksResultsVM : ViewModelBase, IQueryAttributable
+    public class GoogleBooksResultsVM : ViewModelBase
     {
 
         string pageTitle = "Busca";
@@ -16,18 +17,25 @@ namespace Bookshelf.ViewModels.GoogleSearch
             get => pageTitle; set { if (pageTitle != value) { pageTitle = value; OnPropertyChanged(); } }
         }
 
+        bool isConnected;
+
+        public bool IsConnected
+        {
+            get => isConnected; set { if (isConnected != value) { isConnected = value; OnPropertyChanged(nameof(IsConnected)); } }
+        }
+
         private int CurrentPage;
         private int TotalItems;
 
         public ObservableCollection<UIGoogleBook> GoogleBooksList { get; } = new();
 
-        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        public ICommand OnAppearingCommand => new Command((e) =>
         {
             if (GoogleBooksList.Count > 0)
                 GoogleBooksList.Clear();
 
-            _ = LoadGoogleBooksAsync(0);
-        }
+            IsConnected = (Connectivity.NetworkAccess == NetworkAccess.Internet);
+        });
 
         public bool SearchingBookList { get; set; }
 

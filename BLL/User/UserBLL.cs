@@ -78,7 +78,7 @@ namespace BLL.User
                 email = email.ToLower();
 
                 (bool success, string? userTokenRes) = await GetUserToken(email, password);
-
+                
                 if (success && userTokenRes != null)
                 {
                     ApiResponse resp = await UserApiDAL.GetUser(userTokenRes);

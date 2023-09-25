@@ -19,6 +19,14 @@ namespace Bookshelf.ViewModels.Book
         public ObservableCollection<UIBookHistoric> UIBookHistoricList { get; } = new();
 
         public int CurrentPage { get; set; }
+
+        bool isConnected;
+
+        public bool IsConnected
+        {
+            get => isConnected; set { if (isConnected != value) { isConnected = value; OnPropertyChanged(nameof(IsConnected)); } }
+        }
+
         #endregion
 
         public BookHistoricVM(IBookHistoricBLL bookHistoricBLL)

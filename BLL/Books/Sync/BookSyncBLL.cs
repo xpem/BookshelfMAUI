@@ -42,10 +42,6 @@ namespace BLL.Books.Sync
                         else
                             throw new ArgumentNullException(nameof(apiBook.Id));
                         
-
-                        //else if (!string.IsNullOrEmpty(book.Title))
-                        //    bookLastUpdate = (await BooksDbDAL.GetBookByTitle(book.Title))?.UpdatedAt;
-
                         if (bookLastUpdate == null && !apiBook.Inactive)
                         {
                             await bookshelfDbContext.Book.AddAsync(apiBook);

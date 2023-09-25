@@ -104,7 +104,6 @@ namespace BLL.Books
                 else
                     book.LocalTempId = Guid.NewGuid().ToString();
 
-
                 book.UserId = userBLL.GetUid().Result;
 
                 bookshelfDbContext.Add(book);
@@ -160,8 +159,10 @@ namespace BLL.Books
 
                 if (!string.IsNullOrEmpty(book.SubTitle))
                     SubtitleAndVol = book.SubTitle;
+
                 if (!string.IsNullOrEmpty(book.SubTitle) && book.Volume != null)
                     SubtitleAndVol += "; ";
+
                 if (book.Volume != null)
                     SubtitleAndVol += "Vol.: " + book.Volume;
 

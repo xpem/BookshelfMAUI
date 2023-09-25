@@ -12,13 +12,16 @@
     Title="{Binding PageTitle}"
     x:DataType="vm:GoogleBooksResultsVM"
     Style="{StaticResource ContentPage}">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior Command="{Binding OnAppearingCommand}" EventName="Appearing" />
+    </ContentPage.Behaviors>
     <ContentPage.Content>
         <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
             <Frame
                 Padding="10,0,10,5"
                 HorizontalOptions="FillAndExpand"
                 Style="{StaticResource FramePrimary}">
-                <StackLayout Margin="0">
+                <StackLayout Margin="0" IsEnabled="{Binding IsConnected}">
                     <components:BorderedEntry LabelText="Digite o título do livro" Text="{Binding SearchText}" />
                     <!--  TextTransformValue="Uppercase"  -->
                 </StackLayout>
