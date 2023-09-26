@@ -38,7 +38,9 @@ namespace Bookshelf.ViewModels
 
         #endregion
 
-        private int BookId { get; set; }
+        private int LocalId { get; set; }
+
+        private int ExternalId { get; set; }
 
         private string SituationOri { get; set; }
 
@@ -117,12 +119,12 @@ namespace Bookshelf.ViewModels
 
         public ICommand ConfirmCommand => new Command(async (e) => { await UpdateBookSituation(); });
 
-        public ICommand CallTimelineCommand => new Command(async (e) => await Shell.Current.GoToAsync($"{nameof(BookHistoric)}?BookId={BookId}"));
+        public ICommand CallHistoricCommand => new Command(async (e) => await Shell.Current.GoToAsync($"{nameof(BookHistoric)}?BookId={(ExternalId)}"));
 
         /// <summary>
         /// navigate to update book
         /// </summary>
-        public ICommand NavToUpdateBookCommand => new Command(async (e) => { await Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={BookId}", true); });
+        public ICommand NavToUpdateBookCommand => new Command(async (e) => { await Shell.Current.GoToAsync($"{nameof(AddBook)}?Id={LocalId}", true); });
 
         /// <summary>
         /// inactivate book
@@ -132,7 +134,7 @@ namespace Bookshelf.ViewModels
             {
                 if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir este livro?", "Sim", "Cancelar"))
                 {
-                    _ = booksServices.InactivateBook(BookId);
+                    _ = booksServices.InactivateBook(LocalId);
 
                     if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
                     {
@@ -143,16 +145,20 @@ namespace Bookshelf.ViewModels
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            BookId = Convert.ToInt32(query["Key"]);
+            LocalId = Convert.ToInt32(query["Id"]);
             situation = "0";
             rate = 0;
 
-            _ = GetBook(Convert.ToInt32(BookId));
+            _ = GetBook(Convert.ToInt32(LocalId));
         }
 
         private async Task GetBook(int bookId)
         {
             Models.Books.Book book = await booksServices.GetBook(bookId);
+
+            if (book.Id > 0)
+                ExternalId = book.Id.Value;
+            else ExternalId = 0;
 
             string subtitleAndVol = "";
 
@@ -257,7 +263,7 @@ namespace Bookshelf.ViewModels
 
             if (alterou)
             {
-                _ = booksServices.UpdateBookSituation(BookId, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
+                _ = booksServices.UpdateBookSituation(LocalId, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
 
                 if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Situação alterada", null, "Ok"))
                 {

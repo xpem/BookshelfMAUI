@@ -19,13 +19,20 @@ namespace Bookshelf.ViewModels.Book
         public ObservableCollection<UIBookHistoric> UIBookHistoricList { get; } = new();
 
         public int CurrentPage { get; set; }
+
+        bool isConnected;
+
+        public bool IsConnected
+        {
+            get => isConnected; set { if (isConnected != value) { isConnected = value; OnPropertyChanged(nameof(IsConnected)); } }
+        }
+
         #endregion
 
         public BookHistoricVM(IBookHistoricBLL bookHistoricBLL)
         {
             BookHistoricBLL = bookHistoricBLL;
         }
-
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
@@ -35,6 +42,7 @@ namespace Bookshelf.ViewModels.Book
                 UIBookHistoricList.Clear();
 
             CurrentPage++;
+
             _ = LoadListAsync(CurrentPage);
         }
 
@@ -86,6 +94,7 @@ namespace Bookshelf.ViewModels.Book
                         }
                     }
                 }
+
                 UIBookHistoric uIBookHistoric = new()
                 {
                     Id = bookHistoricObj.Id.Value,
@@ -93,6 +102,7 @@ namespace Bookshelf.ViewModels.Book
                     BookHistoricIcon = bookHistoricIcon,
                     BookHistoricText = bookHistoricText.ToString(),
                 };
+
                 UIBookHistoricList.Add(uIBookHistoric);
             }
 
@@ -102,7 +112,7 @@ namespace Bookshelf.ViewModels.Book
         public ICommand LoadMoreCommand => new Command(() =>
         {
             CurrentPage++;
-            _ = LoadListAsync(CurrentPage);
+            Task.Run(() => LoadListAsync(CurrentPage));
         });
 
         private static string BuildStatusText(int statusId)

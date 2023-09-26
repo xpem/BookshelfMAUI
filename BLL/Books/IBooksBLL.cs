@@ -7,7 +7,7 @@ namespace BLL.Books
     {
         Totals GetBookshelfTotals();
 
-        Task<Book?> GetBook(int bookId);
+        Task<Book?> GetBook(int localId);
 
         Task<BLLResponse> UpdateBook(Book book);
 
@@ -19,8 +19,8 @@ namespace BLL.Books
 
         Task<(List<UIBookItem>, int total)> GetBookSituationByStatus(int? page, int Situation, string? textoBusca);
 
-        Task InactivateBook(int bookId);
+        Task InactivateBook(int LocalId);
 
-        Task UpdateBookSituation(int bookId, Status status, int rate, string comment);
+        Task UpdateBookSituation(int LocalId, Status status, int rate, string comment);
     }
 }

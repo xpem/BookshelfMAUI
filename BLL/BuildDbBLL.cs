@@ -19,7 +19,7 @@ namespace BLL
 
             VersionDbTables? actualVesionDbTables = await bookshelfDBContext.VersionDbTables.FirstOrDefaultAsync();
 
-            VersionDbTables newVersionDbTables = new() { Id = 0, VERSION = 6 };
+            VersionDbTables newVersionDbTables = new() { Id = 0, VERSION = 8 };
 
             if (actualVesionDbTables != null)
             {

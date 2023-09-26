@@ -26,7 +26,7 @@ namespace BLL.Books
 
             int uid = userBLL.GetUid().Result;
 
-            var list = bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).GroupBy(x => x.Status).Select(x => new { status = x.Key, count = x.Count() }).ToList();
+            var list = Task.Run(() => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).GroupBy(x => x.Status).Select(x => new { status = x.Key, count = x.Count() }).ToList()).Result;
 
             if (list.Count > 0)
             {
@@ -48,17 +48,18 @@ namespace BLL.Books
             return BTotals;
         }
 
-        public async Task<Book?> GetBook(int bookId) => await bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && x.Id == bookId).FirstOrDefaultAsync();
+        public async Task<Book?> GetBook(int localId) => await bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && x.LocalId == localId).FirstOrDefaultAsync();
 
         public async Task<BLLResponse> UpdateBook(Book book)
         {
             Book? bookResponse = Task.Run(() => GetBookByTitle(book.Title)).Result;
 
-            if (bookResponse == null)
+            if (bookResponse != null && bookResponse.LocalId.Equals(book.LocalId))
             {
                 book.UpdatedAt = DateTime.Now;
                 book.UserId = bookshelfDbContext.User.Select(x => x.Id).First();
 
+                bookshelfDbContext.ChangeTracker?.Clear();
                 bookshelfDbContext.Update(book);
                 await bookshelfDbContext.SaveChangesAsync();
 
@@ -67,19 +68,15 @@ namespace BLL.Books
                 {
                     BLLResponse resp = await BooksApiBLL.UpdateBook(book);
 
-                    if (resp.Success) { book.Id = Convert.ToInt32(resp.Content); }
-                    else
-                    {
+                    if (!resp.Success) {
                         if (resp.Content is not null)
                             return new BLLResponse() { Success = false, Content = resp.Content.ToString() };
                         else return new BLLResponse() { Success = false };
                     }
                 }
-
                 return new BLLResponse() { Success = true };
             }
             else return new BLLResponse() { Success = false, Content = "Livro com este título já cadastrado." };
-
         }
 
         private Book? GetBookByTitle(string title) => bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && x.Title != null && x.Title.ToLower().Contains(title.ToLower())).FirstOrDefault();
@@ -105,11 +102,10 @@ namespace BLL.Books
                     }
                 }
                 else
-                {
                     book.LocalTempId = Guid.NewGuid().ToString();
-                }
 
                 book.UserId = userBLL.GetUid().Result;
+
                 bookshelfDbContext.Add(book);
                 bookshelfDbContext.SaveChanges();
 
@@ -163,14 +159,16 @@ namespace BLL.Books
 
                 if (!string.IsNullOrEmpty(book.SubTitle))
                     SubtitleAndVol = book.SubTitle;
+
                 if (!string.IsNullOrEmpty(book.SubTitle) && book.Volume != null)
                     SubtitleAndVol += "; ";
+
                 if (book.Volume != null)
                     SubtitleAndVol += "Vol.: " + book.Volume;
 
                 UIBookItem bookItem = new()
                 {
-                    Key = book.Id.ToString(),
+                    Id = book.LocalId,
                     Title = book.Title,
                     Authors = book.Authors,// + "; Ano: " + book.Year,
                     Pages = book.Pages.ToString(),
@@ -190,16 +188,17 @@ namespace BLL.Books
             return (listBooksItens, total);
         }
 
-        public async Task InactivateBook(int bookId)
+        public async Task InactivateBook(int localId)
         {
-            Book? book = await GetBook(bookId);
+            Book? book = await GetBook(localId);
 
-            if (book?.Id is not null)
+            if (book is not null)
             {
                 book.UpdatedAt = DateTime.Now;
                 book.UserId = userBLL.GetUid().Result;
                 book.Inactive = true;
 
+                bookshelfDbContext.ChangeTracker?.Clear();
                 bookshelfDbContext.Update(book);
 
                 bookshelfDbContext.SaveChanges();
@@ -209,11 +208,11 @@ namespace BLL.Books
             }
         }
 
-        public async Task UpdateBookSituation(int bookId, Status status, int score, string comment)
+        public async Task UpdateBookSituation(int localId, Status status, int score, string comment)
         {
             try
             {
-                Book? book = await GetBook(bookId);
+                Book? book = await GetBook(localId);
 
                 if (book is not null)
                 {
@@ -222,6 +221,7 @@ namespace BLL.Books
                     book.Score = score;
                     book.Comment = comment;
                     book.UserId = userBLL.GetUid().Result;
+                    bookshelfDbContext.ChangeTracker?.Clear();
 
                     bookshelfDbContext.Update(book);
 

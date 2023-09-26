@@ -44,12 +44,12 @@ namespace Bookshelf.ViewModels
 
         public string PageTitle
         {
-            get => pageTitle; set { if (pageTitle != value) { pageTitle = value; OnPropertyChanged(); } }
+            get => pageTitle; set { if (pageTitle != value) { pageTitle = value; OnPropertyChanged(nameof(PageTitle)); } }
         }
 
         int totalBooksItens;
 
-        public int TotalBooksItens { get => totalBooksItens; set { if (totalBooksItens != value) { totalBooksItens = value; OnPropertyChanged(); } } }
+        public int TotalBooksItens { get => totalBooksItens; set { if (totalBooksItens != value) { totalBooksItens = value; OnPropertyChanged(nameof(TotalBooksItens)); } } }
 
         string searchTitle;
 
@@ -62,7 +62,7 @@ namespace Bookshelf.ViewModels
                 {
                     searchTitle = value;
                     SearchBookList();
-                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(SearchTitle));
                 }
             }
         }
@@ -165,7 +165,7 @@ namespace Bookshelf.ViewModels
                             BooksList.Clear();
 
                         CurrentPage = 1;
-                        LoadBooks(CurrentPage);
+                        _ = LoadBooks(CurrentPage);
 
                         SearchingBookList = false;
                     }

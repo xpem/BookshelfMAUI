@@ -27,7 +27,8 @@ namespace BLL.Books.Sync.Tests
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddDays(-2),
                     UserId = 1,
-                    Id = 1
+                    Id =  1,
+                    LocalId = 1,
                 },
                 new Book() {
                     Title = "Teste de Título 2",
@@ -36,7 +37,7 @@ namespace BLL.Books.Sync.Tests
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddDays(-3),
                     UserId = 1,
-                    Id = 2
+                    Id = 2, LocalId = 2,
                 },
                      new Book() {
                     Title = "Teste de Título 3",
@@ -45,7 +46,7 @@ namespace BLL.Books.Sync.Tests
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddHours(-2),
                     UserId = 1,
-                    Id = 3
+                    Id = 3, LocalId = 3,
                 },
                 new Book() {
                     Title = "Teste de Título 4",
@@ -54,7 +55,7 @@ namespace BLL.Books.Sync.Tests
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddHours(-1),
                     UserId = 1,
-                    Id = 4
+                    Id = 4, LocalId = 4,
                 },
                    new Book() {
                     Title = "Teste de Título 5",
@@ -63,7 +64,7 @@ namespace BLL.Books.Sync.Tests
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now,
                     UserId = 1,
-                       Id = 5
+                       Id = 5, LocalId = 5,
                    },
             };
 
@@ -76,7 +77,7 @@ namespace BLL.Books.Sync.Tests
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddDays(-2),
                     UserId = 1,
-                    Id = 6
+                    Id = 6, LocalId = 6,
                 },
                 //new Book() {
                 //    Title = "Teste de Título 2",
@@ -156,7 +157,8 @@ namespace BLL.Books.Sync.Tests
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddDays(-2),
                     UserId = 1,
-                    Id = 1
+                    Id = 1,
+                    LocalId = 1
                 },
                 new Book() {
                     Title = "Teste de Título 2",
@@ -165,7 +167,8 @@ namespace BLL.Books.Sync.Tests
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddDays(-2),
                     UserId = 1,
-                    Id = 2
+                    Id = 2,
+                    LocalId = 2
                 },
                      new Book() {
                     Title = "Teste de Título 3",
@@ -174,7 +177,8 @@ namespace BLL.Books.Sync.Tests
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddDays(-5),
                     UserId = 1,
-                    Id = 3
+                    Id = 3,
+                         LocalId = 3
                 },
                 new Book() {
                     Title = "Teste de Título 4",
@@ -183,7 +187,8 @@ namespace BLL.Books.Sync.Tests
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddDays(-5),
                     UserId = 1,
-                    Id = 4
+                    Id = 4,
+                    LocalId = 4
                 },
                    new Book() {
                     Title = "Teste de Título 5",
@@ -192,7 +197,8 @@ namespace BLL.Books.Sync.Tests
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddDays(-5),
                     UserId = 1,
-                       Id = 5
+                       Id = 5,
+                       LocalId = 5
                    },
             };
 
@@ -205,7 +211,8 @@ namespace BLL.Books.Sync.Tests
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddDays(-5),
                     UserId = 1,
-                    Id = 1
+                    Id = 1,
+                    LocalId = 1
                 },
                 new Book() {
                     Title = "Teste de Título Alterado",
@@ -214,7 +221,8 @@ namespace BLL.Books.Sync.Tests
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddDays(-5),
                     UserId = 1,
-                    Id = 2
+                    Id = 2,
+                    LocalId = 2
                 },
                 //new Book() {
                 //    Title = "Teste de Título 2",
@@ -294,6 +302,7 @@ namespace BLL.Books.Sync.Tests
                 UpdatedAt = DateTime.Now.AddDays(-2),
                 UserId = 1,
                 Id = null,
+                LocalId = 1,
                 LocalTempId = "Temp1"
             };
 
@@ -306,21 +315,23 @@ namespace BLL.Books.Sync.Tests
                 UpdatedAt = DateTime.Now.AddDays(-2),
                 UserId = 1,
                 Id = null,
+                LocalId = 2,
                 LocalTempId = "Temp2"
             };
 
             IQueryable<Book> mockBooks = new List<Book>()
             {
                 bookForAddInApi1,
-                bookForAddInApi2,
-                     new Book() {
+                bookForAddInApi2,                     
+                new Book() {
                     Title = "Teste de Título 3",
                     Authors = "Emanuel Teste",
                     Status = Status.IllRead,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddDays(-5),
                     UserId = 1,
-                    Id = 3
+                    Id = 3,
+                    LocalId = 3,
                 },
                 new Book() {
                     Title = "Teste de Título 4",
@@ -329,17 +340,19 @@ namespace BLL.Books.Sync.Tests
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddDays(-5),
                     UserId = 1,
-                    Id = 4
+                    Id = 4,
+                    LocalId = 4,
                 },
-                   new Book() {
+                new Book() {
                     Title = "Teste de Título 5",
                     Authors = "Emanuel Teste",
                     Status = Status.IllRead,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now.AddDays(-5),
                     UserId = 1,
-                       Id = 5
-                   },
+                    Id = 5,
+                    LocalId = 5,
+                },
             }.AsQueryable();
 
             mockSetBook.As<IQueryable<Book>>().Setup(m => m.Provider).Returns(mockBooks.Provider);

@@ -4,6 +4,7 @@ using Bookshelf.ViewModels.Components;
 using Models.Books;
 using Models.Books.GoogleApi;
 using System.Collections.ObjectModel;
+using System.Net;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
@@ -19,7 +20,7 @@ namespace Bookshelf.ViewModels
         //
         private bool IsUpdate = false;
 
-        private string BookId, GoogleKey;
+        private string LocalId,BookId, GoogleKey;
 
         private string title, subTitle, volume, authors, year, isbn, pages, genre, comment, situation, cover;
 
@@ -114,8 +115,8 @@ namespace Bookshelf.ViewModels
 
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            if (query != null && query.ContainsKey("Key"))
-                BookId = query["Key"].ToString();
+            if (query != null && query.ContainsKey("Id"))
+                LocalId = query["Id"].ToString();
 
             if (query != null && query.ContainsKey("GoogleKey"))
                 GoogleKey = query["GoogleKey"].ToString();
@@ -126,7 +127,7 @@ namespace Bookshelf.ViewModels
             BtnAddBookImageSourceGlyph = IconFont.Plus;
             pkrStatusSelectedIndex = 1;
 
-            if (string.IsNullOrEmpty(BookId))
+            if (string.IsNullOrEmpty(LocalId))
             {
                 if (!string.IsNullOrEmpty(GoogleKey))
                     await GetGoogleBook();
@@ -139,11 +140,11 @@ namespace Bookshelf.ViewModels
                     {
                         BuildBook(_book);
 
-                        BookId = _book.Id.ToString();
+                        LocalId = _book.LocalId.ToString();
                     }
                 }
 
-                if (string.IsNullOrEmpty(BookId))
+                if (string.IsNullOrEmpty(LocalId))
                 {
                     RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
 
@@ -154,7 +155,7 @@ namespace Bookshelf.ViewModels
                 }
             }
             else
-                _ = Task.Run(() => GetBook(Convert.ToInt32(BookId)));
+                _ = Task.Run(() => GetBook(Convert.ToInt32(LocalId)));
         }
 
         protected async Task GetGoogleBook()
@@ -182,6 +183,7 @@ namespace Bookshelf.ViewModels
 
         protected void BuildBook(Models.Books.Book book)
         {
+            BookId = book.Id.ToString();
             Title = book.Title;
             SubTitle = book.SubTitle;
             Authors = book.Authors;
@@ -192,7 +194,7 @@ namespace Bookshelf.ViewModels
             Volume = book.Volume.ToString();
             Comment = book.Comment;
             PkrStatusSelectedIndex = Convert.ToInt32(book.Status);
-
+            
             GoogleKey ??= book.GoogleId;
             Cover ??= book.Cover;
 
@@ -227,8 +229,7 @@ namespace Bookshelf.ViewModels
         /// <summary>
         /// get book by book key
         /// </summary>
-        /// <param name="BookKey"></param>
-        protected async Task GetBook(int bookId) => BuildBook(await booksServices.GetBook(bookId));
+        protected async Task GetBook(int localId) => BuildBook(await booksServices.GetBook(localId));
 
         private async Task InsertBook()
         {
@@ -252,7 +253,7 @@ namespace Bookshelf.ViewModels
                         Genre = Genre,
                         Volume = _volume,
                         Cover = Cover,
-                        GoogleId = GoogleKey
+                        GoogleId = GoogleKey,                        
                     };
 
                     //cadastra o livro 
@@ -281,8 +282,9 @@ namespace Bookshelf.ViewModels
                         mensagem = "Livro";
                     }
 
-                    if (!string.IsNullOrEmpty(BookId))
+                    if (!string.IsNullOrEmpty(LocalId))
                     {
+                        book.LocalId = Convert.ToInt32(LocalId);
                         book.Id = Convert.ToInt32(BookId);
 
                         Models.Responses.BLLResponse uptRes = await booksServices.UpdateBook(book);

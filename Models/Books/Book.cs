@@ -6,8 +6,11 @@ namespace Models.Books
     public class Book
     {
         [Key]
-        public int? LocalId { get; set; }
+        public int LocalId { get; set; }
 
+        /// <summary>
+        /// external id
+        /// </summary>
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int? Id { get; set; }
 
