@@ -15,6 +15,7 @@ using Bookshelf.Views;
 using Bookshelf.Views.Book;
 using Bookshelf.Views.GoogleSearch;
 using CommunityToolkit.Maui;
+using DbContextDAL;
 using DBContextDAL;
 
 namespace Bookshelf;
@@ -115,6 +116,13 @@ public static class MauiProgram
         builder.Services.AddScoped<IUserApiDAL, UserApiDAL>();
         builder.Services.AddScoped<IBookHistoricApiDAL, BookHistoricApiDAL>();
         builder.Services.AddScoped<IBookApiDAL, BookApiDAL>();
+
+        #endregion
+
+        #region DAL
+
+        builder.Services.AddScoped<IBookDAL, BookDAL>();
+
         #endregion
 
         #endregion

@@ -134,7 +134,7 @@ namespace Bookshelf.ViewModels
 
                 if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(GoogleKey))
                 {
-                    Models.Books.Book _book = booksServices.GetBookbyTitleOrGoogleId(Title.ToLower(), GoogleKey);
+                    Models.Books.Book _book = await booksServices.GetBookbyTitleOrGoogleIdAsync(Title.ToLower(), GoogleKey);
 
                     if (_book is not null)
                     {

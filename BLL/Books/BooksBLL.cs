@@ -1,4 +1,5 @@
 ﻿using BLL.User;
+using DbContextDAL;
 using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
 using Models.Books;
@@ -10,65 +11,43 @@ namespace BLL.Books
     public class BooksBLL : IBooksBLL
     {
         readonly IBookApiBLL BooksApiBLL;
-        private readonly BookshelfDbContext bookshelfDbContext;
         private readonly IUserBLL userBLL;
+        private readonly IBookDAL bookDAL;
 
-        public BooksBLL(IBookApiBLL booksApiBLL, BookshelfDbContext bookshelfDbContext, IUserBLL userBLL)
+        public BooksBLL(IBookApiBLL booksApiBLL, IUserBLL userBLL, IBookDAL bookDAL)
         {
             BooksApiBLL = booksApiBLL;
-            this.bookshelfDbContext = bookshelfDbContext;
             this.userBLL = userBLL;
+            this.bookDAL = bookDAL;
         }
 
         public Totals GetBookshelfTotals()
         {
-            Totals BTotals = new();
-
             int uid = userBLL.GetUid().Result;
 
-            var list = Task.Run(() => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).GroupBy(x => x.Status).Select(x => new { status = x.Key, count = x.Count() }).ToList()).Result;
-
-            if (list.Count > 0)
-            {
-                var illRead = list.FirstOrDefault(x => x.status == Status.IllRead);
-                var reading = list.FirstOrDefault(x => x.status == Status.Reading);
-                var read = list.FirstOrDefault(x => x.status == Status.Read);
-                var interrupted = list.FirstOrDefault(x => x.status == Status.Interrupted);
-
-                BTotals.IllRead = illRead is not null ? illRead.count : 0;
-                BTotals.Reading = reading is not null ? reading.count : 0;
-                BTotals.Read = read is not null ? read.count : 0;
-                BTotals.Interrupted = interrupted is not null ? interrupted.count : 0;
-            }
-            else
-            {
-                BTotals.IllRead = BTotals.Reading = BTotals.Read = BTotals.Interrupted = 0;
-            }
-
-            return BTotals;
+            return bookDAL.GetTotalBooksGroupedByStatus(uid);
         }
 
-        public async Task<Book?> GetBook(int localId) => await bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && x.LocalId == localId).FirstOrDefaultAsync();
+        public async Task<Book?> GetBook(int localId) => await bookDAL.GetBookByLocalIdAsync(userBLL.GetUid().Result, localId);
 
         public async Task<BLLResponse> UpdateBook(Book book)
         {
-            Book? bookResponse = Task.Run(() => GetBookByTitle(book.Title)).Result;
+            Book? bookResponse = Task.Run(() => bookDAL.GetBookByTitleAsync(userBLL.GetUid().Result, book.Title)).Result;
 
             if (bookResponse != null && bookResponse.LocalId.Equals(book.LocalId))
             {
                 book.UpdatedAt = DateTime.Now;
-                book.UserId = bookshelfDbContext.User.Select(x => x.Id).First();
+                book.UserId = userBLL.GetUid().Result;
 
-                bookshelfDbContext.ChangeTracker?.Clear();
-                bookshelfDbContext.Update(book);
-                await bookshelfDbContext.SaveChangesAsync();
+                await bookDAL.ExecuteUpdateBookAsync(book);
 
                 //
                 if (CrossConnectivity.Current.IsConnected)
                 {
                     BLLResponse resp = await BooksApiBLL.UpdateBook(book);
 
-                    if (!resp.Success) {
+                    if (!resp.Success)
+                    {
                         if (resp.Content is not null)
                             return new BLLResponse() { Success = false, Content = resp.Content.ToString() };
                         else return new BLLResponse() { Success = false };
@@ -79,13 +58,12 @@ namespace BLL.Books
             else return new BLLResponse() { Success = false, Content = "Livro com este título já cadastrado." };
         }
 
-        private Book? GetBookByTitle(string title) => bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && x.Title != null && x.Title.ToLower().Contains(title.ToLower())).FirstOrDefault();
-
         public async Task<BLLResponse> AddBook(Book book)
         {
             book.UpdatedAt = DateTime.Now;
+            int uid = userBLL.GetUid().Result;
 
-            Book? bookResponse = Task.Run(() => GetBookByTitle(book.Title)).Result;
+            Book? bookResponse = Task.Run(() => bookDAL.GetBookByTitleAsync(uid, book.Title)).Result;
 
             if (bookResponse == null)
             {
@@ -104,25 +82,14 @@ namespace BLL.Books
                 else
                     book.LocalTempId = Guid.NewGuid().ToString();
 
-                book.UserId = userBLL.GetUid().Result;
+                book.UserId = uid;
 
-                bookshelfDbContext.Add(book);
-                bookshelfDbContext.SaveChanges();
+                await bookDAL.ExecuteAddBookAsync(book);
 
                 return new BLLResponse() { Success = true };
             }
             else return new BLLResponse() { Success = false, Content = "Livro com este título já cadastrado." };
 
-        }
-
-        public Book? GetBookbyTitleOrGoogleId(string title, string googleId)
-        {
-            try
-            {
-                return bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && ((x.Title != null &&
-                   x.Title.ToLower().Equals(title.ToLower())) || (x.GoogleId != null && x.GoogleId.Equals(googleId)))).FirstOrDefault();
-            }
-            catch (Exception ex) { throw ex; }
         }
 
         /// <summary>
@@ -139,9 +106,9 @@ namespace BLL.Books
             List<Book> list = new();
 
             if (status > 0)
-                list = await bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && x.Status == (Status)status && x.Inactive == false).OrderBy(x => x.UpdatedAt).ToListAsync();
+                list = await bookDAL.GetBooksByStatusAsync(userBLL.GetUid().Result, (Status)status);
             else
-                list = await bookshelfDbContext.Book.Where(x => x.UserId == userBLL.GetUid().Result && x.Inactive == false).OrderBy(x => x.UpdatedAt).ToListAsync();
+                list = await bookDAL.GetBooks(userBLL.GetUid().Result);
 
             if (list.Count > 0 && !string.IsNullOrEmpty(textoBusca))
                 list = list.Where(x => x.Title != null && x.Title.ToLower().Contains(textoBusca.ToLower())).ToList();
@@ -198,10 +165,7 @@ namespace BLL.Books
                 book.UserId = userBLL.GetUid().Result;
                 book.Inactive = true;
 
-                bookshelfDbContext.ChangeTracker?.Clear();
-                bookshelfDbContext.Update(book);
-
-                bookshelfDbContext.SaveChanges();
+                await bookDAL.ExecuteInactivateBookAsync(localId, book.UserId);
 
                 if (CrossConnectivity.Current.IsConnected)
                     await BooksApiBLL.UpdateBook(book);
@@ -221,19 +185,17 @@ namespace BLL.Books
                     book.Score = score;
                     book.Comment = comment;
                     book.UserId = userBLL.GetUid().Result;
-                    bookshelfDbContext.ChangeTracker?.Clear();
 
-                    bookshelfDbContext.Update(book);
-
-                    await bookshelfDbContext.SaveChangesAsync();
+                    await bookDAL.ExecuteUpdateBookStatusAsync(localId, status, score, comment, book.UserId);
 
                     if (CrossConnectivity.Current.IsConnected)
-                    {
                         _ = BooksApiBLL.UpdateBook(book);
-                    }
                 }
             }
             catch (Exception ex) { throw ex; }
         }
+
+        public async Task<Book?> GetBookbyTitleOrGoogleIdAsync(string title, string googleId)
+            => await bookDAL.GetBookbyTitleOrGoogleIdAsync(userBLL.GetUid().Result, title, googleId);
     }
 }

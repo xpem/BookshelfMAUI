@@ -15,7 +15,7 @@ namespace BLL.Books
 
         //bool VerifyBookbyTitle(string title);
 
-        Book? GetBookbyTitleOrGoogleId(string title, string googleId);
+        Task<Book?> GetBookbyTitleOrGoogleIdAsync(string title, string googleId);
 
         Task<(List<UIBookItem>, int total)> GetBookSituationByStatus(int? page, int Situation, string? textoBusca);
 

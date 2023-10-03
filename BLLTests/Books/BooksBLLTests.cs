@@ -118,7 +118,7 @@ namespace BLL.Books.Tests
         }
 
         [TestMethod()]
-        public void UpdateBook_FaiL_Valitation_Unique_Title_Test()
+        public void UpdateBook_FaiL_Validation_Unique_Title_Test()
         {
             Mock<BookshelfDbContext> mockContext = new();
 
