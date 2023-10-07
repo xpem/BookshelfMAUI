@@ -122,6 +122,8 @@ public static class MauiProgram
         #region DAL
 
         builder.Services.AddScoped<IBookDAL, BookDAL>();
+        builder.Services.AddScoped<IBookHistoricDAL, BookHistoricDAL>();
+        builder.Services.AddScoped<IUserDAL, UserDAL>();
 
         #endregion
 

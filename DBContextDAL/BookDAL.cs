@@ -59,6 +59,12 @@ namespace DbContextDAL
         public async Task<Book?> GetBookByTitleAsync(int uid, string title)
             => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Title != null && x.Title.ToLower().Contains(title.ToLower())).FirstOrDefaultAsync();
 
+        public async Task<DateTime?> GetBookUpdatedAtByIdAsync(int id)
+            => await bookshelfDbContext.Book.Where(x => x.Id.Equals(id)).Select(y => y.UpdatedAt).FirstOrDefaultAsync();
+
+        public List<Book> GetBookByAfterUpdatedAt(int uid, DateTime lastUpdate)
+            => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.UpdatedAt > lastUpdate).ToList();
+
         public async Task<int> ExecuteAddBookAsync(Book book)
         {
             bookshelfDbContext.Add(book);

@@ -67,7 +67,7 @@ namespace Bookshelf.Services.Sync
 
                         await BookHistoricSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
 
-                        await UserBLL.UpdateLocalUserLastUpdate(user);
+                        await UserBLL.UpdateLocalUserLastUpdate(user.Id);
                     }
 
                     Synchronizing = SyncStatus.Sleeping;

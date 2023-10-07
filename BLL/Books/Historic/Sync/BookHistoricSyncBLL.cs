@@ -1,5 +1,5 @@
 ﻿using BLL.Books.Historic.Interfaces;
-using DBContextDAL;
+using DbContextDAL;
 using Models.Books.Historic;
 
 namespace BLL.Books.Historic.Sync
@@ -8,12 +8,12 @@ namespace BLL.Books.Historic.Sync
     {
 
         readonly IBookHistoricApiBLL BookHistoricApiBLL;
-        private readonly BookshelfDbContext bookshelfDbContext;
+        private readonly IBookHistoricDAL bookHistoricDAL;
 
-        public BookHistoricSyncBLL(IBookHistoricApiBLL bookHistoricApiBLL, BookshelfDbContext bookshelfDbContext)
+        public BookHistoricSyncBLL(IBookHistoricApiBLL bookHistoricApiBLL, IBookHistoricDAL bookHistoricDAL)
         {
             BookHistoricApiBLL = bookHistoricApiBLL;
-            this.bookshelfDbContext = bookshelfDbContext;
+            this.bookHistoricDAL = bookHistoricDAL;
         }
 
         public async Task ApiToLocalSync(int uid, DateTime lastUpdate)
@@ -29,24 +29,7 @@ namespace BLL.Books.Historic.Sync
                 if (bookHistoricsList is not null)
                     foreach (BookHistoric bookHistoric in bookHistoricsList)
                     {
-                        if (bookshelfDbContext.BookHistoric.Where(x => x.Id == bookHistoric.Id).ToList().Count == 0)
-                        {
-                            bookHistoric.Uid = uid;
-
-                            bookshelfDbContext.BookHistoric.Add(bookHistoric);
-
-                            if (bookHistoric.BookHistoricItems is not null)
-                                foreach (BookHistoricItem _bookHistoricItem in bookHistoric.BookHistoricItems)
-                                {
-                                    if ((bookshelfDbContext.BookHistoricItem.Where(x => x.Id == _bookHistoricItem.Id).ToList().Count) == 0)
-                                    {
-                                        _bookHistoricItem.Uid = uid;
-                                        bookshelfDbContext.BookHistoricItem.Add(_bookHistoricItem);
-                                    }
-                                }
-
-                            await bookshelfDbContext.SaveChangesAsync();
-                        }
+                        await bookHistoricDAL.ExecuteAddBookHistoricAsync(bookHistoric, uid);
                     }
             }
         }

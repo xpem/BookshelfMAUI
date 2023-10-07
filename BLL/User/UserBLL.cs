@@ -1,7 +1,6 @@
 ﻿using ApiDAL.Handlers;
 using ApiDAL.Interfaces;
-using DBContextDAL;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using DbContextDAL;
 using Models.Responses;
 using System.Text.Json.Nodes;
 
@@ -10,12 +9,12 @@ namespace BLL.User
     public class UserBLL : IUserBLL
     {
         readonly IUserApiDAL UserApiDAL;
-        private readonly BookshelfDbContext bookshelfDbContext;
+        private readonly IUserDAL userDAL;
 
-        public UserBLL(IUserApiDAL userApiDAL, BookshelfDbContext bookshelfDBContext)
+        public UserBLL(IUserApiDAL userApiDAL, IUserDAL userDAL)
         {
             UserApiDAL = userApiDAL;
-            this.bookshelfDbContext = bookshelfDBContext;
+            this.userDAL = userDAL;
         }
 
         public async Task<BLLResponse> AddUser(string name, string email, string password)
@@ -67,9 +66,7 @@ namespace BLL.User
             catch { throw; }
         }
 
-        public Task<Models.User?> GetUserLocal() => Task.Run(() => bookshelfDbContext.User.FirstOrDefault());
-
-        public Task<int> GetUid() => Task.Run(() => bookshelfDbContext.User.Select(x => x.Id).First());
+        public Task<Models.User?> GetUserLocal() => userDAL.GetUserLocal();
 
         public async Task<BLLResponse> SignIn(string email, string password)
         {
@@ -78,7 +75,7 @@ namespace BLL.User
                 email = email.ToLower();
 
                 (bool success, string? userTokenRes) = await GetUserToken(email, password);
-                
+
                 if (success && userTokenRes != null)
                 {
                     ApiResponse resp = await UserApiDAL.GetUser(userTokenRes);
@@ -98,10 +95,7 @@ namespace BLL.User
                                 Password = PasswordHandler.Encrypt(password)
                             };
 
-                            bookshelfDbContext.ChangeTracker.Clear();
-
-                            await bookshelfDbContext.User.AddAsync(user);
-                            await bookshelfDbContext.SaveChangesAsync();
+                            await userDAL.ExecuteAddUser(user);
 
                             return new BLLResponse() { Success = true };
                         }
@@ -117,14 +111,6 @@ namespace BLL.User
             catch (Exception ex) { throw ex; }
         }
 
-        public async Task UpdateLocalUserLastUpdate(Models.User user)
-        {
-            user.LastUpdate = DateTime.Now;
-
-            bookshelfDbContext.ChangeTracker?.Clear();
-
-            bookshelfDbContext.Update(user);
-            await bookshelfDbContext.SaveChangesAsync();
-        }
+        public async Task UpdateLocalUserLastUpdate(int uid) => await userDAL.ExecuteUpdateLastUpdateUser(DateTime.Now, uid);
     }
 }
