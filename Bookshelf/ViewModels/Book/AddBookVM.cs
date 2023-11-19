@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class AddBookVM : ViewModelBase, IQueryAttributable
+    public class AddBookVM(IBooksBLL _booksServices) : ViewModelBase, IQueryAttributable
     {
         private int? rate;
 
@@ -102,16 +102,10 @@ namespace Bookshelf.ViewModels
         /// </summary>
         public ICommand InsertBookCommand => new Command(async (e) => { await InsertBook(); });
 
-        readonly IBooksBLL booksServices;
+        readonly IBooksBLL booksServices = _booksServices;
 
         #endregion
-
         #endregion
-
-        public AddBookVM(IBooksBLL _booksServices)
-        {
-            booksServices = _booksServices;
-        }
 
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
@@ -265,7 +259,6 @@ namespace Bookshelf.ViewModels
                         int rate = 0;
                         if (pkrStatusSelectedIndex == 3)
                             rate = Convert.ToInt32(Math.Round(Convert.ToDecimal(Rate), MidpointRounding.AwayFromZero));
-
 
                         book.Status = (Status)pkrStatusSelectedIndex;
 

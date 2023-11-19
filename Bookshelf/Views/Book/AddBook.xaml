@@ -72,7 +72,7 @@
                             HorizontalOptions="Start"
                             VerticalOptions="Start">
                             <components:BorderedNumericEntry
-                                LabelText="*Páginas"
+                                LabelText="Páginas"
                                 MaxLength="4"
                                 Text="{Binding Pages}" />
                         </StackLayout>

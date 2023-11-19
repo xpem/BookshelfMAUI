@@ -20,7 +20,10 @@
                 Padding="10,0,10,5"
                 HorizontalOptions="FillAndExpand"
                 Style="{StaticResource FramePrimary}">
-                <StackLayout Margin="0">
+                <StackLayout
+                    Margin="0"
+                    HorizontalOptions="FillAndExpand"
+                    Orientation="Vertical">
                     <components:BorderedEntry LabelText="Digite o título do livro" Text="{Binding SearchTitle}" />
                 </StackLayout>
             </Frame>

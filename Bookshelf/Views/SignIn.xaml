@@ -3,8 +3,8 @@
     x:Class="Bookshelf.Views.SignIn"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Components="clr-namespace:Bookshelf.Components"
     xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
-    xmlns:components="clr-namespace:Bookshelf.Components"
     xmlns:vm="clr-namespace:Bookshelf.ViewModels"
     Title="Bookshelf - Gerenciamento de livros"
     x:DataType="vm:SignInVM"
@@ -28,13 +28,14 @@
                 VerticalOptions="Center">
                 <VerticalStackLayout>
                     <Label Style="{StaticResource Icon}" Text="{x:Static Icons:IconFont.BookReader}" />
-
-                    <components:BorderedEntry LabelText="Email" Text="{Binding Email}" />
-                    <components:BorderedEntry
+                    <Components:BorderedEntry
+                        BackgroundColor="AliceBlue"
+                        LabelText="Email"
+                        Text="{Binding Email}" />
+                    <Components:BorderedEntry
                         IsPassword="True"
                         LabelText="Senha"
                         Text="{Binding Password}" />
-
                     <Button
                         Margin="0,10,0,20"
                         Command="{Binding SignInCommand}"

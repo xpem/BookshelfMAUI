@@ -1,28 +1,12 @@
-﻿using BLL.User;
-using DbContextDAL;
-using DBContextDAL;
-using Microsoft.EntityFrameworkCore;
+﻿using DbContextDAL;
 using Models.Books;
 using Models.Responses;
 using Plugin.Connectivity;
 
 namespace BLL.Books
 {
-    public class BooksBLL : IBooksBLL
+    public class BooksBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL, IUserDAL userDAL) : IBooksBLL
     {
-        readonly IBookApiBLL BooksApiBLL;
-        private readonly IUserBLL userBLL;
-        private readonly IBookDAL bookDAL;
-        private readonly IUserDAL userDAL;
-
-        public BooksBLL(IBookApiBLL booksApiBLL, IUserBLL userBLL, IBookDAL bookDAL, IUserDAL userDAL)
-        {
-            BooksApiBLL = booksApiBLL;
-            this.userBLL = userBLL;
-            this.bookDAL = bookDAL;
-            this.userDAL = userDAL;
-        }
-
         public Totals GetBookshelfTotals() => bookDAL.GetTotalBooksGroupedByStatus(userDAL.GetUid());
 
         public async Task<Book?> GetBook(int localId) => await bookDAL.GetBookByLocalIdAsync(userDAL.GetUid(), localId);
@@ -41,7 +25,7 @@ namespace BLL.Books
                 //
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    BLLResponse resp = await BooksApiBLL.UpdateBook(book);
+                    BLLResponse resp = await booksApiBLL.UpdateBook(book);
 
                     if (!resp.Success)
                     {
@@ -60,13 +44,13 @@ namespace BLL.Books
             book.UpdatedAt = DateTime.Now;
             int uid = userDAL.GetUid();
 
-            Book? bookResponse = Task.Run(() => bookDAL.GetBookByTitleAsync(uid, book.Title)).Result;
+            Book? bookResponse = await bookDAL.GetBookByTitleAsync(uid, book.Title);
 
             if (bookResponse == null)
             {
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    BLLResponse response = await BooksApiBLL.AddBook(book);
+                    BLLResponse response = await booksApiBLL.AddBook(book);
 
                     if (response.Success) { book.Id = Convert.ToInt32(response.Content); }
                     else
@@ -94,13 +78,13 @@ namespace BLL.Books
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public async Task<(List<UIBookItem>, int)> GetBookSituationByStatus(int? page, int status, string? textoBusca = null)
+        public async Task<(List<UIBookItem>, int)> GetBooksByStatus(int? page, int status, string? textoBusca = null)
         {
-            List<UIBookItem> listBooksItens = new();
+            List<UIBookItem> listBooksItens = [];
             int total = 0;
 
             int pageSize = 10;
-            List<Book> list = new();
+            List<Book> list = [];
 
             if (status > 0)
                 list = await bookDAL.GetBooksByStatusAsync(userDAL.GetUid(), (Status)status);
@@ -165,7 +149,7 @@ namespace BLL.Books
                 await bookDAL.ExecuteInactivateBookAsync(localId, book.UserId);
 
                 if (CrossConnectivity.Current.IsConnected)
-                    await BooksApiBLL.UpdateBook(book);
+                    await booksApiBLL.UpdateBook(book);
             }
         }
 
@@ -186,7 +170,7 @@ namespace BLL.Books
                     await bookDAL.ExecuteUpdateBookStatusAsync(localId, status, score, comment, book.UserId);
 
                     if (CrossConnectivity.Current.IsConnected)
-                        _ = BooksApiBLL.UpdateBook(book);
+                        _ = booksApiBLL.UpdateBook(book);
                 }
             }
             catch (Exception ex) { throw ex; }

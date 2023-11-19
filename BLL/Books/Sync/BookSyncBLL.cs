@@ -4,16 +4,10 @@ using Models.Books;
 
 namespace BLL.Books.Sync
 {
-    public class BookSyncBLL : IBookSyncBLL
+    public class BookSyncBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL) : IBookSyncBLL
     {
-        readonly IBookApiBLL BooksApiBLL;
-        private readonly IBookDAL bookDAL;
-
-        public BookSyncBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL)
-        {
-            BooksApiBLL = booksApiBLL;
-            this.bookDAL = bookDAL;
-        }
+        readonly IBookApiBLL BooksApiBLL = booksApiBLL;
+        private readonly IBookDAL bookDAL = bookDAL;
 
         public async Task<(int added, int updated)> ApiToLocalSync(int uid, DateTime lastUpdate)
         {

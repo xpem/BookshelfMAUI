@@ -15,7 +15,7 @@ public partial class App : Application
 
             InitializeComponent();
 
-            Models.User user = userBLL.GetUserLocal().Result;
+            Models.User? user = userBLL.GetUserLocal().Result;
 
             MainPage = new AppShell();
 

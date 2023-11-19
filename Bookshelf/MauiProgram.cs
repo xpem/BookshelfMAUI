@@ -24,18 +24,13 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
-        //todo
-        //criar uma branch para o desenvolvimento da timeline
-        //criar branch para o desenvolvimento da abstração da camada dal.
-
         MauiAppBuilder builder = MauiApp.CreateBuilder();
-
-        builder.UseMauiApp<App>().UseMauiCommunityToolkit();
 
         //fonts: https://fonts.google.com/specimen/Playfair+Display
         //icons: https://fontawesome.com/icons/right-to-bracket?s=solid
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

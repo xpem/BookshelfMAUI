@@ -7,9 +7,9 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class BookDetailVM : ViewModelBase, IQueryAttributable
+    public class BookDetailVM(IBooksBLL _booksServices) : ViewModelBase, IQueryAttributable
     {
-        readonly IBooksBLL booksServices;
+        readonly IBooksBLL booksServices = _booksServices;
 
         #region bind variables.
 
@@ -111,11 +111,6 @@ namespace Bookshelf.ViewModels
         public bool ImgCoverIsVisible { get => imgCoverIsVisible; set { if (value != imgCoverIsVisible) { imgCoverIsVisible = value; OnPropertyChanged(); } } }
 
         #endregion
-
-        public BookDetailVM(IBooksBLL _booksServices)
-        {
-            booksServices = _booksServices;
-        }
 
         public ICommand ConfirmCommand => new Command(async (e) => { await UpdateBookSituation(); });
 
