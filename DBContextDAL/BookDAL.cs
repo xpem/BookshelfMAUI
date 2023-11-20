@@ -1,13 +1,6 @@
 ﻿using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
-using Models;
 using Models.Books;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DbContextDAL
 {
@@ -20,17 +13,18 @@ namespace DbContextDAL
             this.bookshelfDbContext = bookshelfDbContext;
         }
 
-        public async Task<int> ExecuteUpdateBookAsync(Book book)
+        public int ExecuteUpdateBook(Book book)
         {
             bookshelfDbContext.ChangeTracker?.Clear();
             bookshelfDbContext.Update(book);
-            return await bookshelfDbContext.SaveChangesAsync();
+            return bookshelfDbContext.SaveChanges();
         }
 
         public Totals GetTotalBooksGroupedByStatus(int uid)
         {
             Totals totals = new();
 
+            bookshelfDbContext.SaveChanges();
             var list = bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).GroupBy(x => x.Status).Select(x => new { status = x.Key, count = x.Count() }).ToList();
 
             if (list is not null && list.Count > 0)
@@ -51,6 +45,7 @@ namespace DbContextDAL
             }
 
             return totals;
+
         }
 
         public async Task<Book?> GetBookByLocalIdAsync(int uid, int localId)
@@ -65,10 +60,11 @@ namespace DbContextDAL
         public List<Book> GetBookByAfterUpdatedAt(int uid, DateTime lastUpdate)
             => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.UpdatedAt > lastUpdate).ToList();
 
-        public async Task<int> ExecuteAddBookAsync(Book book)
+        public int ExecuteAddBook(Book book)
         {
             bookshelfDbContext.Add(book);
-            return await bookshelfDbContext.SaveChangesAsync();
+            bookshelfDbContext.ChangeTracker.Clear();
+            return bookshelfDbContext.SaveChanges();
         }
 
         public async Task<Book?> GetBookbyTitleOrGoogleIdAsync(int uid, string title, string googleId)
@@ -76,7 +72,7 @@ namespace DbContextDAL
                    x.Title.ToLower().Equals(title.ToLower())) || (x.GoogleId != null && x.GoogleId.Equals(googleId)))).FirstOrDefaultAsync();
 
         public async Task<List<Book>> GetBooksByStatusAsync(int uid, Status status)
-                => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Status == status && x.Inactive == false).OrderBy(x => x.UpdatedAt).ToListAsync();
+                => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Status == status && x.Inactive == false).OrderByDescending(x => x.UpdatedAt).ToListAsync();
 
         public async Task<List<Book>> GetBooks(int uid)
                 => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).OrderBy(x => x.UpdatedAt).ToListAsync();

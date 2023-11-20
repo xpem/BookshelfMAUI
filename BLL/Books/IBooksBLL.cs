@@ -17,7 +17,7 @@ namespace BLL.Books
 
         Task<Book?> GetBookbyTitleOrGoogleIdAsync(string title, string googleId);
 
-        Task<(List<UIBookItem>, int total)> GetBookSituationByStatus(int? page, int Situation, string? textoBusca);
+        Task<(List<UIBookItem>, int total)> GetBooksByStatus(int? page, int Situation, string? textoBusca);
 
         Task InactivateBook(int LocalId);
 
