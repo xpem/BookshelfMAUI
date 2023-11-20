@@ -25,7 +25,7 @@ namespace BLL.Books
                     {
                         int? addedBookId = null;
                         if (jResp != null)
-                            addedBookId = jResp["Id"]?.GetValue<int>();
+                            addedBookId = jResp["id"]?.GetValue<int>();
 
                         return new BLLResponse() { Success = resp.Success, Content = addedBookId };
                     }

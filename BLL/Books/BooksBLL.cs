@@ -1,7 +1,4 @@
-﻿using BLL.User;
-using DbContextDAL;
-using DBContextDAL;
-using Microsoft.EntityFrameworkCore;
+﻿using DbContextDAL;
 using Models.Books;
 using Models.Responses;
 using Plugin.Connectivity;
@@ -11,14 +8,12 @@ namespace BLL.Books
     public class BooksBLL : IBooksBLL
     {
         readonly IBookApiBLL BooksApiBLL;
-        private readonly IUserBLL userBLL;
         private readonly IBookDAL bookDAL;
         private readonly IUserDAL userDAL;
 
-        public BooksBLL(IBookApiBLL booksApiBLL, IUserBLL userBLL, IBookDAL bookDAL, IUserDAL userDAL)
+        public BooksBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL, IUserDAL userDAL)
         {
             BooksApiBLL = booksApiBLL;
-            this.userBLL = userBLL;
             this.bookDAL = bookDAL;
             this.userDAL = userDAL;
         }
@@ -36,7 +31,7 @@ namespace BLL.Books
                 book.UpdatedAt = DateTime.Now;
                 book.UserId = userDAL.GetUid();
 
-                await bookDAL.ExecuteUpdateBookAsync(book);
+                bookDAL.ExecuteUpdateBook(book);
 
                 //
                 if (CrossConnectivity.Current.IsConnected)
@@ -81,7 +76,7 @@ namespace BLL.Books
 
                 book.UserId = uid;
 
-                await bookDAL.ExecuteAddBookAsync(book);
+                bookDAL.ExecuteAddBook(book);
 
                 return new BLLResponse() { Success = true };
             }
@@ -94,7 +89,7 @@ namespace BLL.Books
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public async Task<(List<UIBookItem>, int)> GetBookSituationByStatus(int? page, int status, string? textoBusca = null)
+        public async Task<(List<UIBookItem>, int)> GetBooksByStatus(int? page, int status, string? textoBusca = null)
         {
             List<UIBookItem> listBooksItens = new();
             int total = 0;

@@ -20,7 +20,7 @@ namespace Bookshelf.ViewModels
         //
         private bool IsUpdate = false;
 
-        private string LocalId,BookId, GoogleKey;
+        private string LocalId, BookId, GoogleKey;
 
         private string title, subTitle, volume, authors, year, isbn, pages, genre, comment, situation, cover;
 
@@ -194,7 +194,7 @@ namespace Bookshelf.ViewModels
             Volume = book.Volume.ToString();
             Comment = book.Comment;
             PkrStatusSelectedIndex = Convert.ToInt32(book.Status);
-            
+
             GoogleKey ??= book.GoogleId;
             Cover ??= book.Cover;
 
@@ -253,7 +253,7 @@ namespace Bookshelf.ViewModels
                         Genre = Genre,
                         Volume = _volume,
                         Cover = Cover,
-                        GoogleId = GoogleKey,                        
+                        GoogleId = GoogleKey,
                     };
 
                     //cadastra o livro 
@@ -327,6 +327,8 @@ namespace Bookshelf.ViewModels
         {
             bool ValidInfo = true;
             if (string.IsNullOrEmpty(Title))
+                ValidInfo = false;
+            else if (await booksServices.GetBookbyTitleOrGoogleIdAsync(Title, null) is not null)
                 ValidInfo = false;
 
             if (string.IsNullOrEmpty(Authors))
