@@ -98,19 +98,19 @@
         </Setter>
     </Style>
 
-    <Style x:Key="EntryBorders" TargetType="Border">
-        <Setter Property="Padding" Value="5,0,0,0" />
+    <Style x:Key="EntryBorders" TargetType="Frame">
+        <Setter Property="Padding" Value="-5,0,0,0" />
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
         <Setter Property="BackgroundColor" Value="#101923" />
-        <Setter Property="Stroke" Value="{StaticResource ActiveColor}" />
-        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="BorderColor" Value="{StaticResource ActiveColor}" />
+        <Setter Property="CornerRadius" Value="5" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
                     <VisualState x:Name="Normal" />
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="Stroke" Value="#2B659B" />
+                            <Setter Property="BorderColor" Value="#2B659B" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>

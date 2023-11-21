@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-android;net7.0-maccatalyst;net7.0-ios</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net8.0-maccatalyst;net8.0-ios;net8.0-android</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net6.0-tizen</TargetFrameworks> -->
 		<OutputType>Exe</OutputType>
@@ -28,6 +28,7 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+		<DefaultLanguage>pt-br</DefaultLanguage>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -48,124 +49,126 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Platforms\Android\Resources\values\Styles.xml" />
-	  <None Remove="Resources\Fonts\EBGaramond\EBGaramond-Bold.ttf" />
-	  <None Remove="Resources\Fonts\EBGaramond\EBGaramond-Italic.ttf" />
-	  <None Remove="Resources\Fonts\EBGaramond\EBGaramond-Medium.ttf" />
-	  <None Remove="Resources\Fonts\EBGaramond\EBGaramond-Regular.ttf" />
-	  <None Remove="Resources\Fonts\EBGaramond\EBGaramond-SemiBold.ttf" />
-	  <None Remove="Resources\Fonts\Free-Solid-900.otf" />
-	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Bold.ttf" />
-	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Italic.ttf" />
-	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Medium.ttf" />
-	  <None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Regular.ttf" />
-	  <None Remove="Resources\Images\cover.jpg" />
-	  <None Remove="Resources\Splash\booksolid2.svg" />
-	  <None Remove="Resources\Splash\splash.svg" />
+		<None Remove="Platforms\Android\Resources\values\Styles.xml" />
+		<None Remove="Resources\Fonts\EBGaramond\EBGaramond-Bold.ttf" />
+		<None Remove="Resources\Fonts\EBGaramond\EBGaramond-Italic.ttf" />
+		<None Remove="Resources\Fonts\EBGaramond\EBGaramond-Medium.ttf" />
+		<None Remove="Resources\Fonts\EBGaramond\EBGaramond-Regular.ttf" />
+		<None Remove="Resources\Fonts\EBGaramond\EBGaramond-SemiBold.ttf" />
+		<None Remove="Resources\Fonts\Free-Solid-900.otf" />
+		<None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Bold.ttf" />
+		<None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Italic.ttf" />
+		<None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Medium.ttf" />
+		<None Remove="Resources\Fonts\Playfair\PlayfairDisplay-Regular.ttf" />
+		<None Remove="Resources\Images\cover.jpg" />
+		<None Remove="Resources\Splash\booksolid2.svg" />
+		<None Remove="Resources\Splash\splash.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-Bold.ttf">
-	    <CopyToOutputDirectory></CopyToOutputDirectory>
-	  </MauiFont>
-	  <MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-Italic.ttf">
-	    <CopyToOutputDirectory></CopyToOutputDirectory>
-	  </MauiFont>
-	  <MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-Medium.ttf">
-	    <CopyToOutputDirectory></CopyToOutputDirectory>
-	  </MauiFont>
-	  <MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-Regular.ttf">
-	    <CopyToOutputDirectory></CopyToOutputDirectory>
-	  </MauiFont>
-	  <MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-SemiBold.ttf">
-	    <CopyToOutputDirectory></CopyToOutputDirectory>
-	  </MauiFont>
-	  <MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Bold.ttf" />
-	  <MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Italic.ttf" />
-	  <MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Medium.ttf" />
-	  <MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Regular.ttf" />
+		<MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-Bold.ttf">
+			<CopyToOutputDirectory></CopyToOutputDirectory>
+		</MauiFont>
+		<MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-Italic.ttf">
+			<CopyToOutputDirectory></CopyToOutputDirectory>
+		</MauiFont>
+		<MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-Medium.ttf">
+			<CopyToOutputDirectory></CopyToOutputDirectory>
+		</MauiFont>
+		<MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-Regular.ttf">
+			<CopyToOutputDirectory></CopyToOutputDirectory>
+		</MauiFont>
+		<MauiFont Include="Resources\Fonts\EBGaramond\EBGaramond-SemiBold.ttf">
+			<CopyToOutputDirectory></CopyToOutputDirectory>
+		</MauiFont>
+		<MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Bold.ttf" />
+		<MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Italic.ttf" />
+		<MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Medium.ttf" />
+		<MauiFont Include="Resources\Fonts\Playfair\PlayfairDisplay-Regular.ttf" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="CommunityToolkit.Maui" Version="6.0.0" />
-	  <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.6" />
-	  <PackageReference Include="SQLitePCLRaw.core" Version="2.1.6" />
-	  <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.6" />
-	  <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.6" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.0" />
+		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.6" />
+		<PackageReference Include="SQLitePCLRaw.core" Version="2.1.6" />
+		<PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.6" />
+		<PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.6" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BLL\BLL.csproj" />
-	  <ProjectReference Include="..\DBContextDAL\DbContextDAL.csproj" />
+		<ProjectReference Include="..\BLL\BLL.csproj" />
+		<ProjectReference Include="..\DBContextDAL\DbContextDAL.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Components\BorderedNumericEntry.xaml.cs">
-	    <DependentUpon>BorderedNumericEntry.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Views\FirstSyncProcess.xaml.cs">
-	    <DependentUpon>FirstSyncProcess.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Views\SignUp.xaml.cs">
-	    <DependentUpon>SignUp.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Views\SignIn.xaml.cs">
-	    <DependentUpon>SignIn.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Views\Book\BookDetail.xaml.cs">
-	    <DependentUpon>BookDetail.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Views\Book\AddBook.xaml.cs">
-	    <DependentUpon>AddBook.xaml</DependentUpon>
-	  </Compile>
+		<Compile Update="Components\BorderedNumericEntry.xaml.cs">
+			<DependentUpon>BorderedNumericEntry.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\FirstSyncProcess.xaml.cs">
+			<DependentUpon>FirstSyncProcess.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\SignUp.xaml.cs">
+			<DependentUpon>SignUp.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\SignIn.xaml.cs">
+			<DependentUpon>SignIn.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Book\BookDetail.xaml.cs">
+			<DependentUpon>BookDetail.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\Book\AddBook.xaml.cs">
+			<DependentUpon>AddBook.xaml</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Components\BorderedEditor.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\BorderedNumericEntry.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\BorderedEntry.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Components\RatingBar.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Book\BookHistoric.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\FirstSyncProcess.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\GoogleSearch\GoogleBooksResults.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\SignIn.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Book\BookDetail.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\BookList.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Book\AddBook.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\SignUp.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Main.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\Timeline.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\UpdatePassword.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
+		<MauiXaml Update="Components\BorderedEditor.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\BorderedNumericEntry.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\BorderedEntry.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Components\RatingBar.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Book\BookHistoric.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\FirstSyncProcess.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\GoogleSearch\GoogleBooksResults.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\SignIn.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Book\BookDetail.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\BookList.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Book\AddBook.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\SignUp.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Main.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Timeline.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\UpdatePassword.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 	</ItemGroup>
 
 </Project>
