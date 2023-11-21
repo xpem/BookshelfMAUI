@@ -91,19 +91,19 @@ namespace BLL.Books
         /// <returns></returns>
         public async Task<(List<UIBookItem>, int)> GetBooksByStatus(int? page, int status, string? textoBusca = null)
         {
-            List<UIBookItem> listBooksItens = new();
+            List<UIBookItem> listBooksItens = [];
             int total = 0;
 
             int pageSize = 10;
-            List<Book> list = new();
+            List<Book> list = [];
 
             if (status > 0)
-                list = await bookDAL.GetBooksByStatusAsync(userDAL.GetUid(), (Status)status);
+                list = bookDAL.GetBooksByStatus(userDAL.GetUid(), (Status)status);
             else
                 list = await bookDAL.GetBooks(userDAL.GetUid());
 
             if (list.Count > 0 && !string.IsNullOrEmpty(textoBusca))
-                list = list.Where(x => x.Title != null && x.Title.ToLower().Contains(textoBusca.ToLower())).ToList();
+                list = list.Where(x => x.Title != null && x.Title.Contains(textoBusca, StringComparison.CurrentCultureIgnoreCase)).ToList();
 
             total = list.Count;
 

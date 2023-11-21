@@ -6,10 +6,9 @@
     x:Name="this"
     Margin="0,5,0,0">
     <Label Style="{StaticResource LblHEntry}" Text="{Binding Source={x:Reference this}, Path=LabelText}" />
-    <Border IsEnabled="{Binding Source={x:Reference this}, Path=Enabled}" Style="{StaticResource EntryBorders}">
-        <Border.StrokeShape>
-            <RoundRectangle CornerRadius="5" />
-        </Border.StrokeShape>
+    <Frame
+        IsEnabled="{Binding Source={x:Reference this}, Path=Enabled}"
+        Style="{StaticResource EntryBorders}">
         <Entry
             IsEnabled="{Binding Source={x:Reference this}, Path=Enabled}"
             IsPassword="{Binding Source={x:Reference this}, Path=IsPassword}"
@@ -17,5 +16,5 @@
             Text="{Binding Source={x:Reference this}, Path=Text}" />
         <!--  erro no net 7 impossibilita o uso dessa função, necessário esperar fix ser publicado no net 8  -->
         <!--  TextTransform="{Binding Source={x:Reference this},Path= TextTransformValue}"  -->
-    </Border>
+    </Frame>
 </VerticalStackLayout>

@@ -38,10 +38,7 @@
                             <ColumnDefinition Width="4*" />
                             <ColumnDefinition Width="6*" />
                         </Grid.ColumnDefinitions>
-                        <StackLayout
-                            Padding="0"
-                            HorizontalOptions="Start"
-                            VerticalOptions="Start">
+                        <StackLayout Padding="0" HorizontalOptions="Start">
                             <components:BorderedNumericEntry
                                 LabelText="*Volume"
                                 MaxLength="2"
@@ -69,8 +66,7 @@
                             Grid.Row="2"
                             Grid.Column="0"
                             Padding="0"
-                            HorizontalOptions="Start"
-                            VerticalOptions="Start">
+                            HorizontalOptions="Start">
                             <components:BorderedNumericEntry
                                 LabelText="Páginas"
                                 MaxLength="4"

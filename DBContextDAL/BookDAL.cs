@@ -71,8 +71,8 @@ namespace DbContextDAL
             => await bookshelfDbContext.Book.Where(x => x.UserId == uid && ((x.Title != null &&
                    x.Title.ToLower().Equals(title.ToLower())) || (x.GoogleId != null && x.GoogleId.Equals(googleId)))).FirstOrDefaultAsync();
 
-        public async Task<List<Book>> GetBooksByStatusAsync(int uid, Status status)
-                => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Status == status && x.Inactive == false).OrderByDescending(x => x.UpdatedAt).ToListAsync();
+        public List<Book> GetBooksByStatus(int uid, Status status)
+        => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Status == status && x.Inactive == false).OrderByDescending(x => x.UpdatedAt).ToList();
 
         public async Task<List<Book>> GetBooks(int uid)
                 => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).OrderBy(x => x.UpdatedAt).ToListAsync();
