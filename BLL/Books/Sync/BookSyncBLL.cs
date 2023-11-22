@@ -1,5 +1,4 @@
 ﻿using DbContextDAL;
-using DBContextDAL;
 using Models.Books;
 
 namespace BLL.Books.Sync
@@ -38,7 +37,7 @@ namespace BLL.Books.Sync
 
                         DateTime? bookLastUpdate;
                         if (apiBook.Id is not null)
-                            bookLastUpdate = await bookDAL.GetBookUpdatedAtByIdAsync(apiBook.Id.Value);
+                            bookLastUpdate = bookDAL.GetBookUpdatedAtById(apiBook.Id.Value);
                         else
                             throw new ArgumentNullException(nameof(apiBook.Id));
 

@@ -12,7 +12,7 @@
         <!--  carditens  -->
         <Style x:Key="FrameCardItem" TargetType="Frame">
             <Setter Property="BackgroundColor" Value="#101923" />
-            <Setter Property="BorderColor" Value="#51555B" />
+            <Setter Property="BorderColor" Value="{StaticResource ActiveColor}" />
             <Setter Property="CornerRadius" Value="10" />
         </Style>
         <Style x:Key="GridCardItem" TargetType="Frame">

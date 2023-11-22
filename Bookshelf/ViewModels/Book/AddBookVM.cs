@@ -4,7 +4,6 @@ using Bookshelf.ViewModels.Components;
 using Models.Books;
 using Models.Books.GoogleApi;
 using System.Collections.ObjectModel;
-using System.Net;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
@@ -17,8 +16,6 @@ namespace Bookshelf.ViewModels
 
         #region Properties
 
-        //
-        private bool IsUpdate = false;
 
         private string LocalId, BookId, GoogleKey;
 
@@ -134,7 +131,7 @@ namespace Bookshelf.ViewModels
 
                 if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(GoogleKey))
                 {
-                    Models.Books.Book _book = await booksServices.GetBookbyTitleOrGoogleIdAsync(Title.ToLower(), GoogleKey);
+                    Models.Books.Book _book = booksServices.GetBookbyTitleOrGoogleId(Title, GoogleKey);
 
                     if (_book is not null)
                     {
@@ -223,7 +220,6 @@ namespace Bookshelf.ViewModels
             BtnAddBookImageSourceGlyph = IconFont.Edit;
             BtnInsertText = "Alterar";
             BtnInsertIsVisible = true;
-            IsUpdate = true;
         }
 
         /// <summary>
@@ -328,7 +324,7 @@ namespace Bookshelf.ViewModels
             bool ValidInfo = true;
             if (string.IsNullOrEmpty(Title))
                 ValidInfo = false;
-            else if (await booksServices.GetBookbyTitleOrGoogleIdAsync(Title, null) is not null)
+            else if (booksServices.GetBookbyTitleOrGoogleId(Title, null) is not null)
                 ValidInfo = false;
 
             if (string.IsNullOrEmpty(Authors))

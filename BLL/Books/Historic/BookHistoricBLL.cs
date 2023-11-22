@@ -1,8 +1,5 @@
 ﻿using BLL.Books.Historic.Interfaces;
-using BLL.User;
 using DbContextDAL;
-using DBContextDAL;
-using Microsoft.EntityFrameworkCore;
 using Models.Books.Historic;
 
 namespace BLL.Books.Historic
@@ -12,7 +9,7 @@ namespace BLL.Books.Historic
         private readonly IBookHistoricDAL bookHistoricDAL;
         private readonly IUserDAL userDAL;
 
-        public BookHistoricBLL(IBookHistoricDAL bookHistoricDAL,IUserDAL userDAL)
+        public BookHistoricBLL(IBookHistoricDAL bookHistoricDAL, IUserDAL userDAL)
         {
             this.bookHistoricDAL = bookHistoricDAL;
             this.userDAL = userDAL;

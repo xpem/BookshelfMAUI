@@ -14,7 +14,7 @@
         <ScrollView>
             <!--<StackLayout VerticalOptions="Center" Style="{StaticResource MainStackLayout}" >-->
             <Frame Style="{StaticResource FramePrimary}">
-                <StackLayout>
+                <VerticalStackLayout>
                     <Image
                         Margin="0,0,0,10"
                         Aspect="AspectFit"
@@ -25,7 +25,6 @@
                         Enabled="{Binding LblTitleIsEnabled}"
                         LabelText="Título"
                         Text="{Binding Title}" />
-
                     <components:BorderedEntry LabelText="*Subtítulo" Text="{Binding SubTitle}" />
 
                     <Grid HorizontalOptions="FillAndExpand">
@@ -88,8 +87,6 @@
                         VerticalOptions="Start">
                         <components:BorderedEntry LabelText="*Isbn" Text="{Binding Isbn}" />
                     </StackLayout>
-                    <!--    -->
-
                     <BoxView
                         Margin="0,10,0,10"
                         BackgroundColor="{StaticResource White}"
@@ -101,16 +98,15 @@
                         Text="Situação"
                         TextColor="{StaticResource White}"
                         VerticalOptions="Fill" />
-                    <Border
+                    <Frame
                         Margin="0,5,0,5"
+                        Padding="0"
                         BackgroundColor="#101923"
-                        HorizontalOptions="CenterAndExpand"
-                        Stroke="{StaticResource ActiveColor}">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="5" />
-                        </Border.StrokeShape>
+                        BorderColor="{StaticResource ActiveColor}"
+                        CornerRadius="5"
+                        HorizontalOptions="CenterAndExpand">
                         <Picker ItemsSource="{Binding StatusList}" SelectedIndex="{Binding PkrStatusSelectedIndex}" />
-                    </Border>
+                    </Frame>
 
                     <components:RatingBar Rate="{Binding Rate}" RatingBarIsVisible="{Binding RatingBarIsVisible}" />
 
@@ -134,7 +130,7 @@
                                 Color="Black" />
                         </Button.ImageSource>
                     </Button>
-                </StackLayout>
+                </VerticalStackLayout>
             </Frame>
             <!--</StackLayout>-->
         </ScrollView>

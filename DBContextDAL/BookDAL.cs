@@ -52,10 +52,13 @@ namespace DbContextDAL
             => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.LocalId == localId).FirstOrDefaultAsync();
 
         public async Task<Book?> GetBookByTitleAsync(int uid, string title)
-            => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Title != null && x.Title.ToLower().Contains(title.ToLower())).FirstOrDefaultAsync();
+            => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Title != null && x.Title.ToLower().Contains(title.ToLower()) && x.Inactive == false).FirstOrDefaultAsync();
 
-        public async Task<DateTime?> GetBookUpdatedAtByIdAsync(int id)
-            => await bookshelfDbContext.Book.Where(x => x.Id.Equals(id)).Select(y => y.UpdatedAt).FirstOrDefaultAsync();
+        public DateTime? GetBookUpdatedAtById(int id)
+        {
+            Book? book = bookshelfDbContext.Book.Where(x => x.Id.Equals(id)).FirstOrDefault();
+            return book?.UpdatedAt;
+        }
 
         public List<Book> GetBookByAfterUpdatedAt(int uid, DateTime lastUpdate)
             => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.UpdatedAt > lastUpdate).ToList();
@@ -63,13 +66,13 @@ namespace DbContextDAL
         public int ExecuteAddBook(Book book)
         {
             bookshelfDbContext.Add(book);
-            bookshelfDbContext.ChangeTracker.Clear();
+            //bookshelfDbContext.ChangeTracker.Clear();
             return bookshelfDbContext.SaveChanges();
         }
 
-        public async Task<Book?> GetBookbyTitleOrGoogleIdAsync(int uid, string title, string googleId)
-            => await bookshelfDbContext.Book.Where(x => x.UserId == uid && ((x.Title != null &&
-                   x.Title.ToLower().Equals(title.ToLower())) || (x.GoogleId != null && x.GoogleId.Equals(googleId)))).FirstOrDefaultAsync();
+        public Book? GetBookByTitleOrGoogleId(int uid, string title, string googleId)
+            => bookshelfDbContext.Book.Where(x => x.UserId == uid && ((x.Title != null &&
+                   x.Title.ToLower() == title.ToLower()) || (x.GoogleId != null && x.GoogleId.Equals(googleId))) && x.Inactive == false).FirstOrDefault();
 
         public List<Book> GetBooksByStatus(int uid, Status status)
         => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Status == status && x.Inactive == false).OrderByDescending(x => x.UpdatedAt).ToList();

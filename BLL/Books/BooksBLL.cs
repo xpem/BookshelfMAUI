@@ -5,18 +5,11 @@ using Plugin.Connectivity;
 
 namespace BLL.Books
 {
-    public class BooksBLL : IBooksBLL
+    public class BooksBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL, IUserDAL userDAL) : IBooksBLL
     {
-        readonly IBookApiBLL BooksApiBLL;
-        private readonly IBookDAL bookDAL;
-        private readonly IUserDAL userDAL;
-
-        public BooksBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL, IUserDAL userDAL)
-        {
-            BooksApiBLL = booksApiBLL;
-            this.bookDAL = bookDAL;
-            this.userDAL = userDAL;
-        }
+        readonly IBookApiBLL BooksApiBLL = booksApiBLL;
+        private readonly IBookDAL bookDAL = bookDAL;
+        private readonly IUserDAL userDAL = userDAL;
 
         public Totals GetBookshelfTotals() => bookDAL.GetTotalBooksGroupedByStatus(userDAL.GetUid());
 
@@ -187,7 +180,7 @@ namespace BLL.Books
             catch (Exception ex) { throw ex; }
         }
 
-        public async Task<Book?> GetBookbyTitleOrGoogleIdAsync(string title, string googleId)
-            => await bookDAL.GetBookbyTitleOrGoogleIdAsync(userDAL.GetUid(), title, googleId);
+        public Book? GetBookbyTitleOrGoogleId(string title, string googleId)
+            => bookDAL.GetBookByTitleOrGoogleId(userDAL.GetUid(), title, googleId);
     }
 }
