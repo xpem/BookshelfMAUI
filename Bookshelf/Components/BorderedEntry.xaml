@@ -6,9 +6,7 @@
     x:Name="this"
     Margin="0,5,0,0">
     <Label Style="{StaticResource LblHEntry}" Text="{Binding Source={x:Reference this}, Path=LabelText}" />
-    <Frame
-        IsEnabled="{Binding Source={x:Reference this}, Path=Enabled}"
-        Style="{StaticResource EntryBorders}">
+    <Frame IsEnabled="{Binding Source={x:Reference this}, Path=Enabled}" Style="{StaticResource EntryBorders}">
         <Entry
             IsEnabled="{Binding Source={x:Reference this}, Path=Enabled}"
             IsPassword="{Binding Source={x:Reference this}, Path=IsPassword}"

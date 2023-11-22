@@ -6,15 +6,13 @@
     x:Name="this"
     IsVisible="{Binding Source={x:Reference this}, Path=RatingBarIsVisible}">
     <Label IsVisible="false" Text="{Binding Source={x:Reference this}, Path=Rate}" />
-    <Border
+    <Frame
         Margin="0,5,0,5"
         Padding="10,0,10,0"
         BackgroundColor="#101923"
-        HorizontalOptions="CenterAndExpand"
-        Stroke="{StaticResource ActiveColor}">
-        <Border.StrokeShape>
-            <RoundRectangle CornerRadius="5" />
-        </Border.StrokeShape>
+        BorderColor="{StaticResource ActiveColor}"
+        CornerRadius="5"
+        HorizontalOptions="CenterAndExpand">
         <Grid Margin="0,10,0,10" HorizontalOptions="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -81,5 +79,5 @@
                 </Image.GestureRecognizers>
             </Image>
         </Grid>
-    </Border>
+    </Frame>
 </VerticalStackLayout>

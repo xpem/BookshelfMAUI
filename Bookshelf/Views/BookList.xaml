@@ -45,7 +45,7 @@
                                 <Frame
                                     Margin="0,0,0,5"
                                     BackgroundColor="#101923"
-                                    BorderColor="#2B659B"
+                                    BorderColor="{StaticResource ActiveColor}"
                                     CornerRadius="10">
                                     <StackLayout HorizontalOptions="FillAndExpand" Orientation="Vertical">
                                         <Label
