@@ -137,11 +137,13 @@ namespace BLL.Books.Sync.Tests
             mockContext.Setup(m => m.Book).Returns(mockSetBook.Object);
 
             Mock<IBookApiBLL> bookApiBLL = new();
+            
+
             BLLResponse bLLResponse = new() { Success = true, Content = apiResultBooks };
 
             bookApiBLL.Setup(x => x.GetBooksByLastUpdate(lastUpdate)).ReturnsAsync(() => bLLResponse);
 
-            IBookDAL bookDAL = new BookDAL(mockContext.Object);
+            BookDAL bookDAL = new(mockContext.Object);
 
             BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, bookDAL);
 
@@ -295,7 +297,7 @@ namespace BLL.Books.Sync.Tests
 
             bookApiBLL.Setup(x => x.GetBooksByLastUpdate(lastUpdate)).ReturnsAsync(() => bLLResponse);
 
-            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, mockBookDAL);
+            IBookSyncBLL bookSyncBLL = new BookSyncBLL(bookApiBLL.Object, mockBookDAL);
 
             (int added, int updated) = bookSyncBLL.ApiToLocalSync(1, lastUpdate).Result;
 
@@ -390,9 +392,10 @@ namespace BLL.Books.Sync.Tests
 
             bookApiBLL.Setup(x => x.AddBook(bookForAddInApi1)).ReturnsAsync(() => bLLResponse1);
             bookApiBLL.Setup(x => x.AddBook(bookForAddInApi2)).ReturnsAsync(() => bLLResponse2);
-            BookDAL mockBookDAL = new(mockContext.Object);
 
-            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, mockBookDAL);
+            BookDAL bookDAL = new(mockContext.Object);
+
+            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, bookDAL);
 
             (int added, int updated) = bookSyncBLL.LocalToApiSync(1, lastUpdate).Result;
 
@@ -487,9 +490,10 @@ namespace BLL.Books.Sync.Tests
             bookApiBLL.Setup(x => x.AddBook(bookForAddInApi1)).ReturnsAsync(() => bLLResponse1);
             bookApiBLL.Setup(x => x.UpdateBook(bookForUptInApi1)).ReturnsAsync(() => bLLResponse2);
             bookApiBLL.Setup(x => x.UpdateBook(bookForUptInApi2)).ReturnsAsync(() => bLLResponse3);
-            BookDAL mockBookDAL = new(mockContext.Object);
 
-            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, mockBookDAL);
+            BookDAL bookDAL = new(mockContext.Object);
+
+            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, bookDAL);
 
             (int added, int updated) = bookSyncBLL.LocalToApiSync(1, lastUpdate).Result;
 

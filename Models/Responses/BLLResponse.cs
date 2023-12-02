@@ -4,7 +4,7 @@
     {
         public bool Success { get; set; }
 
-        public Object? Content { get; set; }
+        public object? Content { get; set; }
 
         public bool TryRefreshToken { get; set; } = false;
 
@@ -14,7 +14,7 @@
         {
             ErrorTypes.ServerUnavaliable => "Servidor indisponível",
             ErrorTypes.WrongEmailOrPassword => "Senha ou email inválidos",
-            null => String.Empty,
+            null => string.Empty,
             _ => throw new NotImplementedException("Erro não mapeado")
         };
     }

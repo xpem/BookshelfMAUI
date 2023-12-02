@@ -62,8 +62,17 @@ namespace Bookshelf.ViewModels
                                  //_ = (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<Main>(), true);
                              }
                              else
-                                 await Application.Current.MainPage.DisplayAlert("Aviso", "Email/senha incorretos", null, "Ok");
+                             {
+                                 string errorMessage = "";
 
+                                 if (resp.Error == Models.Responses.ErrorTypes.WrongEmailOrPassword)
+                                     errorMessage = "Email/senha incorretos";
+                                 else if (resp.Error == Models.Responses.ErrorTypes.ServerUnavaliable)
+                                     errorMessage = "Servidor indisponível, favor entrar em contato com o desenvolvedor.";
+                                 else errorMessage = "Erro não mapeado, favor entrar em contato com o desenvolvedor.";
+
+                                 await Application.Current.MainPage.DisplayAlert("Aviso", errorMessage, null, "Ok");
+                             }
                              BtnSignEnabled = true;
                              SignInText = "Acessar";
                              IsBusy = false;
