@@ -3,23 +3,14 @@ using Models.Books;
 
 namespace BLL.Books.Sync
 {
-    public class BookSyncBLL : IBookSyncBLL
+    public class BookSyncBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL) : IBookSyncBLL
     {
-        readonly IBookApiBLL BooksApiBLL;
-        private readonly IBookDAL bookDAL;
-
-        public BookSyncBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL)
-        {
-            BooksApiBLL = booksApiBLL;
-            this.bookDAL = bookDAL;
-        }
-
         public async Task<(int added, int updated)> ApiToLocalSync(int uid, DateTime lastUpdate)
         {
             int added = 0, updated = 0;
 
             //update local database
-            Models.Responses.BLLResponse respGetBooksByLastUpdate = await BooksApiBLL.GetBooksByLastUpdate(lastUpdate);
+            Models.Responses.BLLResponse respGetBooksByLastUpdate = await booksApiBLL.GetBooksByLastUpdate(lastUpdate);
 
             if (respGetBooksByLastUpdate.Success && respGetBooksByLastUpdate.Content is not null)
             {
@@ -78,7 +69,7 @@ namespace BLL.Books.Sync
             {
                 if (book.LocalTempId != null)
                 {
-                    Models.Responses.BLLResponse addBookResp = await BooksApiBLL.AddBook(book);
+                    Models.Responses.BLLResponse addBookResp = await booksApiBLL.AddBook(book);
 
                     if (addBookResp.Success && addBookResp.Content is not null)
                     {
@@ -91,7 +82,7 @@ namespace BLL.Books.Sync
                 }
                 else
                 {
-                    Models.Responses.BLLResponse response = await BooksApiBLL.UpdateBook(book);
+                    Models.Responses.BLLResponse response = await booksApiBLL.UpdateBook(book);
                     if (response.Success)
                         updated++;
                 }

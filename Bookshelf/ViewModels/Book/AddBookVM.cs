@@ -336,7 +336,7 @@ namespace Bookshelf.ViewModels
             //}
             if (string.IsNullOrEmpty(Pages))
             {
-                if (Int32.TryParse(Pages, out int pages))
+                if (int.TryParse(Pages, out int pages))
                 {
                     if (pages <= 0)
                         ValidInfo = false;

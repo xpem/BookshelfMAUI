@@ -104,7 +104,7 @@ namespace BLL.User
                 //maybe use a errorcodes instead a message?
                 else if (!success && userTokenRes is not null && (userTokenRes is "User/Password incorrect" or "Invalid Email"))
                     return new BLLResponse() { Success = false, Error = ErrorTypes.WrongEmailOrPassword };
-                else throw new Exception("Erro não mapeado");
+                else return new BLLResponse() { Success = false, Error = ErrorTypes.ServerUnavaliable }; ;
 
                 return new BLLResponse() { Success = false, Error = ErrorTypes.Unknown };
             }
