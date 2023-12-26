@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class AddBookVM : ViewModelBase, IQueryAttributable
+    public class AddBookVM(IBooksBLL _booksServices) : ViewModelBase, IQueryAttributable
     {
         private int? rate;
 
@@ -99,16 +99,8 @@ namespace Bookshelf.ViewModels
         /// </summary>
         public ICommand InsertBookCommand => new Command(async (e) => { await InsertBook(); });
 
-        readonly IBooksBLL booksServices;
-
         #endregion
-
         #endregion
-
-        public AddBookVM(IBooksBLL _booksServices)
-        {
-            booksServices = _booksServices;
-        }
 
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
@@ -131,7 +123,7 @@ namespace Bookshelf.ViewModels
 
                 if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(GoogleKey))
                 {
-                    Models.Books.Book _book = booksServices.GetBookbyTitleOrGoogleId(Title, GoogleKey);
+                    Models.Books.Book _book = _booksServices.GetBookbyTitleOrGoogleId(Title, GoogleKey);
 
                     if (_book is not null)
                     {
@@ -225,7 +217,7 @@ namespace Bookshelf.ViewModels
         /// <summary>
         /// get book by book key
         /// </summary>
-        protected async Task GetBook(int localId) => BuildBook(await booksServices.GetBook(localId));
+        protected async Task GetBook(int localId) => BuildBook(await _booksServices.GetBook(localId));
 
         private async Task InsertBook()
         {
@@ -283,7 +275,7 @@ namespace Bookshelf.ViewModels
                         book.LocalId = Convert.ToInt32(LocalId);
                         book.Id = Convert.ToInt32(BookId);
 
-                        Models.Responses.BLLResponse uptRes = await booksServices.UpdateBook(book);
+                        Models.Responses.BLLResponse uptRes = await _booksServices.UpdateBook(book);
 
                         if (!uptRes.Success)
                         {
@@ -296,7 +288,7 @@ namespace Bookshelf.ViewModels
                     }
                     else
                     {
-                        Models.Responses.BLLResponse addRes = await booksServices.AddBook(book);
+                        Models.Responses.BLLResponse addRes = await _booksServices.AddBook(book);
 
                         if (!addRes.Success)
                         {
@@ -324,7 +316,7 @@ namespace Bookshelf.ViewModels
             bool ValidInfo = true;
             if (string.IsNullOrEmpty(Title))
                 ValidInfo = false;
-            else if (booksServices.GetBookbyTitleOrGoogleId(Title, null) is not null)
+            else if (_booksServices.GetBookbyTitleOrGoogleId(Title, null) is not null)
                 ValidInfo = false;
 
             if (string.IsNullOrEmpty(Authors))

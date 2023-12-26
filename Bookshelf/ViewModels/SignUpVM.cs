@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public partial class SignUpVM : ViewModelBase
+    public partial class SignUpVM(IUserBLL userBLL) : ViewModelBase
     {
 
         string name, email;
@@ -26,10 +26,6 @@ namespace Bookshelf.ViewModels
         bool btnCreateUserIsEnabled = true;
 
         public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { btnCreateUserIsEnabled = value; OnPropertyChanged(); } } }
-
-        readonly IUserBLL UserBLL;
-
-        public SignUpVM(IUserBLL userBLL) { UserBLL = userBLL; }
 
         private async Task<bool> VerifyFileds()
         {
@@ -72,7 +68,7 @@ namespace Bookshelf.ViewModels
                 BtnCreateUserIsEnabled = false;
 
                 //
-                Models.Responses.BLLResponse resp = await UserBLL.AddUser(name, email, password);
+                Models.Responses.BLLResponse resp = await userBLL.AddUser(name, email, password);
 
                 if (!resp.Success)
                     await Application.Current.MainPage.DisplayAlert("Erro", "Não foi possível cadastrar o usuário!", null, "Ok");

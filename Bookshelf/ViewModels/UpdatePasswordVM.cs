@@ -5,19 +5,12 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class UpdatePasswordVM : ViewModelBase
+    public class UpdatePasswordVM(IUserBLL userBLL) : ViewModelBase
     {
 
         string email;
 
         public string Email { get => email; set { if (email != value) { email = value; OnPropertyChanged(); } } }
-
-        readonly IUserBLL UserBLL;
-
-        public UpdatePasswordVM(IUserBLL userBLL)
-        {
-            UserBLL = userBLL;
-        }
 
         public ICommand UpdatePasswordCommand => new Command(async () =>
         {
@@ -39,7 +32,7 @@ namespace Bookshelf.ViewModels
             }
             else
             {
-                await UserBLL.RecoverPassword(Email);
+                await userBLL.RecoverPassword(Email);
 
                 await Application.Current.MainPage.DisplayAlert("Aviso", "Email de alteração de senha enviado!", null, "Ok");
 

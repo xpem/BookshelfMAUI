@@ -6,12 +6,10 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class BookListVM : ViewModelBase, IQueryAttributable
+    public class BookListVM(IBooksBLL _booksServices) : ViewModelBase, IQueryAttributable
     {
 
         #region Vars
-
-        readonly IBooksBLL booksServices;
 
         public ObservableCollection<UIBookItem> BooksList { get; } = new();
 
@@ -73,11 +71,6 @@ namespace Bookshelf.ViewModels
 
         #endregion
 
-        public BookListVM(IBooksBLL _booksServices)
-        {
-            booksServices = _booksServices;
-        }
-
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             SituationIndex = Convert.ToInt16(query["Situation"].ToString());
@@ -122,7 +115,7 @@ namespace Bookshelf.ViewModels
             if (!string.IsNullOrEmpty(SearchTitle))
                 _searchText = SearchTitle.ToLower();
 
-            (List<UIBookItem> booksList, TotalBooksItens) = await booksServices.GetBooksByStatus(pageNumber, SituationIndex.Value, _searchText);
+            (List<UIBookItem> booksList, TotalBooksItens) = await _booksServices.GetBooksByStatus(pageNumber, SituationIndex.Value, _searchText);
 
             foreach (UIBookItem bookItem in booksList)
             {

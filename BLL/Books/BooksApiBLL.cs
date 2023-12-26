@@ -6,15 +6,11 @@ using System.Text.Json.Nodes;
 
 namespace BLL.Books
 {
-    public class BooksApiBLL : IBookApiBLL
+    public class BooksApiBLL(IBookApiDAL bookApiDAL) : IBookApiBLL
     {
-        readonly IBookApiDAL BookApiDAL;
-
-        public BooksApiBLL(IBookApiDAL bookApiDAL) { BookApiDAL = bookApiDAL; }
-
         public async Task<BLLResponse> AddBook(Book book)
         {
-            ApiResponse? resp = await BookApiDAL.AddBook(book);
+            ApiResponse? resp = await bookApiDAL.AddBook(book);
 
             if (resp is not null)
             {
@@ -49,7 +45,7 @@ namespace BLL.Books
 
         public async Task<BLLResponse> UpdateBook(Book book)
         {
-            ApiResponse? resp = await BookApiDAL.UpdateBook(book);
+            ApiResponse? resp = await bookApiDAL.UpdateBook(book);
 
             if (resp is not null && resp.Content is not null)
             {
@@ -72,7 +68,7 @@ namespace BLL.Books
 
         public async Task<BLLResponse> GetBooksByLastUpdate(DateTime lastUpdate)
         {
-            ApiResponse resp = await BookApiDAL.GetBooksByLastUpdate(lastUpdate);
+            ApiResponse resp = await bookApiDAL.GetBooksByLastUpdate(lastUpdate);
 
             return ApiResponseHandler.Handler<List<Book>>(resp);
         }

@@ -4,21 +4,11 @@ using Models.Books.Historic;
 
 namespace BLL.Books.Historic.Sync
 {
-    public class BookHistoricSyncBLL : IBookHistoricSyncBLL
+    public class BookHistoricSyncBLL(IBookHistoricApiBLL bookHistoricApiBLL, IBookHistoricDAL bookHistoricDAL) : IBookHistoricSyncBLL
     {
-
-        readonly IBookHistoricApiBLL BookHistoricApiBLL;
-        private readonly IBookHistoricDAL bookHistoricDAL;
-
-        public BookHistoricSyncBLL(IBookHistoricApiBLL bookHistoricApiBLL, IBookHistoricDAL bookHistoricDAL)
-        {
-            BookHistoricApiBLL = bookHistoricApiBLL;
-            this.bookHistoricDAL = bookHistoricDAL;
-        }
-
         public async Task ApiToLocalSync(int uid, DateTime lastUpdate)
         {
-            Models.Responses.BLLResponse respGetBookHistoricListByCreatedAt = await BookHistoricApiBLL.GetBookHistoricByLastCreatedAt(lastUpdate);
+            Models.Responses.BLLResponse respGetBookHistoricListByCreatedAt = await bookHistoricApiBLL.GetBookHistoricByLastCreatedAt(lastUpdate);
 
             if (respGetBookHistoricListByCreatedAt.Success && respGetBookHistoricListByCreatedAt.Content is not null)
             {

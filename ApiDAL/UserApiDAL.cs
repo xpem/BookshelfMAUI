@@ -5,7 +5,7 @@ namespace ApiDAL
 {
     public class UserApiDAL : IUserApiDAL
     {
-        private readonly UsersManagement.IUserService userService = new UsersManagement.UserService(ApiKeys.ApiAddress);
+        private readonly UsersManagement.UserService userService = new(ApiKeys.ApiAddress);
 
         public async Task<ApiResponse> AddUser(string name, string email, string password)
         {

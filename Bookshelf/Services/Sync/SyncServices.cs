@@ -5,7 +5,7 @@ using Models;
 
 namespace Bookshelf.Services.Sync
 {
-    public class SyncServices : ISyncServices
+    public class SyncServices(IUserBLL userBLL, IBookSyncBLL booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL) : ISyncServices
     {
         public SyncStatus Synchronizing { get; set; }
 
@@ -15,17 +15,6 @@ namespace Bookshelf.Services.Sync
         readonly int Interval = 40000;
 
         public bool ThreadIsRunning { get; set; } = false;
-
-        readonly IUserBLL UserBLL;
-        readonly IBookSyncBLL BookSyncBLL;
-        readonly IBookHistoricSyncBLL BookHistoricSyncBLL;
-
-        public SyncServices(IUserBLL userBLL, IBookSyncBLL booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL)
-        {
-            UserBLL = userBLL;
-            BookSyncBLL = booksSyncBLL;
-            BookHistoricSyncBLL = bookHistoricSyncBLL;
-        }
 
         public void StartThread()
         {
@@ -53,7 +42,7 @@ namespace Bookshelf.Services.Sync
         {
             try
             {
-                Models.User user = UserBLL.GetUserLocal().Result;
+                Models.User user = userBLL.GetUserLocal().Result;
 
                 if (user != null && Synchronizing != SyncStatus.Processing)
                 {
@@ -61,13 +50,13 @@ namespace Bookshelf.Services.Sync
 
                     if (Connectivity.NetworkAccess == NetworkAccess.Internet)
                     {
-                        await BookSyncBLL.LocalToApiSync(user.Id, user.LastUpdate);
+                        await booksSyncBLL.LocalToApiSync(user.Id, user.LastUpdate);
 
-                        await BookSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
+                        await booksSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
 
-                        await BookHistoricSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
+                        await bookHistoricSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
 
-                        await UserBLL.UpdateLocalUserLastUpdate(user.Id);
+                        await userBLL.UpdateLocalUserLastUpdate(user.Id);
                     }
 
                     Synchronizing = SyncStatus.Sleeping;
