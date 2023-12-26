@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class MainVM : ViewModelBase
+    public class MainVM(IBooksBLL _booksServices, ISyncServices syncService, IBuildDbBLL buildDbBLL) : ViewModelBase
     {
         private bool firstSyncIsRunnig = true;
 
@@ -44,23 +44,9 @@ namespace Bookshelf.ViewModels
 
         public Color IsConnected { get => isConnected; set { if (value != isConnected) { isConnected = value; OnPropertyChanged(nameof(IsConnected)); } } }
 
-        private readonly IBooksBLL booksServices;
-        private readonly ISyncServices SyncService;
-        private readonly IBuildDbBLL buildDbBLL;
-        private readonly IUserBLL UserBLL;
-
         private Timer _Timer;
         private int Interval = 2000;
         private bool ThreadIsRunning = false;
-
-        public MainVM(IBooksBLL _booksServices, IUserBLL userBLL, ISyncServices syncService, IBuildDbBLL buildDbBLL)
-        {
-            booksServices = _booksServices;
-            UserBLL = userBLL;
-            SyncService = syncService;
-            this.buildDbBLL = buildDbBLL;
-        }
-
 
         public ICommand OnAppearingCommand => new Command((e) =>
         {
@@ -98,7 +84,7 @@ namespace Bookshelf.ViewModels
                 {
                     IsConnected = Colors.Green;
 
-                    switch (SyncService.Synchronizing)
+                    switch (syncService.Synchronizing)
                     {
                         case SyncStatus.Processing: IsSync = Colors.Green; break;
                         case SyncStatus.Sleeping:
@@ -139,7 +125,7 @@ namespace Bookshelf.ViewModels
         public void GetBookshelfTotals()
         {
             //
-            Models.Books.Totals totals = booksServices.GetBookshelfTotals();
+            Models.Books.Totals totals = _booksServices.GetBookshelfTotals();
             //
             if (totals.IllRead.ToString() != IllRead) { IllRead = totals.IllRead.ToString(); }
             if (totals.Reading.ToString() != Reading) { Reading = totals.Reading.ToString(); }
@@ -168,10 +154,10 @@ namespace Bookshelf.ViewModels
             {
                 _Timer.Dispose();
                 //finalize sync thread process
-                SyncService.ThreadIsRunning = false;
+                syncService.ThreadIsRunning = false;
                 ThreadIsRunning = false;
 
-                SyncService.Timer?.Dispose();
+                syncService.Timer?.Dispose();
 
                 await buildDbBLL.CleanLocalDatabase();
 

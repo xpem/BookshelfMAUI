@@ -7,15 +7,8 @@ using System.Text;
 
 namespace ApiDAL
 {
-    public class HttpClientFunctions : HttpClient, IHttpClientFunctions
+    public class HttpClientFunctions(BookshelfDbContext bookshelfDbContext) : HttpClient, IHttpClientFunctions
     {
-        private readonly BookshelfDbContext bookshelfDbContext;
-
-        public HttpClientFunctions(BookshelfDbContext bookshelfDbContext)
-        {
-            this.bookshelfDbContext = bookshelfDbContext;
-        }
-
         public async Task<bool> CheckServer()
         {
             try
@@ -50,7 +43,7 @@ namespace ApiDAL
                     case RequestsTypes.Post:
                         if (jsonContent is not null)
                         {
-                            StringContent bodyContent = new(jsonContent, Encoding.UTF8, "application/json"); ;
+                            StringContent bodyContent = new(jsonContent, Encoding.UTF8, "application/json");
                             httpResponse = await httpClient.PostAsync(url, bodyContent);
                         }
                         else return new ApiResponse() { Success = false, Content = null, Error = ErrorTypes.BodyContentNull };
@@ -58,7 +51,7 @@ namespace ApiDAL
                     case RequestsTypes.Put:
                         if (jsonContent is not null)
                         {
-                            StringContent bodyContent = new(jsonContent, Encoding.UTF8, "application/json"); ;
+                            StringContent bodyContent = new(jsonContent, Encoding.UTF8, "application/json");
                             httpResponse = await httpClient.PutAsync(url, bodyContent);
                         }
                         else return new ApiResponse() { Success = false, Content = null, Error = ErrorTypes.BodyContentNull };
@@ -127,7 +120,9 @@ namespace ApiDAL
             {
                 UsersManagement.IUserService userService = new UsersManagement.UserService(ApiKeys.ApiAddress);
 
-                UsersManagement.Model.ApiResponse resp = await userService.GetUserTokenAsync(user.Email, PasswordHandler.Decrypt(user.Password));
+                string password = PasswordHandler.Decrypt(user.Password);
+
+                UsersManagement.Model.ApiResponse resp = await userService.GetUserTokenAsync(user.Email, password);
 
                 if (resp.Success && resp.Content is not null)
                 {

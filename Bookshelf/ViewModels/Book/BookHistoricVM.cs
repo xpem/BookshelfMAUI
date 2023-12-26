@@ -8,11 +8,10 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.Book
 {
-    public class BookHistoricVM : ViewModelBase, IQueryAttributable
+    public class BookHistoricVM(IBookHistoricBLL bookHistoricBLL) : ViewModelBase, IQueryAttributable
     {
-        #region Vars
 
-        readonly IBookHistoricBLL BookHistoricBLL;
+        #region Vars
 
         private int BookId { get; set; }
 
@@ -29,11 +28,6 @@ namespace Bookshelf.ViewModels.Book
 
         #endregion
 
-        public BookHistoricVM(IBookHistoricBLL bookHistoricBLL)
-        {
-            BookHistoricBLL = bookHistoricBLL;
-        }
-
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             BookId = Convert.ToInt32(query["BookId"]);
@@ -43,14 +37,14 @@ namespace Bookshelf.ViewModels.Book
 
             CurrentPage++;
 
-            _ = LoadListAsync(CurrentPage);
+            Task.Run(() => LoadListAsync(CurrentPage));
         }
 
-        private async Task LoadListAsync(int? pageNumber)
+        private void LoadListAsync(int? pageNumber)
         {
             IsBusy = true;
 
-            Models.Books.Historic.BookHistoricList bookHistoricList = BookHistoricBLL.GetBookHistoricByBookId(pageNumber, BookId);
+            Models.Books.Historic.BookHistoricList bookHistoricList = bookHistoricBLL.GetBookHistoricByBookId(pageNumber, BookId);
 
             foreach (Models.Books.Historic.BookHistoric bookHistoricObj in bookHistoricList.List)
             {

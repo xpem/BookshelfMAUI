@@ -4,15 +4,8 @@ using Models;
 
 namespace BLL
 {
-    public class BuildDbBLL : IBuildDbBLL
+    public class BuildDbBLL(BookshelfDbContext bookshelfDBContext) : IBuildDbBLL
     {
-        private readonly BookshelfDbContext bookshelfDBContext;
-
-        public BuildDbBLL(BookshelfDbContext bookshelfDBContext)
-        {
-            this.bookshelfDBContext = bookshelfDBContext;
-        }
-
         public async Task Init()
         {
             await bookshelfDBContext.Database.EnsureCreatedAsync();

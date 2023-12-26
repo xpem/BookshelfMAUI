@@ -4,17 +4,8 @@ using Models.Books.Historic;
 
 namespace BLL.Books.Historic
 {
-    public class BookHistoricBLL : IBookHistoricBLL
+    public class BookHistoricBLL(IBookHistoricDAL bookHistoricDAL, IUserDAL userDAL) : IBookHistoricBLL
     {
-        private readonly IBookHistoricDAL bookHistoricDAL;
-        private readonly IUserDAL userDAL;
-
-        public BookHistoricBLL(IBookHistoricDAL bookHistoricDAL, IUserDAL userDAL)
-        {
-            this.bookHistoricDAL = bookHistoricDAL;
-            this.userDAL = userDAL;
-        }
-
         public BookHistoricList GetBookHistoricByBookId(int? page, int bookId)
         {
             int uid = userDAL.GetUid();
