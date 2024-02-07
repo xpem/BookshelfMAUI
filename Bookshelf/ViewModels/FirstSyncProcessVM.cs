@@ -51,7 +51,7 @@ namespace Bookshelf.ViewModels
 
                         Progress = 0.75M;
 
-                        await UserBLL.UpdateLocalUserLastUpdate(user.Id);
+                        UserBLL.UpdateLocalUserLastUpdate(user.Id);
 
                         Progress = 1;
 

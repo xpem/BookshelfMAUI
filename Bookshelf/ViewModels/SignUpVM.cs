@@ -27,7 +27,7 @@ namespace Bookshelf.ViewModels
 
         public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { btnCreateUserIsEnabled = value; OnPropertyChanged(); } } }
 
-        private async Task<bool> VerifyFileds()
+        private bool VerifyFileds()
         {
             bool validInformation = true;
 
@@ -47,10 +47,10 @@ namespace Bookshelf.ViewModels
             else if (Password.Length < 4) validInformation = false;
 
             if (string.IsNullOrEmpty(ConfirmPassword)) validInformation = false;
-            else if (ConfirmPassword.ToUpper() != Password.ToUpper()) validInformation = false;
+            else if (!ConfirmPassword.Equals(Password, StringComparison.CurrentCultureIgnoreCase)) validInformation = false;
 
             if (!validInformation)
-                await Application.Current.MainPage.DisplayAlert("Aviso", "Preencha os campos e confirme a senha corretamente", null, "Ok");
+                _ = Application.Current.MainPage.DisplayAlert("Aviso", "Preencha os campos e confirme a senha corretamente", null, "Ok");
 
             return validInformation;
         }
@@ -63,7 +63,7 @@ namespace Bookshelf.ViewModels
                 return;
             }
 
-            if (await VerifyFileds())
+            if (VerifyFileds())
             {
                 BtnCreateUserIsEnabled = false;
 

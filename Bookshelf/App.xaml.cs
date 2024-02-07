@@ -11,7 +11,7 @@ public partial class App : Application
     {
         try
         {
-            Task.Run(buildDbBLL.Init).Wait();
+            buildDbBLL.Init();
 
             InitializeComponent();
 

@@ -48,14 +48,7 @@ namespace BLL.User
             return null;
         }
 
-        public async Task<(bool, string?)> GetUserToken(string email, string password)
-        {
-            try
-            {
-                return await userApiDAL.GetUserToken(email.ToLower(), password);
-            }
-            catch { throw; }
-        }
+        public async Task<(bool, string?)> GetUserToken(string email, string password) => await userApiDAL.GetUserToken(email.ToLower(), password);
 
         public Task<Models.User?> GetUserLocal() => userDAL.GetUserLocal();
 
@@ -102,6 +95,6 @@ namespace BLL.User
             catch (Exception ex) { throw ex; }
         }
 
-        public async Task UpdateLocalUserLastUpdate(int uid) => await userDAL.ExecuteUpdateLastUpdateUser(DateTime.Now, uid);
+        public void UpdateLocalUserLastUpdate(int uid) => userDAL.ExecuteUpdateLastUpdateUser(DateTime.Now, uid);
     }
 }

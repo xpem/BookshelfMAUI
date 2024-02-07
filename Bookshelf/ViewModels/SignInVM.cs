@@ -1,6 +1,4 @@
-﻿using BLL;
-using BLL.User;
-using Bookshelf.Services.Sync;
+﻿using BLL.User;
 using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using Plugin.Connectivity;
@@ -8,10 +6,9 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class SignInVM : ViewModelBase
+    public class SignInVM(IUserBLL userBLL) : ViewModelBase
     {
-
-        string email, password, signInText;
+        string email, password, signInText = "Acessar";
 
         bool btnSignEnabled = true;
 
@@ -22,18 +19,6 @@ namespace Bookshelf.ViewModels
         public string SignInText { get => signInText; set { if (signInText != value) { signInText = value; OnPropertyChanged(); } } }
 
         public bool BtnSignEnabled { get => btnSignEnabled; set { if (btnSignEnabled != value) { btnSignEnabled = value; OnPropertyChanged(); } } }
-
-        readonly ISyncServices SyncServices;
-        readonly IUserBLL UserBLL;
-        private readonly IBuildDbBLL BuildDbBLL;
-
-        public SignInVM(ISyncServices syncServices, IUserBLL userBLL, IBuildDbBLL buildDbBLL)
-        {
-            SyncServices = syncServices;
-            UserBLL = userBLL;
-            this.BuildDbBLL = buildDbBLL;
-            SignInText = "Acessar";
-        }
 
         public ICommand SignInCommand => new Command(async () =>
          {
@@ -51,7 +36,7 @@ namespace Bookshelf.ViewModels
 
                              //Task.Run(BuildDbBLL.Init).Wait();
 
-                             Models.Responses.BLLResponse resp = await UserBLL.SignIn(Email, Password);
+                             Models.Responses.BLLResponse resp = await userBLL.SignIn(Email, Password);
 
 
                              if (resp.Success)
