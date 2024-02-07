@@ -6,21 +6,12 @@ using System.Text.Json.Nodes;
 
 namespace BLL.User
 {
-    public class UserBLL : IUserBLL
+    public class UserBLL(IUserApiDAL userApiDAL, IUserDAL userDAL) : IUserBLL
     {
-        readonly IUserApiDAL UserApiDAL;
-        private readonly IUserDAL userDAL;
-
-        public UserBLL(IUserApiDAL userApiDAL, IUserDAL userDAL)
-        {
-            UserApiDAL = userApiDAL;
-            this.userDAL = userDAL;
-        }
-
         public async Task<BLLResponse> AddUser(string name, string email, string password)
         {
             email = email.ToLower();
-            ApiResponse? resp = await UserApiDAL.AddUser(name, email, password);
+            ApiResponse? resp = await userApiDAL.AddUser(name, email, password);
 
             if (resp is not null && resp.Success && resp.Content is not null)
             {
@@ -45,7 +36,7 @@ namespace BLL.User
         public async Task<string?> RecoverPassword(string email)
         {
             email = email.ToLower();
-            ApiResponse? resp = await UserApiDAL.RecoverPassword(email);
+            ApiResponse? resp = await userApiDAL.RecoverPassword(email);
 
             if (resp is not null && resp.Content is not null)
             {
@@ -57,14 +48,7 @@ namespace BLL.User
             return null;
         }
 
-        public async Task<(bool, string?)> GetUserToken(string email, string password)
-        {
-            try
-            {
-                return await UserApiDAL.GetUserToken(email.ToLower(), password);
-            }
-            catch { throw; }
-        }
+        public async Task<(bool, string?)> GetUserToken(string email, string password) => await userApiDAL.GetUserToken(email.ToLower(), password);
 
         public Task<Models.User?> GetUserLocal() => userDAL.GetUserLocal();
 
@@ -78,7 +62,7 @@ namespace BLL.User
 
                 if (success && userTokenRes != null)
                 {
-                    ApiResponse resp = await UserApiDAL.GetUser(userTokenRes);
+                    ApiResponse resp = await userApiDAL.GetUser(userTokenRes);
 
                     if (resp.Success && resp.Content != null)
                     {
@@ -111,6 +95,6 @@ namespace BLL.User
             catch (Exception ex) { throw ex; }
         }
 
-        public async Task UpdateLocalUserLastUpdate(int uid) => await userDAL.ExecuteUpdateLastUpdateUser(DateTime.Now, uid);
+        public void UpdateLocalUserLastUpdate(int uid) => userDAL.ExecuteUpdateLastUpdateUser(DateTime.Now, uid);
     }
 }

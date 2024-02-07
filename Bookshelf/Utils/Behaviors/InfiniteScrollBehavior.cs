@@ -59,8 +59,11 @@ namespace Bookshelf.Utils.Behaviors
         void InfiniteListView_ItemAppearing(object sender, ItemVisibilityEventArgs e)
         {
             IList items = AssociatedObject.ItemsSource as IList;
+            int index = 0;
 
-            if (items != null && e.Item == items[items.Count - 1])
+            if (items.Count > 0) { index = items.Count - 1; }
+
+            if (items != null && e.Item == items[index])
             {
                 if (LoadMoreCommand != null && LoadMoreCommand.CanExecute(null)) LoadMoreCommand.Execute(null);
             }

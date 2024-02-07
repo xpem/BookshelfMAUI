@@ -3,6 +3,6 @@
     public interface IBuildDbBLL
     {
         Task CleanLocalDatabase();
-        Task Init();
+        void Init();
     }
 }

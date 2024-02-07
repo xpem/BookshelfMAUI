@@ -14,6 +14,6 @@ namespace BLL.User
 
         Task<BLLResponse> SignIn(string email, string password);
 
-        Task UpdateLocalUserLastUpdate(int uid);
+        void UpdateLocalUserLastUpdate(int uid);
     }
 }

@@ -4,20 +4,13 @@ using Models;
 
 namespace BLL
 {
-    public class BuildDbBLL : IBuildDbBLL
+    public class BuildDbBLL(BookshelfDbContext bookshelfDBContext) : IBuildDbBLL
     {
-        private readonly BookshelfDbContext bookshelfDBContext;
-
-        public BuildDbBLL(BookshelfDbContext bookshelfDBContext)
+        public void Init()
         {
-            this.bookshelfDBContext = bookshelfDBContext;
-        }
+            bookshelfDBContext.Database.EnsureCreated();
 
-        public async Task Init()
-        {
-            await bookshelfDBContext.Database.EnsureCreatedAsync();
-
-            VersionDbTables? actualVesionDbTables = await bookshelfDBContext.VersionDbTables.FirstOrDefaultAsync();
+            VersionDbTables? actualVesionDbTables = bookshelfDBContext.VersionDbTables.FirstOrDefault();
 
             VersionDbTables newVersionDbTables = new() { Id = 0, VERSION = 8 };
 
@@ -25,16 +18,18 @@ namespace BLL
             {
                 if (actualVesionDbTables.VERSION != newVersionDbTables.VERSION)
                 {
-                    await bookshelfDBContext.Database.EnsureDeletedAsync();
+                    bookshelfDBContext.Database.EnsureDeleted();
+                    bookshelfDBContext.Database.EnsureCreated();
 
-                    await bookshelfDBContext.Database.EnsureCreatedAsync();
+                    bookshelfDBContext.VersionDbTables.Update(newVersionDbTables);
                 }
             }
             else
             {
                 bookshelfDBContext.VersionDbTables.Add(newVersionDbTables);
-                await bookshelfDBContext.SaveChangesAsync();
             }
+
+            bookshelfDBContext.SaveChanges();
         }
 
         public async Task CleanLocalDatabase()
