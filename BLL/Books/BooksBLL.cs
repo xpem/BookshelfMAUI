@@ -7,10 +7,6 @@ namespace BLL.Books
 {
     public class BooksBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL, IUserDAL userDAL) : IBooksBLL
     {
-        readonly IBookApiBLL BooksApiBLL = booksApiBLL;
-        private readonly IBookDAL bookDAL = bookDAL;
-        private readonly IUserDAL userDAL = userDAL;
-
         public Totals GetBookshelfTotals() => bookDAL.GetTotalBooksGroupedByStatus(userDAL.GetUid());
 
         public async Task<Book?> GetBook(int localId) => await bookDAL.GetBookByLocalIdAsync(userDAL.GetUid(), localId);
@@ -29,7 +25,7 @@ namespace BLL.Books
                 //
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    BLLResponse resp = await BooksApiBLL.UpdateBook(book);
+                    BLLResponse resp = await booksApiBLL.UpdateBook(book);
 
                     if (!resp.Success)
                     {
@@ -54,7 +50,7 @@ namespace BLL.Books
             {
                 if (CrossConnectivity.Current.IsConnected)
                 {
-                    BLLResponse response = await BooksApiBLL.AddBook(book);
+                    BLLResponse response = await booksApiBLL.AddBook(book);
 
                     if (response.Success) { book.Id = Convert.ToInt32(response.Content); }
                     else
@@ -153,7 +149,7 @@ namespace BLL.Books
                 await bookDAL.ExecuteInactivateBookAsync(localId, book.UserId);
 
                 if (CrossConnectivity.Current.IsConnected)
-                    await BooksApiBLL.UpdateBook(book);
+                    await booksApiBLL.UpdateBook(book);
             }
         }
 
@@ -174,7 +170,7 @@ namespace BLL.Books
                     await bookDAL.ExecuteUpdateBookStatusAsync(localId, status, score, comment, book.UserId);
 
                     if (CrossConnectivity.Current.IsConnected)
-                        _ = BooksApiBLL.UpdateBook(book);
+                        _ = booksApiBLL.UpdateBook(book);
                 }
             }
             catch (Exception ex) { throw ex; }

@@ -5,15 +5,11 @@ using Models.Responses;
 
 namespace BLL.Books.Historic
 {
-    public class BookHistoricApiBLL : IBookHistoricApiBLL
+    public class BookHistoricApiBLL(IBookHistoricApiDAL bookHistoricApiDAL) : IBookHistoricApiBLL
     {
-        readonly IBookHistoricApiDAL BookHistoricApiDAL;
-
-        public BookHistoricApiBLL(IBookHistoricApiDAL bookHistoricApiDAL) { BookHistoricApiDAL = bookHistoricApiDAL; }
-
         public async Task<BLLResponse> GetBookHistoricByLastCreatedAt(DateTime lastCreatedAt)
         {
-            ApiResponse resp = await BookHistoricApiDAL.GetBooksHistoricByLastCreatedAt(lastCreatedAt);
+            ApiResponse resp = await bookHistoricApiDAL.GetBooksHistoricByLastCreatedAt(lastCreatedAt);
 
             return ApiResponseHandler.Handler<List<Models.Books.Historic.BookHistoric>>(resp);
         }

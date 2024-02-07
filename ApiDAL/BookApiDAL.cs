@@ -5,21 +5,15 @@ using System.Text.Json;
 
 namespace ApiDAL
 {
-    public class BookApiDAL : IBookApiDAL
+    public class BookApiDAL(IHttpClientFunctions httpClientFunctions) : IBookApiDAL
     {
-
-        readonly IHttpClientFunctions HttpClientFunctions;
-
-        public BookApiDAL(IHttpClientFunctions httpClientFunctions) { HttpClientFunctions = httpClientFunctions; }
-
-
         public async Task<ApiResponse> AddBook(Book book)
         {
             try
             {
                 string json = JsonSerializer.Serialize(book);
 
-                return await HttpClientFunctions.AuthRequest(RequestsTypes.Post, ApiKeys.ApiAddress + "/book", json);
+                return await httpClientFunctions.AuthRequest(RequestsTypes.Post, ApiKeys.ApiAddress + "/bookshelf/book", json);
             }
             catch (Exception ex) { throw ex; }
         }
@@ -30,13 +24,13 @@ namespace ApiDAL
             {
                 string json = JsonSerializer.Serialize(book);
 
-                return await HttpClientFunctions.AuthRequest(RequestsTypes.Put, ApiKeys.ApiAddress + "/Book/" + book.Id, json);
+                return await httpClientFunctions.AuthRequest(RequestsTypes.Put, ApiKeys.ApiAddress + "/bookshelf/book/" + book.Id, json);
             }
             catch (Exception ex) { throw ex; }
         }
 
         public async Task<ApiResponse> GetBooksByLastUpdate(DateTime lastUpdate) =>
-            await HttpClientFunctions.AuthRequest(RequestsTypes.Get, ApiKeys.ApiAddress + "/book/byupdatedat/" + lastUpdate.ToString("yyyy-MM-ddThh:mm:ss.fff"));
+            await httpClientFunctions.AuthRequest(RequestsTypes.Get, ApiKeys.ApiAddress + "/bookshelf/book/byupdatedat/" + lastUpdate.ToString("yyyy-MM-ddThh:mm:ss.fff"));
 
     }
 }

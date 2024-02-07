@@ -7,9 +7,8 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class BookDetailVM : ViewModelBase, IQueryAttributable
+    public class BookDetailVM(IBooksBLL _booksServices) : ViewModelBase, IQueryAttributable
     {
-        readonly IBooksBLL booksServices;
 
         #region bind variables.
 
@@ -112,11 +111,6 @@ namespace Bookshelf.ViewModels
 
         #endregion
 
-        public BookDetailVM(IBooksBLL _booksServices)
-        {
-            booksServices = _booksServices;
-        }
-
         public ICommand ConfirmCommand => new Command(async (e) => { await UpdateBookSituation(); });
 
         public ICommand CallHistoricCommand => new Command(async (e) => await Shell.Current.GoToAsync($"{nameof(BookHistoric)}?BookId={(ExternalId)}"));
@@ -134,7 +128,7 @@ namespace Bookshelf.ViewModels
             {
                 if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir este livro?", "Sim", "Cancelar"))
                 {
-                    _ = booksServices.InactivateBook(LocalId);
+                    _ = _booksServices.InactivateBook(LocalId);
 
                     if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
                     {
@@ -154,7 +148,7 @@ namespace Bookshelf.ViewModels
 
         private async Task GetBook(int bookId)
         {
-            Models.Books.Book book = await booksServices.GetBook(bookId);
+            Models.Books.Book book = await _booksServices.GetBook(bookId);
 
             if (book.Id > 0)
                 ExternalId = book.Id.Value;
@@ -263,7 +257,7 @@ namespace Bookshelf.ViewModels
 
             if (alterou)
             {
-                _ = booksServices.UpdateBookSituation(LocalId, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
+                _ = _booksServices.UpdateBookSituation(LocalId, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
 
                 if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Situação alterada", null, "Ok"))
                 {
