@@ -11,7 +11,7 @@ namespace BLL.User
         public async Task<BLLResponse> AddUser(string name, string email, string password)
         {
             email = email.ToLower();
-            ApiResponse? resp = await userApiDAL.AddUser(name, email, password);
+            ApiResponse? resp = await userApiDAL.AddUserAsync(name, email, password);
 
             if (resp is not null && resp.Success && resp.Content is not null)
             {
@@ -36,7 +36,7 @@ namespace BLL.User
         public async Task<string?> RecoverPassword(string email)
         {
             email = email.ToLower();
-            ApiResponse? resp = await userApiDAL.RecoverPassword(email);
+            ApiResponse? resp = await userApiDAL.RecoverPasswordAsync(email);
 
             if (resp is not null && resp.Content is not null)
             {
@@ -48,7 +48,7 @@ namespace BLL.User
             return null;
         }
 
-        public async Task<(bool, string?)> GetUserToken(string email, string password) => await userApiDAL.GetUserToken(email.ToLower(), password);
+        public async Task<(bool, string?)> GetUserToken(string email, string password) => await userApiDAL.GetUserTokenAsync(email.ToLower(), password);
 
         public Task<Models.User?> GetUserLocal() => userDAL.GetUserLocal();
 
@@ -62,7 +62,7 @@ namespace BLL.User
 
                 if (success && userTokenRes != null)
                 {
-                    ApiResponse resp = await userApiDAL.GetUser(userTokenRes);
+                    ApiResponse resp = await userApiDAL.GetUserAsync(userTokenRes);
 
                     if (resp.Success && resp.Content != null)
                     {
@@ -81,7 +81,7 @@ namespace BLL.User
 
                             await userDAL.ExecuteAddUser(user);
 
-                            return new BLLResponse() { Success = true };
+                            return new BLLResponse() { Success = true, Content = user.Id };
                         }
                     }
                 }

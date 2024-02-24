@@ -8,7 +8,7 @@ namespace BLL.Books.Historic
     {
         public BookHistoricList GetBookHistoricByBookId(int? page, int bookId)
         {
-            int uid = userDAL.GetUid();
+            int uid = userDAL.GetUidAsync().Result;
 
             int pageSize = 10;
 

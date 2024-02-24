@@ -41,6 +41,9 @@ namespace Bookshelf.ViewModels
 
                              if (resp.Success)
                              {
+                                 if (resp.Content is not null and int)
+                                     ((App)App.Current).Uid = (int)resp.Content;
+
                                  await Shell.Current.GoToAsync($"{nameof(FirstSyncProcess)}", false);
 
                                  //Application.Current.MainPage = new NavigationPage();

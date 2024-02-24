@@ -1,23 +1,31 @@
 ﻿using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
+using Models;
 using Models.Books;
+using System.Reflection.Metadata;
 
 namespace DbContextDAL
 {
     public class BookDAL(BookshelfDbContext bookshelfDbContext) : IBookDAL
     {
-        public int ExecuteUpdateBook(Book book)
+        public async Task<int> ExecuteUpdateBookAsync(Book book)
         {
-            bookshelfDbContext.ChangeTracker?.Clear();
-            bookshelfDbContext.Update(book);
-            return bookshelfDbContext.SaveChanges();
+            return await bookshelfDbContext.Book.Where(x => x.UserId == book.UserId && x.LocalId == book.LocalId).ExecuteUpdateAsync(y => y
+            .SetProperty(z => z.Isbn, book.Isbn)
+            .SetProperty(z => z.LocalTempId, book.LocalTempId)
+            .SetProperty(z => z.Title, book.Title).SetProperty(z => z.SubTitle, book.SubTitle)
+            .SetProperty(z => z.Authors, book.Authors).SetProperty(z => z.Volume, book.Volume)
+            .SetProperty(z => z.Pages, book.Pages).SetProperty(z => z.Year, book.Year).SetProperty(z => z.Status, book.Status)
+            .SetProperty(z => z.Genre, book.Genre).SetProperty(z => z.Isbn, book.Isbn).SetProperty(z => z.Cover, book.Cover).SetProperty(z => z.GoogleId, book.GoogleId)
+            .SetProperty(z => z.Score, book.Score).SetProperty(z => z.Comment, book.Comment)
+            .SetProperty(z => z.CreatedAt, book.CreatedAt).SetProperty(z => z.UpdatedAt, book.UpdatedAt).SetProperty(z => z.Inactive, book.Inactive));
+
         }
 
-        public Totals GetTotalBooksGroupedByStatus(int uid)
+        public async Task<Totals> GetTotalBooksGroupedByStatusAsync(int uid)
         {
             Totals totals = new();
-
-            var list = bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).GroupBy(x => x.Status).Select(x => new { status = x.Key, count = x.Count() }).ToList();
+            var list = await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).GroupBy(x => x.Status).Select(x => new { status = x.Key, count = x.Count() }).ToListAsync();
 
             if (list is not null && list.Count > 0)
             {
@@ -53,9 +61,11 @@ namespace DbContextDAL
 
         public int ExecuteAddBook(Book book)
         {
+            bookshelfDbContext.Book.Add(book);
+            int resp = bookshelfDbContext.SaveChanges();
+
             bookshelfDbContext.ChangeTracker?.Clear();
-            bookshelfDbContext.Add(book);         
-            return bookshelfDbContext.SaveChanges();
+            return resp;
         }
 
         public Book? GetBookByTitleOrGoogleId(int uid, string title, string googleId)
@@ -69,26 +79,18 @@ namespace DbContextDAL
 
         public async Task<int> ExecuteInactivateBookAsync(int localId, int userId)
         {
-            bookshelfDbContext.ChangeTracker?.Clear();
-
-            bookshelfDbContext.Book.Where(x => x.UserId == userId && x.LocalId == localId).ExecuteUpdate(y => y
-            .SetProperty(z => z.Inactive, true)
-            .SetProperty(z => z.UpdatedAt, DateTime.Now));
-
-            return await bookshelfDbContext.SaveChangesAsync();
+            return await bookshelfDbContext.Book.Where(x => x.UserId == userId && x.LocalId == localId).ExecuteUpdateAsync(y => y
+              .SetProperty(z => z.Inactive, true)
+              .SetProperty(z => z.UpdatedAt, DateTime.Now));
         }
 
         public async Task<int> ExecuteUpdateBookStatusAsync(int localId, Status status, int score, string comment, int uid)
         {
-            bookshelfDbContext.ChangeTracker?.Clear();
-
-            bookshelfDbContext.Book.Where(x => x.UserId == uid && x.LocalId == localId).ExecuteUpdate(y => y
-              .SetProperty(z => z.Status, status)
-              .SetProperty(z => z.Score, score)
-              .SetProperty(z => z.Comment, comment)
-              .SetProperty(z => z.UpdatedAt, DateTime.Now));
-
-            return await bookshelfDbContext.SaveChangesAsync();
+            return await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.LocalId == localId).ExecuteUpdateAsync(y => y
+                .SetProperty(z => z.Status, status)
+                .SetProperty(z => z.Score, score)
+                .SetProperty(z => z.Comment, comment)
+                .SetProperty(z => z.UpdatedAt, DateTime.Now));
         }
     }
 }

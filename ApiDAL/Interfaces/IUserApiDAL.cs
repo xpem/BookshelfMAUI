@@ -4,12 +4,12 @@ namespace ApiDAL.Interfaces
 {
     public interface IUserApiDAL
     {
-        Task<ApiResponse> AddUser(string name, string email, string password);
+        Task<ApiResponse> AddUserAsync(string name, string email, string password);
 
-        Task<ApiResponse> RecoverPassword(string email);
+        Task<ApiResponse> RecoverPasswordAsync(string email);
 
-        Task<(bool, string?)> GetUserToken(string email, string password);
+        Task<(bool, string?)> GetUserTokenAsync(string email, string password);
 
-        Task<ApiResponse> GetUser(string token);
+        Task<ApiResponse> GetUserAsync(string token);
     }
 }

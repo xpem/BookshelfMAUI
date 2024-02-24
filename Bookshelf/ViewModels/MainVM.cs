@@ -54,7 +54,7 @@ namespace Bookshelf.ViewModels
 
             IllRead = Reading = Read = Interrupted = "...";
 
-            Task.Run(GetBookshelfTotals).Wait();
+            Task.Run(GetBookshelfTotalsAsync).Wait();
 
             SetTimer();
         });
@@ -89,7 +89,7 @@ namespace Bookshelf.ViewModels
                         case SyncStatus.Processing: IsSync = Colors.Green; break;
                         case SyncStatus.Sleeping:
 
-                            await Task.Run(GetBookshelfTotals);
+                            await Task.Run(GetBookshelfTotalsAsync);
 
                             IsSync = Colors.Gray;
 
@@ -122,10 +122,10 @@ namespace Bookshelf.ViewModels
             }
         }
 
-        public void GetBookshelfTotals()
+        public async Task GetBookshelfTotalsAsync()
         {
             //
-            Models.Books.Totals totals = _booksServices.GetBookshelfTotals();
+            Models.Books.Totals totals = await _booksServices.GetBookshelfTotalsAsync(((App)Application.Current).Uid);
             //
             if (totals.IllRead.ToString() != IllRead) { IllRead = totals.IllRead.ToString(); }
             if (totals.Reading.ToString() != Reading) { Reading = totals.Reading.ToString(); }

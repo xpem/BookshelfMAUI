@@ -7,20 +7,21 @@ namespace BLL.Books
 {
     public class BooksBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL, IUserDAL userDAL) : IBooksBLL
     {
-        public Totals GetBookshelfTotals() => bookDAL.GetTotalBooksGroupedByStatus(userDAL.GetUid());
 
-        public async Task<Book?> GetBook(int localId) => await bookDAL.GetBookByLocalIdAsync(userDAL.GetUid(), localId);
+        public async Task<Totals> GetBookshelfTotalsAsync(int uid) => await bookDAL.GetTotalBooksGroupedByStatusAsync(uid);
+
+        public async Task<Book?> GetBook(int localId) => await bookDAL.GetBookByLocalIdAsync(userDAL.GetUidAsync().Result, localId);
 
         public async Task<BLLResponse> UpdateBook(Book book)
         {
-            Book? bookResponse = Task.Run(() => bookDAL.GetBookByTitleAsync(userDAL.GetUid(), book.Title)).Result;
+            Book? bookResponse = await bookDAL.GetBookByTitleAsync(await userDAL.GetUidAsync(), book.Title);
 
             if (bookResponse != null && bookResponse.LocalId.Equals(book.LocalId))
             {
                 book.UpdatedAt = DateTime.Now;
-                book.UserId = userDAL.GetUid();
+                book.UserId = await userDAL.GetUidAsync();
 
-                bookDAL.ExecuteUpdateBook(book);
+                await bookDAL.ExecuteUpdateBookAsync(book);
 
                 //
                 if (CrossConnectivity.Current.IsConnected)
@@ -42,7 +43,7 @@ namespace BLL.Books
         public async Task<BLLResponse> AddBook(Book book)
         {
             book.UpdatedAt = DateTime.Now;
-            int uid = userDAL.GetUid();
+            int uid = await userDAL.GetUidAsync();
 
             Book? bookResponse = Task.Run(() => bookDAL.GetBookByTitleAsync(uid, book.Title)).Result;
 
@@ -78,7 +79,7 @@ namespace BLL.Books
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public async Task<(List<UIBookItem>, int)> GetBooksByStatus(int? page, int status, string? textoBusca = null)
+        public async Task<(List<UIBookItem>, int)> GetBooksByStatusAsync(int? page, int status, string? textoBusca = null)
         {
             List<UIBookItem> listBooksItens = [];
             int total = 0;
@@ -87,9 +88,9 @@ namespace BLL.Books
             List<Book> list = [];
 
             if (status > 0)
-                list = bookDAL.GetBooksByStatus(userDAL.GetUid(), (Status)status);
+                list = bookDAL.GetBooksByStatus(await userDAL.GetUidAsync(), (Status)status);
             else
-                list = await bookDAL.GetBooks(userDAL.GetUid());
+                list = await bookDAL.GetBooks(await userDAL.GetUidAsync());
 
             if (list.Count > 0 && !string.IsNullOrEmpty(textoBusca))
                 list = list.Where(x => x.Title != null && x.Title.Contains(textoBusca, StringComparison.CurrentCultureIgnoreCase)).ToList();
@@ -136,14 +137,14 @@ namespace BLL.Books
             return (listBooksItens, total);
         }
 
-        public async Task InactivateBook(int localId)
+        public async Task InactivateBookAsync(int localId)
         {
             Book? book = await GetBook(localId);
 
             if (book is not null)
             {
                 book.UpdatedAt = DateTime.Now;
-                book.UserId = userDAL.GetUid();
+                book.UserId = await userDAL.GetUidAsync();
                 book.Inactive = true;
 
                 await bookDAL.ExecuteInactivateBookAsync(localId, book.UserId);
@@ -153,7 +154,7 @@ namespace BLL.Books
             }
         }
 
-        public async Task UpdateBookSituation(int localId, Status status, int score, string comment)
+        public async Task UpdateBookSituationAsync(int localId, Status status, int score, string comment)
         {
             try
             {
@@ -165,7 +166,7 @@ namespace BLL.Books
                     book.Status = status;
                     book.Score = score;
                     book.Comment = comment;
-                    book.UserId = userDAL.GetUid();
+                    book.UserId = await userDAL.GetUidAsync();
 
                     await bookDAL.ExecuteUpdateBookStatusAsync(localId, status, score, comment, book.UserId);
 
@@ -177,6 +178,6 @@ namespace BLL.Books
         }
 
         public Book? GetBookbyTitleOrGoogleId(string title, string googleId)
-            => bookDAL.GetBookByTitleOrGoogleId(userDAL.GetUid(), title, googleId);
+            => bookDAL.GetBookByTitleOrGoogleId(userDAL.GetUidAsync().Result, title, googleId);
     }
 }

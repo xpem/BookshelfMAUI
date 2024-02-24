@@ -5,7 +5,7 @@ namespace BLL.Books
 {
     public interface IBooksBLL
     {
-        Totals GetBookshelfTotals();
+        Task<Totals> GetBookshelfTotalsAsync(int uid);
 
         Task<Book?> GetBook(int localId);
 
@@ -17,10 +17,10 @@ namespace BLL.Books
 
         Book? GetBookbyTitleOrGoogleId(string title, string googleId);
 
-        Task<(List<UIBookItem>, int total)> GetBooksByStatus(int? page, int Situation, string? textoBusca);
+        Task<(List<UIBookItem>, int total)> GetBooksByStatusAsync(int? page, int Situation, string? textoBusca);
 
-        Task InactivateBook(int LocalId);
+        Task InactivateBookAsync(int LocalId);
 
-        Task UpdateBookSituation(int LocalId, Status status, int rate, string comment);
+        Task UpdateBookSituationAsync(int LocalId, Status status, int rate, string comment);
     }
 }

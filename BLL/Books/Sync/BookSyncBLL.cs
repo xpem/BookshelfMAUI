@@ -39,7 +39,7 @@ namespace BLL.Books.Sync
                         }
                         else if (apiBook.UpdatedAt > bookLastUpdate)
                         {
-                            bookDAL.ExecuteUpdateBook(apiBook);
+                            await bookDAL.ExecuteUpdateBookAsync(apiBook);
                             updated++;
                         }
 
@@ -75,7 +75,7 @@ namespace BLL.Books.Sync
                     {
                         book.LocalTempId = null;
                         book.Id = Convert.ToInt32(addBookResp.Content);
-                        bookDAL.ExecuteUpdateBook(book);
+                        await bookDAL.ExecuteUpdateBookAsync(book);
                         added++;
                     }
                     else throw new Exception($"Não foi possivel sincronizar o livro {book.Id}, res: {addBookResp.Error}");

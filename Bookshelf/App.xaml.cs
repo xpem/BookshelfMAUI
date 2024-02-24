@@ -7,6 +7,8 @@ namespace Bookshelf;
 
 public partial class App : Application
 {
+    public int Uid { get; set; }
+
     public App(ISyncServices syncServices, IUserBLL userBLL, IBuildDbBLL buildDbBLL)
     {
         try
@@ -21,6 +23,7 @@ public partial class App : Application
 
             if (user != null)
             {
+                Uid = user.Id;
                 syncServices.StartThread();
                 Shell.Current.GoToAsync($"//{nameof(Main)}");
             }
