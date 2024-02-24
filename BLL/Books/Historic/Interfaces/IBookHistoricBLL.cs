@@ -4,6 +4,6 @@ namespace BLL.Books.Historic.Interfaces
 {
     public interface IBookHistoricBLL
     {
-        BookHistoricList GetBookHistoricByBookId(int? page, int bookId);
+        Task<BookHistoricList> GetBookHistoricByBookIdAsync(int uid, int? page, int bookId);
     }
 }

@@ -5,6 +5,6 @@ namespace DbContextDAL
     public interface IBookHistoricDAL
     {
         Task<int> ExecuteAddBookHistoricAsync(BookHistoric bookHistoric, int uid);
-        List<BookHistoric> GetBookHistoricByBookId(int uid, int bookId);
+        Task<List<BookHistoric>> GetBookHistoricByBookIdAsync(int uid, int bookId);
     }
 }

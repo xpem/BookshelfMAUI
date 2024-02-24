@@ -4,15 +4,13 @@ using Models.Books.Historic;
 
 namespace BLL.Books.Historic
 {
-    public class BookHistoricBLL(IBookHistoricDAL bookHistoricDAL, IUserDAL userDAL) : IBookHistoricBLL
+    public class BookHistoricBLL(IBookHistoricDAL bookHistoricDAL) : IBookHistoricBLL
     {
-        public BookHistoricList GetBookHistoricByBookId(int? page, int bookId)
+        public async Task<BookHistoricList> GetBookHistoricByBookIdAsync(int uid, int? page, int bookId)
         {
-            int uid = userDAL.GetUidAsync().Result;
-
             int pageSize = 10;
 
-            List<BookHistoric> list = bookHistoricDAL.GetBookHistoricByBookId(uid, bookId);
+            List<BookHistoric> list = await bookHistoricDAL.GetBookHistoricByBookIdAsync(uid, bookId);
 
             int total = list.Count;
             if (page != null)

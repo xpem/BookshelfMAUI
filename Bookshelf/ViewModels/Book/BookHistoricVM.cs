@@ -40,11 +40,11 @@ namespace Bookshelf.ViewModels.Book
             Task.Run(() => LoadListAsync(CurrentPage));
         }
 
-        private void LoadListAsync(int? pageNumber)
+        private async Task LoadListAsync(int? pageNumber)
         {
             IsBusy = true;
 
-            Models.Books.Historic.BookHistoricList bookHistoricList = bookHistoricBLL.GetBookHistoricByBookId(pageNumber, BookId);
+            Models.Books.Historic.BookHistoricList bookHistoricList = await bookHistoricBLL.GetBookHistoricByBookIdAsync(((App)App.Current).Uid, pageNumber, BookId);
 
             foreach (Models.Books.Historic.BookHistoric bookHistoricObj in bookHistoricList.List)
             {
@@ -109,9 +109,8 @@ namespace Bookshelf.ViewModels.Book
             Task.Run(() => LoadListAsync(CurrentPage));
         });
 
-        private static string BuildStatusText(int statusId)
-        {
-            return statusId switch
+        private static string BuildStatusText(int statusId) =>
+            statusId switch
             {
                 0 => "Nenhum",
                 1 => "Vou ler",
@@ -120,7 +119,5 @@ namespace Bookshelf.ViewModels.Book
                 4 => "Interrompido",
                 _ => "Desconhecido",
             };
-        }
-
     }
 }

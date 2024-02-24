@@ -7,20 +7,20 @@ namespace BLL.Books
     {
         Task<Totals> GetBookshelfTotalsAsync(int uid);
 
-        Task<Book?> GetBook(int localId);
+        Task<Book?> GetBookAsync(int uid,int localId);
 
-        Task<BLLResponse> UpdateBook(Book book);
+        Task<BLLResponse> UpdateBookAsync(int uid, Book book);
 
-        Task<BLLResponse> AddBook(Book book);
+        Task<BLLResponse> AddBookAsync(int uid, Book book);
 
         //bool VerifyBookbyTitle(string title);
 
-        Book? GetBookbyTitleOrGoogleId(string title, string googleId);
+        Book? GetBookbyTitleOrGoogleId(int uid, string title, string googleId);
 
-        Task<(List<UIBookItem>, int total)> GetBooksByStatusAsync(int? page, int Situation, string? textoBusca);
+        Task<List<UIBookItem>> GetBooksByStatusAsync(int uid, int page, int Situation, string? textoBusca);
 
-        Task InactivateBookAsync(int LocalId);
+        Task InactivateBookAsync(int uid, int LocalId);
 
-        Task UpdateBookSituationAsync(int LocalId, Status status, int rate, string comment);
+        Task UpdateBookSituationAsync(int uid, int LocalId, Status status, int rate, string comment);
     }
 }

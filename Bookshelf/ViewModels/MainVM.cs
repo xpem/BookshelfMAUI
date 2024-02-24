@@ -159,6 +159,8 @@ namespace Bookshelf.ViewModels
 
                 syncService.Timer?.Dispose();
 
+                ((App)App.Current).Uid = 0;
+
                 await buildDbBLL.CleanLocalDatabase();
 
 

@@ -12,9 +12,13 @@ namespace DbContextDAL
         Task<Book?> GetBookByLocalIdAsync(int uid, int localId);
         Task<Book?> GetBookByTitleAsync(int uid, string title);
         Book? GetBookByTitleOrGoogleId(int uid, string title, string googleId);
-        Task<List<Book>> GetBooks(int uid);
-        List<Book> GetBooksByStatus(int uid, Status status);
+
         DateTime? GetBookUpdatedAtById(int id);
+
         Task<Totals> GetTotalBooksGroupedByStatusAsync(int uid);
+
+        Task<List<Book>> GetBooksAsync(int uid, int page);
+
+        Task<List<Book>> GetBooksByStatusAsync(int uid, Status status, int page);
     }
 }
