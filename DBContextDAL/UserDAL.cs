@@ -8,7 +8,7 @@ namespace DbContextDAL
     {
         public async Task<Models.User?> GetUserLocal() => await bookshelfDbContext.User.FirstOrDefaultAsync();
 
-        public int GetUid() => bookshelfDbContext.User.Select(x => x.Id).First();
+        public Task<int> GetUidAsync() => bookshelfDbContext.User.Select(x => x.Id).FirstAsync();
 
         public async Task<int> ExecuteAddUser(User user)
         {

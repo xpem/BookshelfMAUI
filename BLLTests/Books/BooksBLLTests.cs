@@ -113,13 +113,13 @@ namespace BLL.Books.Tests
 
             Mock<IUserDAL> mockUserDAL = new();
 
-            mockUserDAL.Setup(x => x.GetUid()).Returns(1);
+            mockUserDAL.Setup(x => x.GetUidAsync()).ReturnsAsync(1);
 
             IUserBLL userBLL = new UserBLL(userAPIDAL.Object, mockUserDAL.Object);
 
             BooksBLL booksBLL = new(bookApiBLL.Object, bookDAL, mockUserDAL.Object);
 
-            Totals? result = booksBLL.GetBookshelfTotals();
+            Totals? result = booksBLL.GetBookshelfTotalsAsync(1).Result;
 
             if (result is not null && result.IllRead == 1 && result.Reading == 2 && result.Read == 3 && result.Interrupted == 0)
                 Assert.IsTrue(true);
@@ -172,7 +172,7 @@ namespace BLL.Books.Tests
             Mock<IUserApiDAL> userAPIDAL = new();
             Mock<IUserDAL> mockUserDAL = new();
 
-            mockUserDAL.Setup(x => x.GetUid()).Returns(1);
+            mockUserDAL.Setup(x => x.GetUidAsync()).ReturnsAsync(1);
 
             Mock<IBookDAL> mockBookDAL = new();
 
@@ -190,7 +190,7 @@ namespace BLL.Books.Tests
             };
 
             mockBookDAL.Setup(x => x.GetBookByTitleAsync(1, "Teste de Título 6")).ReturnsAsync(book);
-            mockBookDAL.Setup(x => x.ExecuteUpdateBook(It.IsAny<Book>())).Returns(1);
+            mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(It.IsAny<Book>())).ReturnsAsync(1);
 
             BLLResponse bLLResponse = new() { Success = true };
 

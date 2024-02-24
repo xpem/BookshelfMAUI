@@ -128,7 +128,7 @@ namespace Bookshelf.ViewModels
             {
                 if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir este livro?", "Sim", "Cancelar"))
                 {
-                    _ = _booksServices.InactivateBook(LocalId);
+                    _ = _booksServices.InactivateBookAsync(LocalId);
 
                     if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
                     {
@@ -257,7 +257,7 @@ namespace Bookshelf.ViewModels
 
             if (alterou)
             {
-                _ = _booksServices.UpdateBookSituation(LocalId, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
+                _ = _booksServices.UpdateBookSituationAsync(LocalId, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
 
                 if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Situação alterada", null, "Ok"))
                 {

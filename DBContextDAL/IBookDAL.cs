@@ -6,7 +6,7 @@ namespace DbContextDAL
     {
         int ExecuteAddBook(Book book);
         Task<int> ExecuteInactivateBookAsync(int localId, int userId);
-        int ExecuteUpdateBook(Book book);
+        Task<int> ExecuteUpdateBookAsync(Book book);
         Task<int> ExecuteUpdateBookStatusAsync(int localId, Status status, int score, string comment, int uid);
         List<Book> GetBookByAfterUpdatedAt(int uid, DateTime lastUpdate);
         Task<Book?> GetBookByLocalIdAsync(int uid, int localId);
@@ -15,6 +15,6 @@ namespace DbContextDAL
         Task<List<Book>> GetBooks(int uid);
         List<Book> GetBooksByStatus(int uid, Status status);
         DateTime? GetBookUpdatedAtById(int id);
-        Totals GetTotalBooksGroupedByStatus(int uid);
+        Task<Totals> GetTotalBooksGroupedByStatusAsync(int uid);
     }
 }

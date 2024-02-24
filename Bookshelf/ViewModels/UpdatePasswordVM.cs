@@ -32,7 +32,7 @@ namespace Bookshelf.ViewModels
             }
             else
             {
-                await userBLL.RecoverPassword(Email);
+                _ = userBLL.RecoverPassword(Email);
 
                 await Application.Current.MainPage.DisplayAlert("Aviso", "Email de alteração de senha enviado!", null, "Ok");
 
