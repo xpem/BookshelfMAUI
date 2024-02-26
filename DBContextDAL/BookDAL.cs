@@ -57,10 +57,10 @@ namespace DbContextDAL
         public List<Book> GetBookByAfterUpdatedAt(int uid, DateTime lastUpdate)
             => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.UpdatedAt > lastUpdate).ToList();
 
-        public int ExecuteAddBook(Book book)
+        public async Task<int> ExecuteAddBookAsync(Book book)
         {
             bookshelfDbContext.Book.Add(book);
-            int resp = bookshelfDbContext.SaveChanges();
+            int resp = await bookshelfDbContext.SaveChangesAsync();
 
             bookshelfDbContext.ChangeTracker?.Clear();
             return resp;
@@ -71,7 +71,8 @@ namespace DbContextDAL
         // x.Title.ToLower().Equals(title.ToLower())
 
         public Task< List<Book>> GetBooksByStatusAsync(int uid, Status status, int page)
-        => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Status == status && x.Inactive == false).OrderByDescending(x => x.UpdatedAt).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Status == status && x.Inactive == false)
+            .OrderByDescending(x => x.UpdatedAt).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
         public async Task<List<Book>> GetBooksAsync(int uid,int page)
                 => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).OrderBy(x => x.UpdatedAt).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();

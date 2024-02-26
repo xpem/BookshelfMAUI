@@ -11,6 +11,9 @@
     Title="Histórico"
     x:DataType="vm:BookHistoricVM"
     Style="{StaticResource ContentPage}">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior Command="{Binding OnAppearingCommand}" EventName="Appearing" />
+    </ContentPage.Behaviors>
     <ContentPage.Content>
         <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
             <Frame
@@ -105,19 +108,6 @@
                     </ListView.Footer>
                 </ListView>
             </Frame>
-            <!--<Frame
-            Margin="0,0,0,5"
-            BackgroundColor="WhiteSmoke"
-            BorderColor="Gray"
-            CornerRadius="10,10,10,0">
-            <StackLayout HorizontalOptions="FillAndExpand" Orientation="Vertical">
-                <Label
-                    FontSize="18"
-                    HorizontalOptions="Center"
-                    Text="Welcome to .NET Multi-platform App UI teste de qualquer coisa escrita p ficar por baixo do expander"
-                    TextColor="Black" />
-            </StackLayout>
-        </Frame>-->
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

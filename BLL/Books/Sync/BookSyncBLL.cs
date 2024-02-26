@@ -34,7 +34,7 @@ namespace BLL.Books.Sync
 
                         if (bookLastUpdate == null && !apiBook.Inactive)
                         {
-                            bookDAL.ExecuteAddBook(apiBook);
+                            await bookDAL.ExecuteAddBookAsync(apiBook);
                             added++;
                         }
                         else if (apiBook.UpdatedAt > bookLastUpdate)

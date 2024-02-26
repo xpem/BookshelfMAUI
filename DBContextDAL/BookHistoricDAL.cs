@@ -7,15 +7,16 @@ namespace DbContextDAL
     public class BookHistoricDAL : IBookHistoricDAL
     {
         private readonly BookshelfDbContext bookshelfDbContext;
+        readonly int pageSize = 10;
 
         public BookHistoricDAL(BookshelfDbContext bookshelfDbContext)
         {
             this.bookshelfDbContext = bookshelfDbContext;
         }
 
-        public async Task<List<BookHistoric>> GetBookHistoricByBookIdAsync(int uid, int bookId)
-            => await bookshelfDbContext.BookHistoric.Where(x => x.Uid == uid && x.BookId == bookId)
-            .Include(x => x.BookHistoricItems).OrderByDescending(x => x.CreatedAt).ToListAsync();
+        public async Task<List<BookHistoric>> GetBookHistoricByBookIdAsync(int uid, int bookId, int page) => 
+            await bookshelfDbContext.BookHistoric.Where(x => x.Uid == uid && x.BookId == bookId)
+            .Include(x => x.BookHistoricItems).OrderByDescending(x => x.CreatedAt).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
         public async Task<int> ExecuteAddBookHistoricAsync(BookHistoric bookHistoric, int uid)
         {

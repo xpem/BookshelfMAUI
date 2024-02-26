@@ -44,7 +44,7 @@ namespace BLL.Books
         {
             book.UpdatedAt = DateTime.Now;
 
-            Book? bookResponse = Task.Run(() => bookDAL.GetBookByTitleAsync(uid, book.Title)).Result;
+            Book? bookResponse = await bookDAL.GetBookByTitleAsync(uid, book.Title);
 
             if (bookResponse == null)
             {
@@ -65,7 +65,7 @@ namespace BLL.Books
 
                 book.UserId = uid;
 
-                bookDAL.ExecuteAddBook(book);
+                await bookDAL.ExecuteAddBookAsync(book);
 
                 return new BLLResponse() { Success = true };
             }

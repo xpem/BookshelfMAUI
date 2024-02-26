@@ -15,7 +15,7 @@ namespace Bookshelf.ViewModels.Book
 
         private int BookId { get; set; }
 
-        public ObservableCollection<UIBookHistoric> UIBookHistoricList { get; } = new();
+        public ObservableCollection<UIBookHistoric> UIBookHistoricList { get; } = [];
 
         public int CurrentPage { get; set; }
 
@@ -32,21 +32,30 @@ namespace Bookshelf.ViewModels.Book
         {
             BookId = Convert.ToInt32(query["BookId"]);
 
+            //if (UIBookHistoricList.Count > 0)
+            //    UIBookHistoricList.Clear();
+
+            //CurrentPage++;
+
+            //Task.Run(() => LoadListAsync(CurrentPage));
+        }
+        public ICommand OnAppearingCommand => new Command((e) =>
+        {
             if (UIBookHistoricList.Count > 0)
                 UIBookHistoricList.Clear();
 
-            CurrentPage++;
+            CurrentPage = 1;
 
-            Task.Run(() => LoadListAsync(CurrentPage));
-        }
+            _ = LoadListAsync(CurrentPage);
+        });
 
-        private async Task LoadListAsync(int? pageNumber)
+        private async Task LoadListAsync(int pageNumber)
         {
             IsBusy = true;
 
-            Models.Books.Historic.BookHistoricList bookHistoricList = await bookHistoricBLL.GetBookHistoricByBookIdAsync(((App)App.Current).Uid, pageNumber, BookId);
+            List<Models.Books.Historic.BookHistoric> bookHistoricList = await bookHistoricBLL.GetBookHistoricByBookIdAsync(((App)App.Current).Uid, pageNumber, BookId);
 
-            foreach (Models.Books.Historic.BookHistoric bookHistoricObj in bookHistoricList.List)
+            foreach (Models.Books.Historic.BookHistoric bookHistoricObj in bookHistoricList)
             {
                 StringBuilder bookHistoricText = new();
                 string bookHistoricIcon, updatedFrom, updatedTo;

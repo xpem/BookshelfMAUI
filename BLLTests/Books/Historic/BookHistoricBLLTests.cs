@@ -121,18 +121,16 @@ namespace BLL.Books.Historic.Tests
             Mock<IUserApiDAL> userAPIDAL = new();
             Mock<IUserDAL> mockUserDAL = new();
 
-            mockUserDAL.Setup(x => x.GetUid()).Returns(1);
-
             UserDAL userDAL = new(mockContext.Object);
             BookHistoricDAL bookHistoricDAL = new(mockContext.Object);
 
             IUserBLL userBLL = new UserBLL(userAPIDAL.Object, userDAL);
 
-            BookHistoricBLL bookHistoricBLL = new(bookHistoricDAL, userDAL);
+            BookHistoricBLL bookHistoricBLL = new(bookHistoricDAL);
 
-            BookHistoricList result = bookHistoricBLL.GetBookHistoricByBookId(1, 1);
+            List<BookHistoric> result = bookHistoricBLL.GetBookHistoricByBookIdAsync(1, 1, 1).Result;
 
-            if (result is not null && result.Total == 2)
+            if (result is not null && result.Count == 2)
                 Assert.IsTrue(true);
             else
                 Assert.Fail();
