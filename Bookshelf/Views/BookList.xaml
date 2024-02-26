@@ -131,7 +131,7 @@
                                 IsRunning="{Binding IsBusy}"
                                 IsVisible="{Binding IsBusy}"
                                 VerticalOptions="Center"
-                                Color="#2196F3" />
+                                Color="{StaticResource ActiveColor}" />
                         </Grid>
                     </ListView.Footer>
                 </ListView>

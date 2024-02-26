@@ -113,11 +113,7 @@ namespace BLL.Books.Tests
 
             Mock<IUserDAL> mockUserDAL = new();
 
-            mockUserDAL.Setup(x => x.GetUidAsync()).ReturnsAsync(1);
-
-            IUserBLL userBLL = new UserBLL(userAPIDAL.Object, mockUserDAL.Object);
-
-            BooksBLL booksBLL = new(bookApiBLL.Object, bookDAL, mockUserDAL.Object);
+            BooksBLL booksBLL = new(bookApiBLL.Object, bookDAL);
 
             Totals? result = booksBLL.GetBookshelfTotalsAsync(1).Result;
 
@@ -172,8 +168,6 @@ namespace BLL.Books.Tests
             Mock<IUserApiDAL> userAPIDAL = new();
             Mock<IUserDAL> mockUserDAL = new();
 
-            mockUserDAL.Setup(x => x.GetUidAsync()).ReturnsAsync(1);
-
             Mock<IBookDAL> mockBookDAL = new();
 
             Book UptBook = new()
@@ -196,9 +190,9 @@ namespace BLL.Books.Tests
 
             bookApiBLL.Setup(x => x.UpdateBook(It.IsAny<Book>())).ReturnsAsync(bLLResponse);
 
-            BooksBLL booksBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockUserDAL.Object);
+            BooksBLL booksBLL = new(bookApiBLL.Object, mockBookDAL.Object);
 
-            Models.Responses.BLLResponse? result = booksBLL.UpdateBook(UptBook).Result;
+            Models.Responses.BLLResponse? result = booksBLL.UpdateBookAsync(1, UptBook).Result;
 
             if (result is not null && result.Success == false && result.Content is not null && ((string)result.Content) == "Livro com este título já cadastrado.")
                 Assert.IsTrue(true);

@@ -1,13 +1,13 @@
 ﻿using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
-using Models;
 using Models.Books;
-using System.Reflection.Metadata;
 
 namespace DbContextDAL
 {
     public class BookDAL(BookshelfDbContext bookshelfDbContext) : IBookDAL
     {
+        readonly int pageSize = 10;
+
         public async Task<int> ExecuteUpdateBookAsync(Book book)
         {
             return await bookshelfDbContext.Book.Where(x => x.UserId == book.UserId && x.LocalId == book.LocalId).ExecuteUpdateAsync(y => y
@@ -19,7 +19,6 @@ namespace DbContextDAL
             .SetProperty(z => z.Genre, book.Genre).SetProperty(z => z.Isbn, book.Isbn).SetProperty(z => z.Cover, book.Cover).SetProperty(z => z.GoogleId, book.GoogleId)
             .SetProperty(z => z.Score, book.Score).SetProperty(z => z.Comment, book.Comment)
             .SetProperty(z => z.CreatedAt, book.CreatedAt).SetProperty(z => z.UpdatedAt, book.UpdatedAt).SetProperty(z => z.Inactive, book.Inactive));
-
         }
 
         public async Task<Totals> GetTotalBooksGroupedByStatusAsync(int uid)
@@ -45,7 +44,6 @@ namespace DbContextDAL
             }
 
             return totals;
-
         }
 
         public async Task<Book?> GetBookByLocalIdAsync(int uid, int localId)
@@ -59,10 +57,10 @@ namespace DbContextDAL
         public List<Book> GetBookByAfterUpdatedAt(int uid, DateTime lastUpdate)
             => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.UpdatedAt > lastUpdate).ToList();
 
-        public int ExecuteAddBook(Book book)
+        public async Task<int> ExecuteAddBookAsync(Book book)
         {
             bookshelfDbContext.Book.Add(book);
-            int resp = bookshelfDbContext.SaveChanges();
+            int resp = await bookshelfDbContext.SaveChangesAsync();
 
             bookshelfDbContext.ChangeTracker?.Clear();
             return resp;
@@ -71,11 +69,13 @@ namespace DbContextDAL
         public Book? GetBookByTitleOrGoogleId(int uid, string title, string googleId)
             => bookshelfDbContext.Book.Where(x => x.UserId == uid && ((x.Title != null && EF.Functions.Like(x.Title, $"%{title}%")) || (x.GoogleId != null && x.GoogleId.Equals(googleId)))).FirstOrDefault();
         // x.Title.ToLower().Equals(title.ToLower())
-        public List<Book> GetBooksByStatus(int uid, Status status)
-        => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Status == status && x.Inactive == false).OrderByDescending(x => x.UpdatedAt).ToList();
 
-        public async Task<List<Book>> GetBooks(int uid)
-                => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).OrderBy(x => x.UpdatedAt).ToListAsync();
+        public Task< List<Book>> GetBooksByStatusAsync(int uid, Status status, int page)
+        => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Status == status && x.Inactive == false)
+            .OrderByDescending(x => x.UpdatedAt).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+        public async Task<List<Book>> GetBooksAsync(int uid,int page)
+                => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).OrderBy(x => x.UpdatedAt).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
         public async Task<int> ExecuteInactivateBookAsync(int localId, int userId)
         {

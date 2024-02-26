@@ -5,21 +5,21 @@ using Plugin.Connectivity;
 
 namespace BLL.Books
 {
-    public class BooksBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL, IUserDAL userDAL) : IBooksBLL
+    public class BooksBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL) : IBooksBLL
     {
 
         public async Task<Totals> GetBookshelfTotalsAsync(int uid) => await bookDAL.GetTotalBooksGroupedByStatusAsync(uid);
 
-        public async Task<Book?> GetBook(int localId) => await bookDAL.GetBookByLocalIdAsync(userDAL.GetUidAsync().Result, localId);
+        public async Task<Book?> GetBookAsync(int uid, int localId) => await bookDAL.GetBookByLocalIdAsync(uid, localId);
 
-        public async Task<BLLResponse> UpdateBook(Book book)
+        public async Task<BLLResponse> UpdateBookAsync(int uid, Book book)
         {
-            Book? bookResponse = await bookDAL.GetBookByTitleAsync(await userDAL.GetUidAsync(), book.Title);
+            Book? bookResponse = await bookDAL.GetBookByTitleAsync(uid, book.Title);
 
             if (bookResponse != null && bookResponse.LocalId.Equals(book.LocalId))
             {
                 book.UpdatedAt = DateTime.Now;
-                book.UserId = await userDAL.GetUidAsync();
+                book.UserId = uid;
 
                 await bookDAL.ExecuteUpdateBookAsync(book);
 
@@ -40,12 +40,11 @@ namespace BLL.Books
             else return new BLLResponse() { Success = false, Content = "Livro com este título já cadastrado." };
         }
 
-        public async Task<BLLResponse> AddBook(Book book)
+        public async Task<BLLResponse> AddBookAsync(int uid, Book book)
         {
             book.UpdatedAt = DateTime.Now;
-            int uid = await userDAL.GetUidAsync();
 
-            Book? bookResponse = Task.Run(() => bookDAL.GetBookByTitleAsync(uid, book.Title)).Result;
+            Book? bookResponse = await bookDAL.GetBookByTitleAsync(uid, book.Title);
 
             if (bookResponse == null)
             {
@@ -66,7 +65,7 @@ namespace BLL.Books
 
                 book.UserId = uid;
 
-                bookDAL.ExecuteAddBook(book);
+                await bookDAL.ExecuteAddBookAsync(book);
 
                 return new BLLResponse() { Success = true };
             }
@@ -79,26 +78,22 @@ namespace BLL.Books
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public async Task<(List<UIBookItem>, int)> GetBooksByStatusAsync(int? page, int status, string? textoBusca = null)
+        public async Task<List<UIBookItem>> GetBooksByStatusAsync(int uid, int page, int status, string? textoBusca = null)
         {
             List<UIBookItem> listBooksItens = [];
             int total = 0;
 
-            int pageSize = 10;
             List<Book> list = [];
 
             if (status > 0)
-                list = bookDAL.GetBooksByStatus(await userDAL.GetUidAsync(), (Status)status);
+                list = await bookDAL.GetBooksByStatusAsync(uid, (Status)status, page);
             else
-                list = await bookDAL.GetBooks(await userDAL.GetUidAsync());
+                list = await bookDAL.GetBooksAsync(uid, page);
 
             if (list.Count > 0 && !string.IsNullOrEmpty(textoBusca))
                 list = list.Where(x => x.Title != null && x.Title.Contains(textoBusca, StringComparison.CurrentCultureIgnoreCase)).ToList();
 
             total = list.Count;
-
-            if (page != null)
-                list = list.Skip((page.Value - 1) * pageSize).Take(pageSize).ToList();
 
             string SubtitleAndVol;
 
@@ -134,17 +129,17 @@ namespace BLL.Books
             }
 
 
-            return (listBooksItens, total);
+            return listBooksItens;
         }
 
-        public async Task InactivateBookAsync(int localId)
+        public async Task InactivateBookAsync(int uid, int localId)
         {
-            Book? book = await GetBook(localId);
+            Book? book = await GetBookAsync(uid, localId);
 
             if (book is not null)
             {
                 book.UpdatedAt = DateTime.Now;
-                book.UserId = await userDAL.GetUidAsync();
+                book.UserId = uid;
                 book.Inactive = true;
 
                 await bookDAL.ExecuteInactivateBookAsync(localId, book.UserId);
@@ -154,11 +149,11 @@ namespace BLL.Books
             }
         }
 
-        public async Task UpdateBookSituationAsync(int localId, Status status, int score, string comment)
+        public async Task UpdateBookSituationAsync(int uid, int localId, Status status, int score, string comment)
         {
             try
             {
-                Book? book = await GetBook(localId);
+                Book? book = await GetBookAsync(uid, localId);
 
                 if (book is not null)
                 {
@@ -166,7 +161,7 @@ namespace BLL.Books
                     book.Status = status;
                     book.Score = score;
                     book.Comment = comment;
-                    book.UserId = await userDAL.GetUidAsync();
+                    book.UserId = uid;
 
                     await bookDAL.ExecuteUpdateBookStatusAsync(localId, status, score, comment, book.UserId);
 
@@ -177,7 +172,7 @@ namespace BLL.Books
             catch (Exception ex) { throw ex; }
         }
 
-        public Book? GetBookbyTitleOrGoogleId(string title, string googleId)
-            => bookDAL.GetBookByTitleOrGoogleId(userDAL.GetUidAsync().Result, title, googleId);
+        public Book? GetBookbyTitleOrGoogleId(int uid, string title, string googleId)
+            => bookDAL.GetBookByTitleOrGoogleId(uid, title, googleId);
     }
 }

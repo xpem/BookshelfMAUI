@@ -128,7 +128,7 @@ namespace Bookshelf.ViewModels
             {
                 if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir este livro?", "Sim", "Cancelar"))
                 {
-                    _ = _booksServices.InactivateBookAsync(LocalId);
+                    _ = _booksServices.InactivateBookAsync(((App)App.Current).Uid, LocalId);
 
                     if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
                     {
@@ -148,7 +148,7 @@ namespace Bookshelf.ViewModels
 
         private async Task GetBook(int bookId)
         {
-            Models.Books.Book book = await _booksServices.GetBook(bookId);
+            Models.Books.Book book = await _booksServices.GetBookAsync(((App)App.Current).Uid, bookId);
 
             if (book.Id > 0)
                 ExternalId = book.Id.Value;
@@ -165,17 +165,11 @@ namespace Bookshelf.ViewModels
             if (book.Volume != null)
                 subtitleAndVol += "Vol.: " + book.Volume;
 
-            // ImgCoverIsVisible = true;
-
-            if (book.Cover != null)
+            if (!string.IsNullOrEmpty(book.Cover))
             {
                 ImgCoverIsVisible = true;
                 Cover = book.Cover;
             }
-            //else
-            //{
-            //    Cover = "cover.jpg";
-            //}
 
             Title = book.Title;
             Authors = book.Authors;
@@ -257,7 +251,7 @@ namespace Bookshelf.ViewModels
 
             if (alterou)
             {
-                _ = _booksServices.UpdateBookSituationAsync(LocalId, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
+                _ = _booksServices.UpdateBookSituationAsync(((App)App.Current).Uid, LocalId, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
 
                 if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Situação alterada", null, "Ok"))
                 {

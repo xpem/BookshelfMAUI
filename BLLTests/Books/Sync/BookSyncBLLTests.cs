@@ -137,7 +137,7 @@ namespace BLL.Books.Sync.Tests
             mockContext.Setup(m => m.Book).Returns(mockSetBook.Object);
 
             Mock<IBookApiBLL> bookApiBLL = new();
-            
+
 
             BLLResponse bLLResponse = new() { Success = true, Content = apiResultBooks };
 
@@ -221,65 +221,67 @@ namespace BLL.Books.Sync.Tests
                 },
             ];
 
-            IQueryable<Book> mockBooks = new List<Book>()
+            Book Book1 = new()
             {
-                new() {
-                    Title = "Teste de Título 6",
-                    Authors = "Emanuel Teste",
-                    Status = Status.IllRead,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now.AddDays(-5),
-                    UserId = 1,
-                    Id = 1,
-                    LocalId = 1
-                },
-                new() {
-                    Title = "Teste de Título Alterado",
-                    Authors = "Emanuel Teste",
-                    Status = Status.IllRead,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now.AddDays(-5),
-                    UserId = 1,
-                    Id = 2,
-                    LocalId = 2
-                },
-                //new Book() {
-                //    Title = "Teste de Título 2",
-                //    Authors = "Emanuel Teste",
-                //    Status = Status.IllRead,
-                //    CreatedAt = DateTime.Now,
-                //    UpdatedAt = DateTime.Now.AddDays(-3),
-                //    UserId = 1,
-                //    Id = 2
-                //},
-                //     new Book() {
-                //    Title = "Teste de Título 3",
-                //    Authors = "Emanuel Teste",
-                //    Status = Status.IllRead,
-                //    CreatedAt = DateTime.Now,
-                //    UpdatedAt = DateTime.Now.AddHours(-2),
-                //    UserId = 1,
-                //    Id = 3
-                //},
-                //new Book() {
-                //    Title = "Teste de Título 4",
-                //    Authors = "Emanuel Teste",
-                //    Status = Status.IllRead,
-                //    CreatedAt = DateTime.Now,
-                //    UpdatedAt = DateTime.Now.AddHours(-1),
-                //    UserId = 1,
-                //    Id = 4
-                //},
-                //   new Book() {
-                //    Title = "Teste de Título 5",
-                //    Authors = "Emanuel Teste",
-                //    Status = Status.IllRead,
-                //    CreatedAt = DateTime.Now,
-                //    UpdatedAt = DateTime.Now,
-                //    UserId = 1,
-                //       Id = 5
-                //   },
-            }.AsQueryable();
+                Title = "Teste de Título 6",
+                Authors = "Emanuel Teste",
+                Status = Status.IllRead,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now.AddDays(-5),
+                UserId = 1,
+                Id = 1,
+                LocalId = 1
+            };
+            Book Book2 = new()
+            {
+                Title = "Teste de Título Alterado",
+                Authors = "Emanuel Teste",
+                Status = Status.IllRead,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now.AddDays(-5),
+                UserId = 1,
+                Id = 2,
+                LocalId = 2
+            };
+
+            IQueryable<Book> mockBooks = new List<Book>() { Book1, Book2 }.AsQueryable();
+
+            //new Book() {
+            //    Title = "Teste de Título 2",
+            //    Authors = "Emanuel Teste",
+            //    Status = Status.IllRead,
+            //    CreatedAt = DateTime.Now,
+            //    UpdatedAt = DateTime.Now.AddDays(-3),
+            //    UserId = 1,
+            //    Id = 2
+            //},
+            //     new Book() {
+            //    Title = "Teste de Título 3",
+            //    Authors = "Emanuel Teste",
+            //    Status = Status.IllRead,
+            //    CreatedAt = DateTime.Now,
+            //    UpdatedAt = DateTime.Now.AddHours(-2),
+            //    UserId = 1,
+            //    Id = 3
+            //},
+            //new Book() {
+            //    Title = "Teste de Título 4",
+            //    Authors = "Emanuel Teste",
+            //    Status = Status.IllRead,
+            //    CreatedAt = DateTime.Now,
+            //    UpdatedAt = DateTime.Now.AddHours(-1),
+            //    UserId = 1,
+            //    Id = 4
+            //},
+            //   new Book() {
+            //    Title = "Teste de Título 5",
+            //    Authors = "Emanuel Teste",
+            //    Status = Status.IllRead,
+            //    CreatedAt = DateTime.Now,
+            //    UpdatedAt = DateTime.Now,
+            //    UserId = 1,
+            //       Id = 5
+            //   },
 
             mockSetBook.As<IQueryable<Book>>().Setup(m => m.Provider).Returns(mockBooks.Provider);
             mockSetBook.As<IQueryable<Book>>().Setup(m => m.Expression).Returns(mockBooks.Expression);
@@ -291,13 +293,20 @@ namespace BLL.Books.Sync.Tests
             mockContext.Setup(m => m.Book).Returns(mockSetBook.Object);
 
             Mock<IBookApiBLL> bookApiBLL = new();
-            IBookDAL mockBookDAL = new BookDAL(mockContext.Object);
+
+            Mock<IBookDAL> mockBookDAL = new();
+
+            //mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(Book1)).ReturnsAsync(1);
+
+            mockBookDAL.Setup(x => x.GetBookUpdatedAtById(1)).Returns(Book1.UpdatedAt.AddDays(-1));
+            mockBookDAL.Setup(x => x.GetBookUpdatedAtById(2)).Returns(Book2.UpdatedAt.AddDays(-2));
+            mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(Book1)).ReturnsAsync(1);
 
             BLLResponse bLLResponse = new() { Success = true, Content = apiResultBooks };
 
             bookApiBLL.Setup(x => x.GetBooksByLastUpdate(lastUpdate)).ReturnsAsync(() => bLLResponse);
 
-            IBookSyncBLL bookSyncBLL = new BookSyncBLL(bookApiBLL.Object, mockBookDAL);
+            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, mockBookDAL.Object);
 
             (int added, int updated) = bookSyncBLL.ApiToLocalSync(1, lastUpdate).Result;
 

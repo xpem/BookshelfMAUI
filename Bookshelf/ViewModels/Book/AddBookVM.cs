@@ -123,7 +123,7 @@ namespace Bookshelf.ViewModels
 
                 if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(GoogleKey))
                 {
-                    Models.Books.Book _book = _booksServices.GetBookbyTitleOrGoogleId(Title, GoogleKey);
+                    Models.Books.Book _book = _booksServices.GetBookbyTitleOrGoogleId(((App)App.Current).Uid, Title, GoogleKey);
 
                     if (_book is not null)
                     {
@@ -217,7 +217,7 @@ namespace Bookshelf.ViewModels
         /// <summary>
         /// get book by book key
         /// </summary>
-        protected async Task GetBook(int localId) => BuildBook(await _booksServices.GetBook(localId));
+        protected async Task GetBook(int localId) => BuildBook(await _booksServices.GetBookAsync(((App)App.Current).Uid, localId));
 
         private async Task InsertBook()
         {
@@ -275,7 +275,7 @@ namespace Bookshelf.ViewModels
                         book.LocalId = Convert.ToInt32(LocalId);
                         book.Id = Convert.ToInt32(BookId);
 
-                        Models.Responses.BLLResponse uptRes = await _booksServices.UpdateBook(book);
+                        Models.Responses.BLLResponse uptRes = await _booksServices.UpdateBookAsync(((App)App.Current).Uid, book);
 
                         if (!uptRes.Success)
                         {
@@ -288,7 +288,7 @@ namespace Bookshelf.ViewModels
                     }
                     else
                     {
-                        Models.Responses.BLLResponse addRes = await _booksServices.AddBook(book);
+                        Models.Responses.BLLResponse addRes = await _booksServices.AddBookAsync(((App)App.Current).Uid, book);
 
                         if (!addRes.Success)
                         {
@@ -316,7 +316,7 @@ namespace Bookshelf.ViewModels
             bool ValidInfo = true;
             if (string.IsNullOrEmpty(Title))
                 ValidInfo = false;
-            else if (_booksServices.GetBookbyTitleOrGoogleId(Title, null) is not null)
+            else if (_booksServices.GetBookbyTitleOrGoogleId(((App)App.Current).Uid, Title, null) is not null)
                 ValidInfo = false;
 
             if (string.IsNullOrEmpty(Authors))

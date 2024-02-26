@@ -7,15 +7,16 @@ namespace DbContextDAL
     public class BookHistoricDAL : IBookHistoricDAL
     {
         private readonly BookshelfDbContext bookshelfDbContext;
+        readonly int pageSize = 10;
 
         public BookHistoricDAL(BookshelfDbContext bookshelfDbContext)
         {
             this.bookshelfDbContext = bookshelfDbContext;
         }
 
-        public List<BookHistoric> GetBookHistoricByBookId(int uid, int bookId)
-            => bookshelfDbContext.BookHistoric.Where(x => x.Uid == uid && x.BookId == bookId)
-            .Include(x => x.BookHistoricItems).OrderByDescending(x => x.CreatedAt).ToList();
+        public async Task<List<BookHistoric>> GetBookHistoricByBookIdAsync(int uid, int bookId, int page) => 
+            await bookshelfDbContext.BookHistoric.Where(x => x.Uid == uid && x.BookId == bookId)
+            .Include(x => x.BookHistoricItems).OrderByDescending(x => x.CreatedAt).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
         public async Task<int> ExecuteAddBookHistoricAsync(BookHistoric bookHistoric, int uid)
         {
@@ -23,19 +24,23 @@ namespace DbContextDAL
             {
                 bookHistoric.Uid = uid;
 
-                bookshelfDbContext.BookHistoric.Add(bookHistoric);
+                await bookshelfDbContext.BookHistoric.AddAsync(bookHistoric);
 
                 if (bookHistoric.BookHistoricItems is not null)
                     foreach (BookHistoricItem _bookHistoricItem in bookHistoric.BookHistoricItems)
                     {
-                        if ((bookshelfDbContext.BookHistoricItem.Where(x => x.Id == _bookHistoricItem.Id).ToList().Count) == 0)
+                        if (((await bookshelfDbContext.BookHistoricItem.Where(x => x.Id == _bookHistoricItem.Id).ToListAsync()).Count) == 0)
                         {
                             _bookHistoricItem.Uid = uid;
-                            bookshelfDbContext.BookHistoricItem.Add(_bookHistoricItem);
+                            await bookshelfDbContext.BookHistoricItem.AddAsync(_bookHistoricItem);
                         }
                     }
 
-                return await bookshelfDbContext.SaveChangesAsync();
+                int resp = await bookshelfDbContext.SaveChangesAsync();
+
+                bookshelfDbContext.ChangeTracker?.Clear();
+
+                return resp;
             }
 
             return 0;

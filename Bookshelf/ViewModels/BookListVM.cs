@@ -11,7 +11,7 @@ namespace Bookshelf.ViewModels
 
         #region Vars
 
-        public ObservableCollection<UIBookItem> BooksList { get; } = new();
+        public ObservableCollection<UIBookItem> BooksList { get; } = [];
 
         //UIBookItem bookItem;
 
@@ -106,7 +106,7 @@ namespace Bookshelf.ViewModels
         /// <summary>
         /// Get books by status
         /// </summary>
-        private async Task LoadBooks(int? pageNumber)
+        private async Task LoadBooks(int pageNumber)
         {
             PageTitle = "Carregando lista...";
             IsBusy = true;
@@ -115,11 +115,11 @@ namespace Bookshelf.ViewModels
             if (!string.IsNullOrEmpty(SearchTitle))
                 _searchText = SearchTitle.ToLower();
 
-            (List<UIBookItem> booksList, TotalBooksItens) = await _booksServices.GetBooksByStatusAsync(pageNumber, SituationIndex.Value, _searchText);
+            List<UIBookItem> _booksList = await _booksServices.GetBooksByStatusAsync(((App)App.Current).Uid, pageNumber, SituationIndex.Value, _searchText);
 
-            foreach (UIBookItem bookItem in booksList)
+            foreach (UIBookItem bookItem in _booksList)
             {
-                bookItem.Cover ??= "cover.jpg";
+                bookItem.Cover = !string.IsNullOrEmpty(bookItem.Cover) ? bookItem.Cover : "cover.jpg";
                 BooksList.Add(bookItem);
             }
 
