@@ -22,7 +22,7 @@ namespace DbContextDAL
 
         DateTime? GetBookUpdatedAtById(int id);
 
-        Task<Totals> GetTotalBooksGroupedByStatusAsync(int uid);
+        Task<List<TotalBooksGroupedByStatus>> GetTotalBooksGroupedByStatusAsync(int uid);
 
         Task<List<Book>> GetBooksAsync(int uid, int page);
 

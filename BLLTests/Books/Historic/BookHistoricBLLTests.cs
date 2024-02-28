@@ -34,7 +34,7 @@ namespace BLL.Books.Historic.Tests
             mockSetUser.As<IQueryable<Models.User>>().Setup(m => m.GetEnumerator()).Returns(() => mockUsers.GetEnumerator());
 
 
-            IQueryable<BookHistoric> mockBookHistorics = new List<BookHistoric>() {
+            List<BookHistoric> mockBookHistorics = new List<BookHistoric>() {
                 new()
              {
                  Id = 7,
@@ -106,28 +106,14 @@ namespace BLL.Books.Historic.Tests
                         }
                     }
                 },
-            }.AsQueryable();
+            };
 
-            Mock<DbSet<BookHistoric>> mockSetBookHistorics = new();
+            Mock<IBookHistoricDAL> mockBH = new();
 
-            mockSetBookHistorics.As<IQueryable<BookHistoric>>().Setup(m => m.Provider).Returns(mockBookHistorics.Provider);
-            mockSetBookHistorics.As<IQueryable<BookHistoric>>().Setup(m => m.Expression).Returns(mockBookHistorics.Expression);
-            mockSetBookHistorics.As<IQueryable<BookHistoric>>().Setup(m => m.ElementType).Returns(mockBookHistorics.ElementType);
-            mockSetBookHistorics.As<IQueryable<BookHistoric>>().Setup(m => m.GetEnumerator()).Returns(() => mockBookHistorics.GetEnumerator());
+            mockBH.Setup(x => x.GetBookHistoricByBookIdAsync(1, 1, 1)).ReturnsAsync(mockBookHistorics);
 
-            mockContext.Setup(m => m.BookHistoric).Returns(mockSetBookHistorics.Object);
-            mockContext.Setup(m => m.User).Returns(mockSetUser.Object);
-
-            Mock<IUserApiDAL> userAPIDAL = new();
-            Mock<IUserDAL> mockUserDAL = new();
-
-            UserDAL userDAL = new(mockContext.Object);
-            BookHistoricDAL bookHistoricDAL = new(mockContext.Object);
-
-            IUserBLL userBLL = new UserBLL(userAPIDAL.Object, userDAL);
-
-            BookHistoricBLL bookHistoricBLL = new(bookHistoricDAL);
-
+            BookHistoricBLL bookHistoricBLL = new(mockBH.Object);
+            
             List<BookHistoric> result = bookHistoricBLL.GetBookHistoricByBookIdAsync(1, 1, 1).Result;
 
             if (result is not null && result.Count == 2)

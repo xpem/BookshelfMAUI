@@ -5,10 +5,10 @@ namespace BLL.Books
 {
     public interface IBookApiBLL
     {
-        Task<BLLResponse> AddBook(Book book);
+        Task<BLLResponse> AddBookAsync(Book book);
 
-        Task<BLLResponse> UpdateBook(Book book);
+        Task<BLLResponse> UpdateBookAsync(Book book);
 
-        Task<BLLResponse> GetBooksByLastUpdate(DateTime lastUpdate);
+        Task<BLLResponse> GetBooksByLastUpdateAsync(DateTime lastUpdate);
     }
 }
