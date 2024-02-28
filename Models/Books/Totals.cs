@@ -8,6 +8,16 @@
 
         public int Read { get; set; }//3
 
-        public int Interrupted { get; set; }//4
+        public int Interrupted { get; set; }//4       
+    }
+
+    public class TotalBooksGroupedByStatus
+    {
+        public int Count { get; set; }
+
+        public Models.Books.Status? Status
+        {
+            get; set;
+        }
     }
 }

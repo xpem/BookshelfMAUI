@@ -8,7 +8,7 @@ namespace BLL.Books
 {
     public class BooksApiBLL(IBookApiDAL bookApiDAL) : IBookApiBLL
     {
-        public async Task<BLLResponse> AddBook(Book book)
+        public async Task<BLLResponse> AddBookAsync(Book book)
         {
             ApiResponse? resp = await bookApiDAL.AddBook(book);
 
@@ -43,7 +43,7 @@ namespace BLL.Books
             return new BLLResponse() { Success = false, Content = null };
         }
 
-        public async Task<BLLResponse> UpdateBook(Book book)
+        public async Task<BLLResponse> UpdateBookAsync(Book book)
         {
             ApiResponse? resp = await bookApiDAL.UpdateBook(book);
 
@@ -66,7 +66,7 @@ namespace BLL.Books
             return new BLLResponse() { Success = false, Content = null };
         }
 
-        public async Task<BLLResponse> GetBooksByLastUpdate(DateTime lastUpdate)
+        public async Task<BLLResponse> GetBooksByLastUpdateAsync(DateTime lastUpdate)
         {
             ApiResponse resp = await bookApiDAL.GetBooksByLastUpdate(lastUpdate);
 

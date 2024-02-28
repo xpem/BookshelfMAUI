@@ -10,7 +10,7 @@ namespace BLL.Books.Sync
             int added = 0, updated = 0;
 
             //update local database
-            Models.Responses.BLLResponse respGetBooksByLastUpdate = await booksApiBLL.GetBooksByLastUpdate(lastUpdate);
+            Models.Responses.BLLResponse respGetBooksByLastUpdate = await booksApiBLL.GetBooksByLastUpdateAsync(lastUpdate);
 
             if (respGetBooksByLastUpdate.Success && respGetBooksByLastUpdate.Content is not null)
             {
@@ -69,7 +69,7 @@ namespace BLL.Books.Sync
             {
                 if (book.LocalTempId != null)
                 {
-                    Models.Responses.BLLResponse addBookResp = await booksApiBLL.AddBook(book);
+                    Models.Responses.BLLResponse addBookResp = await booksApiBLL.AddBookAsync(book);
 
                     if (addBookResp.Success && addBookResp.Content is not null)
                     {
@@ -82,7 +82,7 @@ namespace BLL.Books.Sync
                 }
                 else
                 {
-                    Models.Responses.BLLResponse response = await booksApiBLL.UpdateBook(book);
+                    Models.Responses.BLLResponse response = await booksApiBLL.UpdateBookAsync(book);
                     if (response.Success)
                         updated++;
                 }

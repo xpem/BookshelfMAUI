@@ -1,5 +1,4 @@
 ﻿using ApiDAL.Interfaces;
-using BLL.User;
 using DbContextDAL;
 using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
@@ -19,101 +18,41 @@ namespace BLL.Books.Tests
             Mock<DbSet<Book>> mockSetBook = new();
             Mock<BookshelfDbContext> mockContext = new();
 
-            IQueryable<Book> mockBooks = new List<Book>()
-            {
-                new()
-            {
-                Title = "Teste de Título 6",
-                Authors = "Emanuel Teste",
-                Status = Status.IllRead,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now.AddDays(-2),
-                UserId = 1,
-                Id = null,
-                LocalTempId = "Temp1"
-            },
-                new()
-            {
-                Title = "Teste de Título 2",
-                Authors = "Emanuel Teste",
-                Status = Status.Reading,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now.AddDays(-2),
-                UserId = 1,
-                Id = null,
-                LocalTempId = "Temp2"
-            },
-                     new() {
-                    Title = "Teste de Título 3",
-                    Authors = "Emanuel Teste",
-                    Status = Status.Reading,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now.AddDays(-5),
-                    UserId = 1,
-                    Id = 3
-                },
-                new() {
-                    Title = "Teste de Título 4",
-                    Authors = "Emanuel Teste",
-                    Status = Status.Read,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now.AddDays(-5),
-                    UserId = 1,
-                    Id = 4
-                },
-                   new() {
-                    Title = "Teste de Título 5",
-                    Authors = "Emanuel Teste",
-                    Status = Status.Read,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now.AddDays(-5),
-                    UserId = 1,
-                       Id = 5
-                   },
-                    new() {
-                    Title = "Teste de Título 6",
-                    Authors = "Emanuel Teste",
-                    Status = Status.Read,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now.AddDays(-6),
-                    UserId = 1,
-                       Id = 6
-                   },
-            }.AsQueryable();
-
-            mockSetBook.As<IQueryable<Book>>().Setup(m => m.Provider).Returns(mockBooks.Provider);
-            mockSetBook.As<IQueryable<Book>>().Setup(m => m.Expression).Returns(mockBooks.Expression);
-            mockSetBook.As<IQueryable<Book>>().Setup(m => m.ElementType).Returns(mockBooks.ElementType);
-            mockSetBook.As<IQueryable<Book>>().Setup(m => m.GetEnumerator()).Returns(() => mockBooks.GetEnumerator());
-
-            mockContext.Setup(m => m.Book).Returns(mockSetBook.Object);
-
-            Mock<DbSet<Models.User>> mockSetUser = new();
-            IQueryable<Models.User> mockUsers = new List<Models.User>() {
-                new()
+            List<TotalBooksGroupedByStatus> totalBooksGroupedByStatuses =
+            [
+                new TotalBooksGroupedByStatus
                 {
-                    Id = 1,
-                    Email="emanuel@teste.com.br",LastUpdate=DateTime.Now.AddHours(-2),
-                    Name="Emanuel",
-                }
-            }.AsQueryable();
-
-            mockSetUser.As<IQueryable<Models.User>>().Setup(m => m.Provider).Returns(mockUsers.Provider);
-            mockSetUser.As<IQueryable<Models.User>>().Setup(m => m.Expression).Returns(mockUsers.Expression);
-            mockSetUser.As<IQueryable<Models.User>>().Setup(m => m.ElementType).Returns(mockUsers.ElementType);
-            mockSetUser.As<IQueryable<Models.User>>().Setup(m => m.GetEnumerator()).Returns(() => mockUsers.GetEnumerator());
-
-            mockContext.Setup(m => m.User).Returns(mockSetUser.Object);
+                    Count = 1,
+                    Status = Status.IllRead
+                },
+                 new TotalBooksGroupedByStatus
+                {
+                    Count = 3,
+                    Status = Status.Read
+                },
+                  new TotalBooksGroupedByStatus
+                {
+                    Count = 2,
+                    Status = Status.Reading
+                },
+                   new TotalBooksGroupedByStatus
+                {
+                    Count = 0,
+                    Status = Status.Interrupted
+                },
+            ];
 
             Mock<IBookApiBLL> bookApiBLL = new();
 
-            Mock<IUserApiDAL> userAPIDAL = new();
-
             IBookDAL bookDAL = new BookDAL(mockContext.Object);
+
+            Mock<IBookDAL> mockBookDAL = new();
+
+            mockBookDAL.Setup(x => x.GetTotalBooksGroupedByStatusAsync(1)).ReturnsAsync(totalBooksGroupedByStatuses);
 
             Mock<IUserDAL> mockUserDAL = new();
 
-            BooksBLL booksBLL = new(bookApiBLL.Object, bookDAL);
+            BooksBLL booksBLL = new(bookApiBLL.Object, mockBookDAL.Object);
 
             Totals? result = booksBLL.GetBookshelfTotalsAsync(1).Result;
 
@@ -188,7 +127,7 @@ namespace BLL.Books.Tests
 
             BLLResponse bLLResponse = new() { Success = true };
 
-            bookApiBLL.Setup(x => x.UpdateBook(It.IsAny<Book>())).ReturnsAsync(bLLResponse);
+            bookApiBLL.Setup(x => x.UpdateBookAsync(It.IsAny<Book>())).ReturnsAsync(bLLResponse);
 
             BooksBLL booksBLL = new(bookApiBLL.Object, mockBookDAL.Object);
 

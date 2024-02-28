@@ -21,30 +21,8 @@ namespace DbContextDAL
             .SetProperty(z => z.CreatedAt, book.CreatedAt).SetProperty(z => z.UpdatedAt, book.UpdatedAt).SetProperty(z => z.Inactive, book.Inactive));
         }
 
-        public async Task<Totals> GetTotalBooksGroupedByStatusAsync(int uid)
-        {
-            Totals totals = new();
-            var list = await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).GroupBy(x => x.Status).Select(x => new { status = x.Key, count = x.Count() }).ToListAsync();
-
-            if (list is not null && list.Count > 0)
-            {
-                var illRead = list.FirstOrDefault(x => x.status == Status.IllRead);
-                var reading = list.FirstOrDefault(x => x.status == Status.Reading);
-                var read = list.FirstOrDefault(x => x.status == Status.Read);
-                var interrupted = list.FirstOrDefault(x => x.status == Status.Interrupted);
-
-                totals.IllRead = illRead is not null ? illRead.count : 0;
-                totals.Reading = reading is not null ? reading.count : 0;
-                totals.Read = read is not null ? read.count : 0;
-                totals.Interrupted = interrupted is not null ? interrupted.count : 0;
-            }
-            else
-            {
-                totals.IllRead = totals.Reading = totals.Read = totals.Interrupted = 0;
-            }
-
-            return totals;
-        }
+        public async Task<List<TotalBooksGroupedByStatus>> GetTotalBooksGroupedByStatusAsync(int uid)
+            => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).GroupBy(x => x.Status).Select(x => new TotalBooksGroupedByStatus { Status = x.Key, Count = x.Count() }).ToListAsync();
 
         public async Task<Book?> GetBookByLocalIdAsync(int uid, int localId)
             => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.LocalId == localId).FirstOrDefaultAsync();
