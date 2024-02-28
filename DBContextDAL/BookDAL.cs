@@ -27,6 +27,9 @@ namespace DbContextDAL
         public async Task<Book?> GetBookByLocalIdAsync(int uid, int localId)
             => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.LocalId == localId).FirstOrDefaultAsync();
 
+        public async Task<Book?> GetBookByLocalTempIdAsync(int uid, string localTempId)
+          => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.LocalTempId == localTempId).FirstOrDefaultAsync();
+
         public async Task<Book?> GetBookByTitleAsync(int uid, string title)
             => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Title != null && EF.Functions.Like(x.Title, $"%{title}%")).FirstOrDefaultAsync();
 

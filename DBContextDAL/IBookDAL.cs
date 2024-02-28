@@ -16,6 +16,8 @@ namespace DbContextDAL
 
         Task<Book?> GetBookByLocalIdAsync(int uid, int localId);
 
+        Task<Book?> GetBookByLocalTempIdAsync(int uid, string localTempId);
+
         Task<Book?> GetBookByTitleAsync(int uid, string title);
 
         Book? GetBookByTitleOrGoogleId(int uid, string title, string googleId);

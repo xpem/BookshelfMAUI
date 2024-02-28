@@ -12,7 +12,7 @@ namespace Bookshelf.Services.Sync
         public Timer Timer { get; set; }
 
         //40 secs
-        readonly int Interval = 40000;
+        readonly int Interval = 30000;
 
         public bool ThreadIsRunning { get; set; } = false;
 

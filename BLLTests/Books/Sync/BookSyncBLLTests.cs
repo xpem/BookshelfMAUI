@@ -1,8 +1,12 @@
-﻿using DbContextDAL;
+﻿using ApiDAL;
+using ApiDAL.Interfaces;
+using BLL.Books.Sync;
+using DbContextDAL;
 using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Models.Books;
+using Models.OperationQueue;
 using Models.Responses;
 using Moq;
 
@@ -145,7 +149,10 @@ namespace BLL.Books.Sync.Tests
 
             BookDAL bookDAL = new(mockContext.Object);
 
-            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, bookDAL);
+            Mock<IHttpClientFunctions> mockHttpClientFunctions = new();
+            Mock<IOperationBaseBLL> mockOperationBaseBLL = new();
+
+            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, bookDAL, mockOperationBaseBLL.Object, mockHttpClientFunctions.Object);
 
             (int added, int updated) = bookSyncBLL.ApiToLocalSync(1, lastUpdate).Result;
 
@@ -306,7 +313,10 @@ namespace BLL.Books.Sync.Tests
 
             bookApiBLL.Setup(x => x.GetBooksByLastUpdateAsync(lastUpdate)).ReturnsAsync(() => bLLResponse);
 
-            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, mockBookDAL.Object);
+            Mock<IHttpClientFunctions> mockHttpClientFunctions = new();
+            Mock<IOperationBaseBLL> mockOperationBaseBLL = new();
+
+            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockOperationBaseBLL.Object, mockHttpClientFunctions.Object);
 
             (int added, int updated) = bookSyncBLL.ApiToLocalSync(1, lastUpdate).Result;
 
@@ -398,8 +408,10 @@ namespace BLL.Books.Sync.Tests
             mockBookDAL.Setup(x => x.ExecuteAddBookAsync(bookForAddInApi1)).ReturnsAsync(1);
             mockBookDAL.Setup(x => x.ExecuteAddBookAsync(bookForAddInApi2)).ReturnsAsync(1);
 
+            Mock<IHttpClientFunctions> mockHttpClientFunctions = new();
+            Mock<IOperationBaseBLL> mockOperationBaseBLL = new();
 
-            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, mockBookDAL.Object);
+            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockOperationBaseBLL.Object, mockHttpClientFunctions.Object);
 
             (int added, int updated) = bookSyncBLL.LocalToApiSync(1, lastUpdate).Result;
 
@@ -498,7 +510,10 @@ namespace BLL.Books.Sync.Tests
 
             mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(bookForAddInApi1ForUpdateLocal)).ReturnsAsync(1);
 
-            BookSyncBLL bookSyncBLL = new(mockBookApiBLL.Object, mockBookDAL.Object);
+            Mock<IHttpClientFunctions> mockHttpClientFunctions = new();
+            Mock<IOperationBaseBLL> mockOperationBaseBLL = new();
+
+            BookSyncBLL bookSyncBLL = new(mockBookApiBLL.Object, mockBookDAL.Object, mockOperationBaseBLL.Object, mockHttpClientFunctions.Object);
 
             (int added, int updated) = bookSyncBLL.LocalToApiSync(1, lastUpdate).Result;
 

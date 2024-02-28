@@ -15,7 +15,7 @@ namespace ApiDAL
 
                 return await httpClientFunctions.AuthRequest(RequestsTypes.Post, ApiKeys.ApiAddress + "/bookshelf/book", json);
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception ex) { throw; }
         }
 
         public async Task<ApiResponse> UpdateBook(Book book)
@@ -26,7 +26,7 @@ namespace ApiDAL
 
                 return await httpClientFunctions.AuthRequest(RequestsTypes.Put, ApiKeys.ApiAddress + "/bookshelf/book/" + book.Id, json);
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception ex) { throw; }
         }
 
         public async Task<ApiResponse> GetBooksByLastUpdate(DateTime lastUpdate) =>
