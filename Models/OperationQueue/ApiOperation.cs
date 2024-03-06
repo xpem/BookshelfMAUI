@@ -9,9 +9,9 @@ namespace Models.OperationQueue
 
         public required string Content { get; set; }
 
-        public required string Url { get; set; }
+      //  public required string Url { get; set; }
 
-        public Responses.RequestsTypes RequestType { get; set; }
+       // public Responses.RequestsTypes RequestType { get; set; }
 
         public required ObjectType ObjectType { get; set; }
 

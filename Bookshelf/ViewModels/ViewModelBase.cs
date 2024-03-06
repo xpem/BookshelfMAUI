@@ -12,5 +12,6 @@
 
         public bool IsNotBusy => !isBusy;
 
+        protected static bool IsOn => Connectivity.NetworkAccess == NetworkAccess.Internet;
     }
 }

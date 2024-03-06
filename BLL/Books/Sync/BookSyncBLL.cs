@@ -4,10 +4,11 @@ using DbContextDAL;
 using Models.Books;
 using Models.OperationQueue;
 using Models.Responses;
+using System.Text.Json;
 
 namespace BLL.Books.Sync
 {
-    public class BookSyncBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL, IOperationBaseBLL operationBaseBLL, IHttpClientFunctions httpClientFunctions) : IBookSyncBLL
+    public class BookSyncBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL, IOperationQueueDAL operationQueueDAL) : IBookSyncBLL
     {
         public async Task<(int added, int updated)> ApiToLocalSync(int uid, DateTime lastUpdate)
         {
@@ -55,85 +56,58 @@ namespace BLL.Books.Sync
             return (added, updated);
         }
 
-
         public async Task<(int added, int updated)> LocalToApiSync(int uid, DateTime lastUpdate)
         {
             int added = 0, updated = 0;
-            List<ApiOperation> pendingOperations = await operationBaseBLL.GetPendingOperationsByStatusAsync(Models.OperationQueue.OperationStatus.Pending);
+            List<ApiOperation> pendingOperations = await operationQueueDAL.GetPendingOperationsByStatusAsync(Models.OperationQueue.OperationStatus.Pending);
 
             foreach (var pendingOperation in pendingOperations)
             {
-                var response = await httpClientFunctions.AuthRequest(pendingOperation.RequestType, ApiKeys.ApiAddress + pendingOperation.Url, pendingOperation.Content);
-
-                if (response.Success && response.Content is not null)
+                if (pendingOperation.ObjectType == Models.OperationQueue.ObjectType.Book)
                 {
-                    if (pendingOperation.ObjectType == Models.OperationQueue.ObjectType.Book)
+                    Book? book = JsonSerializer.Deserialize<Book>(pendingOperation.Content);
+                    if (book is null) throw new ArgumentNullException(nameof(book));
+                    BLLResponse? bLLResponse = null;
+
+                    switch (pendingOperation.ExecutionType)
                     {
-                        if (response.Success && response.Content is not null)
-                        {
-                            if (pendingOperation.ExecutionType == Models.OperationQueue.ExecutionType.Insert)
+                        case ExecutionType.Insert:
+
+                            bLLResponse = await booksApiBLL.AddBookAsync(book);
+
+                            if (bLLResponse.Success)
                             {
-                                var bookLocal = await bookDAL.GetBookByLocalTempIdAsync(uid, pendingOperation.ObjectId.ToString())
-                                    ?? throw new ArgumentNullException("The local book could not be retrieved.");
-
-                                bookLocal.LocalTempId = null;
-                                bookLocal.Id = Convert.ToInt32(response.Content);
-
-                                await bookDAL.ExecuteUpdateBookAsync(bookLocal);
+                                book.Id = Convert.ToInt32(bLLResponse.Content);
+                                await bookDAL.ExecuteUpdateBookAsync(book);
                                 added++;
                             }
-                            else if (pendingOperation.ExecutionType == Models.OperationQueue.ExecutionType.Update)
+                            else throw new Exception($"Não foi possivel sincronizar o livro {pendingOperation.ObjectId}, res: {bLLResponse.Error}");
+                            break;
+                        case ExecutionType.Update:
+
+                            if (book.Id is null)
+                            {
+                                Book? insertedBook = await bookDAL.GetBookByLocalIdAsync(book.UserId, book.LocalId);
+
+                                if (insertedBook is not null)
+                                    bLLResponse = await booksApiBLL.UpdateBookAsync(insertedBook);
+                                else throw new NullReferenceException("Livro inserido não encontrado " + book.LocalId);
+                            }
+                            else
+                                bLLResponse = await booksApiBLL.UpdateBookAsync(book);
+
+                            if (bLLResponse.Success)
                                 updated++;
+                            else throw new Exception($"Não foi possivel sincronizar o livro {pendingOperation.ObjectId}, res: {bLLResponse.Error}");
 
-                            await operationBaseBLL.UpdateOperationBookStatusAsync(OperationStatus.Success, pendingOperation.Id);
-                        }
-                        else throw new Exception($"Não foi possivel sincronizar o livro {pendingOperation.ObjectId}, res: {response.Error}");
+                            break;
                     }
-                    else throw new ArgumentException("Invalid ObjecType, Op Id: " + pendingOperation.Id);
                 }
-            }
+                else throw new ArgumentException("Invalid ObjecType, Op Id: " + pendingOperation.Id);
 
+                await operationQueueDAL.UpdateOperationStatusAsync(OperationStatus.Success, pendingOperation.Id);
+            }
             return (added, updated);
         }
-
-        /// <summary>
-        /// to do - implementar sincronização in>out por fila de requisições a serem executadas.
-        /// </summary>
-        /// <param name="uid"></param>
-        /// <param name="lastUpdate"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        //public async Task<(int added, int updated)> LocalToApiSync(int uid, DateTime lastUpdate)
-        //{
-        //    int added = 0, updated = 0;
-
-        //    List<Book> booksList = bookDAL.GetBookByAfterUpdatedAt(uid, lastUpdate);
-
-        //    //update api database
-        //    foreach (Book book in booksList)
-        //    {
-        //        if (book.LocalTempId != null)
-        //        {
-        //            Models.Responses.BLLResponse addBookResp = await booksApiBLL.AddBookAsync(book);
-
-        //            if (addBookResp.Success && addBookResp.Content is not null)
-        //            {
-        //                book.LocalTempId = null;
-        //                book.Id = Convert.ToInt32(addBookResp.Content);
-        //                await bookDAL.ExecuteUpdateBookAsync(book);
-        //                added++;
-        //            }
-        //            else throw new Exception($"Não foi possivel sincronizar o livro {book.Id}, res: {addBookResp.Error}");
-        //        }
-        //        else
-        //        {
-        //            Models.Responses.BLLResponse response = await booksApiBLL.UpdateBookAsync(book);
-        //            if (response.Success)
-        //                updated++;
-        //        }
-        //    }
-
-        //    return (added, updated);
-        //}
     }
 }

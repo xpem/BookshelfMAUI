@@ -1,6 +1,7 @@
 ﻿using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
 using Models.Books;
+using System.ComponentModel.Design;
 
 namespace DbContextDAL
 {
@@ -10,15 +11,27 @@ namespace DbContextDAL
 
         public async Task<int> ExecuteUpdateBookAsync(Book book)
         {
-            return await bookshelfDbContext.Book.Where(x => x.UserId == book.UserId && x.LocalId == book.LocalId).ExecuteUpdateAsync(y => y
+            return await bookshelfDbContext.Book.Where(x => x.UserId == book.UserId && x.LocalId == book.LocalId)
+                .ExecuteUpdateAsync(y => y
             .SetProperty(z => z.Isbn, book.Isbn)
+            .SetProperty(z => z.Id, book.Id)
             .SetProperty(z => z.LocalTempId, book.LocalTempId)
-            .SetProperty(z => z.Title, book.Title).SetProperty(z => z.SubTitle, book.SubTitle)
-            .SetProperty(z => z.Authors, book.Authors).SetProperty(z => z.Volume, book.Volume)
-            .SetProperty(z => z.Pages, book.Pages).SetProperty(z => z.Year, book.Year).SetProperty(z => z.Status, book.Status)
-            .SetProperty(z => z.Genre, book.Genre).SetProperty(z => z.Isbn, book.Isbn).SetProperty(z => z.Cover, book.Cover).SetProperty(z => z.GoogleId, book.GoogleId)
-            .SetProperty(z => z.Score, book.Score).SetProperty(z => z.Comment, book.Comment)
-            .SetProperty(z => z.CreatedAt, book.CreatedAt).SetProperty(z => z.UpdatedAt, book.UpdatedAt).SetProperty(z => z.Inactive, book.Inactive));
+            .SetProperty(z => z.Title, book.Title)
+            .SetProperty(z => z.SubTitle, book.SubTitle)
+            .SetProperty(z => z.Authors, book.Authors)
+            .SetProperty(z => z.Volume, book.Volume)
+            .SetProperty(z => z.Pages, book.Pages)
+            .SetProperty(z => z.Year, book.Year)
+            .SetProperty(z => z.Status, book.Status)
+            .SetProperty(z => z.Genre, book.Genre)
+            .SetProperty(z => z.Isbn, book.Isbn)
+            .SetProperty(z => z.Cover, book.Cover)
+            .SetProperty(z => z.GoogleId, book.GoogleId)
+            .SetProperty(z => z.Score, book.Score)
+            .SetProperty(z => z.Comment, book.Comment)
+            .SetProperty(z => z.CreatedAt, book.CreatedAt)
+            .SetProperty(z => z.UpdatedAt, book.UpdatedAt)
+            .SetProperty(z => z.Inactive, book.Inactive));
         }
 
         public async Task<List<TotalBooksGroupedByStatus>> GetTotalBooksGroupedByStatusAsync(int uid)
@@ -47,15 +60,27 @@ namespace DbContextDAL
             return resp;
         }
 
-        public Book? GetBookByTitleOrGoogleId(int uid, string title, string googleId)
-            => bookshelfDbContext.Book.Where(x => x.UserId == uid && ((x.Title != null && EF.Functions.Like(x.Title, $"%{title}%")) || (x.GoogleId != null && x.GoogleId.Equals(googleId)))).FirstOrDefault();
+        public async Task<bool> CheckIfExistsBookWithSameTitleAsync(int uid, string title, int? localId)
+        {
+            if (localId.HasValue)
+                return await bookshelfDbContext.Book.AnyAsync(x => x.UserId == uid && x.Title != null && EF.Functions.Like(x.Title, $"%{title}%") && x.LocalId != localId);
+            else
+                return await bookshelfDbContext.Book.AnyAsync(x => x.UserId == uid && x.Title != null && EF.Functions.Like(x.Title, $"%{title}%"));
+        }
         // x.Title.ToLower().Equals(title.ToLower())
 
-        public Task< List<Book>> GetBooksByStatusAsync(int uid, Status status, int page)
+        public async Task<Book?> GetBookByTitleOrGoogleIdAsync(int uid, string title, string googleId)
+        {
+            return await bookshelfDbContext.Book.Where(x => x.UserId == uid && ((x.Title != null && EF.Functions.Like(x.Title, $"%{title}%"))
+            || (x.GoogleId != null && x.GoogleId.Equals(googleId)))).FirstOrDefaultAsync();
+            // x.Title.ToLower().Equals(title.ToLower())
+        }
+
+        public Task<List<Book>> GetBooksByStatusAsync(int uid, Status status, int page)
         => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Status == status && x.Inactive == false)
             .OrderByDescending(x => x.UpdatedAt).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
-        public async Task<List<Book>> GetBooksAsync(int uid,int page)
+        public async Task<List<Book>> GetBooksAsync(int uid, int page)
                 => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).OrderBy(x => x.UpdatedAt).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
         public async Task<int> ExecuteInactivateBookAsync(int localId, int userId)
