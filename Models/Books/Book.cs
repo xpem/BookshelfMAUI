@@ -51,8 +51,5 @@ namespace Models.Books
         public bool Inactive { get; set; }
     }
 
-    public enum Status
-    {
-        None, IllRead, Reading, Read, Interrupted
-    }
+    public enum Status { None, IllRead, Reading, Read, Interrupted }
 }

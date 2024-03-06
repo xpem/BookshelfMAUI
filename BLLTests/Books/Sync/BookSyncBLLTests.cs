@@ -1,16 +1,25 @@
-﻿using DbContextDAL;
+﻿using ApiDAL;
+using ApiDAL.Interfaces;
+using BLL.Books.Sync;
+using DbContextDAL;
 using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Models.Books;
+using Models.OperationQueue;
 using Models.Responses;
 using Moq;
+using Xunit;
 
 namespace BLL.Books.Sync.Tests
 {
     [TestClass()]
     public class BookSyncBLLTests
     {
+        Mock<IOperationQueueDAL> mockOperationQueueDAL = new();
+        Mock<IBookApiBLL> mockBookApiBLL = new();
+        Mock<IBookDAL> mockBookDAL = new();
+
         [TestMethod()]
         public void ApiToLocalSync_CreateLocalBooksTest()
         {
@@ -145,7 +154,7 @@ namespace BLL.Books.Sync.Tests
 
             BookDAL bookDAL = new(mockContext.Object);
 
-            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, bookDAL);
+            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, bookDAL, mockOperationQueueDAL.Object);
 
             (int added, int updated) = bookSyncBLL.ApiToLocalSync(1, lastUpdate).Result;
 
@@ -246,43 +255,6 @@ namespace BLL.Books.Sync.Tests
 
             IQueryable<Book> mockBooks = new List<Book>() { Book1, Book2 }.AsQueryable();
 
-            //new Book() {
-            //    Title = "Teste de Título 2",
-            //    Authors = "Emanuel Teste",
-            //    Status = Status.IllRead,
-            //    CreatedAt = DateTime.Now,
-            //    UpdatedAt = DateTime.Now.AddDays(-3),
-            //    UserId = 1,
-            //    Id = 2
-            //},
-            //     new Book() {
-            //    Title = "Teste de Título 3",
-            //    Authors = "Emanuel Teste",
-            //    Status = Status.IllRead,
-            //    CreatedAt = DateTime.Now,
-            //    UpdatedAt = DateTime.Now.AddHours(-2),
-            //    UserId = 1,
-            //    Id = 3
-            //},
-            //new Book() {
-            //    Title = "Teste de Título 4",
-            //    Authors = "Emanuel Teste",
-            //    Status = Status.IllRead,
-            //    CreatedAt = DateTime.Now,
-            //    UpdatedAt = DateTime.Now.AddHours(-1),
-            //    UserId = 1,
-            //    Id = 4
-            //},
-            //   new Book() {
-            //    Title = "Teste de Título 5",
-            //    Authors = "Emanuel Teste",
-            //    Status = Status.IllRead,
-            //    CreatedAt = DateTime.Now,
-            //    UpdatedAt = DateTime.Now,
-            //    UserId = 1,
-            //       Id = 5
-            //   },
-
             mockSetBook.As<IQueryable<Book>>().Setup(m => m.Provider).Returns(mockBooks.Provider);
             mockSetBook.As<IQueryable<Book>>().Setup(m => m.Expression).Returns(mockBooks.Expression);
             mockSetBook.As<IQueryable<Book>>().Setup(m => m.ElementType).Returns(mockBooks.ElementType);
@@ -306,7 +278,10 @@ namespace BLL.Books.Sync.Tests
 
             bookApiBLL.Setup(x => x.GetBooksByLastUpdateAsync(lastUpdate)).ReturnsAsync(() => bLLResponse);
 
-            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, mockBookDAL.Object);
+            Mock<IHttpClientFunctions> mockHttpClientFunctions = new();
+            Mock<IOperationQueueDAL> mockOperationQueueDAL = new();
+
+            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockOperationQueueDAL.Object);
 
             (int added, int updated) = bookSyncBLL.ApiToLocalSync(1, lastUpdate).Result;
 
@@ -316,193 +291,247 @@ namespace BLL.Books.Sync.Tests
                 Assert.Fail();
         }
 
+        [Fact(DisplayName = "Executa as ops utilizando a fila de operçãoes adicionando dois livros via api")]
         [TestMethod()]
         public void LocalToApiSync_ApiAddBook_Test()
         {
-            Mock<DbSet<Book>> mockSetBook = new();
-
             DateTime lastUpdate = DateTime.Now.AddDays(-3);
-
-            Book bookForAddInApi1 = new()
+            ApiOperation insertBook1Op = new()
             {
-                Title = "Teste de Título 6",
-                Authors = "Emanuel Teste",
-                Status = Status.IllRead,
+                Id = 1,
+                Content = "{\"LocalId\":2,\"Id\":null,\"UserId\":0,\"LTempId\":\"01d00c2f-6137-4afe-9f55-73eb533e1963\",\"Title\":\"livro um\",\"SubTitle\":\"subt\\u00EDtulo um\",\"Authors\":\"autor um\",\"Volume\":12,\"Pages\":123,\"Year\":2023,\"Status\":1,\"Genre\":\"\",\"Isbn\":\"\",\"Cover\":\"\",\"GoogleId\":null,\"Score\":0,\"Comment\":null,\"CreatedAt\":\"0001-01-01T00:00:00\",\"UpdatedAt\":\"2024-03-01T18:15:48.3594026-03:00\",\"Inactive\":false}",
+                ObjectType = ObjectType.Book,
+                ExecutionType = ExecutionType.Insert,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now.AddDays(-2),
-                UserId = 1,
-                Id = null,
-                LocalId = 1,
-                LocalTempId = "Temp1"
+                UpdatedAt = DateTime.Now,
+                ObjectId = "2",
+                Status = OperationStatus.Pending
             };
 
-            Book bookForAddInApi2 = new()
+            ApiOperation insertBook2Op = new()
             {
-                Title = "Teste de Título 2",
-                Authors = "Emanuel Teste",
-                Status = Status.IllRead,
+                Id = 2,
+                Content = "{\"LocalId\":3,\"Id\":null,\"UserId\":0,\"Title\":\"livro dois\",\"SubTitle\":\"subt\\u00EDtulo dois\",\"Authors\":\"autor dois\",\"Volume\":12,\"Pages\":123,\"Year\":2023,\"Status\":1,\"Genre\":\"\",\"Isbn\":\"\",\"Cover\":\"\",\"GoogleId\":null,\"Score\":0,\"Comment\":null,\"CreatedAt\":\"0001-01-01T00:00:00\",\"UpdatedAt\":\"2024-03-01T18:15:48.3594026-03:00\",\"Inactive\":false}",
+                ObjectType = ObjectType.Book,
+                ExecutionType = ExecutionType.Insert,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now.AddDays(-2),
-                UserId = 1,
-                Id = null,
-                LocalId = 2,
-                LocalTempId = "Temp2"
+                UpdatedAt = DateTime.Now,
+                ObjectId = "3",
+                Status = OperationStatus.Pending
             };
 
-            List<Book> mockBooks = new List<Book>()
+            List<ApiOperation> PendingOperations =
+            [
+               insertBook1Op,
+                insertBook2Op
+            ];
+
+            ApiResponse insertBook1response = new() { Success = true, Content = "100" };
+            ApiResponse insertBook2response = new() { Success = true, Content = "120" };
+
+            DateTime datetimeNow = DateTime.Now;
+
+            Book insertBook1Local = new()
             {
-                bookForAddInApi1,
-                bookForAddInApi2,
-                //new() {
-                //    Title = "Teste de Título 3",
-                //    Authors = "Emanuel Teste",
-                //    Status = Status.IllRead,
-                //    CreatedAt = DateTime.Now,
-                //    UpdatedAt = DateTime.Now.AddDays(-5),
-                //    UserId = 1,
-                //    Id = 3,
-                //    LocalId = 3,
-                //},
-                //new() {
-                //    Title = "Teste de Título 4",
-                //    Authors = "Emanuel Teste",
-                //    Status = Status.IllRead,
-                //    CreatedAt = DateTime.Now,
-                //    UpdatedAt = DateTime.Now.AddDays(-5),
-                //    UserId = 1,
-                //    Id = 4,
-                //    LocalId = 4,
-                //},
-                //new() {
-                //    Title = "Teste de Título 5",
-                //    Authors = "Emanuel Teste",
-                //    Status = Status.IllRead,
-                //    CreatedAt = DateTime.Now,
-                //    UpdatedAt = DateTime.Now.AddDays(-5),
-                //    UserId = 1,
-                //    Id = 5,
-                //    LocalId = 5,
-                //},
+                Title = "livro um",
+                SubTitle = "subtítulo um",
+                Authors = "autor um",
+                Volume = 12,
+                Pages = 123,
+                Year = 2023,
+                Status = Status.IllRead,
+                Genre = "",
+                CreatedAt = DateTime.MinValue,
+                UpdatedAt = datetimeNow,
+                Inactive = false,
+                Score = 0,
+                Isbn = "",
+                LocalId = 2
             };
 
-            Mock<IBookApiBLL> bookApiBLL = new();
+            Book insertBook2Local = new()
+            {
+                Title = "livro dois",
+                SubTitle = "subtítulo dois",
+                Authors = "autor dois",
+                Volume = 12,
+                Pages = 123,
+                Year = 2023,
+                Status = Status.IllRead,
+                Genre = "",
+                CreatedAt = DateTime.MinValue,
+                UpdatedAt = datetimeNow,
+                Inactive = false,
+                Score = 0,
+                Isbn = "",
+                LocalId = 3
+            };
+            BLLResponse bLL1Response = new() { Success = true, Content = 10 };
+            BLLResponse bLL2Response = new() { Success = true, Content = 20 };
 
-            BLLResponse bLLResponse1 = new() { Success = true, Content = 1 };
-            BLLResponse bLLResponse2 = new() { Success = true, Content = 2 };
+            mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(OperationStatus.Pending)).ReturnsAsync(PendingOperations);
+            mockBookApiBLL.Setup(x => x.AddBookAsync(It.IsAny<Book>())).ReturnsAsync(bLL1Response);
+            mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(It.IsAny<Book>()));
+            mockOperationQueueDAL.Setup(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook1Op.Id));
 
-            bookApiBLL.Setup(x => x.AddBookAsync(bookForAddInApi1)).ReturnsAsync(() => bLLResponse1);
-            bookApiBLL.Setup(x => x.AddBookAsync(bookForAddInApi2)).ReturnsAsync(() => bLLResponse2);
+            mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(OperationStatus.Pending)).ReturnsAsync(PendingOperations);
+            mockBookApiBLL.Setup(x => x.AddBookAsync(It.IsAny<Book>())).ReturnsAsync(bLL1Response);
+            mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(It.IsAny<Book>()));
+            mockOperationQueueDAL.Setup(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook1Op.Id));
 
-            Mock<IBookDAL> mockBookDAL = new();
-            mockBookDAL.Setup(x => x.GetBookByAfterUpdatedAt(1, lastUpdate)).Returns(mockBooks);
-            mockBookDAL.Setup(x => x.ExecuteAddBookAsync(bookForAddInApi1)).ReturnsAsync(1);
-            mockBookDAL.Setup(x => x.ExecuteAddBookAsync(bookForAddInApi2)).ReturnsAsync(1);
+            //mockHttpClientFunctions.Setup(x => x.AuthRequest(insertBook2Op.RequestType, ApiKeys.ApiAddress + insertBook2Op.Url, insertBook2Op.Content)).ReturnsAsync(insertBook2response);
+            //mockBookDAL.Setup(x => x.GetBookByLocalIdAsync(1, 3)).ReturnsAsync(insertBook2Local);
+            //mockOperationQueueDAL.Setup(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook2Op.Id));
 
+            mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(It.IsAny<Book>()));
 
-            BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, mockBookDAL.Object);
+            BookSyncBLL bookSyncBLL = new(mockBookApiBLL.Object, mockBookDAL.Object, mockOperationQueueDAL.Object);
 
             (int added, int updated) = bookSyncBLL.LocalToApiSync(1, lastUpdate).Result;
 
-            if (added == 2 && updated == 0)
+            mockBookDAL.Verify(x => x.ExecuteUpdateBookAsync(It.IsAny<Book>()), Times.Exactly(2));
+            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook1Op.Id), Times.Once());
+            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook2Op.Id), Times.Once());
+
+            if (added == 2)
                 Assert.IsTrue(true);
             else
                 Assert.Fail();
         }
 
+        [Fact(DisplayName = "Adiciona um livro e o atualiza via as operações.")]
         [TestMethod()]
-        public void LocalToApiSync_ApiAdd_And_Update_Book_Test()
+        public void LocalToApiSync_ApiAdd_And_Update_Same_Book_Test()
         {
             DateTime lastUpdate = DateTime.Now.AddDays(-3);
 
-            Book bookForAddInApi1 = new()
+            ApiOperation insertBookOp = new()
             {
-                Title = "Teste de Título 6",
-                Authors = "Emanuel Teste",
-                Status = Status.IllRead,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now.AddDays(-2),
-                UserId = 1,
-                Id = null,
-                LocalTempId = "Temp1"
+                Id = 1,
+                Content = "{\"LocalId\":36,\"Id\":null,\"UserId\":6,\"LocalTempId\":\"35d624bd-f7df-49c4-979c-784dc59a4f90\",\"Title\":\"teste livro add\",\"SubTitle\":\"subs add\",\"Authors\":\"teste add\",\"Volume\":21,\"Pages\":32,\"Year\":2013," +
+                "\"Status\":1,\"Genre\":\"\",\"Isbn\":\"\",\"Cover\":\"\",\"GoogleId\":null,\"Score\":0,\"Comment\":null,\"CreatedAt\":\"0001-01-01T00:00:00\",\"UpdatedAt\":\"2024-03-06T07:50:11.6830278-03:00\",\"Inactive\":false}",
+                ObjectType = ObjectType.Book,
+                ExecutionType = ExecutionType.Insert,
+                ObjectId = "36",
+                CreatedAt = new DateTime(2024, 03, 06, 07, 50, 14),
+                UpdatedAt = new DateTime(2024, 03, 06, 07, 50, 14),
+                Status = OperationStatus.Pending,
             };
 
-            Book bookForUptInApi1 = new()
+            ApiOperation updateBookOp = new()
             {
-                Title = "Teste de Título 2",
-                Authors = "Emanuel Teste",
-                Status = Status.IllRead,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now.AddDays(-2),
-                UserId = 1,
                 Id = 2,
+                Content = "{\"LocalId\":36,\"Id\":null,\"UserId\":6,\"LocalTempId\":null,\"Title\":\"teste livro add\",\"SubTitle\":\"subs add\",\"Authors\":\"teste add\",\"Volume\":21,\"Pages\":32,\"Year\":2013,\"Status\":3,\"Genre\":\"\",\"Isbn\":\"\"," +
+                "\"Cover\":\"\",\"GoogleId\":null,\"Score\":3,\"Comment\":null,\"CreatedAt\":\"0001-01-01T00:00:00\",\"UpdatedAt\":\"2024-03-06T07:50:38.9655821-03:00\",\"Inactive\":false}",
+                ObjectType = ObjectType.Book,
+                ExecutionType = ExecutionType.Update,
+                ObjectId = "36",
+                CreatedAt = new DateTime(0001, 01, 01, 0, 0, 0),
+                UpdatedAt = new DateTime(2024, 03, 06, 07, 50, 38),
+                Status = OperationStatus.Pending,
             };
 
-            Book bookForUptInApi2 = new()
+            Book insertBook1Local = new()
             {
-                Title = "Teste de Título Alterado",
-                Authors = "Emanuel Teste",
+                Title = "teste livro add",
+                SubTitle = "subs add",
+                Authors = "teste add",
+                Volume = 21,
+                Pages = 32,
+                Year = 2013,
                 Status = Status.IllRead,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now.AddDays(-2),
-                UserId = 1,
-                Id = 3
+                Genre = "",
+                CreatedAt = DateTime.MinValue,
+                UpdatedAt = lastUpdate,
+                Inactive = false,
+                Score = 0,
+                Isbn = "",
+                LocalId = 3
             };
 
-            List<Book> mockBooks =
+            List<ApiOperation> PendingOperations = new List<ApiOperation>() { insertBookOp, updateBookOp };
+
+            BLLResponse insertBook1Response = new() { Success = true, Content = "100" };
+            BLLResponse uptBook2Response = new() { Success = true };
+
+            termina isso aqui mano, na moral.
+        }
+
+        [Fact(DisplayName = "Adiciona um livro e atualiza outro")]
+        [TestMethod()]
+        public void LocalToApiSync_ApiAdd_And_Update_Books_Test()
+        {
+            DateTime lastUpdate = DateTime.Now.AddDays(-3);
+            ApiOperation insertBook1Op = new()
+            {
+                Id = 1,
+                Content = "{\"LocalId\":2,\"Id\":null,\"UserId\":0,\"LTempId\":\"01d00c2f-6137-4afe-9f55-73eb533e1963\",\"Title\":\"livro um\",\"SubTitle\":\"subt\\u00EDtulo um\",\"Authors\":\"autor um\",\"Volume\":12,\"Pages\":123,\"Year\":2023,\"Status\":1,\"Genre\":\"\",\"Isbn\":\"\",\"Cover\":\"\",\"GoogleId\":null,\"Score\":0,\"Comment\":null,\"CreatedAt\":\"0001-01-01T00:00:00\",\"UpdatedAt\":\"2024-03-01T18:15:48.3594026-03:00\",\"Inactive\":false}",
+                ObjectType = ObjectType.Book,
+                ExecutionType = ExecutionType.Insert,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                ObjectId = "2",
+                Status = OperationStatus.Pending
+            };
+
+            ApiOperation uptBook1Op = new()
+            {
+                Id = 2,
+                Content = "{\"LocalId\":3,\"Id\":null,\"UserId\":0,\"Title\":\"livro dois alterado\",\"SubTitle\":\"subt\\u00EDtulo dois\",\"Authors\":\"autor dois\",\"Volume\":12,\"Pages\":123,\"Year\":2023,\"Status\":1,\"Genre\":\"\",\"Isbn\":\"\",\"Cover\":\"\",\"GoogleId\":null,\"Score\":0,\"Comment\":null,\"CreatedAt\":\"0001-01-01T00:00:00\",\"UpdatedAt\":\"2024-03-01T18:15:48.3594026-03:00\",\"Inactive\":false}",
+                ObjectType = ObjectType.Book,
+                ExecutionType = ExecutionType.Update,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                ObjectId = "3",
+                Status = OperationStatus.Pending
+            };
+
+            List<ApiOperation> PendingOperations =
             [
-                bookForAddInApi1,
-                bookForUptInApi1,
-                bookForUptInApi2,
-                //new() {
-                //    Title = "Teste de Título 4",
-                //    Authors = "Emanuel Teste",
-                //    Status = Status.IllRead,
-                //    CreatedAt = DateTime.Now,
-                //    UpdatedAt = DateTime.Now.AddDays(-5),
-                //    UserId = 1,
-                //    Id = 4
-                //},
-                //   new() {
-                //    Title = "Teste de Título 5",
-                //    Authors = "Emanuel Teste",
-                //    Status = Status.IllRead,
-                //    CreatedAt = DateTime.Now,
-                //    UpdatedAt = DateTime.Now.AddDays(-5),
-                //    UserId = 1,
-                //       Id = 5
-                //   },
+               insertBook1Op,
+                uptBook1Op
             ];
 
-            Mock<IBookApiBLL> mockBookApiBLL = new();
-            Mock<IBookDAL> mockBookDAL = new();
-            BLLResponse mockResponseBookForAddInApi1 = new BLLResponse() { Success = true, Content = 1 };
-            BLLResponse mockResponsebookForUptInApi1 = new BLLResponse() { Success = true, Content = 2 };
-            BLLResponse mockResponseBookForAddInApi2 = new BLLResponse() { Success = true, Content = 3 };
+            BLLResponse insertBook1Response = new() { Success = true, Content = "100" };
+            BLLResponse uptBook2Response = new() { Success = true };
 
-            mockBookDAL.Setup(x => x.GetBookByAfterUpdatedAt(1, lastUpdate)).Returns(mockBooks);
-            mockBookApiBLL.Setup(x => x.AddBookAsync(bookForAddInApi1)).ReturnsAsync(mockResponseBookForAddInApi1);
-            mockBookApiBLL.Setup(x => x.UpdateBookAsync(bookForUptInApi1)).ReturnsAsync(mockResponsebookForUptInApi1);
-            mockBookApiBLL.Setup(x => x.UpdateBookAsync(bookForUptInApi2)).ReturnsAsync(mockResponseBookForAddInApi2);
+            DateTime datetimeNow = DateTime.Now;
 
-            Book bookForAddInApi1ForUpdateLocal = new()
+            Book insertBook1Local = new()
             {
-                Title = "Teste de Título 6",
-                Authors = "Emanuel Teste",
+                Title = "livro um",
+                SubTitle = "subtítulo um",
+                Authors = "autor um",
+                Volume = 12,
+                Pages = 123,
+                Year = 2023,
                 Status = Status.IllRead,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now.AddDays(-2),
-                UserId = 1,
-                Id = 1,
-                LocalTempId = null
+                Genre = "",
+                CreatedAt = DateTime.MinValue,
+                UpdatedAt = datetimeNow,
+                Inactive = false,
+                Score = 0,
+                Isbn = "",
+                LocalId = 3
             };
 
-            mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(bookForAddInApi1ForUpdateLocal)).ReturnsAsync(1);
+            mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(OperationStatus.Pending)).ReturnsAsync(PendingOperations);
+            mockBookApiBLL.Setup(x => x.AddBookAsync(It.IsAny<Book>())).ReturnsAsync(insertBook1Response);
+            mockBookApiBLL.Setup(c => c.UpdateBookAsync(It.IsAny<Book>())).ReturnsAsync(uptBook2Response);
+            mockBookDAL.Setup(x => x.GetBookByLocalIdAsync(1, 2)).ReturnsAsync(insertBook1Local);
+            mockOperationQueueDAL.Setup(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook1Op.Id));
 
-            BookSyncBLL bookSyncBLL = new(mockBookApiBLL.Object, mockBookDAL.Object);
+            mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(It.IsAny<Book>()));
+
+            BookSyncBLL bookSyncBLL = new(mockBookApiBLL.Object, mockBookDAL.Object, mockOperationQueueDAL.Object);
 
             (int added, int updated) = bookSyncBLL.LocalToApiSync(1, lastUpdate).Result;
 
-            if (added == 1 && updated == 2)
+            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook1Op.Id), Times.Once());
+            mockBookDAL.Verify(x => x.ExecuteUpdateBookAsync(It.IsAny<Book>()), Times.Once);
+            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook1Op.Id), Times.Once());
+
+            if (added == 1 && updated == 1)
                 Assert.IsTrue(true);
             else
                 Assert.Fail();

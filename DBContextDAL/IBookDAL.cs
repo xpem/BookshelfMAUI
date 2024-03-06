@@ -16,9 +16,9 @@ namespace DbContextDAL
 
         Task<Book?> GetBookByLocalIdAsync(int uid, int localId);
 
-        Task<Book?> GetBookByTitleAsync(int uid, string title);
+        Task<Book?> GetBookByLocalTempIdAsync(int uid, string localTempId);
 
-        Book? GetBookByTitleOrGoogleId(int uid, string title, string googleId);
+        Task<Book?> GetBookByTitleAsync(int uid, string title);
 
         DateTime? GetBookUpdatedAtById(int id);
 
@@ -27,5 +27,9 @@ namespace DbContextDAL
         Task<List<Book>> GetBooksAsync(int uid, int page);
 
         Task<List<Book>> GetBooksByStatusAsync(int uid, Status status, int page);
+
+        Task<Book?> GetBookByTitleOrGoogleIdAsync(int uid, string title, string? googleId = null);
+
+        Task<bool> CheckIfExistsBookWithSameTitleAsync(int uid, string title, int? localId);
     }
 }

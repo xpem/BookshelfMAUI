@@ -12,7 +12,7 @@ namespace BLL
 
             VersionDbTables? actualVesionDbTables = bookshelfDBContext.VersionDbTables.FirstOrDefault();
 
-            VersionDbTables newVersionDbTables = new() { Id = 0, VERSION = 8 };
+            VersionDbTables newVersionDbTables = new() { Id = 0, VERSION = 11 };
 
             if (actualVesionDbTables != null)
             {
@@ -38,6 +38,7 @@ namespace BLL
             bookshelfDBContext.User.RemoveRange(bookshelfDBContext.User);
             bookshelfDBContext.BookHistoric.RemoveRange(bookshelfDBContext.BookHistoric);
             bookshelfDBContext.BookHistoricItem.RemoveRange(bookshelfDBContext.BookHistoricItem);
+            bookshelfDBContext.ApiOperationQueue.RemoveRange(bookshelfDBContext.ApiOperationQueue);
 
             await bookshelfDBContext.SaveChangesAsync();
         }

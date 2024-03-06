@@ -20,6 +20,7 @@ namespace BLL.Books
                     if (jResp is not null)
                     {
                         int? addedBookId = null;
+
                         if (jResp != null)
                             addedBookId = jResp["id"]?.GetValue<int>();
 

@@ -14,6 +14,8 @@ namespace DBContextDAL
 
         public virtual DbSet<Models.Books.Historic.BookHistoricItem> BookHistoricItem { get; set; }
 
+        public virtual DbSet<Models.OperationQueue.ApiOperation> ApiOperationQueue { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite($"Filename={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Bookshelf.db")}").UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);

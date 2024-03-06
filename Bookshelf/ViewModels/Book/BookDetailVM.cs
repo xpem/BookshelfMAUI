@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class BookDetailVM(IBooksBLL _booksServices) : ViewModelBase, IQueryAttributable
+    public class BookDetailVM(IBookBLL _booksServices) : ViewModelBase, IQueryAttributable
     {
 
         #region bind variables.
@@ -128,7 +128,7 @@ namespace Bookshelf.ViewModels
             {
                 if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir este livro?", "Sim", "Cancelar"))
                 {
-                    _ = _booksServices.InactivateBookAsync(((App)App.Current).Uid, LocalId);
+                    _ = _booksServices.InactivateBookAsync(((App)App.Current).Uid, (Connectivity.NetworkAccess == NetworkAccess.Internet), LocalId);
 
                     if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
                     {
@@ -251,7 +251,7 @@ namespace Bookshelf.ViewModels
 
             if (alterou)
             {
-                _ = _booksServices.UpdateBookSituationAsync(((App)App.Current).Uid, LocalId, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
+                _ = _booksServices.UpdateBookSituationAsync(((App)App.Current).Uid, (Connectivity.NetworkAccess == NetworkAccess.Internet), LocalId, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
 
                 if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Situação alterada", null, "Ok"))
                 {

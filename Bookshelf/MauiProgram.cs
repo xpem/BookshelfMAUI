@@ -53,39 +53,7 @@ public static class MauiProgram
 
         #region Dependency injections
 
-        #region UIs
-
-        builder.Services.AddTransient<Main>();
-        builder.Services.AddTransient<MainVM>();
-
-        builder.Services.AddTransient<SignIn>();
-        builder.Services.AddTransient<SignInVM>();
-
-        builder.Services.AddTransient<SignUp>();
-        builder.Services.AddTransient<SignUpVM>();
-
-        builder.Services.AddTransient<UpdatePassword>();
-        builder.Services.AddTransient<UpdatePasswordVM>();
-
-        builder.Services.AddTransient<AddBook>();
-        builder.Services.AddTransient<AddBookVM>();
-
-        builder.Services.AddTransient<BookList>();
-        builder.Services.AddTransient<BookListVM>();
-
-        builder.Services.AddTransient<BookDetail>();
-        builder.Services.AddTransient<BookDetailVM>();
-
-        builder.Services.AddTransient<GoogleBooksResults>();
-        builder.Services.AddTransient<GoogleBooksResultsVM>();
-
-        builder.Services.AddTransient<BookHistoric>();
-        builder.Services.AddTransient<BookHistoricVM>();
-
-        builder.Services.AddTransient<FirstSyncProcess>();
-        builder.Services.AddTransient<FirstSyncProcessVM>();
-
-        #endregion
+        builder.Services.AddUIServices();
 
         #region UIServices
 
@@ -93,42 +61,88 @@ public static class MauiProgram
 
         #endregion;
 
-        #region BLL
-
-        builder.Services.AddScoped<IBookHistoricApiBLL, BookHistoricApiBLL>();
-        builder.Services.AddScoped<IBookHistoricBLL, BookHistoricBLL>();
-        builder.Services.AddScoped<IBooksBLL, BooksBLL>();
-        builder.Services.AddScoped<IBookApiBLL, BooksApiBLL>();
-        builder.Services.AddScoped<IUserBLL, UserBLL>();
-
-        builder.Services.AddScoped<IBookHistoricSyncBLL, BookHistoricSyncBLL>();
-
-        builder.Services.AddScoped<IBuildDbBLL, BuildDbBLL>();
-        builder.Services.AddScoped<IBookSyncBLL, BookSyncBLL>();
-
-        #endregion
+        builder.Services.AddBLLServices();
 
         builder.Services.AddDbContext<BookshelfDbContext>();
 
-        #region ApiDAL
+        builder.Services.ApiDALServices();
 
-        builder.Services.AddScoped<IHttpClientFunctions, HttpClientFunctions>();
-        builder.Services.AddScoped<IUserApiDAL, UserApiDAL>();
-        builder.Services.AddScoped<IBookHistoricApiDAL, BookHistoricApiDAL>();
-        builder.Services.AddScoped<IBookApiDAL, BookApiDAL>();
-
-        #endregion
-
-        #region DAL
-
-        builder.Services.AddScoped<IBookDAL, BookDAL>();
-        builder.Services.AddScoped<IBookHistoricDAL, BookHistoricDAL>();
-        builder.Services.AddScoped<IUserDAL, UserDAL>();
-
-        #endregion
+        builder.Services.DALServices();
 
         #endregion
 
         return builder.Build();
     }
+
+    public static IServiceCollection AddUIServices(this IServiceCollection services)
+    {
+        services.AddTransient<Main>();
+        services.AddTransient<MainVM>();
+
+        services.AddTransient<SignIn>();
+        services.AddTransient<SignInVM>();
+
+        services.AddTransient<SignUp>();
+        services.AddTransient<SignUpVM>();
+
+        services.AddTransient<UpdatePassword>();
+        services.AddTransient<UpdatePasswordVM>();
+
+        services.AddTransient<AddBook>();
+        services.AddTransient<AddBookVM>();
+
+        services.AddTransient<BookList>();
+        services.AddTransient<BookListVM>();
+
+        services.AddTransient<BookDetail>();
+        services.AddTransient<BookDetailVM>();
+
+        services.AddTransient<GoogleBooksResults>();
+        services.AddTransient<GoogleBooksResultsVM>();
+
+        services.AddTransient<BookHistoric>();
+        services.AddTransient<BookHistoricVM>();
+
+        services.AddTransient<FirstSyncProcess>();
+        services.AddTransient<FirstSyncProcessVM>();
+        return services;
+    }
+
+    public static IServiceCollection AddBLLServices(this IServiceCollection services)
+    {
+        services.AddScoped<IBookHistoricApiBLL, BookHistoricApiBLL>();
+        services.AddScoped<IBookHistoricBLL, BookHistoricBLL>();
+        services.AddScoped<IBookBLL, BookBLL>();
+        services.AddScoped<IBookApiBLL, BooksApiBLL>();
+        services.AddScoped<IUserBLL, UserBLL>();
+
+        services.AddScoped<IBookHistoricSyncBLL, BookHistoricSyncBLL>();
+
+        services.AddScoped<IBuildDbBLL, BuildDbBLL>();
+        services.AddScoped<IBookSyncBLL, BookSyncBLL>();
+        services.AddScoped<IBooksOperationBLL, BooksOperationBLL>();
+
+        return services;
+    }
+
+    public static IServiceCollection ApiDALServices(this IServiceCollection services)
+    {
+        services.AddScoped<IHttpClientFunctions, HttpClientFunctions>();
+        services.AddScoped<IUserApiDAL, UserApiDAL>();
+        services.AddScoped<IBookHistoricApiDAL, BookHistoricApiDAL>();
+        services.AddScoped<IBookApiDAL, BookApiDAL>();
+        services.AddScoped<IOperationQueueDAL, OperationQueueDAL>();
+
+        return services;
+    }
+
+    public static IServiceCollection DALServices(this IServiceCollection services)
+    {
+        services.AddScoped<IBookDAL, BookDAL>();
+        services.AddScoped<IBookHistoricDAL, BookHistoricDAL>();
+        services.AddScoped<IUserDAL, UserDAL>();
+
+        return services;
+    }
+
 }

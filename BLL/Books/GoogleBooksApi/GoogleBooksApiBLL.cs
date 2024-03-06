@@ -99,7 +99,7 @@ namespace BLL.Books.GoogleBooksApi
 
         private static (List<UIGoogleBook>, int) BuildListBooksResult(string json)
         {
-            List<UIGoogleBook> list = new();
+            List<UIGoogleBook> list = [];
             int totalItems;
 
             try

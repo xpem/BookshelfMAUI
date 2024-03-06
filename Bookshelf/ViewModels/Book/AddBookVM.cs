@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class AddBookVM(IBooksBLL _booksServices) : ViewModelBase, IQueryAttributable
+    public class AddBookVM(IBookBLL bookBLL) : ViewModelBase, IQueryAttributable
     {
         private int? rate;
 
@@ -119,11 +119,11 @@ namespace Bookshelf.ViewModels
             if (string.IsNullOrEmpty(LocalId))
             {
                 if (!string.IsNullOrEmpty(GoogleKey))
-                    await GetGoogleBook();
+                    await GetGoogleBookAsync();
 
                 if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(GoogleKey))
                 {
-                    Models.Books.Book _book = _booksServices.GetBookbyTitleOrGoogleId(((App)App.Current).Uid, Title, GoogleKey);
+                    Models.Books.Book _book = await bookBLL.GetBookbyTitleOrGoogleIdAsync(((App)App.Current).Uid, Title, GoogleKey);
 
                     if (_book is not null)
                     {
@@ -143,11 +143,10 @@ namespace Bookshelf.ViewModels
                     Isbn = Genre = Volume = "";
                 }
             }
-            else
-                _ = Task.Run(() => GetBook(Convert.ToInt32(LocalId)));
+            else _ = GetBookAsync(Convert.ToInt32(LocalId));
         }
 
-        protected async Task GetGoogleBook()
+        protected async Task GetGoogleBookAsync()
         {
             UIGoogleBook _googleBook = await BLL.Books.GoogleBooksApi.GoogleBooksApiBLL.GetBook(GoogleKey);
 
@@ -217,7 +216,7 @@ namespace Bookshelf.ViewModels
         /// <summary>
         /// get book by book key
         /// </summary>
-        protected async Task GetBook(int localId) => BuildBook(await _booksServices.GetBookAsync(((App)App.Current).Uid, localId));
+        protected async Task GetBookAsync(int localId) => BuildBook(await bookBLL.GetBookAsync(((App)App.Current).Uid, localId));
 
         private async Task InsertBook()
         {
@@ -273,9 +272,11 @@ namespace Bookshelf.ViewModels
                     if (!string.IsNullOrEmpty(LocalId))
                     {
                         book.LocalId = Convert.ToInt32(LocalId);
-                        book.Id = Convert.ToInt32(BookId);
 
-                        Models.Responses.BLLResponse uptRes = await _booksServices.UpdateBookAsync(((App)App.Current).Uid, book);
+                        if (!string.IsNullOrEmpty(BookId))
+                            book.Id = Convert.ToInt32(BookId);
+
+                        Models.Responses.BLLResponse uptRes = await bookBLL.UpdateBookAsync(((App)App.Current).Uid, IsOn, book);
 
                         if (!uptRes.Success)
                         {
@@ -288,7 +289,7 @@ namespace Bookshelf.ViewModels
                     }
                     else
                     {
-                        Models.Responses.BLLResponse addRes = await _booksServices.AddBookAsync(((App)App.Current).Uid, book);
+                        Models.Responses.BLLResponse addRes = await bookBLL.AddBookAsync(((App)App.Current).Uid, IsOn, book);
 
                         if (!addRes.Success)
                         {
@@ -316,7 +317,7 @@ namespace Bookshelf.ViewModels
             bool ValidInfo = true;
             if (string.IsNullOrEmpty(Title))
                 ValidInfo = false;
-            else if (_booksServices.GetBookbyTitleOrGoogleId(((App)App.Current).Uid, Title, null) is not null)
+            else if (await bookBLL.CheckIfExistsBookWithSameTitleAsync(((App)App.Current).Uid, Title, !string.IsNullOrEmpty(BookId) ? Convert.ToInt32(BookId) : null))
                 ValidInfo = false;
 
             if (string.IsNullOrEmpty(Authors))
