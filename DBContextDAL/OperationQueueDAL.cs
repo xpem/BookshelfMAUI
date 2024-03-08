@@ -20,7 +20,9 @@ namespace DbContextDAL
     {
         public async Task UpdateOperationStatusAsync(OperationStatus operationStatus, int operationId) =>
             await bookshelfDbContext.ApiOperationQueue.Where(x => x.Id == operationId)
-            .ExecuteUpdateAsync(y => y.SetProperty(z => z.Status, operationStatus));
+            .ExecuteUpdateAsync(y => y
+            .SetProperty(z => z.Status, operationStatus)
+            .SetProperty(z => z.UpdatedAt, DateTime.Now));
 
         public async Task<List<ApiOperation>> GetPendingOperationsByStatusAsync(OperationStatus operationStatus) =>
             await bookshelfDbContext.ApiOperationQueue.Where(x => x.Status == operationStatus).OrderBy(x => x.CreatedAt).ToListAsync();

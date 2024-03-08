@@ -11,7 +11,7 @@ namespace BLL.Books
         Task InsertOperationUpdateBookAsync(Book book);
     }
 
-    public class BooksOperationBLL(IOperationQueueDAL operationQueueDAL) : OperationBaseBLL(operationQueueDAL), IBooksOperationBLL
+    public class BooksOperationBLL(IOperationQueueDAL operationQueueDAL) : ApiOperationBaseBLL(operationQueueDAL), IBooksOperationBLL
     {
         public async Task InsertOperationInsertBookAsync(Models.Books.Book book) =>
             await InsertOperationAsync(JsonSerializer.Serialize(book), book.LocalId.ToString(), Models.OperationQueue.ExecutionType.Insert);
