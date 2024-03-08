@@ -1,9 +1,6 @@
-﻿using ApiDAL;
-using ApiDAL.Interfaces;
-using BLL.Books.Sync;
+﻿using ApiDAL.Interfaces;
 using DbContextDAL;
 using DBContextDAL;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Models.Books;
 using Models.OperationQueue;
@@ -24,7 +21,7 @@ namespace BLL.Books.Sync.Tests
         public void ApiToLocalSync_CreateLocalBooksTest()
         {
 
-            Mock<DbSet<Book>> mockSetBook = new();
+            Mock<Microsoft.EntityFrameworkCore.DbSet<Book>> mockSetBook = new();
 
             DateTime lastUpdate = DateTime.MinValue;
 
@@ -147,7 +144,6 @@ namespace BLL.Books.Sync.Tests
 
             Mock<IBookApiBLL> bookApiBLL = new();
 
-
             BLLResponse bLLResponse = new() { Success = true, Content = apiResultBooks };
 
             bookApiBLL.Setup(x => x.GetBooksByLastUpdateAsync(lastUpdate)).ReturnsAsync(() => bLLResponse);
@@ -167,7 +163,7 @@ namespace BLL.Books.Sync.Tests
         [TestMethod()]
         public void ApiToLocalSync_Create_and_UpdateLocalBooksTest()
         {
-            Mock<DbSet<Book>> mockSetBook = new();
+            Mock<Microsoft.EntityFrameworkCore.DbSet<Book>> mockSetBook = new();
 
             DateTime lastUpdate = DateTime.Now.AddDays(-3);
 
@@ -305,7 +301,7 @@ namespace BLL.Books.Sync.Tests
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 ObjectId = "2",
-                Status = OperationStatus.Pending
+                Status = Models.OperationQueue.OperationStatus.Pending
             };
 
             ApiOperation insertBook2Op = new()
@@ -317,7 +313,7 @@ namespace BLL.Books.Sync.Tests
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 ObjectId = "3",
-                Status = OperationStatus.Pending
+                Status = Models.OperationQueue.OperationStatus.Pending
             };
 
             List<ApiOperation> PendingOperations =
@@ -403,6 +399,7 @@ namespace BLL.Books.Sync.Tests
         [TestMethod()]
         public void LocalToApiSync_ApiAdd_And_Update_Same_Book_Test()
         {
+
             DateTime lastUpdate = DateTime.Now.AddDays(-3);
 
             ApiOperation insertBookOp = new()
@@ -426,7 +423,7 @@ namespace BLL.Books.Sync.Tests
                 ObjectType = ObjectType.Book,
                 ExecutionType = ExecutionType.Update,
                 ObjectId = "36",
-                CreatedAt = new DateTime(0001, 01, 01, 0, 0, 0),
+                CreatedAt = new DateTime(2024, 03, 06, 07, 50, 38),
                 UpdatedAt = new DateTime(2024, 03, 06, 07, 50, 38),
                 Status = OperationStatus.Pending,
             };
@@ -449,12 +446,44 @@ namespace BLL.Books.Sync.Tests
                 LocalId = 3
             };
 
-            List<ApiOperation> PendingOperations = new List<ApiOperation>() { insertBookOp, updateBookOp };
+            Book updatedBook1Local = new()
+            {
+                Title = "teste livro add",
+                SubTitle = "subs add",
+                Authors = "teste add",
+                Volume = 21,
+                Pages = 32,
+                Year = 2013,
+                Status = Status.IllRead,
+                Genre = "",
+                CreatedAt = DateTime.MinValue,
+                UpdatedAt = lastUpdate,
+                Inactive = false,
+                Score = 0,
+                Isbn = "",
+                LocalId = 3,
+                Id = 100,
+            };
 
             BLLResponse insertBook1Response = new() { Success = true, Content = "100" };
-            BLLResponse uptBook2Response = new() { Success = true };
+            BLLResponse uptBook1Response = new() { Success = true };
 
-            termina isso aqui mano, na moral.
+            var pendingOperations = new List<ApiOperation>() { insertBookOp, updateBookOp };
+
+
+            mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(Models.OperationQueue.OperationStatus.Pending))
+                .ReturnsAsync(pendingOperations);
+            mockBookApiBLL.Setup(x => x.AddBookAsync(It.IsAny<Book>())).ReturnsAsync(insertBook1Response);
+            mockBookApiBLL.Setup(c => c.UpdateBookAsync(It.IsAny<Book>())).ReturnsAsync(uptBook1Response);
+            mockBookDAL.Setup(x => x.GetBookByLocalIdAsync(6, 36)).ReturnsAsync(updatedBook1Local);
+
+            BookSyncBLL bookSyncBLL = new(mockBookApiBLL.Object, mockBookDAL.Object, mockOperationQueueDAL.Object);
+            (int added, int updated) = bookSyncBLL.LocalToApiSync(1, lastUpdate).Result;
+
+            if (added == 1 && updated == 1)
+                Assert.IsTrue(true);
+            else
+                Assert.Fail();
         }
 
         [Fact(DisplayName = "Adiciona um livro e atualiza outro")]

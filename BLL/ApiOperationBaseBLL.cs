@@ -3,21 +3,23 @@ using Models.OperationQueue;
 
 namespace BLL
 {
-    public interface IOperationBaseBLL
+    public interface IApiOperationBaseBLL
     {
         Task InsertOperationAsync(string jsonContent, string objectId, ExecutionType executionType);
     }
 
-    public class OperationBaseBLL(IOperationQueueDAL operationQueueDAL)
+    public class ApiOperationBaseBLL(IOperationQueueDAL operationQueueDAL)
     {
         protected async Task InsertOperationAsync(string jsonContent, string objectId, ExecutionType executionType)
         {
+            DateTime dateTimeNow = DateTime.Now;
+
             Models.OperationQueue.ApiOperation apiOperation = new()
             {
-                CreatedAt = DateTime.Now,
+                CreatedAt = dateTimeNow,
                 ObjectType = Models.OperationQueue.ObjectType.Book,
                 Status = Models.OperationQueue.OperationStatus.Pending,
-                UpdatedAt = DateTime.Now,
+                UpdatedAt = dateTimeNow,
                 Content = jsonContent,
                 ObjectId = objectId,
                 ExecutionType = executionType
