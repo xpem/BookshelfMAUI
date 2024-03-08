@@ -16,24 +16,30 @@ namespace Bookshelf.ViewModels.GoogleSearch
             get => pageTitle; set { if (pageTitle != value) { pageTitle = value; OnPropertyChanged(); } }
         }
 
-        bool isConnected;
+        bool isNotConnected, isConnected;
+
+        public bool IsNotConnected
+        {
+            get => isNotConnected; set { if (IsNotConnected != value) { isNotConnected = value; OnPropertyChanged(nameof(IsNotConnected)); } }
+        }
 
         public bool IsConnected
         {
-            get => isConnected; set { if (isConnected != value) { isConnected = value; OnPropertyChanged(nameof(IsConnected)); } }
+            get => isConnected; set { if (IsConnected != value) { isConnected = value; OnPropertyChanged(nameof(IsConnected)); } }
         }
 
         private int CurrentPage;
         private int TotalItems;
 
-        public ObservableCollection<UIGoogleBook> GoogleBooksList { get; } = new();
+        public ObservableCollection<UIGoogleBook> GoogleBooksList { get; } = [];
 
         public ICommand OnAppearingCommand => new Command((e) =>
         {
             if (GoogleBooksList.Count > 0)
                 GoogleBooksList.Clear();
 
-            IsConnected = (Connectivity.NetworkAccess == NetworkAccess.Internet);
+            IsConnected = IsOn;
+            IsNotConnected = !IsOn;
         });
 
         public bool SearchingBookList { get; set; }
@@ -57,7 +63,11 @@ namespace Bookshelf.ViewModels.GoogleSearch
             }
         }
 
-        public ICommand LoadMoreCommand => new Command(() => { CurrentPage++; _ = LoadGoogleBooksAsync(CurrentPage); });
+        public ICommand LoadMoreCommand => new Command(() =>
+        {
+            CurrentPage++;
+            _ = LoadGoogleBooksAsync(CurrentPage);
+        });
 
         /// <summary>
         /// is necessary the config: android:usesCleartextTraffic="true"
@@ -65,6 +75,11 @@ namespace Bookshelf.ViewModels.GoogleSearch
         /// <param name="pageNumber"></param>
         private async Task LoadGoogleBooksAsync(int pageNumber)
         {
+            IsConnected = IsOn;
+            IsNotConnected = !IsOn;
+
+            if (IsNotConnected) { return; }
+
             if (!string.IsNullOrEmpty(SearchText))
             {
                 IsBusy = true;
