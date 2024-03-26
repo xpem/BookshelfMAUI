@@ -63,6 +63,8 @@ namespace BLL.Books.Sync
 
             foreach (var pendingOperation in pendingOperations)
             {
+                await operationQueueDAL.UpdateOperationStatusAsync(OperationStatus.Processing, pendingOperation.Id);
+
                 if (pendingOperation.ObjectType == Models.OperationQueue.ObjectType.Book)
                 {
                     Book? book = JsonSerializer.Deserialize<Book>(pendingOperation.Content);
@@ -79,6 +81,7 @@ namespace BLL.Books.Sync
                             {
                                 book.Id = Convert.ToInt32(bLLResponse.Content);
                                 await bookDAL.ExecuteUpdateBookAsync(book);
+
                                 added++;
                             }
                             else throw new Exception($"Não foi possivel sincronizar o livro {pendingOperation.ObjectId}, res: {bLLResponse.Error}");

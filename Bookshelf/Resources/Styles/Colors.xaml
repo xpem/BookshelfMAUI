@@ -9,6 +9,7 @@
     <Color x:Key="PrimaryColor">#4DACFF</Color>
     <Color x:Key="MainBackgroundColor">#1B2D3E</Color>
     <Color x:Key="ActiveColor">#92CBFF</Color>
+    <Color x:Key="WarningColor">#F8D210</Color>
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>

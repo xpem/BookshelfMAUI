@@ -16,6 +16,30 @@
     </ContentPage.Behaviors>
     <ContentPage.Content>
         <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
+            <Label
+                FontFamily="EBGaramondSemiBold"
+                FontSize="15"
+                HorizontalOptions="Center"
+                IsVisible="{Binding IsNotSyncUpdates}"
+                Text="Há alterações neste livro não sincronizadas!"
+                TextColor="{StaticResource WarningColor}"
+                VerticalOptions="Fill" />
+            <Button
+                BackgroundColor="{Binding SyncProcessingColor}"
+                CornerRadius="20"
+                HeightRequest="40"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding SyncOptionIsProcessing}"
+                IsVisible="{Binding SyncOptionIsVisible}"
+                WidthRequest="40">
+                <Button.ImageSource>
+                    <FontImageSource
+                        FontFamily="FontAwesome"
+                        Glyph="{x:Static Icons:IconFont.Sync}"
+                        Size="15"
+                        Color="Black" />
+                </Button.ImageSource>
+            </Button>
             <Frame
                 Margin="5"
                 Padding="5"
