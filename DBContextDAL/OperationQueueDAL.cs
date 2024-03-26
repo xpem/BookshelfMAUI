@@ -12,8 +12,12 @@ namespace DbContextDAL
     public interface IOperationQueueDAL
     {
         Task<List<ApiOperation>> GetPendingOperationsByStatusAsync(OperationStatus operationStatus);
+
         Task InsertOperationInQueueAsync(ApiOperation apiOperation);
+
         Task UpdateOperationStatusAsync(OperationStatus operationStatus, int operationId);
+
+        Task<bool> CheckIfHasPendingOperationWithObjectId(string objectId);
     }
 
     public class OperationQueueDAL(BookshelfDbContext bookshelfDbContext) : IOperationQueueDAL
@@ -35,6 +39,8 @@ namespace DbContextDAL
 
             bookshelfDbContext.ChangeTracker?.Clear();
         }
+
+        public async Task<bool> CheckIfHasPendingOperationWithObjectId(string objectId) => await bookshelfDbContext.ApiOperationQueue.AnyAsync(x => x.ObjectId == objectId && x.Status == OperationStatus.Pending);
     }
 
 

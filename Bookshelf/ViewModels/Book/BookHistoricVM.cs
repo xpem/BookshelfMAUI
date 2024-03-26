@@ -1,14 +1,17 @@
-﻿using BLL.Books.Historic.Interfaces;
+﻿using BLL.Books;
+using BLL.Books.Historic.Interfaces;
 using Bookshelf.Resources.Fonts.Styles;
+using Bookshelf.Services.Sync;
 using Bookshelf.UIModels;
 using Bookshelf.ViewModels.Components;
+using DbContextDAL;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.Book
 {
-    public class BookHistoricVM(IBookHistoricBLL bookHistoricBLL) : ViewModelBase, IQueryAttributable
+    public class BookHistoricVM(IBookHistoricBLL bookHistoricBLL, IBooksOperationBLL booksOperationBLL, ISyncServices syncServices) : ViewModelBase, IQueryAttributable
     {
 
         #region Vars
@@ -26,6 +29,55 @@ namespace Bookshelf.ViewModels.Book
             get => isConnected; set { if (isConnected != value) { isConnected = value; OnPropertyChanged(nameof(IsConnected)); } }
         }
 
+        bool isNotSyncUpdates;
+
+        public bool IsNotSyncUpdates
+        {
+            get => isNotSyncUpdates; set { if (isNotSyncUpdates != value) { isNotSyncUpdates = value; OnPropertyChanged(nameof(IsNotSyncUpdates)); } }
+        }
+
+        //Color.FromArgb("#a3e4d7")
+        Color syncProcessingColor;
+
+        public Color SyncProcessingColor
+        {
+            get => syncProcessingColor; set
+            {
+                if (syncProcessingColor != value)
+                {
+                    syncProcessingColor = value;
+                    OnPropertyChanged(nameof(SyncProcessingColor));
+                }
+            }
+        }
+
+        bool syncOptionIsVisible;
+
+        public bool SyncOptionIsVisible
+        {
+            get => syncOptionIsVisible; set
+            {
+                if (syncOptionIsVisible != value)
+                {
+                    syncOptionIsVisible = value;
+                    OnPropertyChanged(nameof(SyncOptionIsVisible));
+                }
+            }
+        }
+
+        bool syncOptionIsProcessing;
+
+        public bool SyncOptionIsProcessing
+        {
+            get => syncOptionIsProcessing; set
+            {
+                if (syncOptionIsProcessing != value)
+                {
+                    syncOptionIsProcessing = value; OnPropertyChanged(nameof(SyncOptionIsProcessing));
+                }
+            }
+        }
+
         #endregion
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -39,6 +91,7 @@ namespace Bookshelf.ViewModels.Book
 
             //Task.Run(() => LoadListAsync(CurrentPage));
         }
+
         public ICommand OnAppearingCommand => new Command((e) =>
         {
             if (UIBookHistoricList.Count > 0)
@@ -46,7 +99,37 @@ namespace Bookshelf.ViewModels.Book
 
             CurrentPage = 1;
 
+            _ = CheckIfHasPendingOperationWithBookId();
+
             _ = LoadListAsync(CurrentPage);
+        });
+
+        public async Task CheckIfHasPendingOperationWithBookId()
+        {
+            if (await booksOperationBLL.CheckIfHasPendingOperationsWithBookId(BookId))
+            {
+                IsNotSyncUpdates = true;
+                if (IsOn)
+                    SyncOptionIsVisible = true;
+            }
+            else
+            {
+                IsNotSyncUpdates = false;
+                SyncOptionIsVisible = false;
+            }
+        }
+
+        public ICommand SyncCommand => new Command(async (e) =>
+        {
+            SyncOptionIsProcessing = true;
+            SyncProcessingColor = Color.FromArgb("#F8D210");
+
+            await syncServices.ExecSyncAsync();
+
+            SyncOptionIsProcessing = false;
+            SyncProcessingColor = Color.FromArgb("#919191");
+
+            _ = CheckIfHasPendingOperationWithBookId();
         });
 
         private async Task LoadListAsync(int pageNumber)

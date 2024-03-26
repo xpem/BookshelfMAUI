@@ -84,7 +84,7 @@ namespace Bookshelf.ViewModels
                 {
                     IsConnected = Colors.Green;
 
-                    switch (syncService.Synchronizing)
+                    switch (SyncServices.Synchronizing)
                     {
                         case SyncStatus.Processing: IsSync = Colors.Green; break;
                         case SyncStatus.Sleeping:

@@ -13,9 +13,9 @@ namespace BLL.Books.Sync.Tests
     [TestClass()]
     public class BookSyncBLLTests
     {
-        Mock<IOperationQueueDAL> mockOperationQueueDAL = new();
-        Mock<IBookApiBLL> mockBookApiBLL = new();
-        Mock<IBookDAL> mockBookDAL = new();
+        readonly Mock<IOperationQueueDAL> mockOperationQueueDAL = new();
+        readonly Mock<IBookApiBLL> mockBookApiBLL = new();
+        readonly Mock<IBookDAL> mockBookDAL = new();
 
         [TestMethod()]
         public void ApiToLocalSync_CreateLocalBooksTest()

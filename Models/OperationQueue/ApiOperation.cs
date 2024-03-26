@@ -22,7 +22,7 @@ namespace Models.OperationQueue
         public required string ObjectId { get; set; }
     }
 
-    public enum OperationStatus { Pending, Success, Failure }
+    public enum OperationStatus { Pending, Processing, Success, Failure }
 
     public enum ObjectType
     {

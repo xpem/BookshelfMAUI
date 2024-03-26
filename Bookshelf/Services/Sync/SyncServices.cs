@@ -7,7 +7,7 @@ namespace Bookshelf.Services.Sync
 {
     public class SyncServices(IUserBLL userBLL, IBookSyncBLL booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL) : ISyncServices
     {
-        public SyncStatus Synchronizing { get; set; }
+        public static SyncStatus Synchronizing { get; set; }
 
         public Timer Timer { get; set; }
 
@@ -38,7 +38,9 @@ namespace Bookshelf.Services.Sync
             }
         }
 
-        private async void SyncLocalDb(object state)
+        public async void SyncLocalDb(object state) => await ExecSyncAsync();
+
+        public async Task ExecSyncAsync()
         {
             try
             {
@@ -71,13 +73,10 @@ namespace Bookshelf.Services.Sync
             catch { throw; }
             finally
             {
-                if (Timer != null)
-                    Timer.Change(Interval, Timeout.Infinite);
+                Timer?.Change(Interval, Timeout.Infinite);
 
                 Synchronizing = SyncStatus.Sleeping;
             }
         }
-
     }
-
 }
