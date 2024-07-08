@@ -76,26 +76,30 @@ namespace Bookshelf.ViewModels
             SituationIndex = Convert.ToInt16(query["Situation"].ToString());
 
             if (BooksList.Count > 0)
+            {
                 BooksList.Clear();
-
-            CurrentPage++;
-            _ = LoadBooks(CurrentPage);
-        }
-
-        public ICommand LoadMoreCommand => new Command(() =>
-        {
-            CurrentPage++;
-            _ = LoadBooks(CurrentPage);
-        });
-
-        public ICommand OnAppearingCommand => new Command((e) =>
-        {
-            if (BooksList.Count > 0)
-                BooksList.Clear();
+            }
 
             CurrentPage = 1;
-            _ = LoadBooks(CurrentPage);
+
+            LoadBooks(CurrentPage).ConfigureAwait(false);
+            //Task.Run(() => LoadBooks(CurrentPage)).ConfigureAwait(false);
+        }
+
+        public ICommand LoadMoreCommand => new Command((e) =>
+        {
+            CurrentPage++;
+            LoadBooks(CurrentPage).ConfigureAwait(false);
         });
+
+        //public ICommand OnAppearingCommand => new Command(async (e) =>
+        //{
+        //    if (BooksList.Count > 0)
+        //        BooksList.Clear();
+
+        //    CurrentPage = 1;
+        //    _ = LoadBooks(CurrentPage);
+        //});
 
 
         /// <summary>

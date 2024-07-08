@@ -1,7 +1,6 @@
 ﻿using BLL.User;
 using Bookshelf.Utils;
 using Bookshelf.ViewModels.Components;
-using Plugin.Connectivity;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
@@ -57,7 +56,7 @@ namespace Bookshelf.ViewModels
 
         public ICommand SignUpCommand => new Command(async () =>
         {
-            if (!CrossConnectivity.Current.IsConnected)
+            if (!(Connectivity.NetworkAccess == NetworkAccess.Internet))
             {
                 _ = await Application.Current.MainPage.DisplayAlert("Aviso", "Sem conexão com a internet", null, "Ok");
                 return;

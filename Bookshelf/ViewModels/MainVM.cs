@@ -136,15 +136,15 @@ namespace Bookshelf.ViewModels
 
         public ICommand GoogleSearchCommand => new Command(async (e) => { await Shell.Current.GoToAsync($"{nameof(GoogleBooksResults)}"); });
 
-        public ICommand ReadCommand => new Command(async (e) => { await CallBookList(3); });
+        public ICommand ReadCommand => new Command((e) => { _ = CallBookList(3); });
 
-        public ICommand InterruptedCommand => new Command(async (e) => await CallBookList(4));
+        public ICommand InterruptedCommand => new Command((e) => _ = CallBookList(4));
 
-        public ICommand ReadingCommand => new Command(async (e) => await CallBookList(2));
+        public ICommand ReadingCommand => new Command((e) => _ = CallBookList(2));
 
-        public ICommand IllReadCommand => new Command(async (e) => await CallBookList(1));
+        public ICommand IllReadCommand => new Command((e) => _ = CallBookList(1));
 
-        public ICommand ArchiveCommand => new Command(async (e) => await CallBookList(0));
+        public ICommand ArchiveCommand => new Command((e) => _ = CallBookList(0));
 
         public ICommand LogoutCommand => new Command(async (e) =>
         {
@@ -163,13 +163,11 @@ namespace Bookshelf.ViewModels
 
                 await buildDbBLL.CleanLocalDatabase();
 
-
-                await Shell.Current.GoToAsync($"//{nameof(SignIn)}");
+                _ = Shell.Current.GoToAsync($"//{nameof(SignIn)}");
             }
         });
 
-        private async Task CallBookList(int BookSituation) =>
-            await Shell.Current.GoToAsync($"{nameof(BookList)}?Situation={BookSituation}", true);
+        private async Task CallBookList(int BookSituation) => await Shell.Current.GoToAsync($"{nameof(BookList)}?Situation={BookSituation}", true);
 
     }
 }

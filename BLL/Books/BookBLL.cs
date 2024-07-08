@@ -1,7 +1,6 @@
 ﻿using DbContextDAL;
 using Models.Books;
 using Models.Responses;
-using Plugin.Connectivity;
 
 namespace BLL.Books
 {
