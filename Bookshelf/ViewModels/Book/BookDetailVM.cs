@@ -143,7 +143,7 @@ namespace Bookshelf.ViewModels
             situation = "0";
             rate = 0;
 
-            _ = GetBook(Convert.ToInt32(LocalId));
+            GetBook(Convert.ToInt32(LocalId)).ConfigureAwait(false);
         }
 
         private async Task GetBook(int bookId)

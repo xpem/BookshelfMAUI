@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models.Books
@@ -6,6 +7,7 @@ namespace Models.Books
     public class Book
     {
         [Key]
+        [Index("IX_LocalIdAndUid", 2)]
         public int LocalId { get; set; }
 
         /// <summary>
@@ -14,6 +16,8 @@ namespace Models.Books
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int? Id { get; set; }
 
+        [Index("IX_UserIdAndStatusAndInactive",1)]
+        [Index("IX_LocalIdAndUid", 1)]
         public int UserId { get; set; }
 
         public string? LocalTempId { get; set; }
@@ -30,6 +34,7 @@ namespace Models.Books
 
         public int? Year { get; set; }
 
+        [Index("IX_UserIdAndStatusAndInactive", 2)]
         public Status? Status { get; set; }
 
         public string? Genre { get; set; }
@@ -48,6 +53,7 @@ namespace Models.Books
 
         public DateTime UpdatedAt { get; set; }
 
+        [Index("IX_UserIdAndStatusAndInactive", 3)]
         public bool Inactive { get; set; }
     }
 

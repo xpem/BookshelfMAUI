@@ -1,7 +1,6 @@
 ﻿using BLL.User;
 using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
-using Plugin.Connectivity;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
@@ -27,7 +26,7 @@ namespace Bookshelf.ViewModels
              {
                  if (!string.IsNullOrEmpty(Email) && !string.IsNullOrEmpty(Password))
                  {
-                     if (CrossConnectivity.Current.IsConnected)
+                     if ((Connectivity.NetworkAccess == NetworkAccess.Internet))
                      {
                          if (Password.Length > 3)
                          {

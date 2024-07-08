@@ -12,7 +12,7 @@ namespace BLL
 
             VersionDbTables? actualVesionDbTables = bookshelfDBContext.VersionDbTables.FirstOrDefault();
 
-            VersionDbTables newVersionDbTables = new() { Id = 0, VERSION = 11 };
+            VersionDbTables newVersionDbTables = new() { Id = 0, VERSION = 12 };
 
             if (actualVesionDbTables != null)
             {

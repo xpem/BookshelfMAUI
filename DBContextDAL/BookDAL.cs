@@ -35,8 +35,13 @@ namespace DbContextDAL
         }
 
         public async Task<List<TotalBooksGroupedByStatus>> GetTotalBooksGroupedByStatusAsync(int uid)
-            => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).GroupBy(x => x.Status).Select(x => new TotalBooksGroupedByStatus { Status = x.Key, Count = x.Count() }).ToListAsync();
-
+        {
+            try
+            {
+              return  await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).GroupBy(x => x.Status).Select(x => new TotalBooksGroupedByStatus { Status = x.Key, Count = x.Count() }).ToListAsync();
+            }
+            catch (Exception ex) { throw ex; }
+        }
         public async Task<Book?> GetBookByLocalIdAsync(int uid, int localId)
             => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.LocalId == localId).FirstOrDefaultAsync();
 
@@ -76,8 +81,8 @@ namespace DbContextDAL
             // x.Title.ToLower().Equals(title.ToLower())
         }
 
-        public Task<List<Book>> GetBooksByStatusAsync(int uid, Status status, int page)
-        => bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Status == status && x.Inactive == false)
+        public async Task<List<Book>> GetBooksByStatusAsync(int uid, Status status, int page)
+        => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Status == status && x.Inactive == false)
             .OrderByDescending(x => x.UpdatedAt).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
         public async Task<List<Book>> GetBooksAsync(int uid, int page)

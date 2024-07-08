@@ -82,6 +82,7 @@
                         <Frame Margin="0,5,0,5" Style="{StaticResource FrameCardItem}">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding IllReadCommand}" />
+                                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                             </Frame.GestureRecognizers>
                             <Grid Style="{StaticResource GridCardItem}">
                                 <Grid.RowDefinitions>
@@ -120,6 +121,7 @@
                         <Frame Margin="0,0,0,5" Style="{StaticResource FrameCardItem}">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ReadingCommand}" />
+                                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                             </Frame.GestureRecognizers>
                             <Grid Style="{StaticResource GridCardItem}">
                                 <Grid.RowDefinitions>
@@ -158,6 +160,7 @@
                         <Frame Margin="0,0,0,5" Style="{StaticResource FrameCardItem}">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ReadCommand}" />
+                                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                             </Frame.GestureRecognizers>
                             <Grid Style="{StaticResource GridCardItem}">
                                 <Grid.RowDefinitions>
@@ -196,6 +199,7 @@
                         <Frame Margin="0,0,0,5" Style="{StaticResource FrameCardItem}">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding InterruptedCommand}" />
+                                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                             </Frame.GestureRecognizers>
                             <Grid Style="{StaticResource GridCardItem}">
                                 <Grid.RowDefinitions>
