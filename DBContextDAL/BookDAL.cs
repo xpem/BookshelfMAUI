@@ -38,7 +38,7 @@ namespace DbContextDAL
         {
             try
             {
-              return  await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).GroupBy(x => x.Status).Select(x => new TotalBooksGroupedByStatus { Status = x.Key, Count = x.Count() }).ToListAsync();
+                return await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Inactive == false).GroupBy(x => x.Status).Select(x => new TotalBooksGroupedByStatus { Status = x.Key, Count = x.Count() }).ToListAsync();
             }
             catch (Exception ex) { throw ex; }
         }

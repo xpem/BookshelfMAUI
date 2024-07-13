@@ -1,5 +1,6 @@
 ﻿using BLL.Books;
 using Bookshelf.ViewModels.Components;
+using Bookshelf.Views;
 using Models.Books;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -13,30 +14,6 @@ namespace Bookshelf.ViewModels
 
         public ObservableCollection<UIBookItem> BooksList { get; } = [];
 
-        //UIBookItem bookItem;
-
-        //public UIBookItem BookItem
-        //{
-        //    get => bookItem;
-        //    set
-        //    {
-        //        if (bookItem != value)
-        //        {
-        //            bookItem = value;
-
-        //            if (bookItem is not null)
-        //            {
-        //                if (SituationIndex == -1)
-        //                    Shell.Current.GoToAsync($"{nameof(AddBook)}?Key={bookItem.Key}", true);
-        //                else
-        //                    Shell.Current.GoToAsync($"{nameof(BookDetail)}?Key={bookItem.Key}", true);
-
-        //                bookItem = null;
-        //            }
-        //            OnPropertyChanged();
-        //        }
-        //    }
-        //}
 
         string pageTitle;
 
@@ -73,18 +50,20 @@ namespace Bookshelf.ViewModels
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            SituationIndex = Convert.ToInt16(query["Situation"].ToString());
+            if (query != null && query.TryGetValue("Situation",out object outValue))
+                SituationIndex = Convert.ToInt16(outValue);
+            else { SituationIndex = 0; }
 
             if (BooksList.Count > 0)
             {
                 BooksList.Clear();
             }
-
             CurrentPage = 1;
 
             LoadBooks(CurrentPage).ConfigureAwait(false);
             //Task.Run(() => LoadBooks(CurrentPage)).ConfigureAwait(false);
         }
+
 
         public ICommand LoadMoreCommand => new Command((e) =>
         {
@@ -92,14 +71,22 @@ namespace Bookshelf.ViewModels
             LoadBooks(CurrentPage).ConfigureAwait(false);
         });
 
-        //public ICommand OnAppearingCommand => new Command(async (e) =>
-        //{
-        //    if (BooksList.Count > 0)
-        //        BooksList.Clear();
+        /// <summary>
+        /// vindo do FlyoutItem, direto da side bar
+        /// </summary>
+        public ICommand OnAppearingCommand => new Command(async (e) =>
+        {
+            if (SituationIndex is null)
+            {
+                SituationIndex = 0;
 
-        //    CurrentPage = 1;
-        //    _ = LoadBooks(CurrentPage);
-        //});
+                if (BooksList.Count > 0)
+                    BooksList.Clear();
+
+                CurrentPage = 1;
+                _ = LoadBooks(CurrentPage);
+            }
+        });
 
 
         /// <summary>
@@ -131,7 +118,7 @@ namespace Bookshelf.ViewModels
             PageTitle = "Livros ";
             switch (SituationIndex)
             {
-                case 0: PageTitle += " do arquivo"; break;
+                case 0: break;
                 case 1: PageTitle += " que vou ler"; break;
                 case 2: PageTitle += " que estou lendo"; break;
                 case 3: PageTitle += " lidos"; break;

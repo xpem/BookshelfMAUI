@@ -11,7 +11,7 @@
     <ContentPage.Resources>
         <!--  carditens  -->
         <Style x:Key="FrameCardItem" TargetType="Frame">
-            <Setter Property="BackgroundColor" Value="#101923" />
+            <Setter Property="BackgroundColor" Value="{StaticResource SecondaryBGColor}" />
             <Setter Property="BorderColor" Value="{StaticResource ActiveColor}" />
             <Setter Property="CornerRadius" Value="10" />
         </Style>
@@ -243,51 +243,22 @@
                     BackgroundColor="Transparent"
                     CornerRadius="10"
                     VerticalOptions="FillAndExpand">
-                    <StackLayout VerticalOptions="FillAndExpand">
-                        <Grid
-                            Margin="0,10,0,0"
-                            ColumnSpacing="5"
-                            HorizontalOptions="FillAndExpand">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Button
-                                Command="{Binding GoogleSearchCommand}"
-                                ContentLayout="Left, 10"
-                                FontSize="15"
-                                HorizontalOptions="FillAndExpand"
-                                Style="{StaticResource BtnPrimary}"
-                                Text="Adicionar">
-                                <Button.ImageSource>
-                                    <FontImageSource
-                                        FontFamily="FontAwesome"
-                                        Glyph="{x:Static Icons:IconFont.Book}"
-                                        Size="15"
-                                        Color="{StaticResource Black}" />
-                                </Button.ImageSource>
-                            </Button>
-                            <Button
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Command="{Binding ArchiveCommand}"
-                                ContentLayout="Left, 10"
-                                FontSize="15"
-                                HorizontalOptions="FillAndExpand"
-                                Style="{StaticResource BtnPrimary}"
-                                Text="Listar Todos">
-                                <Button.ImageSource>
-                                    <FontImageSource
-                                        FontFamily="FontAwesome"
-                                        Glyph="{x:Static Icons:IconFont.Bars}"
-                                        Size="15"
-                                        Color="{StaticResource Black}" />
-                                </Button.ImageSource>
-                            </Button>
-                        </Grid>
+                    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <Button
+                            Command="{Binding GoogleSearchCommand}"
+                            ContentLayout="top, 10"
+                            FontSize="15"
+                            HorizontalOptions="FillAndExpand"
+                            Style="{StaticResource BtnPrimary}"
+                            Text="Adicionar">
+                            <Button.ImageSource>
+                                <FontImageSource
+                                    FontFamily="FontAwesome"
+                                    Glyph="{x:Static Icons:IconFont.Book}"
+                                    Size="25"
+                                    Color="{StaticResource Black}" />
+                            </Button.ImageSource>
+                        </Button>
                         <Grid
                             Margin="0,5,0,0"
                             HorizontalOptions="FillAndExpand"
@@ -300,21 +271,6 @@
                                 <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="30" />
                             </Grid.ColumnDefinitions>
-                            <Button
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Command="{Binding LogoutCommand}"
-                                ContentLayout="Left, 10"
-                                Style="{StaticResource BtnExit}"
-                                Text="Sair">
-                                <Button.ImageSource>
-                                    <FontImageSource
-                                        FontFamily="FontAwesome"
-                                        Glyph="{x:Static Icons:IconFont.SignOutAlt}"
-                                        Size="15"
-                                        Color="{StaticResource PrimaryColor}" />
-                                </Button.ImageSource>
-                            </Button>
                             <Label
                                 Grid.Row="0"
                                 Grid.Column="1"

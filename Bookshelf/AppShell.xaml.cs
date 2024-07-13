@@ -1,4 +1,5 @@
-﻿using Bookshelf.Views;
+﻿using Bookshelf.ViewModels;
+using Bookshelf.Views;
 using Bookshelf.Views.Book;
 using Bookshelf.Views.GoogleSearch;
 
@@ -6,7 +7,7 @@ namespace Bookshelf;
 
 public partial class AppShell : Shell
 {
-    public AppShell()
+    public AppShell(AppShellVM appShellVM)
     {
         InitializeComponent();
 
@@ -15,6 +16,8 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(BookDetail), typeof(BookDetail));
 
         Routing.RegisterRoute(nameof(SignUp), typeof(SignUp));
+
+        Routing.RegisterRoute(nameof(SignIn), typeof(SignIn));
 
         Routing.RegisterRoute(nameof(UpdatePassword), typeof(UpdatePassword));
 
@@ -28,6 +31,8 @@ public partial class AppShell : Shell
 
         Routing.RegisterRoute(nameof(FirstSyncProcess), typeof(FirstSyncProcess));
 
-        //Routing.RegisterRoute(nameof(Main), typeof(Main));
+        Routing.RegisterRoute(nameof(Main), typeof(Main));
+
+        BindingContext = appShellVM;
     }
 }

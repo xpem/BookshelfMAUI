@@ -46,7 +46,6 @@ namespace Bookshelf.ViewModels
 
         private Timer _Timer;
         private int Interval = 2000;
-        private bool ThreadIsRunning = false;
 
         public ICommand OnAppearingCommand => new Command((e) =>
         {
@@ -61,11 +60,9 @@ namespace Bookshelf.ViewModels
 
         public void SetTimer()
         {
-            if (!ThreadIsRunning)
+            if (_Timer == null)
             {
                 FrmMainOpacity = 0.5;
-
-                ThreadIsRunning = true;
                 firstSyncIsRunnig = true;
                 _Timer = new Timer(CheckSync, null, Interval, Timeout.Infinite);
             }
@@ -146,28 +143,15 @@ namespace Bookshelf.ViewModels
 
         public ICommand ArchiveCommand => new Command((e) => _ = CallBookList(0));
 
-        public ICommand LogoutCommand => new Command(async (e) =>
+
+        private async Task CallBookList(int BookSituation) => await GoToAsync($"{nameof(BookList)}?Situation={BookSituation}");// await Shell.Current.GoToAsync($"{nameof(BookList)}?Situation={BookSituation}", true);
+
+
+        private async Task GoToAsync(string state)
         {
-            bool resp = await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja sair e retornar a tela inicial?", "Sim", "Cancelar");
-
-            if (resp)
-            {
-                _Timer.Dispose();
-                //finalize sync thread process
-                syncService.ThreadIsRunning = false;
-                ThreadIsRunning = false;
-
-                syncService.Timer?.Dispose();
-
-                ((App)App.Current).Uid = 0;
-
-                await buildDbBLL.CleanLocalDatabase();
-
-                _ = Shell.Current.GoToAsync($"//{nameof(SignIn)}");
-            }
-        });
-
-        private async Task CallBookList(int BookSituation) => await Shell.Current.GoToAsync($"{nameof(BookList)}?Situation={BookSituation}", true);
-
+            _Timer = null;
+            //_Timer.Dispose();
+            await Shell.Current.GoToAsync(state, true);
+        }
     }
 }
