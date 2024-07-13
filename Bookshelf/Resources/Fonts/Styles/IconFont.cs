@@ -438,6 +438,7 @@
         public const string HospitalAlt = "\uf47d";
         public const string HospitalSymbol = "\uf47e";
         public const string Hospital = "\uf0f8";
+        public const string House = "\uf015";
         public const string HotTub = "\uf593";
         public const string Hotel = "\uf594";
         public const string HourglassEnd = "\uf253";

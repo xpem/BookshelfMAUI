@@ -11,9 +11,9 @@
     Title="{Binding PageTitle}"
     x:DataType="vm:BookListVM"
     Style="{StaticResource ContentPage}">
-    <!--<ContentPage.Behaviors>
+    <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding OnAppearingCommand}" EventName="Appearing" />
-    </ContentPage.Behaviors>-->
+    </ContentPage.Behaviors>
     <ContentPage.Content>
 
         <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">

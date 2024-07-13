@@ -3,9 +3,12 @@
     x:Class="Bookshelf.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Components="clr-namespace:Bookshelf.Components"
+    xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
     xmlns:local="clr-namespace:Bookshelf.Views"
+    xmlns:vm="clr-namespace:Bookshelf.ViewModels"
     BackgroundColor="{StaticResource MainBackgroundColor}"
-    Shell.FlyoutBehavior="Disabled">
+    FlyoutBackgroundColor="{StaticResource MainBackgroundColor}">
 
     <ShellItem FlyoutItemIsVisible="False" Route="SignIn">
         <ShellContent ContentTemplate="{DataTemplate local:SignIn}" />
@@ -18,5 +21,70 @@
     <ShellItem FlyoutItemIsVisible="False" Route="FirstSyncProcess">
         <ShellContent ContentTemplate="{DataTemplate local:FirstSyncProcess}" />
     </ShellItem>
+
+    <FlyoutItem Title="Home" Icon="{x:Static Icons:IconFont.House}">
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate local:Main}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Todos os Livros" Icon="{x:Static Icons:IconFont.Swatchbook}">
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate local:BookList}" />
+        </Tab>
+    </FlyoutItem>
+
+    <Shell.FlyoutHeader>
+        <Components:FlyoutHeader Name="{Binding Name, Source={RelativeSource AncestorType={x:Type vm:AppShellVM}}}" Email="{Binding Email, Source={RelativeSource AncestorType={x:Type vm:AppShellVM}}}" />
+    </Shell.FlyoutHeader>
+
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid
+                ColumnDefinitions="0.2*,0.8*"
+                HeightRequest="50"
+                HorizontalOptions="StartAndExpand">
+                <Label
+                    Margin="10,5,10,5"
+                    FontFamily="FontAwesome"
+                    FontSize="15"
+                    Text="{Binding Icon}"
+                    VerticalOptions="Center" />
+                <Label
+                    Grid.Column="1"
+                    FontAttributes="Bold"
+                    FontFamily="OpenSansRegular"
+                    FontSize="15"
+                    Text="{Binding Title}"
+                    TextColor="White"
+                    VerticalTextAlignment="Center" />
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <Shell.FlyoutFooterTemplate>
+        <DataTemplate>
+            <StackLayout>
+                <Button
+                    x:Name="BtnSignOut"
+                    Margin="10,10,10,10"
+                    BackgroundColor="#943126"
+                    Command="{Binding SignOutCommand}"
+                    ContentLayout="Left,10"
+                    FontSize="15"
+                    Style="{StaticResource BtnPrimary}"
+                    Text="Sair"
+                    TextColor="{StaticResource White}">
+                    <Button.ImageSource>
+                        <FontImageSource
+                            FontFamily="FontAwesome"
+                            Glyph="{x:Static Icons:IconFont.SignOutAlt}"
+                            Size="12"
+                            Color="{StaticResource White}" />
+                    </Button.ImageSource>
+                </Button>
+            </StackLayout>
+        </DataTemplate>
+    </Shell.FlyoutFooterTemplate>
 
 </Shell>

@@ -63,7 +63,7 @@ public static class MauiProgram
 
         builder.Services.AddBLLServices();
 
-        builder.Services.AddDbContext<BookshelfDbContext>();
+        builder.Services.AddDbContext<BookshelfDbContext>(ServiceLifetime.Scoped);
 
         builder.Services.ApiDALServices();
 
@@ -76,6 +76,9 @@ public static class MauiProgram
 
     public static IServiceCollection AddUIServices(this IServiceCollection services)
     {
+        services.AddTransient<AppShell>();
+        services.AddTransient<AppShellVM>();
+
         services.AddTransient<Main>();
         services.AddTransient<MainVM>();
 
