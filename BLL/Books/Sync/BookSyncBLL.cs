@@ -1,5 +1,6 @@
 ﻿using ApiDAL;
 using ApiDAL.Interfaces;
+using Models.Exceptions;
 using DbContextDAL;
 using Models.Books;
 using Models.OperationQueue;
@@ -8,49 +9,62 @@ using System.Text.Json;
 
 namespace BLL.Books.Sync
 {
-    public class BookSyncBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL, IOperationQueueDAL operationQueueDAL) : IBookSyncBLL
+    public class BookSyncBLL(IBookApiService booksApiBLL, IBookDAL bookDAL, IOperationQueueDAL operationQueueDAL) : IBookSyncBLL
     {
+        private const int PAGEMAX = 50;
+
         public async Task<(int added, int updated)> ApiToLocalSync(int uid, DateTime lastUpdate)
         {
-            int added = 0, updated = 0;
+            int added = 0, updated = 0, page = 1;
 
-            //update local database
-            Models.Responses.BLLResponse respGetBooksByLastUpdate = await booksApiBLL.GetBooksByLastUpdateAsync(lastUpdate);
-
-            if (respGetBooksByLastUpdate.Success && respGetBooksByLastUpdate.Content is not null)
+            while (true)
             {
-                List<Book>? BooksByLastUpdate = respGetBooksByLastUpdate.Content as List<Book>;
+                //update local database
+                Models.Responses.BLLResponse respGetBooksByLastUpdate = await booksApiBLL.GetByLastUpdateAsync(lastUpdate, page);
 
-                if (BooksByLastUpdate is not null)
+                if ((respGetBooksByLastUpdate != null) && respGetBooksByLastUpdate.Success && respGetBooksByLastUpdate.Content is not null)
                 {
-                    //bookshelfDbContext.ChangeTracker.Clear();
+                    List<Book>? BooksByLastUpdate = respGetBooksByLastUpdate.Content as List<Book>;
 
-                    foreach (Book apiBook in BooksByLastUpdate)
+                    if (BooksByLastUpdate is not null)
                     {
-                        if (apiBook is null) { throw new ArgumentNullException(nameof(apiBook)); }
+                        //bookshelfDbContext.ChangeTracker.Clear();
 
-                        apiBook.UserId = uid;
-
-                        DateTime? bookLastUpdate;
-                        if (apiBook.Id is not null)
-                            bookLastUpdate = bookDAL.GetBookUpdatedAtById(apiBook.Id.Value);
-                        else
-                            throw new ArgumentNullException(nameof(apiBook.Id));
-
-                        if (bookLastUpdate == null && !apiBook.Inactive)
+                        foreach (Book apiBook in BooksByLastUpdate)
                         {
-                            await bookDAL.ExecuteAddBookAsync(apiBook);
-                            added++;
-                        }
-                        else if (apiBook.UpdatedAt > bookLastUpdate)
-                        {
-                            await bookDAL.ExecuteUpdateBookAsync(apiBook);
-                            updated++;
+                            if (apiBook is null) throw new ArgumentNullException(nameof(apiBook));
+
+                            apiBook.UserId = uid;
+
+                            DateTime? bookLastUpdate;
+
+                            if (apiBook.Id is not null)
+                                bookLastUpdate = bookDAL.GetBookUpdatedAtById(apiBook.Id.Value);
+                            else
+                                throw new ArgumentNullException(nameof(apiBook.Id));
+
+                            if (bookLastUpdate == null && !apiBook.Inactive)
+                            {
+                                await bookDAL.ExecuteAddBookAsync(apiBook);
+                                added++;
+                            }
+                            else if (apiBook.UpdatedAt > bookLastUpdate)
+                            {
+                                await bookDAL.ExecuteUpdateBookAsync(apiBook);
+                                updated++;
+                            }
+
+                            if (lastUpdate < apiBook.UpdatedAt)
+                                lastUpdate = apiBook.UpdatedAt;
                         }
 
-                        if (lastUpdate < apiBook.UpdatedAt) lastUpdate = apiBook.UpdatedAt;
+                        if (BooksByLastUpdate.Count < PAGEMAX)
+                            break;
                     }
+                    else break;
                 }
+                else throw new BookshelfAPIException("Erro ao tentar utilizar a api do UniqueServer/bookshelf/books: " + respGetBooksByLastUpdate?.ErrorMessage);
+                page++;
             }
 
             return (added, updated);
@@ -75,7 +89,7 @@ namespace BLL.Books.Sync
                     {
                         case ExecutionType.Insert:
 
-                            bLLResponse = await booksApiBLL.AddBookAsync(book);
+                            bLLResponse = await booksApiBLL.CreateAsync(book);
 
                             if (bLLResponse.Success)
                             {
@@ -93,11 +107,11 @@ namespace BLL.Books.Sync
                                 Book? insertedBook = await bookDAL.GetBookByLocalIdAsync(book.UserId, book.LocalId);
 
                                 if (insertedBook is not null)
-                                    bLLResponse = await booksApiBLL.UpdateBookAsync(insertedBook);
+                                    bLLResponse = await booksApiBLL.UpdateAsync(insertedBook);
                                 else throw new NullReferenceException("Livro inserido não encontrado " + book.LocalId);
                             }
                             else
-                                bLLResponse = await booksApiBLL.UpdateBookAsync(book);
+                                bLLResponse = await booksApiBLL.UpdateAsync(book);
 
                             if (bLLResponse.Success)
                                 updated++;

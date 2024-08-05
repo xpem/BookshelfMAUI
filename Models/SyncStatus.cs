@@ -2,6 +2,6 @@
 {
     public enum SyncStatus
     {
-        Processing, Sleeping, ServerOff
+        Processing, Sleeping, ServerOff, Unauthorized
     }
 }
