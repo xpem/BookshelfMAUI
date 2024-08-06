@@ -113,10 +113,10 @@ public static class MauiProgram
 
     public static IServiceCollection AddBLLServices(this IServiceCollection services)
     {
-        services.AddScoped<IBookHistoricApiBLL, BookHistoricApiBLL>();
+        services.AddScoped<IBookHistoricApiServices, BookHistoricApiServices>();
         services.AddScoped<IBookHistoricBLL, BookHistoricBLL>();
         services.AddScoped<IBookBLL, BookBLL>();
-        services.AddScoped<IBookApiBLL, BooksApiBLL>();
+        services.AddScoped<IBookApiService, BooksApiService>();
         services.AddScoped<IUserBLL, UserBLL>();
 
         services.AddScoped<IBookHistoricSyncBLL, BookHistoricSyncBLL>();
@@ -132,8 +132,8 @@ public static class MauiProgram
     {
         services.AddScoped<IHttpClientFunctions, HttpClientFunctions>();
         services.AddScoped<IUserApiDAL, UserApiDAL>();
-        services.AddScoped<IBookHistoricApiDAL, BookHistoricApiDAL>();
-        services.AddScoped<IBookApiDAL, BookApiDAL>();
+        services.AddScoped<IBookHistoricApiRepo, BookHistoricApiRepo>();
+        services.AddScoped<IBookApiRepo, BookApiRepo>();
         services.AddScoped<IOperationQueueDAL, OperationQueueDAL>();
 
         return services;
@@ -143,7 +143,7 @@ public static class MauiProgram
     {
         services.AddScoped<IBookDAL, BookDAL>();
         services.AddScoped<IBookHistoricDAL, BookHistoricDAL>();
-        services.AddScoped<IUserDAL, UserDAL>();
+        services.AddScoped<IUserRepo, UserRepo>();
 
         return services;
     }

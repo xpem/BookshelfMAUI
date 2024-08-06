@@ -6,7 +6,7 @@ using System.Text.Json.Nodes;
 
 namespace BLL.User
 {
-    public class UserBLL(IUserApiDAL userApiDAL, IUserDAL userDAL) : IUserBLL
+    public class UserBLL(IUserApiDAL userApiDAL, IUserRepo userRepo, IBuildDbBLL buildDbBLL) : IUserBLL
     {
         public async Task<BLLResponse> AddUser(string name, string email, string password)
         {
@@ -50,7 +50,7 @@ namespace BLL.User
 
         public async Task<(bool, string?)> GetUserToken(string email, string password) => await userApiDAL.GetUserTokenAsync(email.ToLower(), password);
 
-        public Task<Models.User?> GetUserLocal() => userDAL.GetUserLocal();
+        public Task<Models.User?> GetUserLocal() => userRepo.GetUserLocalAsync();
 
         public async Task<BLLResponse> SignIn(string email, string password)
         {
@@ -67,10 +67,11 @@ namespace BLL.User
                     if (resp.Success && resp.Content != null)
                     {
                         JsonNode? userResponse = JsonNode.Parse(resp.Content);
+                        Models.User? user;
 
                         if (userResponse is not null)
                         {
-                            Models.User? user = new()
+                            user = new()
                             {
                                 Id = userResponse["id"]?.GetValue<int>() ?? 0,
                                 Name = userResponse["name"]?.GetValue<string>(),
@@ -79,7 +80,22 @@ namespace BLL.User
                                 Password = PasswordHandler.Encrypt(password)
                             };
 
-                            await userDAL.ExecuteAddUser(user);
+                            var actualUser = await userRepo.GetUserLocalAsync();
+
+                            //resign 
+                            if (actualUser != null)
+                            {
+                                //with the same user
+                                if ((actualUser.Id == actualUser.Id))
+                                    await userRepo.UpdateAsync(user);
+                                else
+                                {
+                                    await buildDbBLL.CleanLocalDatabase();
+                                    await userRepo.CreateAsync(user);
+                                }
+                            }
+                            else
+                                await userRepo.CreateAsync(user);
 
                             return new BLLResponse() { Success = true, Content = user.Id };
                         }
@@ -95,6 +111,6 @@ namespace BLL.User
             catch (Exception ex) { throw ex; }
         }
 
-        public void UpdateLocalUserLastUpdate(int uid) => userDAL.ExecuteUpdateLastUpdateUser(DateTime.Now, uid);
+        public void UpdateLocalUserLastUpdate(int uid) => userRepo.UpdateLastUpdate(DateTime.Now, uid);
     }
 }
