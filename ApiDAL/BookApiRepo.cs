@@ -5,9 +5,9 @@ using System.Text.Json;
 
 namespace ApiDAL
 {
-    public class BookApiDAL(IHttpClientFunctions httpClientFunctions) : IBookApiDAL
+    public class BookApiRepo(IHttpClientFunctions httpClientFunctions) : IBookApiRepo
     {
-        public async Task<ApiResponse> AddBook(Book book)
+        public async Task<ApiResponse> CreateAsync(Book book)
         {
             try
             {
@@ -18,7 +18,7 @@ namespace ApiDAL
             catch (Exception ex) { throw; }
         }
 
-        public async Task<ApiResponse> UpdateBook(Book book)
+        public async Task<ApiResponse> UpdateAsync(Book book)
         {
             try
             {
@@ -29,8 +29,8 @@ namespace ApiDAL
             catch (Exception ex) { throw; }
         }
 
-        public async Task<ApiResponse> GetBooksByLastUpdate(DateTime lastUpdate) =>
-            await httpClientFunctions.AuthRequest(RequestsTypes.Get, ApiKeys.ApiAddress + "/bookshelf/book/byupdatedat/" + lastUpdate.ToString("yyyy-MM-ddThh:mm:ss.fff"));
+        public async Task<ApiResponse> GetByLastUpdateAsync(DateTime lastUpdate, int page) =>
+            await httpClientFunctions.AuthRequest(RequestsTypes.Get, $"{ApiKeys.ApiAddress}/bookshelf/book/byupdatedat/{lastUpdate:yyyy-MM-ddThh:mm:ss.fff}/{page}");
 
     }
 }

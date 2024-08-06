@@ -1,26 +1,41 @@
 ﻿using BLL.Books.Historic.Interfaces;
 using DbContextDAL;
 using Models.Books.Historic;
+using Models.Exceptions;
 
 namespace BLL.Books.Historic.Sync
 {
-    public class BookHistoricSyncBLL(IBookHistoricApiBLL bookHistoricApiBLL, IBookHistoricDAL bookHistoricDAL) : IBookHistoricSyncBLL
+    public class BookHistoricSyncBLL(IBookHistoricApiServices bookHistoricApiBLL, IBookHistoricDAL bookHistoricDAL) : IBookHistoricSyncBLL
     {
+        private const int PAGEMAX = 50;
+
         public async Task ApiToLocalSync(int uid, DateTime lastUpdate)
         {
-            Models.Responses.BLLResponse respGetBookHistoricListByCreatedAt = await bookHistoricApiBLL.GetBookHistoricByLastCreatedAt(lastUpdate);
+            int page = 1;
 
-            if (respGetBookHistoricListByCreatedAt.Success && respGetBookHistoricListByCreatedAt.Content is not null)
+            while (true)
             {
-                List<BookHistoric>? bookHistoricsList = respGetBookHistoricListByCreatedAt.Content as List<BookHistoric>;
+                Models.Responses.BLLResponse respGetBookHistoricListByCreatedAt = await bookHistoricApiBLL.GetByLastCreatedAtAsync(lastUpdate, page);
 
-                //bookshelfDbContext.ChangeTracker.Clear();
+                if (respGetBookHistoricListByCreatedAt.Success && respGetBookHistoricListByCreatedAt.Content is not null)
+                {
+                    List<BookHistoric>? bookHistoricsList = respGetBookHistoricListByCreatedAt.Content as List<BookHistoric>;
 
-                if (bookHistoricsList is not null)
-                    foreach (BookHistoric bookHistoric in bookHistoricsList)
+                    if (bookHistoricsList is not null)
                     {
-                        await bookHistoricDAL.ExecuteAddBookHistoricAsync(bookHistoric, uid);
+                        foreach (BookHistoric bookHistoric in bookHistoricsList)
+                        {
+                            await bookHistoricDAL.ExecuteAddBookHistoricAsync(bookHistoric, uid);
+                        }
+
+                        if (bookHistoricsList.Count < PAGEMAX)
+                            break;
                     }
+                    else break;
+                }
+                else throw new BookshelfAPIException("Erro ao tentar utilizar a api do UniqueServer/bookshelf/bookHistorics: " + respGetBookHistoricListByCreatedAt?.ErrorMessage);
+
+                page++;
             }
         }
     }

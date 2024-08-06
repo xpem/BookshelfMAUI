@@ -123,6 +123,7 @@ namespace Bookshelf.ViewModels
 
                 if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(GoogleKey))
                 {
+                    
                     Models.Books.Book _book = await bookBLL.GetBookbyTitleOrGoogleIdAsync(((App)App.Current).Uid, Title, GoogleKey);
 
                     if (_book is not null)

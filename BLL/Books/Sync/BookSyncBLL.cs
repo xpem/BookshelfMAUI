@@ -53,9 +53,8 @@ namespace BLL.Books.Sync
                                 await bookDAL.ExecuteUpdateBookAsync(apiBook);
                                 updated++;
                             }
-
-                            if (lastUpdate < apiBook.UpdatedAt)
-                                lastUpdate = apiBook.UpdatedAt;
+                            //if (lastUpdate < apiBook.UpdatedAt)
+                            //    lastUpdate = apiBook.UpdatedAt;
                         }
 
                         if (BooksByLastUpdate.Count < PAGEMAX)

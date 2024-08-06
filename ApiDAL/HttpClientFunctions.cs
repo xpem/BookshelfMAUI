@@ -135,6 +135,7 @@ namespace ApiDAL
 
                     return (true, newToken);
                 }
+                else throw new UnauthorizedAccessException("Falha ao tentar recuperar token do usuario");
             }
 
             return (false, null);

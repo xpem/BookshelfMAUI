@@ -70,12 +70,20 @@ namespace Bookshelf.Services.Sync
                     Synchronizing = SyncStatus.ServerOff;
                 else throw ex;
             }
-            catch { throw; }
+            catch (UnauthorizedAccessException ex)
+            {
+                Synchronizing = SyncStatus.Unauthorized;
+            }
+            catch
+            {
+                throw;
+            }
             finally
             {
                 Timer?.Change(Interval, Timeout.Infinite);
 
-                Synchronizing = SyncStatus.Sleeping;
+                if (Synchronizing != SyncStatus.Unauthorized)
+                    Synchronizing = SyncStatus.Sleeping;
             }
         }
     }
