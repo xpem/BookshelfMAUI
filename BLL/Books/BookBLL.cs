@@ -4,7 +4,7 @@ using Models.Responses;
 
 namespace BLL.Books
 {
-    public class BookBLL(IBookApiBLL booksApiBLL, IBookDAL bookDAL, IBooksOperationBLL booksOperationBLL) : IBookBLL
+    public class BookBLL(IBookApiService booksApiBLL, IBookDAL bookDAL, IBooksOperationBLL booksOperationBLL) : IBookBLL
     {
         public async Task<Totals> GetBookshelfTotalsAsync(int uid)
         {
@@ -64,7 +64,7 @@ namespace BLL.Books
 
                 if (isOn)
                 {
-                    BLLResponse response = await booksApiBLL.AddBookAsync(book);
+                    BLLResponse response = await booksApiBLL.CreateAsync(book);
 
                     if (response.Success)
                     {
@@ -192,7 +192,7 @@ namespace BLL.Books
         {
             if (isOn)
             {
-                BLLResponse resp = await booksApiBLL.UpdateBookAsync(book);
+                BLLResponse resp = await booksApiBLL.UpdateAsync(book);
 
                 if (!resp.Success) throw new Exception($"Could not be possible update book, book id: {book.Id}, Erro: {resp.Content?.ToString()} ");
             }

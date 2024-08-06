@@ -5,6 +5,7 @@ using Bookshelf.Services.Sync;
 using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using Bookshelf.Views.GoogleSearch;
+using DbContextDAL;
 using Models;
 using System.Windows.Input;
 
@@ -45,7 +46,7 @@ namespace Bookshelf.ViewModels
         public Color IsConnected { get => isConnected; set { if (value != isConnected) { isConnected = value; OnPropertyChanged(nameof(IsConnected)); } } }
 
         private Timer _Timer;
-        private int Interval = 2000;
+        private int Interval = 3000;
 
         public ICommand OnAppearingCommand => new Command((e) =>
         {
@@ -103,6 +104,10 @@ namespace Bookshelf.ViewModels
                         case SyncStatus.ServerOff:
                             IsSync = Colors.Red;
                             break;
+                        case SyncStatus.Unauthorized:
+                            MainThread.BeginInvokeOnMainThread(() => { ReSignAsync(); });
+
+                            break;
                     }
                 }
 
@@ -117,6 +122,16 @@ namespace Bookshelf.ViewModels
             {
                 _Timer?.Change(Interval, Timeout.Infinite);
             }
+        }
+
+        private async Task ReSignAsync()
+        {
+            //finalize sync thread process
+            syncService.ThreadIsRunning = false;
+
+            syncService.Timer?.Dispose();
+
+            await GoToAsync($"//{nameof(SignIn)}");
         }
 
         public async Task GetBookshelfTotalsAsync()
@@ -141,11 +156,9 @@ namespace Bookshelf.ViewModels
 
         public ICommand IllReadCommand => new Command((e) => _ = CallBookList(1));
 
-        public ICommand ArchiveCommand => new Command((e) => _ = CallBookList(0));
-
+        //public ICommand ArchiveCommand => new Command((e) => _ = CallBookList(0));
 
         private async Task CallBookList(int BookSituation) => await GoToAsync($"{nameof(BookList)}?Situation={BookSituation}");// await Shell.Current.GoToAsync($"{nameof(BookList)}?Situation={BookSituation}", true);
-
 
         private async Task GoToAsync(string state)
         {

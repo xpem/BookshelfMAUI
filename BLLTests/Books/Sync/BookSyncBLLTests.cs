@@ -14,7 +14,7 @@ namespace BLL.Books.Sync.Tests
     public class BookSyncBLLTests
     {
         readonly Mock<IOperationQueueDAL> mockOperationQueueDAL = new();
-        readonly Mock<IBookApiBLL> mockBookApiBLL = new();
+        readonly Mock<IBookApiService> mockBookApiBLL = new();
         readonly Mock<IBookDAL> mockBookDAL = new();
 
         [TestMethod()]
@@ -142,11 +142,11 @@ namespace BLL.Books.Sync.Tests
 
             mockContext.Setup(m => m.Book).Returns(mockSetBook.Object);
 
-            Mock<IBookApiBLL> bookApiBLL = new();
+            Mock<IBookApiService> bookApiBLL = new();
 
             BLLResponse bLLResponse = new() { Success = true, Content = apiResultBooks };
 
-            bookApiBLL.Setup(x => x.GetBooksByLastUpdateAsync(lastUpdate)).ReturnsAsync(() => bLLResponse);
+            bookApiBLL.Setup(x => x.GetByLastUpdateAsync(lastUpdate, 1)).ReturnsAsync(() => bLLResponse);
 
             BookDAL bookDAL = new(mockContext.Object);
 
@@ -260,7 +260,7 @@ namespace BLL.Books.Sync.Tests
 
             mockContext.Setup(m => m.Book).Returns(mockSetBook.Object);
 
-            Mock<IBookApiBLL> bookApiBLL = new();
+            Mock<IBookApiService> bookApiBLL = new();
 
             Mock<IBookDAL> mockBookDAL = new();
 
@@ -272,7 +272,7 @@ namespace BLL.Books.Sync.Tests
 
             BLLResponse bLLResponse = new() { Success = true, Content = apiResultBooks };
 
-            bookApiBLL.Setup(x => x.GetBooksByLastUpdateAsync(lastUpdate)).ReturnsAsync(() => bLLResponse);
+            bookApiBLL.Setup(x => x.GetByLastUpdateAsync(lastUpdate, 1)).ReturnsAsync(() => bLLResponse);
 
             Mock<IHttpClientFunctions> mockHttpClientFunctions = new();
             Mock<IOperationQueueDAL> mockOperationQueueDAL = new();
@@ -366,12 +366,12 @@ namespace BLL.Books.Sync.Tests
             BLLResponse bLL2Response = new() { Success = true, Content = 20 };
 
             mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(OperationStatus.Pending)).ReturnsAsync(PendingOperations);
-            mockBookApiBLL.Setup(x => x.AddBookAsync(It.IsAny<Book>())).ReturnsAsync(bLL1Response);
+            mockBookApiBLL.Setup(x => x.CreateAsync(It.IsAny<Book>())).ReturnsAsync(bLL1Response);
             mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(It.IsAny<Book>()));
             mockOperationQueueDAL.Setup(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook1Op.Id));
 
             mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(OperationStatus.Pending)).ReturnsAsync(PendingOperations);
-            mockBookApiBLL.Setup(x => x.AddBookAsync(It.IsAny<Book>())).ReturnsAsync(bLL1Response);
+            mockBookApiBLL.Setup(x => x.CreateAsync(It.IsAny<Book>())).ReturnsAsync(bLL1Response);
             mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(It.IsAny<Book>()));
             mockOperationQueueDAL.Setup(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook1Op.Id));
 
@@ -473,8 +473,8 @@ namespace BLL.Books.Sync.Tests
 
             mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(Models.OperationQueue.OperationStatus.Pending))
                 .ReturnsAsync(pendingOperations);
-            mockBookApiBLL.Setup(x => x.AddBookAsync(It.IsAny<Book>())).ReturnsAsync(insertBook1Response);
-            mockBookApiBLL.Setup(c => c.UpdateBookAsync(It.IsAny<Book>())).ReturnsAsync(uptBook1Response);
+            mockBookApiBLL.Setup(x => x.CreateAsync(It.IsAny<Book>())).ReturnsAsync(insertBook1Response);
+            mockBookApiBLL.Setup(c => c.UpdateAsync(It.IsAny<Book>())).ReturnsAsync(uptBook1Response);
             mockBookDAL.Setup(x => x.GetBookByLocalIdAsync(6, 36)).ReturnsAsync(updatedBook1Local);
 
             BookSyncBLL bookSyncBLL = new(mockBookApiBLL.Object, mockBookDAL.Object, mockOperationQueueDAL.Object);
@@ -541,13 +541,14 @@ namespace BLL.Books.Sync.Tests
                 Inactive = false,
                 Score = 0,
                 Isbn = "",
-                LocalId = 3
+                LocalId = 3,
+                UserId = 0
             };
 
             mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(OperationStatus.Pending)).ReturnsAsync(PendingOperations);
-            mockBookApiBLL.Setup(x => x.AddBookAsync(It.IsAny<Book>())).ReturnsAsync(insertBook1Response);
-            mockBookApiBLL.Setup(c => c.UpdateBookAsync(It.IsAny<Book>())).ReturnsAsync(uptBook2Response);
-            mockBookDAL.Setup(x => x.GetBookByLocalIdAsync(1, 2)).ReturnsAsync(insertBook1Local);
+            mockBookApiBLL.Setup(x => x.CreateAsync(It.IsAny<Book>())).ReturnsAsync(insertBook1Response);
+            mockBookApiBLL.Setup(c => c.UpdateAsync(It.IsAny<Book>())).ReturnsAsync(uptBook2Response);
+            mockBookDAL.Setup(x => x.GetBookByLocalIdAsync(0, 3)).ReturnsAsync(insertBook1Local);
             mockOperationQueueDAL.Setup(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook1Op.Id));
 
             mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(It.IsAny<Book>()));

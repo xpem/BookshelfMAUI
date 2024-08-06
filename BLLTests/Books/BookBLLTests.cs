@@ -14,7 +14,7 @@ namespace BLL.Books.Tests
     [TestClass()]
     public class BookBLLTests
     {
-        Mock<IBookApiBLL> bookApiBLL = new();
+        Mock<IBookApiService> bookApiBLL = new();
         Mock<IBookDAL> mockBookDAL = new();
         Mock<IBooksOperationBLL> mockBooksOperationBLL = new();
 
@@ -48,7 +48,7 @@ namespace BLL.Books.Tests
                 },
             ];
 
-            Mock<IBookApiBLL> bookApiBLL = new();
+            Mock<IBookApiService> bookApiBLL = new();
 
             IBookDAL bookDAL = new BookDAL(mockContext.Object);
 
@@ -56,7 +56,7 @@ namespace BLL.Books.Tests
 
             mockBookDAL.Setup(x => x.GetTotalBooksGroupedByStatusAsync(1)).ReturnsAsync(totalBooksGroupedByStatuses);
 
-            Mock<IUserDAL> mockUserDAL = new();
+            Mock<IUserRepo> mockUserDAL = new();
             Mock<IBooksOperationBLL> mockBooksOperationBLL = new();
 
             BookBLL booksBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockBooksOperationBLL.Object);
@@ -87,7 +87,7 @@ namespace BLL.Books.Tests
                     LocalId = 1,
                 };
 
-            Mock<IBookApiBLL> bookApiBLL = new();
+            Mock<IBookApiService> bookApiBLL = new();
             Mock<IBookDAL> mockBookDAL = new();
             Mock<IBooksOperationBLL> mockBooksOperationBLL = new();
 
@@ -109,7 +109,7 @@ namespace BLL.Books.Tests
 
             BLLResponse bLLResponse = new() { Success = true };
 
-            bookApiBLL.Setup(x => x.UpdateBookAsync(It.IsAny<Book>())).ReturnsAsync(bLLResponse);
+            bookApiBLL.Setup(x => x.UpdateAsync(It.IsAny<Book>())).ReturnsAsync(bLLResponse);
 
 
             BookBLL booksBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockBooksOperationBLL.Object);
@@ -176,7 +176,7 @@ namespace BLL.Books.Tests
 
             BLLResponse bLLResponse = new() { Success = true };
 
-            bookApiBLL.Setup(x => x.UpdateBookAsync(It.IsAny<Book>())).ReturnsAsync(bLLResponse);
+            bookApiBLL.Setup(x => x.UpdateAsync(It.IsAny<Book>())).ReturnsAsync(bLLResponse);
 
             Mock<BookBLL> booksBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockBooksOperationBLL.Object);
 

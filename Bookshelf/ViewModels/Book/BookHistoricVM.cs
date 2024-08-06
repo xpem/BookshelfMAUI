@@ -83,13 +83,6 @@ namespace Bookshelf.ViewModels.Book
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             BookId = Convert.ToInt32(query["BookId"]);
-
-            //if (UIBookHistoricList.Count > 0)
-            //    UIBookHistoricList.Clear();
-
-            //CurrentPage++;
-
-            //Task.Run(() => LoadListAsync(CurrentPage));
         }
 
         public ICommand OnAppearingCommand => new Command((e) =>
