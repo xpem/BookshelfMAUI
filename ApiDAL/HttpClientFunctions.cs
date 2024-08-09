@@ -117,12 +117,10 @@ namespace ApiDAL
             Models.User? user = bookshelfDbContext.User.FirstOrDefault();
 
             if (user is not null && user.Email is not null && user.Password is not null)
-            {
-                UsersManagement.IUserService userService = new UsersManagement.UserService(ApiKeys.ApiAddress);
+            {        
+                string password = EncryptionService.Decrypt(user.Password);
 
-                string password = PasswordHandler.Decrypt(user.Password);
-
-                UsersManagement.Model.ApiResponse resp = await userService.GetUserTokenAsync(user.Email, password);
+                UsersManagement.Model.ApiResponse resp = await new UsersManagement.UserService(ApiKeys.ApiAddress).GetUserTokenAsync(user.Email, password);
 
                 if (resp.Success && resp.Content is not null)
                 {

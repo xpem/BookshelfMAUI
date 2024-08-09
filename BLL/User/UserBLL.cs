@@ -77,7 +77,7 @@ namespace BLL.User
                                 Name = userResponse["name"]?.GetValue<string>(),
                                 Email = userResponse["email"]?.GetValue<string>(),
                                 Token = userTokenRes,
-                                Password = PasswordHandler.Encrypt(password)
+                                Password = EncryptionService.Encrypt(password)
                             };
 
                             var actualUser = await userRepo.GetUserLocalAsync();

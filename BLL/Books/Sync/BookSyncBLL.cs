@@ -53,8 +53,6 @@ namespace BLL.Books.Sync
                                 await bookDAL.ExecuteUpdateBookAsync(apiBook);
                                 updated++;
                             }
-                            //if (lastUpdate < apiBook.UpdatedAt)
-                            //    lastUpdate = apiBook.UpdatedAt;
                         }
 
                         if (BooksByLastUpdate.Count < PAGEMAX)
@@ -63,6 +61,7 @@ namespace BLL.Books.Sync
                     else break;
                 }
                 else throw new BookshelfAPIException("Erro ao tentar utilizar a api do UniqueServer/bookshelf/books: " + respGetBooksByLastUpdate?.ErrorMessage);
+
                 page++;
             }
 
