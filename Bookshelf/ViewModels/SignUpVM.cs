@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public partial class SignUpVM(IUserBLL userBLL) : ViewModelBase
+    public partial class SignUpVM(IUserService userBLL) : ViewModelBase
     {
 
         string name, email;

@@ -5,7 +5,7 @@ using Models;
 
 namespace Bookshelf.Services.Sync
 {
-    public class SyncServices(IUserBLL userBLL, IBookSyncBLL booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL) : ISyncServices
+    public class SyncServices(IUserService userBLL, IBookSyncBLL booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL) : ISyncServices
     {
         public static SyncStatus Synchronizing { get; set; }
 

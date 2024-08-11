@@ -2,7 +2,7 @@
 
 namespace BLL.User
 {
-    public interface IUserBLL
+    public interface IUserService
     {
         Task<BLLResponse> AddUser(string name, string email, string password);
 
