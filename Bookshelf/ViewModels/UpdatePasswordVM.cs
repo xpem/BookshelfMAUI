@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class UpdatePasswordVM(IUserBLL userBLL) : ViewModelBase
+    public class UpdatePasswordVM(IUserService userBLL) : ViewModelBase
     {
 
         string email;

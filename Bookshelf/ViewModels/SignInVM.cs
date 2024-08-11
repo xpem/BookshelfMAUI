@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class SignInVM(IUserBLL userBLL) : ViewModelBase
+    public class SignInVM(IUserService userBLL) : ViewModelBase
     {
         string email, password, signInText = "Acessar";
 

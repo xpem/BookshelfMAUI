@@ -6,7 +6,7 @@ using System.Text.Json.Nodes;
 
 namespace BLL.User
 {
-    public class UserBLL(IUserApiDAL userApiDAL, IUserRepo userRepo, IBuildDbBLL buildDbBLL) : IUserBLL
+    public class UserService(IUserApiDAL userApiDAL, IUserRepo userRepo, IBuildDbBLL buildDbBLL) : IUserService
     {
         public async Task<BLLResponse> AddUser(string name, string email, string password)
         {
@@ -80,13 +80,13 @@ namespace BLL.User
                                 Password = EncryptionService.Encrypt(password)
                             };
 
-                            var actualUser = await userRepo.GetUserLocalAsync();
+                            Models.User? actualUser = await userRepo.GetUserLocalAsync();
 
                             //resign 
                             if (actualUser != null)
                             {
                                 //with the same user
-                                if ((actualUser.Id == actualUser.Id))
+                                if ((actualUser.Id == user.Id))
                                     await userRepo.UpdateAsync(user);
                                 else
                                 {

@@ -14,11 +14,11 @@ namespace Bookshelf.ViewModels
 
         public decimal Progress { get => progress; set { if (progress != value) { progress = value; OnPropertyChanged(nameof(Progress)); } } }
 
-        public IUserBLL UserBLL { get; }
+        public IUserService UserBLL { get; }
         public IBookSyncBLL BooksSyncBLL { get; }
         public IBookHistoricSyncBLL BookHistoricSyncBLL { get; }
 
-        public FirstSyncProcessVM(IUserBLL userBLL, IBookSyncBLL booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL, ISyncServices syncServices)
+        public FirstSyncProcessVM(IUserService userBLL, IBookSyncBLL booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL, ISyncServices syncServices)
         {
             UserBLL = userBLL;
             BooksSyncBLL = booksSyncBLL;

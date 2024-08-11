@@ -63,7 +63,7 @@ public static class MauiProgram
 
         builder.Services.AddBLLServices();
 
-        builder.Services.AddDbContext<BookshelfDbContext>(ServiceLifetime.Scoped);
+        builder.Services.AddDbContext<BookshelfDbContext>(ServiceLifetime.Transient);
 
         builder.Services.ApiDALServices();
 
@@ -117,7 +117,7 @@ public static class MauiProgram
         services.AddScoped<IBookHistoricBLL, BookHistoricBLL>();
         services.AddScoped<IBookBLL, BookBLL>();
         services.AddScoped<IBookApiService, BooksApiService>();
-        services.AddScoped<IUserBLL, UserBLL>();
+        services.AddScoped<IUserService, UserService>();
 
         services.AddScoped<IBookHistoricSyncBLL, BookHistoricSyncBLL>();
 
