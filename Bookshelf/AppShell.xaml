@@ -34,6 +34,12 @@
         </Tab>
     </FlyoutItem>
 
+    <FlyoutItem Title="Histórico" Icon="{x:Static Icons:IconFont.History}">
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate local:Historic}" />
+        </Tab>
+    </FlyoutItem>
+
     <Shell.FlyoutHeader>
         <Components:FlyoutHeader Name="{Binding Name, Source={RelativeSource AncestorType={x:Type vm:AppShellVM}}}" Email="{Binding Email, Source={RelativeSource AncestorType={x:Type vm:AppShellVM}}}" />
     </Shell.FlyoutHeader>
@@ -49,6 +55,7 @@
                     FontFamily="FontAwesome"
                     FontSize="15"
                     Text="{Binding Icon}"
+                    TextColor="{StaticResource White}"
                     VerticalOptions="Center" />
                 <Label
                     Grid.Column="1"

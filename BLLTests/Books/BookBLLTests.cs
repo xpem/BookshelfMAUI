@@ -15,8 +15,8 @@ namespace BLL.Books.Tests
     public class BookBLLTests
     {
         Mock<IBookApiService> bookApiBLL = new();
-        Mock<IBookDAL> mockBookDAL = new();
-        Mock<IBooksOperationBLL> mockBooksOperationBLL = new();
+        Mock<IBookRepo> mockBookDAL = new();
+        Mock<IBooksOperationService> mockBooksOperationBLL = new();
 
         [TestMethod()]
         public void GetBookshelfTotalsTest()
@@ -50,14 +50,14 @@ namespace BLL.Books.Tests
 
             Mock<IBookApiService> bookApiBLL = new();
 
-            IBookDAL bookDAL = new BookDAL(mockContext.Object);
+            IBookRepo bookDAL = new BookRepo(mockContext.Object);
 
-            Mock<IBookDAL> mockBookDAL = new();
+            Mock<IBookRepo> mockBookDAL = new();
 
             mockBookDAL.Setup(x => x.GetTotalBooksGroupedByStatusAsync(1)).ReturnsAsync(totalBooksGroupedByStatuses);
 
             Mock<IUserRepo> mockUserDAL = new();
-            Mock<IBooksOperationBLL> mockBooksOperationBLL = new();
+            Mock<IBooksOperationService> mockBooksOperationBLL = new();
 
             BookBLL booksBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockBooksOperationBLL.Object);
 
@@ -88,8 +88,8 @@ namespace BLL.Books.Tests
                 };
 
             Mock<IBookApiService> bookApiBLL = new();
-            Mock<IBookDAL> mockBookDAL = new();
-            Mock<IBooksOperationBLL> mockBooksOperationBLL = new();
+            Mock<IBookRepo> mockBookDAL = new();
+            Mock<IBooksOperationService> mockBooksOperationBLL = new();
 
             Book UptBook = new()
             {

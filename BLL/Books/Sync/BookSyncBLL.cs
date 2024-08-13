@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace BLL.Books.Sync
 {
-    public class BookSyncBLL(IBookApiService booksApiBLL, IBookDAL bookDAL, IOperationQueueDAL operationQueueDAL) : IBookSyncBLL
+    public class BookSyncBLL(IBookApiService booksApiBLL, IBookRepo bookDAL, IOperationQueueDAL operationQueueDAL) : IBookSyncBLL
     {
         private const int PAGEMAX = 50;
 
@@ -39,7 +39,7 @@ namespace BLL.Books.Sync
                             DateTime? bookLastUpdate;
 
                             if (apiBook.Id is not null)
-                                bookLastUpdate = bookDAL.GetBookUpdatedAtById(apiBook.Id.Value);
+                                bookLastUpdate = await bookDAL.GetBookUpdatedAtByIdAsync(apiBook.Id.Value);
                             else
                                 throw new ArgumentNullException(nameof(apiBook.Id));
 

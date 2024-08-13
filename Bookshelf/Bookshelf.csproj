@@ -128,17 +128,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.70" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.70" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.80" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.80" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.2" />
-		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.8" />
-		<PackageReference Include="SQLitePCLRaw.core" Version="2.1.8" />
-		<PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.8" />
-		<PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.8" />
+		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.9" />
+		<PackageReference Include="SQLitePCLRaw.core" Version="2.1.9" />
+		<PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.9" />
+		<PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.9" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\BLL\Domain.csproj" />
+		<ProjectReference Include="..\BLL\Services.csproj" />
 		<ProjectReference Include="..\DBContextDAL\DbContextDAL.csproj" />
 		<ProjectReference Include="..\Models\Models.csproj" />
 	</ItemGroup>
@@ -189,6 +189,9 @@
 		<MauiXaml Update="Views\GoogleSearch\GoogleBooksResults.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Historic.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\SignIn.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -205,9 +208,6 @@
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\Main.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\Timeline.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\UpdatePassword.xaml">

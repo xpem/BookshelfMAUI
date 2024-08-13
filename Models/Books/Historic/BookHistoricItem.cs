@@ -24,5 +24,16 @@ namespace Models.Books.Historic
         public string? UpdatedFrom { get; set; }
 
         public string? UpdatedTo { get; set; }
+
+        public static string BuildStatusText(int statusId) =>
+            statusId switch
+            {
+                0 => "Nenhum",
+                1 => "Vou ler",
+                2 => "Lendo",
+                3 => "Lido",
+                4 => "Interrompido",
+                _ => "Desconhecido",
+            };
     }
 }

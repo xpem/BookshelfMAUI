@@ -4,11 +4,11 @@ using Models.Responses;
 
 namespace BLL.Books
 {
-    public class BookBLL(IBookApiService booksApiBLL, IBookDAL bookDAL, IBooksOperationBLL booksOperationBLL) : IBookBLL
+    public class BookBLL(IBookApiService booksApiBLL, IBookRepo bookDAL, IBooksOperationService booksOperationBLL) : IBookBLL
     {
         public async Task<Totals> GetBookshelfTotalsAsync(int uid)
         {
-            var list = await bookDAL.GetTotalBooksGroupedByStatusAsync(uid);
+            List<TotalBooksGroupedByStatus>? list = await bookDAL.GetTotalBooksGroupedByStatusAsync(uid);
 
             Totals totals = new();
 

@@ -2,16 +2,16 @@
 using BLL.Books.Historic.Interfaces;
 using Bookshelf.Resources.Fonts.Styles;
 using Bookshelf.Services.Sync;
-using Bookshelf.UIModels;
 using Bookshelf.ViewModels.Components;
 using DbContextDAL;
+using Models.Books.Historic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.Book
 {
-    public class BookHistoricVM(IBookHistoricBLL bookHistoricBLL, IBooksOperationBLL booksOperationBLL, ISyncServices syncServices) : ViewModelBase, IQueryAttributable
+    public class BookHistoricVM(IBookHistoricService bookHistoricBLL, IBooksOperationService booksOperationBLL, ISyncServices syncServices) : ViewModelBase, IQueryAttributable
     {
 
         #region Vars
@@ -97,6 +97,7 @@ namespace Bookshelf.ViewModels.Book
             _ = LoadListAsync(CurrentPage);
         });
 
+
         public async Task CheckIfHasPendingOperationWithBookId()
         {
             if (await booksOperationBLL.CheckIfHasPendingOperationsWithBookId(BookId))
@@ -129,7 +130,7 @@ namespace Bookshelf.ViewModels.Book
         {
             IsBusy = true;
 
-            List<Models.Books.Historic.BookHistoric> bookHistoricList = await bookHistoricBLL.GetBookHistoricByBookIdAsync(((App)App.Current).Uid, pageNumber, BookId);
+            List<Models.Books.Historic.BookHistoric> bookHistoricList = await bookHistoricBLL.GetByBookIdAsync(((App)App.Current).Uid, pageNumber, BookId);
 
             foreach (Models.Books.Historic.BookHistoric bookHistoricObj in bookHistoricList)
             {
@@ -148,17 +149,17 @@ namespace Bookshelf.ViewModels.Book
 
                     if (bookHistoricObj.BookHistoricItems.Count > 0)
                     {
-                        foreach (Models.Books.Historic.BookHistoricItem bookHistoricItemObj in bookHistoricObj.BookHistoricItems)
+                        foreach (BookHistoricItem bookHistoricItemObj in bookHistoricObj.BookHistoricItems)
                         {
                             if (bookHistoricText.Length > 0) bookHistoricText.Append("<br>");
 
                             if (bookHistoricItemObj.BookFieldId == bookStatusId)
                             {
                                 if (!string.IsNullOrEmpty(bookHistoricItemObj.UpdatedFrom))
-                                    updatedFrom = $"de '{BuildStatusText(Convert.ToInt32(bookHistoricItemObj.UpdatedFrom))}'";
+                                    updatedFrom = $"de '{BookHistoricItem.BuildStatusText(Convert.ToInt32(bookHistoricItemObj.UpdatedFrom))}'";
                                 else updatedFrom = "";
 
-                                updatedTo = $"'{BuildStatusText(Convert.ToInt32(bookHistoricItemObj.UpdatedTo))}'";
+                                updatedTo = $"'{BookHistoricItem.BuildStatusText(Convert.ToInt32(bookHistoricItemObj.UpdatedTo))}'";
                             }
                             else
                             {
@@ -193,16 +194,5 @@ namespace Bookshelf.ViewModels.Book
             CurrentPage++;
             Task.Run(() => LoadListAsync(CurrentPage));
         });
-
-        private static string BuildStatusText(int statusId) =>
-            statusId switch
-            {
-                0 => "Nenhum",
-                1 => "Vou ler",
-                2 => "Lendo",
-                3 => "Lido",
-                4 => "Interrompido",
-                _ => "Desconhecido",
-            };
     }
 }

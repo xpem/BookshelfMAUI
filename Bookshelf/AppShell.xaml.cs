@@ -25,7 +25,7 @@ public partial class AppShell : Shell
 
         Routing.RegisterRoute(nameof(GoogleBooksResults), typeof(GoogleBooksResults));
 
-        Routing.RegisterRoute(nameof(Timeline), typeof(Timeline));
+        Routing.RegisterRoute(nameof(Historic), typeof(Historic));
 
         Routing.RegisterRoute(nameof(BookHistoric), typeof(BookHistoric));
 

@@ -17,6 +17,7 @@ using Bookshelf.Views.GoogleSearch;
 using CommunityToolkit.Maui;
 using DbContextDAL;
 using DBContextDAL;
+using System.Net;
 
 namespace Bookshelf;
 
@@ -64,7 +65,7 @@ public static class MauiProgram
         builder.Services.AddBLLServices();
 
         builder.Services.AddDbContext<BookshelfDbContext>(ServiceLifetime.Transient);
-
+        //builder.Services.AddDbContextFactory<BookshelfDbContext>();
         builder.Services.ApiDALServices();
 
         builder.Services.DALServices();
@@ -106,6 +107,9 @@ public static class MauiProgram
         services.AddTransient<BookHistoric>();
         services.AddTransient<BookHistoricVM>();
 
+        services.AddTransient<Historic>();
+        services.AddTransient<HistoricVM>();
+
         services.AddTransient<FirstSyncProcess>();
         services.AddTransient<FirstSyncProcessVM>();
         return services;
@@ -114,7 +118,7 @@ public static class MauiProgram
     public static IServiceCollection AddBLLServices(this IServiceCollection services)
     {
         services.AddScoped<IBookHistoricApiServices, BookHistoricApiServices>();
-        services.AddScoped<IBookHistoricBLL, BookHistoricBLL>();
+        services.AddScoped<IBookHistoricService, BookHistoricBLL>();
         services.AddScoped<IBookBLL, BookBLL>();
         services.AddScoped<IBookApiService, BooksApiService>();
         services.AddScoped<IUserService, UserService>();
@@ -123,7 +127,7 @@ public static class MauiProgram
 
         services.AddScoped<IBuildDbBLL, BuildDbBLL>();
         services.AddScoped<IBookSyncBLL, BookSyncBLL>();
-        services.AddScoped<IBooksOperationBLL, BooksOperationBLL>();
+        services.AddScoped<IBooksOperationService, BooksOperationBLL>();
 
         return services;
     }
@@ -141,7 +145,7 @@ public static class MauiProgram
 
     public static IServiceCollection DALServices(this IServiceCollection services)
     {
-        services.AddScoped<IBookDAL, BookDAL>();
+        services.AddScoped<IBookRepo, BookRepo>();
         services.AddScoped<IBookHistoricDAL, BookHistoricDAL>();
         services.AddScoped<IUserRepo, UserRepo>();
 
