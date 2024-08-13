@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Models.Books.Historic
 {
@@ -23,5 +24,7 @@ namespace Models.Books.Historic
 
         public List<BookHistoricItem>? BookHistoricItems { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public string? BookTitle { get; set; }
     }
 }

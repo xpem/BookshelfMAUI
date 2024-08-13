@@ -1,11 +1,6 @@
 ﻿using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
 using Models.OperationQueue;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DbContextDAL
 {
@@ -18,6 +13,8 @@ namespace DbContextDAL
         Task UpdateOperationStatusAsync(OperationStatus operationStatus, int operationId);
 
         Task<bool> CheckIfHasPendingOperationWithObjectId(string objectId);
+
+        Task<bool> CheckIfHasPendingOperation();
     }
 
     public class OperationQueueDAL(BookshelfDbContext bookshelfDbContext) : IOperationQueueDAL
@@ -40,7 +37,12 @@ namespace DbContextDAL
             bookshelfDbContext.ChangeTracker?.Clear();
         }
 
-        public async Task<bool> CheckIfHasPendingOperationWithObjectId(string objectId) => await bookshelfDbContext.ApiOperationQueue.AnyAsync(x => x.ObjectId == objectId && x.Status == OperationStatus.Pending);
+        public async Task<bool> CheckIfHasPendingOperationWithObjectId(string objectId) =>
+            await bookshelfDbContext.ApiOperationQueue.AnyAsync(x => x.ObjectId == objectId && x.Status == OperationStatus.Pending);
+
+        public async Task<bool> CheckIfHasPendingOperation() =>
+          await bookshelfDbContext.ApiOperationQueue.AnyAsync(x => x.Status == OperationStatus.Pending);
+
     }
 
 

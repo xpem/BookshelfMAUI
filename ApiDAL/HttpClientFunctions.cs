@@ -30,6 +30,8 @@ namespace ApiDAL
             {
                 HttpClient httpClient = new();
 
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
                 if (userToken is not null)
                     httpClient.DefaultRequestHeaders.Add("authorization", "bearer " + userToken);
 

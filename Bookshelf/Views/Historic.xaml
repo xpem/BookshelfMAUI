@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="Bookshelf.Views.Book.BookHistoric"
+    x:Class="Bookshelf.Views.Historic"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Icons="clr-namespace:Bookshelf.Resources.Fonts.Styles"
     xmlns:behaviors="clr-namespace:Bookshelf.Utils.Behaviors"
     xmlns:model="clr-namespace:Models.Books.Historic;assembly=Models"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:vm="clr-namespace:Bookshelf.ViewModels.Book"
+    xmlns:vm="clr-namespace:Bookshelf.ViewModels"
     Title="Histórico"
-    x:DataType="vm:BookHistoricVM"
+    x:DataType="vm:HistoricVM"
     Style="{StaticResource ContentPage}">
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding OnAppearingCommand}" EventName="Appearing" />
@@ -21,7 +21,7 @@
                 FontSize="15"
                 HorizontalOptions="Center"
                 IsVisible="{Binding IsNotSyncUpdates}"
-                Text="Há alterações neste livro não sincronizadas!"
+                Text="Há alterações não sincronizadas!"
                 TextColor="{StaticResource WarningColor}"
                 VerticalOptions="Fill" />
             <Button

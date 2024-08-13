@@ -15,7 +15,7 @@ namespace BLL.Books.Sync.Tests
     {
         readonly Mock<IOperationQueueDAL> mockOperationQueueDAL = new();
         readonly Mock<IBookApiService> mockBookApiBLL = new();
-        readonly Mock<IBookDAL> mockBookDAL = new();
+        readonly Mock<IBookRepo> mockBookDAL = new();
 
         [TestMethod()]
         public void ApiToLocalSync_CreateLocalBooksTest()
@@ -148,7 +148,7 @@ namespace BLL.Books.Sync.Tests
 
             bookApiBLL.Setup(x => x.GetByLastUpdateAsync(lastUpdate, 1)).ReturnsAsync(() => bLLResponse);
 
-            BookDAL bookDAL = new(mockContext.Object);
+            BookRepo bookDAL = new(mockContext.Object);
 
             BookSyncBLL bookSyncBLL = new(bookApiBLL.Object, bookDAL, mockOperationQueueDAL.Object);
 
@@ -262,7 +262,7 @@ namespace BLL.Books.Sync.Tests
 
             Mock<IBookApiService> bookApiBLL = new();
 
-            Mock<IBookDAL> mockBookDAL = new();
+            Mock<IBookRepo> mockBookDAL = new();
 
             //mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(Book1)).ReturnsAsync(1);
 
