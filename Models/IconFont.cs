@@ -1,7 +1,6 @@
-﻿namespace Bookshelf.Resources.Fonts.Styles
+﻿namespace Models
 {
-
-    static class IconFont
+    public static class IconFont
     {
         // FontAwesome
         public const string Ad = "\uf641";
@@ -921,4 +920,3 @@
         public const string YinYang = "\uf6ad";
     }
 }
-

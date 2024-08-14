@@ -105,7 +105,7 @@ namespace BLL.Books.Tests
             };
 
             mockBookDAL.Setup(x => x.CheckIfExistsBookWithSameTitleAsync(1, "Teste de Título 6",2)).ReturnsAsync(true);
-            mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(It.IsAny<Book>())).ReturnsAsync(1);
+            mockBookDAL.Setup(x => x.UpdateAsync(It.IsAny<Book>())).ReturnsAsync(1);
 
             BLLResponse bLLResponse = new() { Success = true };
 
@@ -143,7 +143,7 @@ namespace BLL.Books.Tests
             BLLResponse bLLResponse = new() { Success = true,Content = 2 };
 
             mockBookDAL.Setup(x => x.GetBookByTitleOrGoogleIdAsync(1, "Teste de Título Insert", null)).ReturnsAsync(returnBook);
-            mockBookDAL.Setup(x => x.ExecuteAddBookAsync(It.IsAny<Book>())).ReturnsAsync(1);
+            mockBookDAL.Setup(x => x.CreateAsyn(It.IsAny<Book>())).ReturnsAsync(1);
 
             Mock<BookBLL> booksBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockBooksOperationBLL.Object);
 
@@ -172,7 +172,7 @@ namespace BLL.Books.Tests
                 LocalId = 2
             };
             mockBookDAL.Setup(x => x.CheckIfExistsBookWithSameTitleAsync(1, "Teste de Título 6", 2)).ReturnsAsync(false);
-            mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(It.IsAny<Book>())).ReturnsAsync(1);
+            mockBookDAL.Setup(x => x.UpdateAsync(It.IsAny<Book>())).ReturnsAsync(1);
 
             BLLResponse bLLResponse = new() { Success = true };
 

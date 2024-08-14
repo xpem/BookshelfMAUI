@@ -114,7 +114,7 @@ namespace BLL.Books.Historic.Tests
 
             BookHistoricBLL bookHistoricBLL = new(mockBH.Object);
             
-            List<BookHistoric> result = bookHistoricBLL.GetByBookIdAsync(1, 1, 1).Result;
+            List<UIBookHistoric> result = bookHistoricBLL.GetByBookIdAsync(1, 1, 1).Result;
 
             if (result is not null && result.Count == 2)
                 Assert.IsTrue(true);

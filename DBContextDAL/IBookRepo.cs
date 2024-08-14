@@ -4,11 +4,11 @@ namespace DbContextDAL
 {
     public interface IBookRepo
     {
-        Task<int> ExecuteAddBookAsync(Book book);
+        Task<int> CreateAsyn(Book book);
 
         Task<int> ExecuteInactivateBookAsync(int localId, int userId);
 
-        Task<int> ExecuteUpdateBookAsync(Book book);
+        Task<int> UpdateAsync(Book book);
 
         Task<int> ExecuteUpdateBookStatusAsync(int localId, Status status, int score, string comment, int uid);
 
@@ -20,7 +20,7 @@ namespace DbContextDAL
 
         Task<Book?> GetBookByTitleAsync(int uid, string title);
 
-        Task<DateTime?> GetBookUpdatedAtByIdAsync(int id);
+        Task<DateTime?> GetUpdatedAtByIdAsync(int id);
 
         Task<List<TotalBooksGroupedByStatus>> GetTotalBooksGroupedByStatusAsync(int uid);
 
