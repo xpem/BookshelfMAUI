@@ -9,7 +9,7 @@ namespace DbContextDAL
     {
         readonly int pageSize = 10;
 
-        public async Task<int> ExecuteUpdateBookAsync(Book book)
+        public async Task<int> UpdateAsync(Book book)
         {
             return await bookshelfDbContext.Book.Where(x => x.UserId == book.UserId && x.LocalId == book.LocalId)
                 .ExecuteUpdateAsync(y => y
@@ -51,12 +51,12 @@ namespace DbContextDAL
         public async Task<Book?> GetBookByTitleAsync(int uid, string title)
             => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.Title != null && EF.Functions.Like(x.Title, $"%{title}%")).FirstOrDefaultAsync();
 
-        public async Task<DateTime?> GetBookUpdatedAtByIdAsync(int id) => (await bookshelfDbContext.Book.Where(x => x.Id.Equals(id)).FirstOrDefaultAsync())?.UpdatedAt;
+        public async Task<DateTime?> GetUpdatedAtByIdAsync(int id) => (await bookshelfDbContext.Book.Where(x => x.Id.Equals(id)).FirstOrDefaultAsync())?.UpdatedAt;
 
         public async Task< List<Book>> GetBookByAfterUpdatedAtAsync(int uid, DateTime lastUpdate)
             => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.UpdatedAt > lastUpdate).ToListAsync();
 
-        public async Task<int> ExecuteAddBookAsync(Book book)
+        public async Task<int> CreateAsyn(Book book)
         {
             bookshelfDbContext.Book.Add(book);
             int resp = await bookshelfDbContext.SaveChangesAsync();

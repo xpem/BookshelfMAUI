@@ -9,13 +9,13 @@ using System.Text.Json;
 
 namespace BLL.Books.Sync
 {
-    public class BookSyncBLL(IBookApiService booksApiBLL, IBookRepo bookDAL, IOperationQueueDAL operationQueueDAL) : IBookSyncBLL
+    public class BookSyncService(IBookApiService booksApiBLL, IBookRepo bookDAL, IOperationQueueDAL operationQueueDAL) : IBookSyncService
     {
         private const int PAGEMAX = 50;
 
-        public async Task<(int added, int updated)> ApiToLocalSync(int uid, DateTime lastUpdate)
+        public async Task ApiToLocalSync(int uid, DateTime lastUpdate)
         {
-            int added = 0, updated = 0, page = 1;
+            int page = 1;
 
             while (true)
             {
@@ -39,19 +39,18 @@ namespace BLL.Books.Sync
                             DateTime? bookLastUpdate;
 
                             if (apiBook.Id is not null)
-                                bookLastUpdate = await bookDAL.GetBookUpdatedAtByIdAsync(apiBook.Id.Value);
+                                bookLastUpdate = await bookDAL.GetUpdatedAtByIdAsync(apiBook.Id.Value);
                             else
                                 throw new ArgumentNullException(nameof(apiBook.Id));
 
                             if (bookLastUpdate == null && !apiBook.Inactive)
                             {
-                                await bookDAL.ExecuteAddBookAsync(apiBook);
-                                added++;
+                                await bookDAL.CreateAsyn(apiBook);
+
                             }
                             else if (apiBook.UpdatedAt > bookLastUpdate)
                             {
-                                await bookDAL.ExecuteUpdateBookAsync(apiBook);
-                                updated++;
+                                await bookDAL.UpdateAsync(apiBook);
                             }
                         }
 
@@ -64,13 +63,10 @@ namespace BLL.Books.Sync
 
                 page++;
             }
-
-            return (added, updated);
         }
 
-        public async Task<(int added, int updated)> LocalToApiSync(int uid, DateTime lastUpdate)
+        public async Task LocalToApiSync(int uid, DateTime lastUpdate)
         {
-            int added = 0, updated = 0;
             List<ApiOperation> pendingOperations = await operationQueueDAL.GetPendingOperationsByStatusAsync(Models.OperationQueue.OperationStatus.Pending);
 
             foreach (var pendingOperation in pendingOperations)
@@ -92,9 +88,7 @@ namespace BLL.Books.Sync
                             if (bLLResponse.Success)
                             {
                                 book.Id = Convert.ToInt32(bLLResponse.Content);
-                                await bookDAL.ExecuteUpdateBookAsync(book);
-
-                                added++;
+                                await bookDAL.UpdateAsync(book);
                             }
                             else throw new Exception($"Não foi possivel sincronizar o livro {pendingOperation.ObjectId}, res: {bLLResponse.Error}");
                             break;
@@ -111,9 +105,7 @@ namespace BLL.Books.Sync
                             else
                                 bLLResponse = await booksApiBLL.UpdateAsync(book);
 
-                            if (bLLResponse.Success)
-                                updated++;
-                            else throw new Exception($"Não foi possivel sincronizar o livro {pendingOperation.ObjectId}, res: {bLLResponse.Error}");
+                            if (!bLLResponse.Success) throw new Exception($"Não foi possivel sincronizar o livro {pendingOperation.ObjectId}, res: {bLLResponse.Error}");
 
                             break;
                     }
@@ -122,7 +114,6 @@ namespace BLL.Books.Sync
 
                 await operationQueueDAL.UpdateOperationStatusAsync(OperationStatus.Success, pendingOperation.Id);
             }
-            return (added, updated);
         }
     }
 }

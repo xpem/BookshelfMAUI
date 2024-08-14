@@ -4,7 +4,7 @@ namespace BLL.Books.Historic.Interfaces
 {
     public interface IBookHistoricService
     {
-        Task<List<BookHistoric>> GetByBookIdAsync(int uid, int page, int bookId);
-        Task<List<BookHistoric>> GetAsync(int uid, int page);
+        Task<List<UIBookHistoric>> GetByBookIdAsync(int uid, int page, int bookId);
+        Task<List<UIBookHistoric>> GetAsync(int uid, int page);
     }
 }

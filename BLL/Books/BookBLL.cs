@@ -41,7 +41,7 @@ namespace BLL.Books
                 book.UpdatedAt = DateTime.Now;
                 book.UserId = uid;
 
-                await bookDAL.ExecuteUpdateBookAsync(book);
+                await bookDAL.UpdateAsync(book);
 
                 //
                 _ = ApiUpdateBook(book, isOn);
@@ -60,7 +60,7 @@ namespace BLL.Books
 
             if (bookResponse is null)
             {
-                await bookDAL.ExecuteAddBookAsync(book);
+                await bookDAL.CreateAsyn(book);
 
                 if (isOn)
                 {
@@ -69,7 +69,7 @@ namespace BLL.Books
                     if (response.Success)
                     {
                         book.Id = Convert.ToInt32(response.Content);
-                        await bookDAL.ExecuteUpdateBookAsync(book);
+                        await bookDAL.UpdateAsync(book);
                     }
                     else
                     {

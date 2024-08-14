@@ -45,7 +45,7 @@ namespace Bookshelf.ViewModels
 
         public Color IsConnected { get => isConnected; set { if (value != isConnected) { isConnected = value; OnPropertyChanged(nameof(IsConnected)); } } }
 
-        private Timer _Timer;
+        private static Timer _Timer;
         private int Interval = 3000;
 
         public ICommand OnAppearingCommand => new Command((e) =>
@@ -54,7 +54,7 @@ namespace Bookshelf.ViewModels
 
             IllRead = Reading = Read = Interrupted = "...";
 
-            Task.Run(GetBookshelfTotalsAsync).Wait();
+            //Task.Run(GetBookshelfTotalsAsync).Wait();
 
             SetTimer();
         });

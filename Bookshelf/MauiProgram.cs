@@ -126,7 +126,7 @@ public static class MauiProgram
         services.AddScoped<IBookHistoricSyncBLL, BookHistoricSyncBLL>();
 
         services.AddScoped<IBuildDbBLL, BuildDbBLL>();
-        services.AddScoped<IBookSyncBLL, BookSyncBLL>();
+        services.AddScoped<IBookSyncService, BookSyncService>();
         services.AddScoped<IBooksOperationService, BooksOperationBLL>();
 
         return services;
