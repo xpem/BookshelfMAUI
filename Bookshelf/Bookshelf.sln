@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiDAL", "..\ApiDAL\ApiDAL.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLLTests", "..\BLLTests\BLLTests.csproj", "{83748606-0D35-4E7A-A84A-0E28B0EE9B46}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbContextDAL", "..\DBContextDAL\DbContextDAL.csproj", "{1824F776-1F60-4C2D-A996-9613B3BE5D57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repositories", "..\DBContextDAL\Repositories.csproj", "{1824F776-1F60-4C2D-A996-9613B3BE5D57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

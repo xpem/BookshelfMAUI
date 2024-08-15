@@ -1,6 +1,6 @@
 ﻿using BLL.Books;
 using ApiDAL.Interfaces;
-using DbContextDAL;
+using Repositories;
 using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,6 +8,7 @@ using Models.Books;
 using Models.Responses;
 using Moq;
 using Xunit;
+using Repositories.Interfaces;
 
 namespace BLL.Books.Tests
 {

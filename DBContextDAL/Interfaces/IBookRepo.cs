@@ -1,6 +1,6 @@
 ﻿using Models.Books;
 
-namespace DbContextDAL
+namespace Repositories.Interfaces
 {
     public interface IBookRepo
     {

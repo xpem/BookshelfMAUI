@@ -1,6 +1,6 @@
 ﻿using Models.Books.Historic;
 
-namespace DbContextDAL
+namespace Repositories.Interfaces
 {
     public interface IBookHistoricDAL
     {

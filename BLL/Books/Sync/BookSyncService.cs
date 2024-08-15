@@ -1,11 +1,12 @@
 ﻿using ApiDAL;
 using ApiDAL.Interfaces;
 using Models.Exceptions;
-using DbContextDAL;
+using Repositories;
 using Models.Books;
 using Models.OperationQueue;
 using Models.Responses;
 using System.Text.Json;
+using Repositories.Interfaces;
 
 namespace BLL.Books.Sync
 {

@@ -1,9 +1,10 @@
-﻿using DBContextDAL;
+﻿using Repositories.Interfaces;
+using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
 using Models.Books;
 using Models.Books.Historic;
 
-namespace DbContextDAL
+namespace Repositories
 {
     public class BookHistoricDAL : IBookHistoricDAL
     {

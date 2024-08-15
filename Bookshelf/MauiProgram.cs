@@ -15,7 +15,8 @@ using Bookshelf.Views;
 using Bookshelf.Views.Book;
 using Bookshelf.Views.GoogleSearch;
 using CommunityToolkit.Maui;
-using DbContextDAL;
+using Repositories;
+using Repositories.Interfaces;
 using DBContextDAL;
 using System.Net;
 
