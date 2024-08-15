@@ -32,12 +32,12 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
-	  <ApplicationId>com.Xpem.XpemBookshelf</ApplicationId>
+	  <ApplicationId>com.Xpem.Bookshelf</ApplicationId>
 	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
-	  <ApplicationId>com.Xpem.XpemBookshelf</ApplicationId>
+	  <ApplicationId>com.Xpem.Bookshelf</ApplicationId>
 	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
 	</PropertyGroup>
 
@@ -52,12 +52,12 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
-	  <ApplicationId>com.Xpem.XpemBookshelf</ApplicationId>
+	  <ApplicationId>com.Xpem.Bookshelf</ApplicationId>
 	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
-	  <ApplicationId>com.Xpem.XpemBookshelf</ApplicationId>
+	  <ApplicationId>com.Xpem.Bookshelf</ApplicationId>
 	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
 	</PropertyGroup>
 
@@ -69,6 +69,16 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.Xpem.XpemBookshelf</ApplicationId>
 	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
+	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
+	  <ApplicationId>com.Xpem.Bookshelf</ApplicationId>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
+	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
+	  <ApplicationId>com.Xpem.Bookshelf</ApplicationId>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -139,7 +149,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BLL\Services.csproj" />
-		<ProjectReference Include="..\DBContextDAL\DbContextDAL.csproj" />
+		<ProjectReference Include="..\DBContextDAL\Repositories.csproj" />
 		<ProjectReference Include="..\Models\Models.csproj" />
 	</ItemGroup>
 

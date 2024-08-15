@@ -1,6 +1,6 @@
 ﻿using Models;
 
-namespace DbContextDAL
+namespace Repositories.Interfaces
 {
     public interface IUserRepo
     {

@@ -1,9 +1,10 @@
-﻿using DBContextDAL;
+﻿using Repositories.Interfaces;
+using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
 using Models.Books;
 using System.ComponentModel.Design;
 
-namespace DbContextDAL
+namespace Repositories
 {
     public class BookRepo(BookshelfDbContext bookshelfDbContext) : IBookRepo
     {
@@ -42,6 +43,7 @@ namespace DbContextDAL
             }
             catch (Exception ex) { throw; }
         }
+
         public async Task<Book?> GetBookByLocalIdAsync(int uid, int localId)
             => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.LocalId == localId).FirstOrDefaultAsync();
 

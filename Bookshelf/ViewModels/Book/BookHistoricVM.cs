@@ -2,7 +2,7 @@
 using BLL.Books.Historic.Interfaces;
 using Bookshelf.Services.Sync;
 using Bookshelf.ViewModels.Components;
-using DbContextDAL;
+using Repositories;
 using Models.Books.Historic;
 using System.Collections.ObjectModel;
 using System.Text;

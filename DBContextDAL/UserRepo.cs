@@ -1,8 +1,9 @@
-﻿using DBContextDAL;
+﻿using Repositories.Interfaces;
+using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
 using Models;
 
-namespace DbContextDAL
+namespace Repositories
 {
     public class UserRepo(BookshelfDbContext bookshelfDbContext) : IUserRepo
     {

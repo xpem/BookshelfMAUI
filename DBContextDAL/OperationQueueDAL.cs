@@ -1,22 +1,10 @@
-﻿using DBContextDAL;
+﻿using Repositories.Interfaces;
+using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
 using Models.OperationQueue;
 
-namespace DbContextDAL
+namespace Repositories
 {
-    public interface IOperationQueueDAL
-    {
-        Task<List<ApiOperation>> GetPendingOperationsByStatusAsync(OperationStatus operationStatus);
-
-        Task InsertOperationInQueueAsync(ApiOperation apiOperation);
-
-        Task UpdateOperationStatusAsync(OperationStatus operationStatus, int operationId);
-
-        Task<bool> CheckIfHasPendingOperationWithObjectId(string objectId);
-
-        Task<bool> CheckIfHasPendingOperation();
-    }
-
     public class OperationQueueDAL(BookshelfDbContext bookshelfDbContext) : IOperationQueueDAL
     {
         public async Task UpdateOperationStatusAsync(OperationStatus operationStatus, int operationId) =>
@@ -33,8 +21,6 @@ namespace DbContextDAL
             bookshelfDbContext.ApiOperationQueue.Add(apiOperation);
 
             await bookshelfDbContext.SaveChangesAsync();
-
-            bookshelfDbContext.ChangeTracker?.Clear();
         }
 
         public async Task<bool> CheckIfHasPendingOperationWithObjectId(string objectId) =>

@@ -5,7 +5,7 @@ using Bookshelf.Services.Sync;
 using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using Bookshelf.Views.GoogleSearch;
-using DbContextDAL;
+using Repositories;
 using Models;
 using System.Windows.Input;
 
@@ -48,13 +48,13 @@ namespace Bookshelf.ViewModels
         private static Timer _Timer;
         private int Interval = 3000;
 
-        public ICommand OnAppearingCommand => new Command((e) =>
+        public ICommand OnAppearingCommand => new Command(async (e) =>
         {
             IsSync = Colors.Gray;
 
             IllRead = Reading = Read = Interrupted = "...";
 
-            //Task.Run(GetBookshelfTotalsAsync).Wait();
+            Task.Run(GetBookshelfTotalsAsync).Wait();
 
             SetTimer();
         });

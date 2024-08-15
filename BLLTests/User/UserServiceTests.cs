@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Moq;
 using ApiDAL.Interfaces;
-using DbContextDAL;
 using ApiDAL;
 using Models.Responses;
+using Repositories.Interfaces;
 
 namespace BLL.User.Tests
 {
