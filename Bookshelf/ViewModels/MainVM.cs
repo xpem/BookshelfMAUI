@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class MainVM(IBookBLL _booksServices, ISyncServices syncService, IBuildDbBLL buildDbBLL) : ViewModelBase
+    public class MainVM(IBookBLL _booksServices, ISyncServices syncService) : ViewModelBase
     {
         private bool firstSyncIsRunnig = true;
 

@@ -19,7 +19,7 @@ public partial class App : Application
 
             Models.User user = userBLL.GetUserLocal().Result;
 
-            MainPage = new AppShell(new ViewModels.AppShellVM(user, syncServices, buildDbBLL));
+            MainPage = new AppShell(new ViewModels.AppShellVM(user, syncServices, buildDbBLL, userBLL));
 
             if (user != null)
             {

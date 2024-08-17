@@ -39,7 +39,9 @@ namespace Repositories
         {
             try
             {
-                return await bookshelfDbContext.Book.Where(x => x.UserId == uid && !x.Inactive).GroupBy(x => x.Status).Select(x => new TotalBooksGroupedByStatus { Status = x.Key, Count = x.Count() }).ToListAsync();
+                var books = await bookshelfDbContext.Book.Where(x => x.UserId == uid && !x.Inactive).ToListAsync();
+
+                return books.GroupBy(x => x.Status).Select(x => new TotalBooksGroupedByStatus { Status = x.Key, Count = x.Count() }).ToList();
             }
             catch (Exception ex) { throw; }
         }
@@ -55,7 +57,7 @@ namespace Repositories
 
         public async Task<DateTime?> GetUpdatedAtByIdAsync(int id) => (await bookshelfDbContext.Book.Where(x => x.Id.Equals(id)).FirstOrDefaultAsync())?.UpdatedAt;
 
-        public async Task< List<Book>> GetBookByAfterUpdatedAtAsync(int uid, DateTime lastUpdate)
+        public async Task<List<Book>> GetBookByAfterUpdatedAtAsync(int uid, DateTime lastUpdate)
             => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.UpdatedAt > lastUpdate).ToListAsync();
 
         public async Task<int> CreateAsyn(Book book)
