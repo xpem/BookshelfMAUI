@@ -1,4 +1,5 @@
 ﻿using BLL;
+using BLL.User;
 using Bookshelf.Services.Sync;
 using Bookshelf.Views;
 using Models;
@@ -18,10 +19,24 @@ namespace Bookshelf.ViewModels
 
         public IBuildDbBLL BuildDbBLL { get; set; }
 
-        public AppShellVM(User user, ISyncServices syncService, IBuildDbBLL buildDbBLL)
+        public IUserService UserService { get; set; }
+
+        public AppShellVM(User user, ISyncServices syncService, IBuildDbBLL buildDbBLL, IUserService userService)
         {
             SyncService = syncService;
             BuildDbBLL = buildDbBLL;
+            UserService = userService;
+
+            if (user is not null)
+            {
+                Name = user.Name;
+                Email = user.Email;
+            }
+        }
+
+        public async void AtualizaUser()
+        {
+            Models.User user = await UserService.GetUserLocal();
 
             if (user is not null)
             {

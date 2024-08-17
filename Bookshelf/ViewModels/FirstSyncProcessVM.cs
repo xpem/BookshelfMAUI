@@ -1,4 +1,5 @@
-﻿using BLL.Books.Historic.Sync;
+﻿using BLL;
+using BLL.Books.Historic.Sync;
 using BLL.Books.Sync;
 using BLL.User;
 using Bookshelf.Services.Sync;
@@ -10,20 +11,22 @@ namespace Bookshelf.ViewModels
     public class FirstSyncProcessVM : ViewModelBase
     {
         private decimal progress;
-        private readonly ISyncServices syncServices;
+        private readonly ISyncServices SyncServices;
 
         public decimal Progress { get => progress; set { if (progress != value) { progress = value; OnPropertyChanged(nameof(Progress)); } } }
 
         public IUserService UserBLL { get; }
         public IBookSyncService BooksSyncBLL { get; }
         public IBookHistoricSyncBLL BookHistoricSyncBLL { get; }
+        public IBuildDbBLL BuildDbBLL { get; }
 
-        public FirstSyncProcessVM(IUserService userBLL, IBookSyncService booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL, ISyncServices syncServices)
+        public FirstSyncProcessVM(IUserService userBLL, IBookSyncService booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL, ISyncServices syncServices, IBuildDbBLL buildDbBLL)
         {
             UserBLL = userBLL;
             BooksSyncBLL = booksSyncBLL;
             BookHistoricSyncBLL = bookHistoricSyncBLL;
-            this.syncServices = syncServices;
+            this.SyncServices = syncServices;
+            BuildDbBLL = buildDbBLL;
             _ = SynchronizingProcess();
         }
 
@@ -55,7 +58,7 @@ namespace Bookshelf.ViewModels
 
                         Progress = 1;
 
-                        _ = Task.Run(() => { Task.Delay(5000); syncServices.StartThread(); });
+                        _ = Task.Run(() => { Task.Delay(5000); SyncServices.StartThread(); });
 
                         _ = Shell.Current.GoToAsync($"//{nameof(Main)}");
 

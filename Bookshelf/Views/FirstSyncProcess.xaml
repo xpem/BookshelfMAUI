@@ -7,7 +7,13 @@
     xmlns:vm="clr-namespace:Bookshelf.ViewModels"
     x:DataType="vm:FirstSyncProcessVM"
     NavigationPage.HasBackButton="False"
+    NavigationPage.HasNavigationBar="False"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False"
     Style="{StaticResource ContentPage}">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="False" IsEnabled="False" />
+    </Shell.BackButtonBehavior>
     <ContentPage.Resources>
         <Style x:Key="Icon" TargetType="Label">
             <Setter Property="TextColor" Value="White" />

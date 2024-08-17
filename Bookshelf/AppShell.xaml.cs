@@ -7,6 +7,8 @@ namespace Bookshelf;
 
 public partial class AppShell : Shell
 {
+    private readonly AppShellVM AppShellVM;
+
     public AppShell(AppShellVM appShellVM)
     {
         InitializeComponent();
@@ -33,6 +35,21 @@ public partial class AppShell : Shell
 
         Routing.RegisterRoute(nameof(Main), typeof(Main));
 
-        BindingContext = appShellVM;
+        BindingContext = AppShellVM = appShellVM;
     }
+
+    protected override void OnNavigated(ShellNavigatedEventArgs args)
+    {
+        var previousRouteString = args?.Previous?.Location?.OriginalString;
+        var currentRouteString = args?.Current?.Location?.OriginalString;
+
+        if (previousRouteString != null && previousRouteString.Equals("//SignIn/FirstSyncProcess") &&
+            currentRouteString.Equals("//Main"))
+        {
+            AppShellVM.AtualizaUser();
+        }
+
+        base.OnNavigated(args);
+    }
+
 }
