@@ -319,7 +319,7 @@ namespace Bookshelf.ViewModels
             if (string.IsNullOrEmpty(Title))
                 ValidInfo = false;
             else if (await bookBLL.CheckIfExistsBookWithSameTitleAsync(((App)App.Current).Uid, Title, !string.IsNullOrEmpty(BookId) ? Convert.ToInt32(BookId) : null))
-                ValidInfo = false;
+                await Application.Current.MainPage.DisplayAlert("Aviso", "Livro já cadastrado!", null, "Ok");
 
             if (string.IsNullOrEmpty(Authors))
                 ValidInfo = false;
