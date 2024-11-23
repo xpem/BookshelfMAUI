@@ -1,6 +1,6 @@
 ﻿using Models.Responses;
 
-namespace BLL.User
+namespace Services.User
 {
     public interface IUserService
     {
@@ -10,7 +10,7 @@ namespace BLL.User
 
         Task<(bool, string?)> GetUserToken(string email, string password);
 
-        Task<Models.User?> GetUserLocal();
+        Task<Models.DTOs.User?> GetUserLocal();
 
         Task<BLLResponse> SignIn(string email, string password);
 

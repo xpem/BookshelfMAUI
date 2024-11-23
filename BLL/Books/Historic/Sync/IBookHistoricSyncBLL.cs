@@ -1,4 +1,4 @@
-﻿namespace BLL.Books.Historic.Sync
+﻿namespace Services.Books.Historic.Sync
 {
     public interface IBookHistoricSyncBLL
     {

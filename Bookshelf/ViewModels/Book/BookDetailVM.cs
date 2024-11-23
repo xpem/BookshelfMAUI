@@ -1,11 +1,12 @@
-﻿using BLL.Books;
-using Bookshelf.ViewModels.Components;
+﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using Bookshelf.Views.Book;
+using Models.DTOs;
+using Services.Books.Interfaces;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace Bookshelf.ViewModels
+namespace Bookshelf.ViewModels.Book
 {
     public class BookDetailVM(IBookBLL _booksServices) : ViewModelBase, IQueryAttributable
     {
@@ -86,17 +87,17 @@ namespace Bookshelf.ViewModels
                 //    BtnConfIsVisible = true;
                 //}
 
-                switch ((Models.Books.Status)pkrStatusSelectedIndex)
+                switch ((Status)pkrStatusSelectedIndex)
                 {
-                    case Models.Books.Status.None:
+                    case Status.None:
                         RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
                         break;
-                    case Models.Books.Status.Reading:
-                    case Models.Books.Status.Interrupted:
-                    case Models.Books.Status.IllRead:
+                    case Status.Reading:
+                    case Status.Interrupted:
+                    case Status.IllRead:
                         RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
                         break;
-                    case Models.Books.Status.Read:
+                    case Status.Read:
                         EdtCommentIsVisible = RatingBarIsVisible = LblRatingBarIsVisible = true;
                         break;
                     default:
@@ -113,7 +114,7 @@ namespace Bookshelf.ViewModels
 
         public ICommand ConfirmCommand => new Command(async (e) => { await UpdateBookSituation(); });
 
-        public ICommand CallHistoricCommand => new Command(async (e) => await Shell.Current.GoToAsync($"{nameof(BookHistoric)}?BookId={(ExternalId)}"));
+        public ICommand CallHistoricCommand => new Command(async (e) => await Shell.Current.GoToAsync($"{nameof(Models.DTOs.BookHistoric)}?BookId={ExternalId}"));
 
         /// <summary>
         /// navigate to update book
@@ -128,7 +129,7 @@ namespace Bookshelf.ViewModels
             {
                 if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir este livro?", "Sim", "Cancelar"))
                 {
-                    _ = _booksServices.InactivateBookAsync(((App)App.Current).Uid, (Connectivity.NetworkAccess == NetworkAccess.Internet), LocalId);
+                    _ = _booksServices.InactivateBookAsync(((App)Application.Current).Uid, Connectivity.NetworkAccess == NetworkAccess.Internet, LocalId);
 
                     if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
                     {
@@ -148,7 +149,7 @@ namespace Bookshelf.ViewModels
 
         private async Task GetBook(int bookId)
         {
-            Models.Books.Book book = await _booksServices.GetBookAsync(((App)App.Current).Uid, bookId);
+            Models.DTOs.Book book = await _booksServices.GetBookAsync(((App)Application.Current).Uid, bookId);
 
             if (book.Id > 0)
                 ExternalId = book.Id.Value;
@@ -183,7 +184,7 @@ namespace Bookshelf.ViewModels
 
             pkrStatusSelectedIndexOri = (int)book.Status;
 
-            if (book.Status != Models.Books.Status.None)
+            if (book.Status != Status.None)
             {
                 Situation = SituationOri = book.Status.ToString();
                 Rate = RateOri = (int)book.Score;
@@ -194,7 +195,7 @@ namespace Bookshelf.ViewModels
                 UpdatesEnableds = true;
                 EdtCommentIsVisible = RatingBarIsVisible = LblRatingBarIsVisible = false;
 
-                if (book.Status == Models.Books.Status.Read)
+                if (book.Status == Status.Read)
                 {
                     LblRatingBarIsVisible = RatingBarIsVisible = true;
 
@@ -251,7 +252,7 @@ namespace Bookshelf.ViewModels
 
             if (alterou)
             {
-                _ = _booksServices.UpdateBookSituationAsync(((App)App.Current).Uid, (Connectivity.NetworkAccess == NetworkAccess.Internet), LocalId, (Models.Books.Status)PkrStatusSelectedIndex, rate, Comment);
+                _ = _booksServices.UpdateBookSituationAsync(((App)Application.Current).Uid, Connectivity.NetworkAccess == NetworkAccess.Internet, LocalId, (Status)PkrStatusSelectedIndex, rate, Comment);
 
                 if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Situação alterada", null, "Ok"))
                 {

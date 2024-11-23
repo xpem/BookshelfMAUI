@@ -1,6 +1,6 @@
 ﻿using Models.Books.Historic;
 
-namespace BLL.Books.Historic.Interfaces
+namespace Services.Books.Historic.Interfaces
 {
     public interface IBookHistoricService
     {

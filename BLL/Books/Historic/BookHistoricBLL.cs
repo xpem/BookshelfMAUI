@@ -1,10 +1,11 @@
-﻿using BLL.Books.Historic.Interfaces;
-using Repositories.Interfaces;
+﻿using Repositories.Interfaces;
 using Models;
 using Models.Books.Historic;
 using System.Text;
+using Models.DTOs;
+using Services.Books.Historic.Interfaces;
 
-namespace BLL.Books.Historic
+namespace Services.Books.Historic
 {
     public class BookHistoricBLL(IBookHistoricDAL bookHistoricDAL) : IBookHistoricService
     {
@@ -14,7 +15,7 @@ namespace BLL.Books.Historic
 
             List<BookHistoric> list = await bookHistoricDAL.GetBookHistoricByBookIdAsync(uid, bookId, page);
 
-            foreach (Models.Books.Historic.BookHistoric bookHistoricObj in list)
+            foreach (BookHistoric bookHistoricObj in list)
             {
                 StringBuilder bookHistoricText = new();
                 string bookHistoricIcon, updatedFrom, updatedTo;
@@ -78,7 +79,7 @@ namespace BLL.Books.Historic
             {
                 List<BookHistoric> bookHistoricList = await bookHistoricDAL.Get(uid, page);
 
-                foreach (Models.Books.Historic.BookHistoric bookHistoricObj in bookHistoricList)
+                foreach (BookHistoric bookHistoricObj in bookHistoricList)
                 {
                     StringBuilder bookHistoricText = new();
                     string bookHistoricIcon, updatedFrom, updatedTo;
@@ -95,7 +96,7 @@ namespace BLL.Books.Historic
 
                         if (bookHistoricObj.BookHistoricItems?.Count > 0)
                         {
-                            foreach (Models.Books.Historic.BookHistoricItem bookHistoricItemObj in bookHistoricObj.BookHistoricItems)
+                            foreach (BookHistoricItem bookHistoricItemObj in bookHistoricObj.BookHistoricItems)
                             {
                                 if (bookHistoricText.Length > 0) bookHistoricText.Append("<br>");
 

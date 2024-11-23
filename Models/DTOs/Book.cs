@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Models.Books
+namespace Models.DTOs
 {
     public class Book
     {
@@ -16,7 +16,7 @@ namespace Models.Books
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int? Id { get; set; }
 
-        [Index("IX_UserIdAndStatusAndInactive",1)]
+        [Index("IX_UserIdAndStatusAndInactive", 1)]
         [Index("IX_LocalIdAndUid", 1)]
         public int UserId { get; set; }
 

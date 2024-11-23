@@ -1,6 +1,6 @@
-﻿using BLL.User;
-using Bookshelf.ViewModels.Components;
+﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
+using Services.User;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels

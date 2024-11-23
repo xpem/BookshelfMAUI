@@ -1,4 +1,6 @@
-﻿namespace Models.Books
+﻿using Models.DTOs;
+
+namespace Models.Books
 {
     public class Totals
     {
@@ -15,7 +17,7 @@
     {
         public int Count { get; set; }
 
-        public Models.Books.Status? Status
+        public Status? Status
         {
             get; set;
         }

@@ -8,7 +8,7 @@ namespace ApiDAL.Interfaces
 
         Task<ApiResponse> Request(RequestsTypes requestsType, string url, string? userToken = null, string? jsonContent = null);
 
-        Task<ApiResponse> AuthRequest(RequestsTypes requestsType, string url, string? jsonContent = null);
+        Task<ApiResponse> AuthRequestAsync(RequestsTypes requestsType, string url, string? jsonContent = null);
 
     }
 }

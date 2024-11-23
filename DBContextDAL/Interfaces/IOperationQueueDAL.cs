@@ -1,4 +1,4 @@
-﻿using Models.OperationQueue;
+﻿using Models.DTOs.OperationQueue;
 
 namespace Repositories.Interfaces
 {

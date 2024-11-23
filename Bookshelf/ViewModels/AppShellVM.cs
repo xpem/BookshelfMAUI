@@ -1,8 +1,8 @@
-﻿using BLL;
-using BLL.User;
-using Bookshelf.Services.Sync;
+﻿using Bookshelf.Services.Sync;
 using Bookshelf.Views;
-using Models;
+using Models.DTOs;
+using Services;
+using Services.User;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
@@ -36,7 +36,7 @@ namespace Bookshelf.ViewModels
 
         public async void AtualizaUser()
         {
-            Models.User user = await UserService.GetUserLocal();
+            User user = await UserService.GetUserLocal();
 
             if (user is not null)
             {

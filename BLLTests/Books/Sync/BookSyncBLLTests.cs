@@ -1,15 +1,16 @@
 ﻿using ApiDAL.Interfaces;
 using Repositories;
 using Repositories.Interfaces;
-using DBContextDAL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Models.Books;
-using Models.OperationQueue;
 using Models.Responses;
 using Moq;
 using Xunit;
+using Models.DTOs;
+using Models.DTOs.OperationQueue;
+using Services.Books.Interfaces;
+using Services.Books.Sync;
 
-namespace BLL.Books.Sync.Tests
+namespace BLLTests.Books.Sync
 {
     [TestClass()]
     public class BookSyncBLLTests
@@ -297,7 +298,7 @@ namespace BLL.Books.Sync.Tests
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 ObjectId = "2",
-                Status = Models.OperationQueue.OperationStatus.Pending
+                Status = OperationStatus.Pending
             };
 
             ApiOperation insertBook2Op = new()
@@ -309,7 +310,7 @@ namespace BLL.Books.Sync.Tests
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 ObjectId = "3",
-                Status = Models.OperationQueue.OperationStatus.Pending
+                Status = OperationStatus.Pending
             };
 
             List<ApiOperation> PendingOperations =
@@ -456,7 +457,7 @@ namespace BLL.Books.Sync.Tests
             var pendingOperations = new List<ApiOperation>() { insertBookOp, updateBookOp };
 
 
-            mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(Models.OperationQueue.OperationStatus.Pending))
+            mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(OperationStatus.Pending))
                 .ReturnsAsync(pendingOperations);
             mockBookApiBLL.Setup(x => x.CreateAsync(It.IsAny<Book>())).ReturnsAsync(insertBook1Response);
             mockBookApiBLL.Setup(c => c.UpdateAsync(It.IsAny<Book>())).ReturnsAsync(uptBook1Response);

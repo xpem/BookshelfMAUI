@@ -1,9 +1,10 @@
 ﻿using ApiDAL.Interfaces;
-using BLL.Books.Historic.Interfaces;
-using BLL.Handlers;
+using Models.DTOs;
 using Models.Responses;
+using Services.Books.Historic.Interfaces;
+using Services.Handlers;
 
-namespace BLL.Books.Historic
+namespace Services.Books.Historic
 {
     public class BookHistoricApiServices(IBookHistoricApiRepo bookHistoricApiDAL) : IBookHistoricApiServices
     {
@@ -11,7 +12,7 @@ namespace BLL.Books.Historic
         {
             ApiResponse resp = await bookHistoricApiDAL.GetByLastCreatedAtAsync(lastCreatedAt, page);
 
-            return ApiResponseHandler.Handler<List<Models.Books.Historic.BookHistoric>>(resp);
+            return ApiResponseHandler.Handler<List<BookHistoric>>(resp);
         }
     }
 }

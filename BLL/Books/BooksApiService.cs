@@ -1,10 +1,11 @@
 ﻿using ApiDAL.Interfaces;
-using BLL.Handlers;
-using Models.Books;
+using Models.DTOs;
 using Models.Responses;
+using Services.Books.Interfaces;
+using Services.Handlers;
 using System.Text.Json.Nodes;
 
-namespace BLL.Books
+namespace Services.Books
 {
     public class BooksApiService(IBookApiRepo bookApiRepo) : IBookApiService
     {

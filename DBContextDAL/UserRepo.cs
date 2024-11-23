@@ -1,13 +1,12 @@
 ﻿using Repositories.Interfaces;
-using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
-using Models;
+using Models.DTOs;
 
 namespace Repositories
 {
     public class UserRepo(BookshelfDbContext bookshelfDbContext) : IUserRepo
     {
-        public async Task<Models.User?> GetUserLocalAsync() => await bookshelfDbContext.User.FirstOrDefaultAsync();
+        public async Task<User?> GetUserLocalAsync() => await bookshelfDbContext.User.FirstOrDefaultAsync();
 
         //public Task<int> GetUidAsync() => bookshelfDbContext.User.Select(x => x.Id).FirstAsync();
 

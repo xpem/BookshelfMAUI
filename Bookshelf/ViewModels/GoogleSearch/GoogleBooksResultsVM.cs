@@ -1,6 +1,7 @@
 ﻿using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using Models.Books.GoogleApi;
+using Services.Books;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -92,7 +93,7 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
                 if (startIndex == 0 || startIndex < TotalItems)
                 {
-                    (List<UIGoogleBook> googleBooksListResult, TotalItems) = await BLL.Books.GoogleBooksApi.GoogleBooksApiBLL.GetBooks(_searchText, startIndex);
+                    (List<UIGoogleBook> googleBooksListResult, TotalItems) = await GoogleBooksApiService.GetBooks(_searchText, startIndex);
 
                     foreach (UIGoogleBook googleBookItem in googleBooksListResult)
                     {

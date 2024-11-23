@@ -1,12 +1,5 @@
 ﻿using ApiDAL;
 using ApiDAL.Interfaces;
-using BLL;
-using BLL.Books;
-using BLL.Books.Historic;
-using BLL.Books.Historic.Interfaces;
-using BLL.Books.Historic.Sync;
-using BLL.Books.Sync;
-using BLL.User;
 using Bookshelf.Services.Sync;
 using Bookshelf.ViewModels;
 using Bookshelf.ViewModels.Book;
@@ -17,8 +10,15 @@ using Bookshelf.Views.GoogleSearch;
 using CommunityToolkit.Maui;
 using Repositories;
 using Repositories.Interfaces;
-using DBContextDAL;
 using System.Net;
+using Services.Books.Historic.Sync;
+using Services.Books.Historic;
+using Services.Books.Interfaces;
+using Services.Books.Sync;
+using Services.Books;
+using Services;
+using Services.User;
+using Services.Books.Historic.Interfaces;
 
 namespace Bookshelf;
 
@@ -128,7 +128,7 @@ public static class MauiProgram
 
         services.AddScoped<IBuildDbBLL, BuildDbBLL>();
         services.AddScoped<IBookSyncService, BookSyncService>();
-        services.AddScoped<IBooksOperationService, BooksOperationBLL>();
+        services.AddScoped<IBooksOperationService, BooksOperationService>();
 
         return services;
     }
