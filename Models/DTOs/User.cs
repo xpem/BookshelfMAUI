@@ -1,4 +1,4 @@
-﻿namespace Models
+﻿namespace Models.DTOs
 {
     public class User
     {

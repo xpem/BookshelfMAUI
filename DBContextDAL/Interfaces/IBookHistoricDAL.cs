@@ -1,4 +1,4 @@
-﻿using Models.Books.Historic;
+﻿using Models.DTOs;
 
 namespace Repositories.Interfaces
 {

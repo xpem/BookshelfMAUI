@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Models.Books.Historic
+namespace Models.DTOs
 {
     public class BookHistoricItem
     {

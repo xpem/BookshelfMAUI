@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 using System.Collections;
 using static Models.Books.GoogleApi.GoogleApiBook;
 
-namespace BLL.Books.GoogleBooksApi
+namespace Services.Books
 {
-    public static class GoogleBooksApiBLL
+    public static class GoogleBooksApiService
     {
 
         /// <see cref="https://developers.google.com/books/docs/v1/reference#resource_volumes"/>
@@ -21,7 +21,7 @@ namespace BLL.Books.GoogleBooksApi
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -42,7 +42,7 @@ namespace BLL.Books.GoogleBooksApi
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -72,7 +72,7 @@ namespace BLL.Books.GoogleBooksApi
 
                 if (volumeInfo.publishedDate is not null)
                 {
-                    if (DateTime.TryParse((volumeInfo.publishedDate).ToString(), out DateTime publishedDate))
+                    if (DateTime.TryParse(volumeInfo.publishedDate.ToString(), out DateTime publishedDate))
                         uIGoogleBook.PublishedDate = string.Format("{0:yyyy}", publishedDate);
 
                     else if (string.IsNullOrEmpty(volumeInfo.publishedDate))

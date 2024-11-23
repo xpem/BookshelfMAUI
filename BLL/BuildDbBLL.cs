@@ -1,8 +1,7 @@
-﻿using DBContextDAL;
-using Microsoft.EntityFrameworkCore;
-using Models;
+﻿using Models.DTOs;
+using Repositories;
 
-namespace BLL
+namespace Services
 {
     public class BuildDbBLL(BookshelfDbContext bookshelfDBContext) : IBuildDbBLL
     {

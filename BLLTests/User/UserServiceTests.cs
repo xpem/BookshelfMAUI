@@ -1,17 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using BLL.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moq;
-using ApiDAL.Interfaces;
-using ApiDAL;
+﻿using ApiDAL.Interfaces;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Models.Responses;
+using Moq;
 using Repositories.Interfaces;
+using Services;
+using Services.User;
 
-namespace BLL.User.Tests
+namespace BLLTests.User
 {
     [TestClass()]
     public class UserServiceTests
@@ -30,14 +25,14 @@ namespace BLL.User.Tests
             (bool, string?) respToken = (true, "test");
 
             ApiResponse apiResponse = new ApiResponse() { Content = "{\"id\":1,\"name\":\"Emanuel Martins\",\"email\":\"emanuel.teste@email.com\",\"createdAt\":\"2023-08-12T12:43:22.24644\"}", Success = true };
-            Models.User? actualUser = null;
+            Models.DTOs.User? actualUser = null;
             BLLResponse respSuccess = new() { Success = true, Content = 1 };
 
 
             userApiDAL.Setup(x => x.GetUserTokenAsync(email, password)).ReturnsAsync(respToken);
             userApiDAL.Setup(x => x.GetUserAsync(respToken.Item2)).ReturnsAsync(apiResponse);
             userRepo.Setup(x => x.GetUserLocalAsync()).ReturnsAsync(actualUser);
-            userRepo.Setup(x => x.CreateAsync(It.IsAny<Models.User?>())).ReturnsAsync(1);
+            userRepo.Setup(x => x.CreateAsync(It.IsAny<Models.DTOs.User?>())).ReturnsAsync(1);
 
             UserService userService = new(userApiDAL.Object, userRepo.Object, buildDbBLL.Object);
 
@@ -84,14 +79,14 @@ namespace BLL.User.Tests
             (bool, string?) respToken = (true, "test");
 
             ApiResponse apiResponse = new ApiResponse() { Content = "{\"id\":1,\"name\":\"Emanuel Martins\",\"email\":\"emanuel.teste@email.com\",\"createdAt\":\"2023-08-12T12:43:22.24644\"}", Success = true };
-            Models.User? actualUser = new Models.User() { Id = 1, Email = "emanuel.teste@email.com", LastUpdate = DateTime.Now, Name = "Emanuel Martins", Password = "121212", Token = "test" };
+            Models.DTOs.User? actualUser = new Models.DTOs.User() { Id = 1, Email = "emanuel.teste@email.com", LastUpdate = DateTime.Now, Name = "Emanuel Martins", Password = "121212", Token = "test" };
             BLLResponse respSuccess = new() { Success = true, Content = 1 };
 
 
             userApiDAL.Setup(x => x.GetUserTokenAsync(email, password)).ReturnsAsync(respToken);
             userApiDAL.Setup(x => x.GetUserAsync(respToken.Item2)).ReturnsAsync(apiResponse);
             userRepo.Setup(x => x.GetUserLocalAsync()).ReturnsAsync(actualUser);
-            userRepo.Setup(x => x.UpdateAsync(It.IsAny<Models.User?>()));
+            userRepo.Setup(x => x.UpdateAsync(It.IsAny<Models.DTOs.User?>()));
 
             UserService userService = new(userApiDAL.Object, userRepo.Object, buildDbBLL.Object);
 
@@ -100,7 +95,7 @@ namespace BLL.User.Tests
             if (respSignIn != null && respSignIn.Success)
             {
                 Assert.AreEqual(respSignIn.Content, 1);
-                userRepo.Verify(x => x.UpdateAsync(It.IsAny<Models.User?>()), Times.Exactly(1));
+                userRepo.Verify(x => x.UpdateAsync(It.IsAny<Models.DTOs.User?>()), Times.Exactly(1));
             }
             else
                 Assert.Fail();
@@ -115,7 +110,7 @@ namespace BLL.User.Tests
             (bool, string?) respToken = (true, "test");
 
             ApiResponse apiResponse = new ApiResponse() { Content = "{\"id\":1,\"name\":\"Emanuel Martins\",\"email\":\"emanuel.teste@email.com\",\"createdAt\":\"2023-08-12T12:43:22.24644\"}", Success = true };
-            Models.User? actualUser = new Models.User() { Id = 2, Email = "emanuel.teste@email.com", LastUpdate = DateTime.Now, Name = "Emanuel Martins", Password = "121212", Token = "test" };
+            Models.DTOs.User? actualUser = new Models.DTOs.User() { Id = 2, Email = "emanuel.teste@email.com", LastUpdate = DateTime.Now, Name = "Emanuel Martins", Password = "121212", Token = "test" };
 
             BLLResponse respSuccess = new() { Success = true, Content = 1 };
 
@@ -123,7 +118,7 @@ namespace BLL.User.Tests
             userApiDAL.Setup(x => x.GetUserTokenAsync(email, password)).ReturnsAsync(respToken);
             userApiDAL.Setup(x => x.GetUserAsync(respToken.Item2)).ReturnsAsync(apiResponse);
             userRepo.Setup(x => x.GetUserLocalAsync()).ReturnsAsync(actualUser);
-            userRepo.Setup(x => x.CreateAsync(It.IsAny<Models.User?>())).ReturnsAsync(1);
+            userRepo.Setup(x => x.CreateAsync(It.IsAny<Models.DTOs.User?>())).ReturnsAsync(1);
 
             UserService userService = new(userApiDAL.Object, userRepo.Object, buildDbBLL.Object);
 
@@ -133,7 +128,7 @@ namespace BLL.User.Tests
             {
                 Assert.AreEqual(respSignIn.Content, 1);
                 buildDbBLL.Verify(x => x.CleanLocalDatabase(), Times.Exactly(1));
-                userRepo.Verify(x => x.CreateAsync(It.IsAny<Models.User?>()), Times.Exactly(1));
+                userRepo.Verify(x => x.CreateAsync(It.IsAny<Models.DTOs.User?>()), Times.Exactly(1));
             }
             else
                 Assert.Fail();

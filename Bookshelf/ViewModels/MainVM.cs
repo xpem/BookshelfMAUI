@@ -1,12 +1,9 @@
-﻿using BLL;
-using BLL.Books;
-using BLL.User;
-using Bookshelf.Services.Sync;
+﻿using Bookshelf.Services.Sync;
 using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using Bookshelf.Views.GoogleSearch;
-using Repositories;
 using Models;
+using Services.Books.Interfaces;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels

@@ -1,13 +1,13 @@
-﻿using ApiDAL.Interfaces;
-using BLL.User;
-using Repositories.Interfaces;
-using DBContextDAL;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Models.Books.Historic;
+using Models.DTOs;
 using Moq;
+using Repositories;
+using Repositories.Interfaces;
+using Services.Books.Historic;
 
-namespace BLL.Books.Historic.Tests
+namespace BLLTests.Books.Historic
 {
     [TestClass()]
     public class BookHistoricBLLTests
@@ -17,9 +17,9 @@ namespace BLL.Books.Historic.Tests
         {
             Mock<BookshelfDbContext> mockContext = new();
 
-            Mock<DbSet<Models.User>> mockSetUser = new();
+            Mock<DbSet<Models.DTOs.User>> mockSetUser = new();
 
-            IQueryable<Models.User> mockUsers = new List<Models.User>() {
+            IQueryable<Models.DTOs.User> mockUsers = new List<Models.DTOs.User>() {
                 new()
                 {
                     Id = 1,
@@ -28,10 +28,10 @@ namespace BLL.Books.Historic.Tests
                 }
             }.AsQueryable();
 
-            mockSetUser.As<IQueryable<Models.User>>().Setup(m => m.Provider).Returns(mockUsers.Provider);
-            mockSetUser.As<IQueryable<Models.User>>().Setup(m => m.Expression).Returns(mockUsers.Expression);
-            mockSetUser.As<IQueryable<Models.User>>().Setup(m => m.ElementType).Returns(mockUsers.ElementType);
-            mockSetUser.As<IQueryable<Models.User>>().Setup(m => m.GetEnumerator()).Returns(() => mockUsers.GetEnumerator());
+            mockSetUser.As<IQueryable<Models.DTOs.User>>().Setup(m => m.Provider).Returns(mockUsers.Provider);
+            mockSetUser.As<IQueryable<Models.DTOs.User>>().Setup(m => m.Expression).Returns(mockUsers.Expression);
+            mockSetUser.As<IQueryable<Models.DTOs.User>>().Setup(m => m.ElementType).Returns(mockUsers.ElementType);
+            mockSetUser.As<IQueryable<Models.DTOs.User>>().Setup(m => m.GetEnumerator()).Returns(() => mockUsers.GetEnumerator());
 
 
             List<BookHistoric> mockBookHistorics = new List<BookHistoric>() {
@@ -113,7 +113,7 @@ namespace BLL.Books.Historic.Tests
             mockBH.Setup(x => x.GetBookHistoricByBookIdAsync(1, 1, 1)).ReturnsAsync(mockBookHistorics);
 
             BookHistoricBLL bookHistoricBLL = new(mockBH.Object);
-            
+
             List<UIBookHistoric> result = bookHistoricBLL.GetByBookIdAsync(1, 1, 1).Result;
 
             if (result is not null && result.Count == 2)

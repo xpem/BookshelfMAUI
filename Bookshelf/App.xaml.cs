@@ -1,7 +1,8 @@
-﻿using BLL;
-using BLL.User;
-using Bookshelf.Services.Sync;
+﻿using Bookshelf.Services.Sync;
 using Bookshelf.Views;
+using Models.DTOs;
+using Services;
+using Services.User;
 
 namespace Bookshelf;
 
@@ -17,7 +18,7 @@ public partial class App : Application
 
             InitializeComponent();
 
-            Models.User user = userBLL.GetUserLocal().Result;
+            User user = userBLL.GetUserLocal().Result;
 
             MainPage = new AppShell(new ViewModels.AppShellVM(user, syncServices, buildDbBLL, userBLL));
 
@@ -28,6 +29,6 @@ public partial class App : Application
                 Shell.Current.GoToAsync($"//{nameof(Main)}");
             }
         }
-        catch (Exception ex) { throw ex; }
+        catch (Exception ex) { throw; }
     }
 }

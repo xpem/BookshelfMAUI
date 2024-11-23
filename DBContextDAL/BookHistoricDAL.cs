@@ -1,8 +1,7 @@
 ﻿using Repositories.Interfaces;
-using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
 using Models.Books;
-using Models.Books.Historic;
+using Models.DTOs;
 
 namespace Repositories
 {

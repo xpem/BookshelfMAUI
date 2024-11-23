@@ -1,7 +1,6 @@
 ﻿using Repositories.Interfaces;
-using DBContextDAL;
 using Microsoft.EntityFrameworkCore;
-using Models.OperationQueue;
+using Models.DTOs.OperationQueue;
 
 namespace Repositories
 {
@@ -16,7 +15,7 @@ namespace Repositories
         public async Task<List<ApiOperation>> GetPendingOperationsByStatusAsync(OperationStatus operationStatus) =>
             await bookshelfDbContext.ApiOperationQueue.Where(x => x.Status == operationStatus).OrderBy(x => x.CreatedAt).ToListAsync();
 
-        public async Task InsertOperationInQueueAsync(Models.OperationQueue.ApiOperation apiOperation)
+        public async Task InsertOperationInQueueAsync(ApiOperation apiOperation)
         {
             bookshelfDbContext.ApiOperationQueue.Add(apiOperation);
 

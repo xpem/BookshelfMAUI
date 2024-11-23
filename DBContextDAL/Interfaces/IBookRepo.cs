@@ -1,4 +1,5 @@
 ﻿using Models.Books;
+using Models.DTOs;
 
 namespace Repositories.Interfaces
 {
@@ -12,7 +13,7 @@ namespace Repositories.Interfaces
 
         Task<int> ExecuteUpdateBookStatusAsync(int localId, Status status, int score, string comment, int uid);
 
-        Task<List<Book>> GetBookByAfterUpdatedAtAsync(int uid, DateTime lastUpdate);
+        //Task<List<Book>> GetBookByAfterUpdatedAtAsync(int uid, DateTime lastUpdate);
 
         Task<Book?> GetBookByLocalIdAsync(int uid, int localId);
 

@@ -1,7 +1,7 @@
 ﻿using Models.Responses;
 using System.Text.Json;
 
-namespace BLL.Handlers
+namespace Services.Handlers
 {
     public static class ApiResponseHandler
     {

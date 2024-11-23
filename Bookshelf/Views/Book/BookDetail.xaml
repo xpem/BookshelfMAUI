@@ -6,7 +6,7 @@
     xmlns:Icons="clr-namespace:Models;assembly=Models"
     xmlns:components="clr-namespace:Bookshelf.Components"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels"
+    xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels.Book"
     x:DataType="viewmodels:BookDetailVM"
     Style="{StaticResource ContentPage}">
     <!--  Title="Detalhes do livro"  -->

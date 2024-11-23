@@ -1,8 +1,7 @@
-﻿using Repositories.Interfaces;
-using DBContextDAL;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Models.Books;
-using System.ComponentModel.Design;
+using Models.DTOs;
+using Repositories.Interfaces;
 
 namespace Repositories
 {
@@ -57,8 +56,8 @@ namespace Repositories
 
         public async Task<DateTime?> GetUpdatedAtByIdAsync(int id) => (await bookshelfDbContext.Book.Where(x => x.Id.Equals(id)).FirstOrDefaultAsync())?.UpdatedAt;
 
-        public async Task<List<Book>> GetBookByAfterUpdatedAtAsync(int uid, DateTime lastUpdate)
-            => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.UpdatedAt > lastUpdate).ToListAsync();
+        //public async Task<List<Book>> GetBookByAfterUpdatedAtAsync(int uid, DateTime lastUpdate)
+        //    => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.UpdatedAt > lastUpdate).ToListAsync();
 
         public async Task<int> CreateAsyn(Book book)
         {

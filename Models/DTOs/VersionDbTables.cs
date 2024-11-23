@@ -1,4 +1,4 @@
-﻿namespace Models
+﻿namespace Models.DTOs
 {
     /// <summary>
     /// Table Versions

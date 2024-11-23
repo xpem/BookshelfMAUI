@@ -1,12 +1,13 @@
-﻿using BLL.Books;
-using Bookshelf.ViewModels.Components;
+﻿using Bookshelf.ViewModels.Components;
 using Models;
-using Models.Books;
 using Models.Books.GoogleApi;
+using Models.DTOs;
+using Services.Books;
+using Services.Books.Interfaces;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace Bookshelf.ViewModels
+namespace Bookshelf.ViewModels.Book
 {
     public class AddBookVM(IBookBLL bookBLL) : ViewModelBase, IQueryAttributable
     {
@@ -123,8 +124,8 @@ namespace Bookshelf.ViewModels
 
                 if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(GoogleKey))
                 {
-                    
-                    Models.Books.Book _book = await bookBLL.GetBookbyTitleOrGoogleIdAsync(((App)App.Current).Uid, Title, GoogleKey);
+
+                    Models.DTOs.Book _book = await bookBLL.GetBookbyTitleOrGoogleIdAsync(((App)Application.Current).Uid, Title, GoogleKey);
 
                     if (_book is not null)
                     {
@@ -149,7 +150,7 @@ namespace Bookshelf.ViewModels
 
         protected async Task GetGoogleBookAsync()
         {
-            UIGoogleBook _googleBook = await BLL.Books.GoogleBooksApi.GoogleBooksApiBLL.GetBook(GoogleKey);
+            UIGoogleBook _googleBook = await GoogleBooksApiService.GetBook(GoogleKey);
 
             if (_googleBook != null)
             {
@@ -170,7 +171,7 @@ namespace Bookshelf.ViewModels
                 GoogleKey = null;
         }
 
-        protected void BuildBook(Models.Books.Book book)
+        protected void BuildBook(Models.DTOs.Book book)
         {
             BookId = book.Id.ToString();
             Title = book.Title;
@@ -217,7 +218,7 @@ namespace Bookshelf.ViewModels
         /// <summary>
         /// get book by book key
         /// </summary>
-        protected async Task GetBookAsync(int localId) => BuildBook(await bookBLL.GetBookAsync(((App)App.Current).Uid, localId));
+        protected async Task GetBookAsync(int localId) => BuildBook(await bookBLL.GetBookAsync(((App)Application.Current).Uid, localId));
 
         private async Task InsertBook()
         {
@@ -228,9 +229,9 @@ namespace Bookshelf.ViewModels
                     BtnInsertIsEnabled = false;
 
                     int? _year = !string.IsNullOrEmpty(Year) ? Convert.ToInt32(Year) : null;
-                    int? _volume = (!string.IsNullOrEmpty(Volume) ? Convert.ToInt32(Volume) : null);
+                    int? _volume = !string.IsNullOrEmpty(Volume) ? Convert.ToInt32(Volume) : null;
 
-                    Models.Books.Book book = new()
+                    Models.DTOs.Book book = new()
                     {
                         Title = Title,
                         SubTitle = SubTitle,
@@ -277,7 +278,7 @@ namespace Bookshelf.ViewModels
                         if (!string.IsNullOrEmpty(BookId))
                             book.Id = Convert.ToInt32(BookId);
 
-                        Models.Responses.BLLResponse uptRes = await bookBLL.UpdateBookAsync(((App)App.Current).Uid, IsOn, book);
+                        Models.Responses.BLLResponse uptRes = await bookBLL.UpdateBookAsync(((App)Application.Current).Uid, IsOn, book);
 
                         if (!uptRes.Success)
                         {
@@ -290,7 +291,7 @@ namespace Bookshelf.ViewModels
                     }
                     else
                     {
-                        Models.Responses.BLLResponse addRes = await bookBLL.AddBookAsync(((App)App.Current).Uid, IsOn, book);
+                        Models.Responses.BLLResponse addRes = await bookBLL.AddBookAsync(((App)Application.Current).Uid, IsOn, book);
 
                         if (!addRes.Success)
                         {
@@ -318,7 +319,7 @@ namespace Bookshelf.ViewModels
             bool ValidInfo = true;
             if (string.IsNullOrEmpty(Title))
                 ValidInfo = false;
-            else if (await bookBLL.CheckIfExistsBookWithSameTitleAsync(((App)App.Current).Uid, Title, !string.IsNullOrEmpty(BookId) ? Convert.ToInt32(BookId) : null))
+            else if (await bookBLL.CheckIfExistsBookWithSameTitleAsync(((App)Application.Current).Uid, Title, !string.IsNullOrEmpty(BookId) ? Convert.ToInt32(BookId) : null))
                 await Application.Current.MainPage.DisplayAlert("Aviso", "Livro já cadastrado!", null, "Ok");
 
             if (string.IsNullOrEmpty(Authors))

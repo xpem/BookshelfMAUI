@@ -1,4 +1,4 @@
-﻿namespace BLL.Books.Sync
+﻿namespace Services.Books.Sync
 {
     public interface IBookSyncService
     {

@@ -1,7 +1,7 @@
-﻿using BLL.Books;
-using BLL.Books.Historic.Interfaces;
-using Bookshelf.ViewModels.Components;
+﻿using Bookshelf.ViewModels.Components;
 using Models.Books.Historic;
+using Services.Books;
+using Services.Books.Historic.Interfaces;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 

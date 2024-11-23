@@ -1,9 +1,9 @@
-﻿using BLL.Books.Historic.Interfaces;
-using Repositories.Interfaces;
-using Models.Books.Historic;
+﻿using Repositories.Interfaces;
 using Models.Exceptions;
+using Models.DTOs;
+using Services.Books.Historic.Interfaces;
 
-namespace BLL.Books.Historic.Sync
+namespace Services.Books.Historic.Sync
 {
     public class BookHistoricSyncBLL(IBookHistoricApiServices bookHistoricApiBLL, IBookHistoricDAL bookHistoricDAL) : IBookHistoricSyncBLL
     {

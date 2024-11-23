@@ -1,4 +1,4 @@
-using Bookshelf.ViewModels;
+using Bookshelf.ViewModels.Book;
 
 namespace Bookshelf.Views;
 

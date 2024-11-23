@@ -1,4 +1,4 @@
-﻿using Models.Books;
+﻿using Models.DTOs;
 using Models.Responses;
 
 namespace ApiDAL.Interfaces

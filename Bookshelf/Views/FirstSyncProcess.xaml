@@ -12,7 +12,7 @@
     Shell.NavBarIsVisible="False"
     Style="{StaticResource ContentPage}">
     <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsVisible="False" IsEnabled="False" />
+        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
     </Shell.BackButtonBehavior>
     <ContentPage.Resources>
         <Style x:Key="Icon" TargetType="Label">

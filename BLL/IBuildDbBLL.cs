@@ -1,4 +1,4 @@
-﻿namespace BLL
+﻿namespace Services
 {
     public interface IBuildDbBLL
     {

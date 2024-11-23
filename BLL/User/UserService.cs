@@ -1,10 +1,10 @@
 ﻿using ApiDAL.Handlers;
 using ApiDAL.Interfaces;
-using Repositories.Interfaces;
 using Models.Responses;
+using Repositories.Interfaces;
 using System.Text.Json.Nodes;
 
-namespace BLL.User
+namespace Services.User
 {
     public class UserService(IUserApiDAL userApiDAL, IUserRepo userRepo, IBuildDbBLL buildDbBLL) : IUserService
     {
@@ -18,7 +18,7 @@ namespace BLL.User
                 JsonNode? jResp = JsonNode.Parse(resp.Content);
                 if (jResp is not null)
                 {
-                    Models.User user = new()
+                    Models.DTOs.User user = new()
                     {
                         Id = jResp["id"]?.GetValue<int>() ?? 0,
                         Name = jResp["name"]?.GetValue<string>(),
@@ -50,7 +50,7 @@ namespace BLL.User
 
         public async Task<(bool, string?)> GetUserToken(string email, string password) => await userApiDAL.GetUserTokenAsync(email.ToLower(), password);
 
-        public Task<Models.User?> GetUserLocal() => userRepo.GetUserLocalAsync();
+        public Task<Models.DTOs.User?> GetUserLocal() => userRepo.GetUserLocalAsync();
 
         public async Task<BLLResponse> SignIn(string email, string password)
         {
@@ -67,7 +67,7 @@ namespace BLL.User
                     if (resp.Success && resp.Content != null)
                     {
                         JsonNode? userResponse = JsonNode.Parse(resp.Content);
-                        Models.User? user;
+                        Models.DTOs.User? user;
 
                         if (userResponse is not null)
                         {
@@ -80,13 +80,13 @@ namespace BLL.User
                                 Password = EncryptionService.Encrypt(password)
                             };
 
-                            Models.User? actualUser = await userRepo.GetUserLocalAsync();
+                            Models.DTOs.User? actualUser = await userRepo.GetUserLocalAsync();
 
                             //resign 
                             if (actualUser != null)
                             {
                                 //with the same user
-                                if ((actualUser.Id == user.Id))
+                                if (actualUser.Id == user.Id)
                                     await userRepo.UpdateAsync(user);
                                 else
                                 {
@@ -102,7 +102,7 @@ namespace BLL.User
                     }
                 }
                 //maybe use a errorcodes instead a message?
-                else if (!success && userTokenRes is not null && (userTokenRes is "User/Password incorrect" or "Invalid Email"))
+                else if (!success && userTokenRes is not null && userTokenRes is "User/Password incorrect" or "Invalid Email")
                     return new BLLResponse() { Success = false, Error = ErrorTypes.WrongEmailOrPassword };
                 else return new BLLResponse() { Success = false, Error = ErrorTypes.ServerUnavaliable }; ;
 

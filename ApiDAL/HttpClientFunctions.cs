@@ -1,7 +1,8 @@
 ﻿using ApiDAL.Handlers;
 using ApiDAL.Interfaces;
-using DBContextDAL;
+using Models.DTOs;
 using Models.Responses;
+using Repositories;
 using System.Net;
 using System.Text;
 
@@ -81,7 +82,7 @@ namespace ApiDAL
             }
         }
 
-        public async Task<ApiResponse> AuthRequest(RequestsTypes requestsType, string url, string? jsonContent = null)
+        public async Task<ApiResponse> AuthRequestAsync(RequestsTypes requestsType, string url, string? jsonContent = null)
         {
             bool retry = true;
             ApiResponse? resp = null;
@@ -116,7 +117,7 @@ namespace ApiDAL
 
         private async Task<(bool success, string? newToken)> RefreshToken()
         {
-            Models.User? user = bookshelfDbContext.User.FirstOrDefault();
+            User? user = bookshelfDbContext.User.FirstOrDefault();
 
             if (user is not null && user.Email is not null && user.Password is not null)
             {        

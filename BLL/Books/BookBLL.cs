@@ -1,8 +1,10 @@
 ﻿using Repositories.Interfaces;
 using Models.Books;
 using Models.Responses;
+using Models.DTOs;
+using Services.Books.Interfaces;
 
-namespace BLL.Books
+namespace Services.Books
 {
     public class BookBLL(IBookApiService booksApiBLL, IBookRepo bookDAL, IBooksOperationService booksOperationBLL) : IBookBLL
     {
@@ -53,7 +55,7 @@ namespace BLL.Books
 
         public async Task<BLLResponse> AddBookAsync(int uid, bool isOn, Book book)
         {
-            book.UpdatedAt = DateTime.Now;            
+            book.UpdatedAt = DateTime.Now;
             book.UserId = uid;
 
             var bookResponse = await bookDAL.GetBookByTitleOrGoogleIdAsync(uid, book.Title);
@@ -138,7 +140,7 @@ namespace BLL.Books
                     Cover = book.Cover,
                 };
 
-                if ((Status)status == Models.Books.Status.Read)
+                if ((Status)status == Status.Read)
                 {
                     bookItem.Rate = book.Score > 0 ? string.Format("Avaliação pessoal: {0} de 5", book.Score.ToString()) : "";
                 }

@@ -1,14 +1,12 @@
-﻿using ApiDAL;
-using ApiDAL.Interfaces;
+﻿using Models.DTOs;
+using Models.DTOs.OperationQueue;
 using Models.Exceptions;
-using Repositories;
-using Models.Books;
-using Models.OperationQueue;
 using Models.Responses;
-using System.Text.Json;
 using Repositories.Interfaces;
+using Services.Books.Interfaces;
+using System.Text.Json;
 
-namespace BLL.Books.Sync
+namespace Services.Books.Sync
 {
     public class BookSyncService(IBookApiService booksApiBLL, IBookRepo bookDAL, IOperationQueueDAL operationQueueDAL) : IBookSyncService
     {
@@ -21,9 +19,9 @@ namespace BLL.Books.Sync
             while (true)
             {
                 //update local database
-                Models.Responses.BLLResponse respGetBooksByLastUpdate = await booksApiBLL.GetByLastUpdateAsync(lastUpdate, page);
+                BLLResponse respGetBooksByLastUpdate = await booksApiBLL.GetByLastUpdateAsync(lastUpdate, page);
 
-                if ((respGetBooksByLastUpdate != null) && respGetBooksByLastUpdate.Success && respGetBooksByLastUpdate.Content is not null)
+                if (respGetBooksByLastUpdate != null && respGetBooksByLastUpdate.Success && respGetBooksByLastUpdate.Content is not null)
                 {
                     List<Book>? BooksByLastUpdate = respGetBooksByLastUpdate.Content as List<Book>;
 
@@ -68,16 +66,18 @@ namespace BLL.Books.Sync
 
         public async Task LocalToApiSync(int uid, DateTime lastUpdate)
         {
-            List<ApiOperation> pendingOperations = await operationQueueDAL.GetPendingOperationsByStatusAsync(Models.OperationQueue.OperationStatus.Pending);
+            List<ApiOperation> pendingOperations = await operationQueueDAL.GetPendingOperationsByStatusAsync(OperationStatus.Pending);
 
             foreach (var pendingOperation in pendingOperations)
             {
                 await operationQueueDAL.UpdateOperationStatusAsync(OperationStatus.Processing, pendingOperation.Id);
 
-                if (pendingOperation.ObjectType == Models.OperationQueue.ObjectType.Book)
+                if (pendingOperation.ObjectType == ObjectType.Book)
                 {
                     Book? book = JsonSerializer.Deserialize<Book>(pendingOperation.Content);
+
                     if (book is null) throw new ArgumentNullException(nameof(book));
+
                     BLLResponse? bLLResponse = null;
 
                     switch (pendingOperation.ExecutionType)

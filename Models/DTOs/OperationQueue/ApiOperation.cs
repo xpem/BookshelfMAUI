@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Models.OperationQueue
+namespace Models.DTOs.OperationQueue
 {
     public record ApiOperation
     {

@@ -1,16 +1,16 @@
-﻿using BLL.Books;
-using ApiDAL.Interfaces;
-using Repositories;
-using DBContextDAL;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Models.Books;
+using Models.DTOs;
 using Models.Responses;
 using Moq;
-using Xunit;
+using Repositories;
 using Repositories.Interfaces;
+using Services.Books;
+using Services.Books.Interfaces;
+using Xunit;
 
-namespace BLL.Books.Tests
+namespace BLLTests.Books
 {
     [TestClass()]
     public class BookBLLTests
@@ -105,7 +105,7 @@ namespace BLL.Books.Tests
                 LocalId = 2
             };
 
-            mockBookDAL.Setup(x => x.CheckIfExistsBookWithSameTitleAsync(1, "Teste de Título 6",2)).ReturnsAsync(true);
+            mockBookDAL.Setup(x => x.CheckIfExistsBookWithSameTitleAsync(1, "Teste de Título 6", 2)).ReturnsAsync(true);
             mockBookDAL.Setup(x => x.UpdateAsync(It.IsAny<Book>())).ReturnsAsync(1);
 
             BLLResponse bLLResponse = new() { Success = true };
@@ -115,9 +115,9 @@ namespace BLL.Books.Tests
 
             BookBLL booksBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockBooksOperationBLL.Object);
 
-            Models.Responses.BLLResponse? result = booksBLL.UpdateBookAsync(1, true, UptBook).Result;
+            BLLResponse? result = booksBLL.UpdateBookAsync(1, true, UptBook).Result;
 
-            if (result is not null && result.Success == false && result.Content is not null && ((string)result.Content) == "Livro com este título já cadastrado.")
+            if (result is not null && result.Success == false && result.Content is not null && (string)result.Content == "Livro com este título já cadastrado.")
                 Assert.IsTrue(true);
             else
                 Assert.Fail();
@@ -141,14 +141,14 @@ namespace BLL.Books.Tests
             };
 
             Book? returnBook = null;
-            BLLResponse bLLResponse = new() { Success = true,Content = 2 };
+            BLLResponse bLLResponse = new() { Success = true, Content = 2 };
 
             mockBookDAL.Setup(x => x.GetBookByTitleOrGoogleIdAsync(1, "Teste de Título Insert", null)).ReturnsAsync(returnBook);
             mockBookDAL.Setup(x => x.CreateAsyn(It.IsAny<Book>())).ReturnsAsync(1);
 
             Mock<BookBLL> booksBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockBooksOperationBLL.Object);
 
-            Models.Responses.BLLResponse? result = booksBLL.Object.AddBookAsync(1, false, insBook).Result;
+            BLLResponse? result = booksBLL.Object.AddBookAsync(1, false, insBook).Result;
 
             mockBooksOperationBLL.Verify(x => x.InsertOperationInsertBookAsync(It.IsAny<Book>()), Times.Once());
 
@@ -181,7 +181,7 @@ namespace BLL.Books.Tests
 
             Mock<BookBLL> booksBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockBooksOperationBLL.Object);
 
-            Models.Responses.BLLResponse? result = booksBLL.Object.UpdateBookAsync(1, false, UptBook).Result;
+            BLLResponse? result = booksBLL.Object.UpdateBookAsync(1, false, UptBook).Result;
 
             mockBooksOperationBLL.Verify(x => x.InsertOperationUpdateBookAsync(UptBook), Times.Once());
 

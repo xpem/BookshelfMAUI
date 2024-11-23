@@ -1,25 +1,24 @@
-﻿using Repositories;
+﻿using Models.DTOs.OperationQueue;
 using Repositories.Interfaces;
-using Models.OperationQueue;
 
-namespace BLL
+namespace Services
 {
     public interface IApiOperationBaseBLL
     {
         Task InsertOperationAsync(string jsonContent, string objectId, ExecutionType executionType);
     }
 
-    public class ApiOperationBaseBLL(IOperationQueueDAL operationQueueDAL)
+    public class ApiOperationBaseService(IOperationQueueDAL operationQueueDAL)
     {
         protected async Task InsertOperationAsync(string jsonContent, string objectId, ExecutionType executionType)
         {
             DateTime dateTimeNow = DateTime.Now;
 
-            Models.OperationQueue.ApiOperation apiOperation = new()
+            ApiOperation apiOperation = new()
             {
                 CreatedAt = dateTimeNow,
-                ObjectType = Models.OperationQueue.ObjectType.Book,
-                Status = Models.OperationQueue.OperationStatus.Pending,
+                ObjectType = ObjectType.Book,
+                Status = OperationStatus.Pending,
                 UpdatedAt = dateTimeNow,
                 Content = jsonContent,
                 ObjectId = objectId,

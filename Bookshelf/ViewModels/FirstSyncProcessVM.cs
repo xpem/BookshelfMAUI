@@ -1,10 +1,11 @@
-﻿using BLL;
-using BLL.Books.Historic.Sync;
-using BLL.Books.Sync;
-using BLL.User;
-using Bookshelf.Services.Sync;
+﻿using Bookshelf.Services.Sync;
 using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
+using Models.DTOs;
+using Services;
+using Services.Books.Historic.Sync;
+using Services.Books.Sync;
+using Services.User;
 
 namespace Bookshelf.ViewModels
 {
@@ -35,18 +36,17 @@ namespace Bookshelf.ViewModels
         {
             try
             {
-                Models.User user = await UserBLL.GetUserLocal();
+                User user = await UserBLL.GetUserLocal();
 
                 if (user != null)
                 {
                     if (Connectivity.NetworkAccess == NetworkAccess.Internet)
                     {
-
-                        await BooksSyncBLL.LocalToApiSync(user.Id, user.LastUpdate);
+                        await BooksSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);                       
 
                         Progress = 0.25M;
 
-                        await BooksSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
+                        await BooksSyncBLL.LocalToApiSync(user.Id, user.LastUpdate);
 
                         Progress = 0.5M;
 

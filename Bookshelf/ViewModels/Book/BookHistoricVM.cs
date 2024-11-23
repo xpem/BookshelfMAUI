@@ -1,11 +1,9 @@
-﻿using BLL.Books;
-using BLL.Books.Historic.Interfaces;
-using Bookshelf.Services.Sync;
+﻿using Bookshelf.Services.Sync;
 using Bookshelf.ViewModels.Components;
-using Repositories;
 using Models.Books.Historic;
+using Services.Books;
+using Services.Books.Historic.Interfaces;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.Book

@@ -1,7 +1,8 @@
-﻿using BLL.Books.Historic.Sync;
-using BLL.Books.Sync;
-using BLL.User;
-using Models;
+﻿using Models;
+using Models.DTOs;
+using Services.Books.Historic.Sync;
+using Services.Books.Sync;
+using Services.User;
 
 namespace Bookshelf.Services.Sync
 {
@@ -44,7 +45,7 @@ namespace Bookshelf.Services.Sync
         {
             try
             {
-                Models.User user = userBLL.GetUserLocal().Result;
+                User user = userBLL.GetUserLocal().Result;
 
                 if (user != null && Synchronizing != SyncStatus.Processing)
                 {
@@ -52,9 +53,9 @@ namespace Bookshelf.Services.Sync
 
                     if (Connectivity.NetworkAccess == NetworkAccess.Internet)
                     {
-                        await booksSyncBLL.LocalToApiSync(user.Id, user.LastUpdate);
-
                         await booksSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
+
+                        await booksSyncBLL.LocalToApiSync(user.Id, user.LastUpdate);                      
 
                         await bookHistoricSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
 

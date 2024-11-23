@@ -1,8 +1,8 @@
-﻿using Repositories;
-using Models.Books;
+﻿using Models.Books;
+using Models.DTOs;
 using Models.Responses;
 
-namespace BLL.Books
+namespace Services.Books.Interfaces
 {
     public interface IBookBLL
     {

@@ -1,20 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Models.DTOs;
+using Models.DTOs.OperationQueue;
 
-namespace DBContextDAL
+namespace Repositories
 {
     public class BookshelfDbContext : DbContext
     {
-        public virtual DbSet<Models.VersionDbTables> VersionDbTables { get; set; }
+        public virtual required DbSet<VersionDbTables> VersionDbTables { get; set; }
 
-        public virtual DbSet<Models.User> User { get; set; }
+        public virtual DbSet<User> User { get; set; }
 
-        public virtual DbSet<Models.Books.Book> Book { get; set; }
+        public virtual DbSet<Book> Book { get; set; }
 
-        public virtual DbSet<Models.Books.Historic.BookHistoric> BookHistoric { get; set; }
+        public virtual DbSet<BookHistoric> BookHistoric { get; set; }
 
-        public virtual DbSet<Models.Books.Historic.BookHistoricItem> BookHistoricItem { get; set; }
+        public virtual DbSet<BookHistoricItem> BookHistoricItem { get; set; }
 
-        public virtual DbSet<Models.OperationQueue.ApiOperation> ApiOperationQueue { get; set; }
+        public virtual DbSet<ApiOperation> ApiOperationQueue { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
