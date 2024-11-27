@@ -6,7 +6,7 @@ using System.Text.Json.Nodes;
 
 namespace Services.User
 {
-    public class UserService(IUserApiDAL userApiDAL, IUserRepo userRepo, IBuildDbBLL buildDbBLL) : IUserService
+    public class UserService(IUserApiDAL userApiDAL, IUserRepo userRepo, IBuildDbService buildDbBLL) : IUserService
     {
         public async Task<BLLResponse> AddUser(string name, string email, string password)
         {

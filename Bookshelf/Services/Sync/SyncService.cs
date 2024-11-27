@@ -6,7 +6,7 @@ using Services.User;
 
 namespace Bookshelf.Services.Sync
 {
-    public class SyncServices(IUserService userBLL, IBookSyncService booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL) : ISyncServices
+    public class SyncService(IUserService userBLL, IBookSyncService booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL) : ISyncService
     {
         public static SyncStatus Synchronizing { get; set; }
 

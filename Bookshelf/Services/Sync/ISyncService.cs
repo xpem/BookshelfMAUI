@@ -2,7 +2,7 @@
 
 namespace Bookshelf.Services.Sync
 {
-    public interface ISyncServices
+    public interface ISyncService
     {
         //SyncStatus Synchronizing { get; set; }
 

@@ -1,6 +1,6 @@
-﻿namespace Bookshelf.ViewModels.Components
+﻿namespace Bookshelf.ViewModels
 {
-    public class ViewModelBase : BindableObject
+    public partial class ViewModelBase : BindableObject
     {
 
         bool isBusy;

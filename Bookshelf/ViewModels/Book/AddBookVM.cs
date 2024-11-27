@@ -1,5 +1,4 @@
-﻿using Bookshelf.ViewModels.Components;
-using Models;
+﻿using Models;
 using Models.Books.GoogleApi;
 using Models.DTOs;
 using Services.Books;

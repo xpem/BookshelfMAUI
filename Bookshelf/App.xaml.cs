@@ -10,7 +10,7 @@ public partial class App : Application
 {
     public int Uid { get; set; }
 
-    public App(ISyncServices syncServices, IUserService userBLL, IBuildDbBLL buildDbBLL)
+    public App(ISyncService syncServices, IUserService userBLL, IBuildDbService buildDbBLL)
     {
         try
         {
