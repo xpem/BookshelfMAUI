@@ -1,5 +1,4 @@
-﻿using Bookshelf.ViewModels.Components;
-using Bookshelf.Views;
+﻿using Bookshelf.Views;
 using Models.Books.GoogleApi;
 using Services.Books;
 using System.Collections.ObjectModel;

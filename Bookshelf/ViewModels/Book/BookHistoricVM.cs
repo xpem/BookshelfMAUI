@@ -1,5 +1,4 @@
 ﻿using Bookshelf.Services.Sync;
-using Bookshelf.ViewModels.Components;
 using Models.Books.Historic;
 using Services.Books;
 using Services.Books.Historic.Interfaces;
@@ -8,7 +7,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.Book
 {
-    public class BookHistoricVM(IBookHistoricService bookHistoricBLL, IBooksOperationService booksOperationBLL, ISyncServices syncServices) : ViewModelBase, IQueryAttributable
+    public class BookHistoricVM(IBookHistoricService bookHistoricBLL, IBooksOperationService booksOperationBLL, ISyncService syncServices) : ViewModelBase, IQueryAttributable
     {
 
         #region Vars

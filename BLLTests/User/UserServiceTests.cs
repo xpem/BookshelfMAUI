@@ -14,7 +14,7 @@ namespace BLLTests.User
 
         readonly Mock<IUserApiDAL> userApiDAL = new();
         readonly Mock<IUserRepo> userRepo = new();
-        readonly Mock<IBuildDbBLL> buildDbBLL = new();
+        readonly Mock<IBuildDbService> buildDbBLL = new();
 
         [TestMethod()]
         public async Task SignIn_Success_Test()
@@ -86,7 +86,7 @@ namespace BLLTests.User
             userApiDAL.Setup(x => x.GetUserTokenAsync(email, password)).ReturnsAsync(respToken);
             userApiDAL.Setup(x => x.GetUserAsync(respToken.Item2)).ReturnsAsync(apiResponse);
             userRepo.Setup(x => x.GetUserLocalAsync()).ReturnsAsync(actualUser);
-            userRepo.Setup(x => x.UpdateAsync(It.IsAny<Models.DTOs.User?>()));
+            userRepo.Setup(x => x.UpdateAsync(It.IsAny<Models.DTOs.User>()));
 
             UserService userService = new(userApiDAL.Object, userRepo.Object, buildDbBLL.Object);
 
@@ -95,7 +95,7 @@ namespace BLLTests.User
             if (respSignIn != null && respSignIn.Success)
             {
                 Assert.AreEqual(respSignIn.Content, 1);
-                userRepo.Verify(x => x.UpdateAsync(It.IsAny<Models.DTOs.User?>()), Times.Exactly(1));
+                userRepo.Verify(x => x.UpdateAsync(It.IsAny<Models.DTOs.User>()), Times.Exactly(1));
             }
             else
                 Assert.Fail();

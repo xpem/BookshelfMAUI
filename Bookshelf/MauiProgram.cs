@@ -59,7 +59,7 @@ public static class MauiProgram
 
         #region UIServices
 
-        builder.Services.AddSingleton<ISyncServices, SyncServices>();
+        builder.Services.AddSingleton<ISyncService, SyncService>();
 
         #endregion;
 
@@ -126,7 +126,7 @@ public static class MauiProgram
 
         services.AddScoped<IBookHistoricSyncBLL, BookHistoricSyncBLL>();
 
-        services.AddScoped<IBuildDbBLL, BuildDbBLL>();
+        services.AddScoped<IBuildDbService, BuildDbBLL>();
         services.AddScoped<IBookSyncService, BookSyncService>();
         services.AddScoped<IBooksOperationService, BooksOperationService>();
 

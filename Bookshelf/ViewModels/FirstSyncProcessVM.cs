@@ -1,5 +1,4 @@
 ﻿using Bookshelf.Services.Sync;
-using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using Models.DTOs;
 using Services;
@@ -9,19 +8,19 @@ using Services.User;
 
 namespace Bookshelf.ViewModels
 {
-    public class FirstSyncProcessVM : ViewModelBase
+    public partial class FirstSyncProcessVM : ViewModelBase
     {
         private decimal progress;
-        private readonly ISyncServices SyncServices;
+        private readonly ISyncService SyncServices;
 
         public decimal Progress { get => progress; set { if (progress != value) { progress = value; OnPropertyChanged(nameof(Progress)); } } }
 
         public IUserService UserBLL { get; }
         public IBookSyncService BooksSyncBLL { get; }
         public IBookHistoricSyncBLL BookHistoricSyncBLL { get; }
-        public IBuildDbBLL BuildDbBLL { get; }
+        public IBuildDbService BuildDbBLL { get; }
 
-        public FirstSyncProcessVM(IUserService userBLL, IBookSyncService booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL, ISyncServices syncServices, IBuildDbBLL buildDbBLL)
+        public FirstSyncProcessVM(IUserService userBLL, IBookSyncService booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL, ISyncService syncServices, IBuildDbService buildDbBLL)
         {
             UserBLL = userBLL;
             BooksSyncBLL = booksSyncBLL;

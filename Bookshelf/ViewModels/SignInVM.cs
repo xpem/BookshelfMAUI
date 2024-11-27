@@ -1,5 +1,4 @@
-﻿using Bookshelf.ViewModels.Components;
-using Bookshelf.Views;
+﻿using Bookshelf.Views;
 using Services.User;
 using System.Windows.Input;
 

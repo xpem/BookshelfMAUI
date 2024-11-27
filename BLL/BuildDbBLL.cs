@@ -3,7 +3,7 @@ using Repositories;
 
 namespace Services
 {
-    public class BuildDbBLL(BookshelfDbContext bookshelfDBContext) : IBuildDbBLL
+    public class BuildDbBLL(BookshelfDbContext bookshelfDBContext) : IBuildDbService
     {
         public void Init()
         {

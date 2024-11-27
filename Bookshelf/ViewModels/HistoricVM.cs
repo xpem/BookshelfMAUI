@@ -1,5 +1,4 @@
-﻿using Bookshelf.ViewModels.Components;
-using Models.Books.Historic;
+﻿using Models.Books.Historic;
 using Services.Books;
 using Services.Books.Historic.Interfaces;
 using System.Collections.ObjectModel;

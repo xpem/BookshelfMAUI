@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class AppShellVM : BindableObject
+    public partial class AppShellVM : BindableObject
     {
         string email, name;
 
@@ -15,13 +15,13 @@ namespace Bookshelf.ViewModels
 
         public string Name { get => name; set { if (name != value) { name = value; OnPropertyChanged(nameof(Name)); } } }
 
-        public ISyncServices SyncService { get; set; }
+        public ISyncService SyncService { get; set; }
 
-        public IBuildDbBLL BuildDbBLL { get; set; }
+        public IBuildDbService BuildDbBLL { get; set; }
 
         public IUserService UserService { get; set; }
 
-        public AppShellVM(User user, ISyncServices syncService, IBuildDbBLL buildDbBLL, IUserService userService)
+        public AppShellVM(User user, ISyncService syncService, IBuildDbService buildDbBLL, IUserService userService)
         {
             SyncService = syncService;
             BuildDbBLL = buildDbBLL;

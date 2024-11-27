@@ -1,5 +1,4 @@
-﻿using Bookshelf.ViewModels.Components;
-using Bookshelf.Views;
+﻿using Bookshelf.Views;
 using Bookshelf.Views.Book;
 using Models.DTOs;
 using Services.Books.Interfaces;

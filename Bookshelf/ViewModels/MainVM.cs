@@ -1,5 +1,4 @@
 ﻿using Bookshelf.Services.Sync;
-using Bookshelf.ViewModels.Components;
 using Bookshelf.Views;
 using Bookshelf.Views.GoogleSearch;
 using Models;
@@ -8,7 +7,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class MainVM(IBookBLL _booksServices, ISyncServices syncService) : ViewModelBase
+    public class MainVM(IBookBLL _booksServices, ISyncService syncService) : ViewModelBase
     {
         private bool firstSyncIsRunnig = true;
 
@@ -79,7 +78,7 @@ namespace Bookshelf.ViewModels
                 {
                     IsConnected = Colors.Green;
 
-                    switch (SyncServices.Synchronizing)
+                    switch (SyncService.Synchronizing)
                     {
                         case SyncStatus.Processing: IsSync = Colors.Green; break;
                         case SyncStatus.Sleeping:
