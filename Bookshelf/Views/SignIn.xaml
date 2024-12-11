@@ -28,20 +28,28 @@
                 Style="{StaticResource FramePrimary}"
                 VerticalOptions="Center">
                 <VerticalStackLayout>
-                    <Label Style="{StaticResource Icon}" Text="{x:Static Icons:IconFont.BookReader}" />
+                    <Label
+                        SemanticProperties.Description="Imagem da tela inicial do sistema"
+                        Style="{StaticResource Icon}"
+                        Text="{x:Static Icons:IconFont.BookReader}" />
 
-                    <components:BorderedEntry LabelText="Email" Text="{Binding Email}" />
+                    <components:BorderedEntry
+                        LabelText="Email"
+                        MaxLength="250"
+                        Text="{Binding Email}" />
                     <components:BorderedEntry
                         IsPassword="True"
                         LabelText="Senha"
+                        MaxLength="20"
                         Text="{Binding Password}" />
 
                     <Button
                         Margin="0,10,0,20"
                         Command="{Binding SignInCommand}"
                         ContentLayout="Left, 10"
-                        FontSize="20"
                         IsEnabled="{Binding BtnSignEnabled}"
+                        SemanticProperties.Description="{Binding SignInText}"
+                        SemanticProperties.Hint="Botão para acessar com usuário e senha"
                         Style="{StaticResource BtnPrimary}"
                         Text="{Binding SignInText}">
                         <Button.ImageSource>
@@ -61,6 +69,8 @@
                         <Label
                             FontFamily="EBGaramondBold"
                             HorizontalOptions="Start"
+                            SemanticProperties.Description="Criar Conta"
+                            SemanticProperties.Hint="Acessar criação de conta"
                             Text="Criar Conta"
                             TextColor="{StaticResource PrimaryColor}"
                             TextDecorations="Underline">
@@ -78,6 +88,8 @@
                         <Label
                             FontFamily="EBGaramondBold"
                             HorizontalOptions="Start"
+                            SemanticProperties.Description="Atualizar senha"
+                            SemanticProperties.Hint="Acessar atualização de senha"
                             Text="Atualizar senha"
                             TextColor="{StaticResource PrimaryColor}"
                             TextDecorations="Underline">

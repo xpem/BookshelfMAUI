@@ -202,7 +202,7 @@ namespace Bookshelf.ViewModels.Book
                         edtCommentIsVisible = true;
                 }
 
-                BtnConfText = "Alterar";
+                BtnConfText = "Salvar";
             }
             else
             {

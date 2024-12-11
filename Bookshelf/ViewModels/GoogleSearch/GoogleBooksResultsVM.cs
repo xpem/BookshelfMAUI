@@ -35,9 +35,6 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
         public ICommand OnAppearingCommand => new Command((e) =>
         {
-            if (GoogleBooksList.Count > 0)
-                GoogleBooksList.Clear();
-
             IsConnected = IsOn;
             IsNotConnected = !IsOn;
         });

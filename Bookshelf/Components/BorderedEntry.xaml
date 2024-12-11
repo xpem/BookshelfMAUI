@@ -10,8 +10,11 @@
         <Entry
             IsEnabled="{Binding Source={x:Reference this}, Path=Enabled}"
             IsPassword="{Binding Source={x:Reference this}, Path=IsPassword}"
+            MaxLength="{Binding Source={x:Reference this}, Path=MaxLength}"
+            SemanticProperties.Description="{Binding Source={x:Reference this}, Path=LabelText}"
             Style="{StaticResource Entry}"
             Text="{Binding Source={x:Reference this}, Path=Text}" />
+        <!--  SemanticProperties.Hint="Campo para inserir {}"  -->
         <!--  erro no net 7 impossibilita o uso dessa função, necessário esperar fix ser publicado no net 8  -->
         <!--  TextTransform="{Binding Source={x:Reference this},Path= TextTransformValue}"  -->
     </Frame>

@@ -204,7 +204,7 @@
                             Grid.Column="1"
                             HorizontalTextAlignment="Start"
                             Style="{StaticResource LblEntry}"
-                            Text="Categoria:"
+                            Text="Gênero:"
                             VerticalTextAlignment="Start" />
                         <Border
                             Grid.Row="1"

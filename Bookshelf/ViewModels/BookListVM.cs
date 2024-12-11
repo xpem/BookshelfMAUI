@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class BookListVM(IBookBLL _booksServices) : ViewModelBase, IQueryAttributable
+    public partial class BookListVM(IBookBLL _booksServices) : ViewModelBase, IQueryAttributable
     {
 
         #region Vars

@@ -25,26 +25,6 @@ namespace Services.Books
             }
         }
 
-        public async static Task<UIGoogleBook> GetBook(string googleId)
-        {
-            try
-            {
-                Models.Responses.ApiResponse apiResponse = await GoogleBooksApiDAL.GetBook(googleId);
-
-                if (apiResponse.Success && apiResponse.Content is not null)
-                {
-                    Item? array = JsonConvert.DeserializeObject<Item>(apiResponse.Content);
-
-                    if (array != null)
-                        return BuildUIGoogleBook(array);
-                }
-                throw new Exception("Erro não mapeado na resposta da api do google");
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
 
         private static UIGoogleBook BuildUIGoogleBook(Item item)
         {

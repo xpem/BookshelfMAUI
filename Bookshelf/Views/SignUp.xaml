@@ -23,16 +23,27 @@
         <ScrollView HorizontalOptions="CenterAndExpand">
             <Frame IsEnabled="{Binding IsNotBusy}" Style="{StaticResource FramePrimary}">
                 <VerticalStackLayout>
-                    <Label Style="{StaticResource Icon}" Text="{x:Static Icons:IconFont.User}" />
-                    <components:BorderedEntry LabelText="Nome" Text="{Binding Name}" />
-                    <components:BorderedEntry LabelText="Email" Text="{Binding Email}" />
+                    <Label
+                        SemanticProperties.Description="Imagem da tela de usuários"
+                        Style="{StaticResource Icon}"
+                        Text="{x:Static Icons:IconFont.User}" />
+                    <components:BorderedEntry
+                        LabelText="Nome"
+                        MaxLength="150"
+                        Text="{Binding Name}" />
+                    <components:BorderedEntry
+                        LabelText="Email"
+                        MaxLength="250"
+                        Text="{Binding Email}" />
                     <components:BorderedEntry
                         IsPassword="True"
                         LabelText="Senha"
+                        MaxLength="20"
                         Text="{Binding Password}" />
                     <components:BorderedEntry
                         IsPassword="True"
                         LabelText="Confirmação da senha"
+                        MaxLength="20"
                         Text="{Binding ConfirmPassword}" />
 
                     <Button
@@ -40,6 +51,7 @@
                         Command="{Binding SignUpCommand}"
                         ContentLayout="Left, 10"
                         IsEnabled="{Binding BtnCreateUserIsEnabled}"
+                        SemanticProperties.Description="Criar usuário"
                         Style="{StaticResource BtnPrimary}"
                         Text="Cadastrar">
                         <Button.ImageSource>

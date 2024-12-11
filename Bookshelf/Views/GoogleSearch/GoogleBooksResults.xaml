@@ -22,7 +22,10 @@
                 HorizontalOptions="FillAndExpand"
                 Style="{StaticResource FramePrimary}">
                 <StackLayout Margin="0" IsEnabled="{Binding IsConnected}">
-                    <components:BorderedEntry LabelText="Digite o título do livro" Text="{Binding SearchText}" />
+                    <components:BorderedEntry
+                        LabelText="Digite o título do livro"
+                        MaxLength="100"
+                        Text="{Binding SearchText}" />
                     <!--  TextTransformValue="Uppercase"  -->
                 </StackLayout>
             </Frame>
@@ -155,16 +158,17 @@
                         Grid.Row="0"
                         Command="{Binding CreateBookCommand}"
                         ContentLayout="Top,0"
-                        CornerRadius="20"
-                        HeightRequest="40"
+                        CornerRadius="50"
+                        HeightRequest="65"
                         HorizontalOptions="End"
                         Style="{StaticResource BtnPrimary}"
-                        VerticalOptions="End">
+                        VerticalOptions="End"
+                        WidthRequest="65">
                         <Button.ImageSource>
                             <FontImageSource
                                 FontFamily="FontAwesome"
                                 Glyph="{x:Static Icons:IconFont.Plus}"
-                                Size="20"
+                                Size="30"
                                 Color="Black" />
                         </Button.ImageSource>
                     </Button>
