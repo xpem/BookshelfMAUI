@@ -29,20 +29,22 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 		<DefaultLanguage>pt-br</DefaultLanguage>
-		<AssemblyVersion>0.1.2</AssemblyVersion>
-		<FileVersion>0.1.2</FileVersion>
+		<AssemblyVersion>0.1.3</AssemblyVersion>
+		<FileVersion>0.1.3</FileVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.Xpem.Bookshelf</ApplicationId>
 	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
-	  <ApplicationDisplayVersion>0.2</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
 	  <ApplicationId>com.Xpem.Bookshelf</ApplicationId>
 	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
-	  <ApplicationDisplayVersion>0.2</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
@@ -53,19 +55,22 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.Xpem.XpemBookshelf</ApplicationId>
 	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
-	  <ApplicationDisplayVersion>0.2</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.Xpem.Bookshelf</ApplicationId>
 	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
-	  <ApplicationDisplayVersion>0.2</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
 	  <ApplicationId>com.Xpem.Bookshelf</ApplicationId>
 	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
-	  <ApplicationDisplayVersion>0.2</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
@@ -76,19 +81,22 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.Xpem.XpemBookshelf</ApplicationId>
 	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
-	  <ApplicationDisplayVersion>0.2</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
 	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
 	  <ApplicationId>com.Xpem.Bookshelf</ApplicationId>
-	  <ApplicationDisplayVersion>0.2</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
 	  <ApplicationTitle>XpemBookshelf</ApplicationTitle>
 	  <ApplicationId>com.Xpem.Bookshelf</ApplicationId>
-	  <ApplicationDisplayVersion>0.2</ApplicationDisplayVersion>
+	  <ApplicationDisplayVersion>0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
