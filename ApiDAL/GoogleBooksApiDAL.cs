@@ -13,7 +13,7 @@ namespace ApiDAL
         {
             StringBuilder url = new();
 
-            url.Append($"{BASEURL}?&startIndex={startIndex}&q={search}&langRestrict=pt&printType=books");
+            url.Append($"{BASEURL}?&startIndex={startIndex}&q=intitle:{search}&langRestrict=pt&printType=books&orderBy=relevance");
 
             //for a custom search
             //switch (key)
@@ -34,7 +34,7 @@ namespace ApiDAL
 
             try
             {
-                HttpResponseMessage httpResponse = await new HttpClient().GetAsync(url.ToString());
+                 HttpResponseMessage httpResponse = await new HttpClient().GetAsync(url.ToString());
 
                 return new ApiResponse()
                 {
@@ -44,18 +44,6 @@ namespace ApiDAL
                 };
             }
             catch { throw; }
-        }
-
-        public async static Task<ApiResponse> GetBook(string googleId)
-        {
-            HttpResponseMessage httpResponse = await new HttpClient().GetAsync($"{BASEURL}/{googleId}");
-
-            return new ApiResponse()
-            {
-                Success = httpResponse.IsSuccessStatusCode,
-                Error = httpResponse.StatusCode == HttpStatusCode.Unauthorized ? ErrorTypes.Unauthorized : null,
-                Content = await httpResponse.Content.ReadAsStringAsync()
-            };
         }
     }
 }

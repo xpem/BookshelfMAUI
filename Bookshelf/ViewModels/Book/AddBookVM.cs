@@ -3,6 +3,7 @@ using Models.Books.GoogleApi;
 using Models.DTOs;
 using Services.Books;
 using Services.Books.Interfaces;
+using Services.Handlers;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -13,6 +14,8 @@ namespace Bookshelf.ViewModels.Book
         private int? rate;
 
         public int? Rate { get => rate; set { rate = value; OnPropertyChanged(nameof(Rate)); } }
+
+        private UIGoogleBook uIGoogleBook { get; set; }
 
         #region Properties
 
@@ -104,12 +107,15 @@ namespace Bookshelf.ViewModels.Book
 
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            if (query != null && query.ContainsKey("Id"))
-                LocalId = query["Id"].ToString();
+            if (query != null)
+            {
+                if (query.ContainsKey("Id"))
+                    LocalId = query["Id"].ToString();
 
-            if (query != null && query.ContainsKey("GoogleKey"))
-                GoogleKey = query["GoogleKey"].ToString();
+                if (query.ContainsKey("GoogleBook"))
+                    uIGoogleBook = query["GoogleBook"] as UIGoogleBook;
 
+            }
             Rate = 0;
             Situation = "0";
             BtnInsertText = "Cadastrar";
@@ -118,13 +124,12 @@ namespace Bookshelf.ViewModels.Book
 
             if (string.IsNullOrEmpty(LocalId))
             {
-                if (!string.IsNullOrEmpty(GoogleKey))
-                    await GetGoogleBookAsync();
+                if (uIGoogleBook is not null)
+                    GetGoogleBookAsync(uIGoogleBook);
 
-                if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(GoogleKey))
+                if (!string.IsNullOrEmpty(Title) || uIGoogleBook is not null)
                 {
-
-                    Models.DTOs.Book _book = await bookBLL.GetBookbyTitleOrGoogleIdAsync(((App)Application.Current).Uid, Title, GoogleKey);
+                    Models.DTOs.Book _book = await bookBLL.GetBookbyTitleOrGoogleIdAsync(((App)Application.Current).Uid, Title, uIGoogleBook.Id);
 
                     if (_book is not null)
                     {
@@ -138,7 +143,7 @@ namespace Bookshelf.ViewModels.Book
                 {
                     RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
 
-                    if (string.IsNullOrEmpty(GoogleKey))
+                    if (uIGoogleBook is null)
                         Cover = Title = SubTitle = Authors = Year = Pages = "";
 
                     Isbn = Genre = Volume = "";
@@ -147,27 +152,20 @@ namespace Bookshelf.ViewModels.Book
             else _ = GetBookAsync(Convert.ToInt32(LocalId));
         }
 
-        protected async Task GetGoogleBookAsync()
+        protected void GetGoogleBookAsync(UIGoogleBook uIGoogleBook)
         {
-            UIGoogleBook _googleBook = await GoogleBooksApiService.GetBook(GoogleKey);
+            Cover = uIGoogleBook.Thumbnail;
+            Title = uIGoogleBook.Title;
+            SubTitle = uIGoogleBook.Subtitle;
+            Authors = uIGoogleBook.Authors;
+            Year = uIGoogleBook.PublishedDate;
+            Pages = uIGoogleBook.PageCount.ToString();
 
-            if (_googleBook != null)
+            if (!string.IsNullOrEmpty(Cover))
             {
-                Cover = _googleBook.Thumbnail;
-                Title = _googleBook.Title;
-                SubTitle = _googleBook.Subtitle;
-                Authors = _googleBook.Authors;
-                Year = _googleBook.PublishedDate;
-                Pages = _googleBook.PageCount.ToString();
-
-                if (!string.IsNullOrEmpty(Cover))
-                {
-                    ImgCoverIsVisible = true;
-                    LblTitleIsEnabled = false;
-                }
+                ImgCoverIsVisible = true;
+                LblTitleIsEnabled = false;
             }
-            else
-                GoogleKey = null;
         }
 
         protected void BuildBook(Models.DTOs.Book book)
@@ -197,8 +195,10 @@ namespace Bookshelf.ViewModels.Book
             {
                 Situation = book.Status.ToString();
                 Rate = book.Score.Value;
+
                 if (book.Score.HasValue)
                     Rate = book.Score.Value;
+
                 Comment = book.Comment;
             }
             else
@@ -230,15 +230,17 @@ namespace Bookshelf.ViewModels.Book
                     int? _year = !string.IsNullOrEmpty(Year) ? Convert.ToInt32(Year) : null;
                     int? _volume = !string.IsNullOrEmpty(Volume) ? Convert.ToInt32(Volume) : null;
 
+                    if (Cover.Length > 2000) Cover = null;
+
                     Models.DTOs.Book book = new()
                     {
-                        Title = Title,
-                        SubTitle = SubTitle,
-                        Authors = Authors,
+                        Title = Title.Truncate(100),
+                        SubTitle = SubTitle.Truncate(100),
+                        Authors = Authors.Truncate(150),
                         Year = _year,
-                        Isbn = Isbn,
+                        Isbn = Isbn.Truncate(100),
                         Pages = Convert.ToInt32(Pages),
-                        Genre = Genre,
+                        Genre = Genre.Truncate(50),
                         Volume = _volume,
                         Cover = Cover,
                         GoogleId = GoogleKey,
@@ -258,7 +260,7 @@ namespace Bookshelf.ViewModels.Book
                         book.Status = (Status)pkrStatusSelectedIndex;
 
                         book.Score = rate;
-                        book.Comment = comment;
+                        book.Comment = comment.Truncate(350);
 
                         mensagem = "Livro e avaliação";
                     }
