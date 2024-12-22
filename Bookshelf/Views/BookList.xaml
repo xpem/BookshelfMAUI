@@ -22,7 +22,10 @@
                 HorizontalOptions="FillAndExpand"
                 Style="{StaticResource FramePrimary}">
                 <StackLayout Margin="0">
-                    <components:BorderedEntry LabelText="Digite o título do livro" Text="{Binding SearchTitle}" />
+                    <components:BorderedEntry
+                        LabelText="Digite o título do livro"
+                        MaxLength="100"
+                        Text="{Binding SearchTitle}" />
                 </StackLayout>
             </Frame>
             <Frame
@@ -72,7 +75,7 @@
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="20" />
                                                 <RowDefinition Height="20" />
-                                                <RowDefinition Height="20" />
+                                                <RowDefinition Height="40" />
                                                 <RowDefinition Height="*" />
                                             </Grid.RowDefinitions>
                                             <Grid.ColumnDefinitions>
@@ -104,7 +107,16 @@
                                                 Text="{Binding Pages, StringFormat='Páginas: {0:F0}'}"
                                                 TextColor="White"
                                                 VerticalTextAlignment="Start" />
-                                            <Label
+                                            <components:RatingBar
+                                                Grid.Row="2"
+                                                Grid.Column="0"
+                                                HeightIcons="15"
+                                                HorizontalOptions="Start"
+                                                IsEnabled="False"
+                                                IsVisible="{Binding RateIsVisible}"
+                                                Rate="{Binding Rate}"
+                                                VerticalOptions="Start" />
+                                            <!--<Label
                                                 Grid.Row="3"
                                                 Grid.Column="0"
                                                 FontFamily="EBGaramondItalic"
@@ -113,7 +125,7 @@
                                                 HorizontalTextAlignment="Start"
                                                 Text="{Binding Rate}"
                                                 TextColor="White"
-                                                VerticalOptions="End" />
+                                                VerticalOptions="End" />-->
                                         </Grid>
                                     </StackLayout>
                                 </Frame>
