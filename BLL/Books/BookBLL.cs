@@ -140,14 +140,11 @@ namespace Services.Books
                     Cover = book.Cover,
                 };
 
-                if ((Status)status == Status.Read)
-                {
-                    bookItem.Rate = book.Score > 0 ? string.Format("Avaliação pessoal: {0} de 5", book.Score.ToString()) : "";
-                }
+                if (book.Status is not null && (Status)book.Status == Status.Read)                
+                    bookItem.Rate = book.Score > 0 ? book.Score.Value : 0;                
 
                 listBooksItens.Add(bookItem);
             }
-
 
             return listBooksItens;
         }

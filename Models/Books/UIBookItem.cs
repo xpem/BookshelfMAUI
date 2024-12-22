@@ -19,7 +19,9 @@
 
         public string? Pages { get; set; }
 
-        public string? Rate { get; set; }
+        public int Rate { get; set; }
+
+        public bool RateIsVisible => Rate > 0;
 
         public string? Cover { get; set; }
 
