@@ -273,6 +273,15 @@
                             </Grid.ColumnDefinitions>
                             <Label
                                 Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="0,0,0,10"
+                                FontFamily="OpenSansSemibold"
+                                FontSize="12"
+                                SemanticProperties.Description="Versão"
+                                Text="{Binding Version}"
+                                VerticalOptions="End" />
+                            <Label
+                                Grid.Row="0"
                                 Grid.Column="1"
                                 Margin="0,0,0,10"
                                 FontFamily="FontAwesome"

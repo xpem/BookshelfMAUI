@@ -55,7 +55,7 @@ namespace Bookshelf.Services.Sync
                     {
                         await booksSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
 
-                        await booksSyncBLL.LocalToApiSync(user.Id, user.LastUpdate);                      
+                        await booksSyncBLL.LocalToApiSync(user.Id, user.LastUpdate);
 
                         await bookHistoricSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
 

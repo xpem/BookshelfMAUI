@@ -10,6 +10,10 @@ namespace Bookshelf.ViewModels
 
         bool btnSignEnabled = true;
 
+        private string version = ((App)Application.Current).Version;
+
+        public string Version { get => version; set { if (version != value) { version = value; OnPropertyChanged(nameof(Version)); } } }
+
         public string Email { get => email; set { if (email != value) { email = value; OnPropertyChanged(); } } }
 
         public string Password { get => password; set { if (password != value) { password = value; OnPropertyChanged(); } } }

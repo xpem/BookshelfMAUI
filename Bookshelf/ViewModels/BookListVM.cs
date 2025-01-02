@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public partial class BookListVM(IBookBLL _booksServices) : ViewModelBase, IQueryAttributable
+    public partial class BookListVM(IBookService _booksServices) : ViewModelBase, IQueryAttributable
     {
 
         #region Vars
@@ -49,7 +49,7 @@ namespace Bookshelf.ViewModels
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            if (query != null && query.TryGetValue("Situation",out object outValue))
+            if (query != null && query.TryGetValue("Situation", out object outValue))
                 SituationIndex = Convert.ToInt16(outValue);
             else { SituationIndex = 0; }
 
@@ -57,6 +57,7 @@ namespace Bookshelf.ViewModels
             {
                 BooksList.Clear();
             }
+
             CurrentPage = 1;
 
             LoadBooks(CurrentPage).ConfigureAwait(false);
@@ -76,15 +77,14 @@ namespace Bookshelf.ViewModels
         public ICommand OnAppearingCommand => new Command(async (e) =>
         {
             if (SituationIndex is null)
-            {
                 SituationIndex = 0;
 
-                if (BooksList.Count > 0)
-                    BooksList.Clear();
+            if (BooksList.Count > 0)
+                BooksList.Clear();
 
-                CurrentPage = 1;
-                _ = LoadBooks(CurrentPage);
-            }
+            CurrentPage = 1;
+            _ = LoadBooks(CurrentPage);
+
         });
 
 
@@ -105,7 +105,7 @@ namespace Bookshelf.ViewModels
             if (!string.IsNullOrEmpty(SearchTitle))
                 _searchText = SearchTitle.ToLower();
 
-            List<UIBookItem> _booksList = await _booksServices.GetBooksByStatusAsync(((App)App.Current).Uid, pageNumber, SituationIndex.Value, _searchText);
+            List<UIBookItem> _booksList = await _booksServices.GetByStatusAsync(((App)App.Current).Uid, pageNumber, SituationIndex.Value, _searchText);
 
             foreach (UIBookItem bookItem in _booksList)
             {

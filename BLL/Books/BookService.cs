@@ -6,7 +6,7 @@ using Services.Books.Interfaces;
 
 namespace Services.Books
 {
-    public class BookBLL(IBookApiService booksApiBLL, IBookRepo bookDAL, IBooksOperationService booksOperationBLL) : IBookBLL
+    public class BookService(IBookApiService booksApiBLL, IBookRepo bookDAL, IBooksOperationService booksOperationBLL) : IBookService
     {
         public async Task<Totals> GetBookshelfTotalsAsync(int uid)
         {
@@ -34,9 +34,9 @@ namespace Services.Books
             return totals;
         }
 
-        public async Task<Book?> GetBookAsync(int uid, int localId) => await bookDAL.GetBookByLocalIdAsync(uid, localId);
+        public async Task<Book?> GetAsync(int uid, int localId) => await bookDAL.GetBookByLocalIdAsync(uid, localId);
 
-        public async Task<BLLResponse> UpdateBookAsync(int uid, bool isOn, Book book)
+        public async Task<BLLResponse> UpdateAsync(int uid, bool isOn, Book book)
         {
             if (!await CheckIfExistsBookWithSameTitleAsync(uid, book.Title, book.LocalId))
             {
@@ -53,12 +53,12 @@ namespace Services.Books
             else return new BLLResponse() { Success = false, Content = "Livro com este título já cadastrado." };
         }
 
-        public async Task<BLLResponse> AddBookAsync(int uid, bool isOn, Book book)
+        public async Task<BLLResponse> AddAsync(int uid, bool isOn, Book book)
         {
             book.UpdatedAt = DateTime.Now;
             book.UserId = uid;
 
-            var bookResponse = await bookDAL.GetBookByTitleOrGoogleIdAsync(uid, book.Title);
+            var bookResponse = await bookDAL.GetByTitleOrGoogleIdAsync(uid, book.Title);
 
             if (bookResponse is null)
             {
@@ -98,22 +98,15 @@ namespace Services.Books
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
-        public async Task<List<UIBookItem>> GetBooksByStatusAsync(int uid, int page, int status, string? textoBusca = null)
+        public async Task<List<UIBookItem>> GetByStatusAsync(int uid, int page, int status, string? searchText = null)
         {
             List<UIBookItem> listBooksItens = [];
-            int total = 0;
-
-            List<Book> list = [];
+            List<Book> list;
 
             if (status > 0)
-                list = await bookDAL.GetBooksByStatusAsync(uid, (Status)status, page);
+                list = await bookDAL.GetByStatusAsync(uid, (Status)status, page, searchText);
             else
-                list = await bookDAL.GetBooksAsync(uid, page);
-
-            if (list.Count > 0 && !string.IsNullOrEmpty(textoBusca))
-                list = list.Where(x => x.Title != null && x.Title.Contains(textoBusca, StringComparison.CurrentCultureIgnoreCase)).ToList();
-
-            total = list.Count;
+                list = await bookDAL.GetAsync(uid, page, searchText);
 
             string SubtitleAndVol;
 
@@ -151,7 +144,7 @@ namespace Services.Books
 
         public async Task InactivateBookAsync(int uid, bool isOn, int localId)
         {
-            Book? book = await GetBookAsync(uid, localId);
+            Book? book = await GetAsync(uid, localId);
 
             if (book is not null)
             {
@@ -169,7 +162,7 @@ namespace Services.Books
         {
             try
             {
-                Book? book = await GetBookAsync(uid, localId);
+                Book? book = await GetAsync(uid, localId);
 
                 if (book is not null)
                 {
@@ -198,10 +191,10 @@ namespace Services.Books
             else _ = booksOperationBLL.InsertOperationUpdateBookAsync(book);
         }
 
-        public async Task<Book?> GetBookbyTitleOrGoogleIdAsync(int uid, string title, string googleId)
-            => await bookDAL.GetBookByTitleOrGoogleIdAsync(uid, title, googleId);
+        public async Task<Book?> GetbyTitleOrGoogleIdAsync(int uid, string title, string googleId)
+            => await bookDAL.GetByTitleOrGoogleIdAsync(uid, title, googleId);
 
         public async Task<bool> CheckIfExistsBookWithSameTitleAsync(int uid, string title, int? localId)
-            => await bookDAL.CheckIfExistsBookWithSameTitleAsync(uid, title, localId);
+            => await bookDAL.CheckIfExistsWithSameTitleAsync(uid, title, localId);
     }
 }

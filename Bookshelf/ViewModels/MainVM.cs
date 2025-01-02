@@ -7,13 +7,17 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class MainVM(IBookBLL _booksServices, ISyncService syncService) : ViewModelBase
+    public partial class MainVM(IBookService _booksServices, ISyncService syncService) : ViewModelBase
     {
         private bool firstSyncIsRunnig = true;
 
         private string illRead, reading, read, interrupted;
 
-        private Color isSync;
+        private string version = ((App)Application.Current).Version;
+
+        private Color isSync, isConnected;
+
+        public string Version { get => version; set { if (version != value) { version = value; OnPropertyChanged(nameof(Version)); } } }
 
         public string IllRead { get => illRead; set { if (illRead != value) { illRead = value; OnPropertyChanged(nameof(IllRead)); } } }
 
@@ -35,16 +39,16 @@ namespace Bookshelf.ViewModels
         public double FrmMainOpacity { get => frmMainOpacity; set { if (frmMainOpacity != value) { frmMainOpacity = value; OnPropertyChanged(nameof(FrmMainOpacity)); } } }
 
         private bool frmMainIsEnabled;
-        Color isConnected;
 
         public bool FrmMainIsEnabled { get => frmMainIsEnabled; set { if (value != frmMainIsEnabled) { frmMainIsEnabled = value; OnPropertyChanged(nameof(FrmMainIsEnabled)); } } }
 
         public Color IsConnected { get => isConnected; set { if (value != isConnected) { isConnected = value; OnPropertyChanged(nameof(IsConnected)); } } }
 
         private static Timer _Timer;
+
         private int Interval = 3000;
 
-        public ICommand OnAppearingCommand => new Command(async (e) =>
+        public ICommand OnAppearingCommand => new Command((e) =>
         {
             IsSync = Colors.Gray;
 

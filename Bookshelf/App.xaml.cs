@@ -10,6 +10,8 @@ public partial class App : Application
 {
     public int Uid { get; set; }
 
+    public readonly string Version = "@0.1.5";
+
     public App(ISyncService syncServices, IUserService userBLL, IBuildDbService buildDbBLL)
     {
         try
