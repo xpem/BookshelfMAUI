@@ -104,33 +104,24 @@
                         Margin="0,10,0,10"
                         BackgroundColor="{StaticResource White}"
                         HeightRequest="1" />
-                    <Label
-                        FontFamily="EBGaramondSemiBold"
-                        FontSize="20"
-                        HorizontalOptions="Center"
-                        Text="Situação"
-                        TextColor="{StaticResource White}"
-                        VerticalOptions="Fill" />
-                    <Frame
-                        Margin="0,5,0,5"
-                        Padding="0"
-                        BackgroundColor="#101923"
-                        BorderColor="{StaticResource ActiveColor}"
-                        CornerRadius="5"
-                        HorizontalOptions="CenterAndExpand">
-                        <Picker ItemsSource="{Binding StatusList}" SelectedIndex="{Binding PkrStatusSelectedIndex}" />
-                    </Frame>
-
-                    <Frame
-                        Margin="0,5,0,5"
-                        Padding="10,0,10,0"
-                        BackgroundColor="#101923"
-                        BorderColor="{StaticResource ActiveColor}"
-                        CornerRadius="5"
-                        HorizontalOptions="CenterAndExpand"
-                        IsVisible="{Binding RatingBarIsVisible}">
-                        <components:RatingBar Rate="{Binding Rate}" RatingBarIsVisible="{Binding RatingBarIsVisible}" />
-                    </Frame>
+                    <VerticalStackLayout HorizontalOptions="Center">
+                        <Label
+                            FontFamily="EBGaramondSemiBold"
+                            FontSize="20"
+                            Text="Situação"
+                            TextColor="{StaticResource White}"
+                            VerticalOptions="Fill" />
+                        <Frame
+                            Margin="0,5,0,5"
+                            Padding="0"
+                            BackgroundColor="#101923"
+                            BorderColor="{StaticResource ActiveColor}"
+                            CornerRadius="5"
+                            HorizontalOptions="CenterAndExpand">
+                            <Picker ItemsSource="{Binding StatusList}" SelectedIndex="{Binding PkrStatusSelectedIndex}" />
+                        </Frame>
+                    </VerticalStackLayout>
+                    <components:RatingBar Rate="{Binding Rate}" RatingBarIsVisible="{Binding RatingBarIsVisible}" />
 
                     <components:BorderedEditor
                         EditorIsVisible="{Binding EdtCommentIsVisible}"

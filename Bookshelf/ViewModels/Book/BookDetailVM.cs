@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.Book
 {
-    public class BookDetailVM(IBookBLL _booksServices) : ViewModelBase, IQueryAttributable
+    public class BookDetailVM(IBookService _booksServices) : ViewModelBase, IQueryAttributable
     {
 
         #region bind variables.
@@ -148,7 +148,7 @@ namespace Bookshelf.ViewModels.Book
 
         private async Task GetBook(int bookId)
         {
-            Models.DTOs.Book book = await _booksServices.GetBookAsync(((App)Application.Current).Uid, bookId);
+            Models.DTOs.Book book = await _booksServices.GetAsync(((App)Application.Current).Uid, bookId);
 
             if (book.Id > 0)
                 ExternalId = book.Id.Value;

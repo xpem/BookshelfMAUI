@@ -78,6 +78,7 @@
 
     <Style TargetType="Picker">
         <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="TitleColor" Value="{StaticResource White}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="FontFamily" Value="EBGaramondRegular" />

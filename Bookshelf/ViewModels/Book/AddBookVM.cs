@@ -1,21 +1,20 @@
 ﻿using Models;
 using Models.Books.GoogleApi;
 using Models.DTOs;
-using Services.Books;
 using Services.Books.Interfaces;
-using Services.Handlers;
+using Services.Utils;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.Book
 {
-    public class AddBookVM(IBookBLL bookBLL) : ViewModelBase, IQueryAttributable
+    public partial class AddBookVM(IBookService bookBLL) : ViewModelBase, IQueryAttributable
     {
         private int? rate;
 
         public int? Rate { get => rate; set { rate = value; OnPropertyChanged(nameof(Rate)); } }
 
-        private UIGoogleBook uIGoogleBook { get; set; }
+        private UIGoogleBook UIGoogleBook { get; set; }
 
         #region Properties
 
@@ -49,7 +48,8 @@ namespace Bookshelf.ViewModels.Book
 
         #region Ui properties
 
-        private ObservableCollection<string> statusList = new() { "Nenhuma", "Vou ler", "Lendo", "Lido", "Interrompido" };
+        private ObservableCollection<string> statusList = ["Nenhuma", "Vou ler", "Lendo", "Lido", "Interrompido"];
+
         public ObservableCollection<string> StatusList { get => statusList; set { if (value != statusList) { statusList = value; OnPropertyChanged(nameof(StatusList)); } } }
 
         private bool ratingBarIsVisible, lblRatingBarIsVisible, edtCommentIsVisible, imgCoverIsVisible = false;
@@ -96,7 +96,6 @@ namespace Bookshelf.ViewModels.Book
 
         public string BtnAddBookImageSourceGlyph { get => btnAddBookImageSourceGlyph; set { if (value != btnAddBookImageSourceGlyph) { btnAddBookImageSourceGlyph = value; OnPropertyChanged(nameof(BtnAddBookImageSourceGlyph)); } } }
 
-
         /// <summary>
         /// btn insert book command
         /// </summary>
@@ -109,13 +108,13 @@ namespace Bookshelf.ViewModels.Book
         {
             if (query != null)
             {
-                if (query.ContainsKey("Id"))
-                    LocalId = query["Id"].ToString();
+                if (query.TryGetValue("Id", out var idValue))
+                    LocalId = idValue.ToString();
 
-                if (query.ContainsKey("GoogleBook"))
-                    uIGoogleBook = query["GoogleBook"] as UIGoogleBook;
-
+                if (query.TryGetValue("GoogleBook", out var googleBookValue))
+                    UIGoogleBook = googleBookValue as UIGoogleBook;
             }
+
             Rate = 0;
             Situation = "0";
             BtnInsertText = "Cadastrar";
@@ -124,12 +123,12 @@ namespace Bookshelf.ViewModels.Book
 
             if (string.IsNullOrEmpty(LocalId))
             {
-                if (uIGoogleBook is not null)
-                    GetGoogleBookAsync(uIGoogleBook);
+                if (UIGoogleBook is not null)
+                    GetGoogleBookAsync(UIGoogleBook);
 
-                if (!string.IsNullOrEmpty(Title) || uIGoogleBook is not null)
+                if (!string.IsNullOrEmpty(Title) || UIGoogleBook is not null)
                 {
-                    Models.DTOs.Book _book = await bookBLL.GetBookbyTitleOrGoogleIdAsync(((App)Application.Current).Uid, Title, uIGoogleBook.Id);
+                    Models.DTOs.Book _book = await bookBLL.GetbyTitleOrGoogleIdAsync(((App)Application.Current).Uid, Title, UIGoogleBook.Id);
 
                     if (_book is not null)
                     {
@@ -143,7 +142,7 @@ namespace Bookshelf.ViewModels.Book
                 {
                     RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
 
-                    if (uIGoogleBook is null)
+                    if (UIGoogleBook is null)
                         Cover = Title = SubTitle = Authors = Year = Pages = "";
 
                     Isbn = Genre = Volume = "";
@@ -217,7 +216,7 @@ namespace Bookshelf.ViewModels.Book
         /// <summary>
         /// get book by book key
         /// </summary>
-        protected async Task GetBookAsync(int localId) => BuildBook(await bookBLL.GetBookAsync(((App)Application.Current).Uid, localId));
+        protected async Task GetBookAsync(int localId) => BuildBook(await bookBLL.GetAsync(((App)Application.Current).Uid, localId));
 
         private async Task InsertBook()
         {
@@ -230,7 +229,7 @@ namespace Bookshelf.ViewModels.Book
                     int? _year = !string.IsNullOrEmpty(Year) ? Convert.ToInt32(Year) : null;
                     int? _volume = !string.IsNullOrEmpty(Volume) ? Convert.ToInt32(Volume) : null;
 
-                    if (Cover.Length > 2000) Cover = null;
+                    if (Cover?.Length > 2000) Cover = null;
 
                     Models.DTOs.Book book = new()
                     {
@@ -279,7 +278,7 @@ namespace Bookshelf.ViewModels.Book
                         if (!string.IsNullOrEmpty(BookId))
                             book.Id = Convert.ToInt32(BookId);
 
-                        Models.Responses.BLLResponse uptRes = await bookBLL.UpdateBookAsync(((App)Application.Current).Uid, IsOn, book);
+                        Models.Responses.BLLResponse uptRes = await bookBLL.UpdateAsync(((App)Application.Current).Uid, IsOn, book);
 
                         if (!uptRes.Success)
                         {
@@ -292,7 +291,7 @@ namespace Bookshelf.ViewModels.Book
                     }
                     else
                     {
-                        Models.Responses.BLLResponse addRes = await bookBLL.AddBookAsync(((App)Application.Current).Uid, IsOn, book);
+                        Models.Responses.BLLResponse addRes = await bookBLL.AddAsync(((App)Application.Current).Uid, IsOn, book);
 
                         if (!addRes.Success)
                         {
@@ -318,18 +317,13 @@ namespace Bookshelf.ViewModels.Book
         private async Task<bool> VerrifyFields()
         {
             bool ValidInfo = true;
+
             if (string.IsNullOrEmpty(Title))
                 ValidInfo = false;
-            else if (await bookBLL.CheckIfExistsBookWithSameTitleAsync(((App)Application.Current).Uid, Title, !string.IsNullOrEmpty(BookId) ? Convert.ToInt32(BookId) : null))
-                await Application.Current.MainPage.DisplayAlert("Aviso", "Livro já cadastrado!", null, "Ok");
 
             if (string.IsNullOrEmpty(Authors))
                 ValidInfo = false;
 
-            //if (string.IsNullOrEmpty(Year))
-            //{
-            //    ValidInfo = false;
-            //}
             if (string.IsNullOrEmpty(Pages))
             {
                 if (int.TryParse(Pages, out int pages))
@@ -340,17 +334,11 @@ namespace Bookshelf.ViewModels.Book
                 else
                     ValidInfo = false;
             }
-            //if (string.IsNullOrEmpty(Genre))
-            //{
-            //    ValidInfo = false;
-            //}
 
             if (!ValidInfo)
                 await Application.Current.MainPage.DisplayAlert("Aviso", "Preencha os campos obrigatórios", null, "Ok");
 
             return ValidInfo;
-
         }
-
     }
 }

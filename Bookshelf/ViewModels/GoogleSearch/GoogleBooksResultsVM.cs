@@ -1,6 +1,7 @@
 ﻿using Bookshelf.Views;
 using Models.Books.GoogleApi;
 using Services.Books;
+using Services.Utils;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -80,7 +81,8 @@ namespace Bookshelf.ViewModels.GoogleSearch
             if (!string.IsNullOrEmpty(SearchText))
             {
                 IsBusy = true;
-                string _searchText = SearchText.ToUpper();
+
+                string _searchText = SearchText.RemoveDiacritics().ToUpper();
 
                 int startIndex = 0;
 

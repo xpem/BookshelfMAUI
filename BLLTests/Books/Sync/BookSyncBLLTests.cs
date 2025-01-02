@@ -135,10 +135,10 @@ namespace BLLTests.Books.Sync
             Mock<IBookApiService> bookApiBLL = new();
 
             BLLResponse bLLResponse = new() { Success = true, Content = apiResultBooks };
-            DateTime? bookLastUpdate = null;
+            Book? bookLastUpdate = null;
 
             bookApiBLL.Setup(x => x.GetByLastUpdateAsync(lastUpdate, 1)).ReturnsAsync(() => bLLResponse);
-            mockBookDAL.Setup(x => x.GetUpdatedAtByIdAsync(It.IsAny<int>())).ReturnsAsync(bookLastUpdate);
+            mockBookDAL.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(bookLastUpdate);
             mockBookDAL.Setup(x => x.CreateAsyn(It.IsAny<Book>())).ReturnsAsync(1);
 
             BookSyncService bookSyncBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockOperationQueueDAL.Object);
@@ -231,6 +231,18 @@ namespace BLLTests.Books.Sync
                 Id = 1,
                 LocalId = 1
             };
+
+            Book Book1ByIdReturn = new()
+            {
+                Title = "Teste de Título 6",
+                Authors = "Emanuel Teste",
+                Status = Status.IllRead,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now.AddDays(-6),
+                UserId = 1,
+                Id = 1,
+                LocalId = 1
+            };
             Book Book2 = new()
             {
                 Title = "Teste de Título Alterado",
@@ -238,6 +250,18 @@ namespace BLLTests.Books.Sync
                 Status = Status.IllRead,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now.AddDays(-5),
+                UserId = 1,
+                Id = 2,
+                LocalId = 2
+            };
+
+            Book Book2ByIdReturn = new()
+            {
+                Title = "Teste de Título Alterado",
+                Authors = "Emanuel Teste",
+                Status = Status.IllRead,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now.AddDays(-7),
                 UserId = 1,
                 Id = 2,
                 LocalId = 2
@@ -260,8 +284,8 @@ namespace BLLTests.Books.Sync
 
             //mockBookDAL.Setup(x => x.ExecuteUpdateBookAsync(Book1)).ReturnsAsync(1);
 
-            mockBookDAL.Setup(x => x.GetUpdatedAtByIdAsync(1)).ReturnsAsync(Book1.UpdatedAt.AddDays(-1));
-            mockBookDAL.Setup(x => x.GetUpdatedAtByIdAsync(2)).ReturnsAsync(Book2.UpdatedAt.AddDays(-2));
+            mockBookDAL.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(Book1ByIdReturn);
+            mockBookDAL.Setup(x => x.GetByIdAsync(2)).ReturnsAsync(Book2ByIdReturn);
             mockBookDAL.Setup(x => x.UpdateAsync(Book1)).ReturnsAsync(1);
 
             BLLResponse bLLResponse = new() { Success = true, Content = apiResultBooks };

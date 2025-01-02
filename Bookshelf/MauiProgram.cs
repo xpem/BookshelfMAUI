@@ -120,7 +120,7 @@ public static class MauiProgram
     {
         services.AddScoped<IBookHistoricApiServices, BookHistoricApiServices>();
         services.AddScoped<IBookHistoricService, BookHistoricBLL>();
-        services.AddScoped<IBookBLL, BookBLL>();
+        services.AddScoped<IBookService, BookService>();
         services.AddScoped<IBookApiService, BooksApiService>();
         services.AddScoped<IUserService, UserService>();
 

@@ -34,23 +34,19 @@ namespace Services.Books.Sync
                             if (apiBook is null) throw new ArgumentNullException(nameof(apiBook));
 
                             apiBook.UserId = uid;
-
-                            DateTime? bookLastUpdate;
+                            Book? localBook = null;
 
                             if (apiBook.Id is not null)
-                                bookLastUpdate = await bookDAL.GetUpdatedAtByIdAsync(apiBook.Id.Value);
-                            else
-                                throw new ArgumentNullException(nameof(apiBook.Id));
-
-                            if (bookLastUpdate == null && !apiBook.Inactive)
                             {
+                                localBook = await bookDAL.GetByIdAsync(apiBook.Id.Value);
+                                apiBook.LocalId = localBook?.LocalId ?? 0;
+                            }
+                            else throw new ArgumentNullException(nameof(apiBook.Id));
+
+                            if (localBook is null && !apiBook.Inactive)
                                 await bookDAL.CreateAsyn(apiBook);
-
-                            }
-                            else if (apiBook.UpdatedAt > bookLastUpdate)
-                            {
+                            else if (apiBook.UpdatedAt > localBook?.UpdatedAt)
                                 await bookDAL.UpdateAsync(apiBook);
-                            }
                         }
 
                         if (BooksByLastUpdate.Count < PAGEMAX)

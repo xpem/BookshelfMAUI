@@ -19,18 +19,18 @@ namespace Repositories.Interfaces
 
         Task<Book?> GetBookByLocalTempIdAsync(int uid, string localTempId);
 
-        Task<Book?> GetBookByTitleAsync(int uid, string title);
+        Task<Book?> GetByTitleAsync(int uid, string title);
 
-        Task<DateTime?> GetUpdatedAtByIdAsync(int id);
+        Task<Book?> GetByIdAsync(int id);
 
         Task<List<TotalBooksGroupedByStatus>> GetTotalBooksGroupedByStatusAsync(int uid);
 
-        Task<List<Book>> GetBooksAsync(int uid, int page);
+        Task<List<Book>> GetAsync(int uid, int page, string? searchTitle);
 
-        Task<List<Book>> GetBooksByStatusAsync(int uid, Status status, int page);
+        Task<List<Book>> GetByStatusAsync(int uid, Status status, int page, string? searchTitle);
 
-        Task<Book?> GetBookByTitleOrGoogleIdAsync(int uid, string title, string? googleId = null);
+        Task<Book?> GetByTitleOrGoogleIdAsync(int uid, string title, string? googleId = null);
 
-        Task<bool> CheckIfExistsBookWithSameTitleAsync(int uid, string title, int? localId);
+        Task<bool> CheckIfExistsWithSameTitleAsync(int uid, string title, int? localId);
     }
 }
