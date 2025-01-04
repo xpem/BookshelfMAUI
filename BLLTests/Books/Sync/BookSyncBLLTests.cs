@@ -15,7 +15,7 @@ namespace BLLTests.Books.Sync
     [TestClass()]
     public class BookSyncBLLTests
     {
-        readonly Mock<IOperationQueueDAL> mockOperationQueueDAL = new();
+        readonly Mock<IOperationQueueRepo> mockOperationQueueDAL = new();
         readonly Mock<IBookApiService> mockBookApiBLL = new();
         readonly Mock<IBookRepo> mockBookDAL = new();
 
@@ -293,7 +293,7 @@ namespace BLLTests.Books.Sync
             bookApiBLL.Setup(x => x.GetByLastUpdateAsync(lastUpdate, 1)).ReturnsAsync(() => bLLResponse);
 
             Mock<IHttpClientFunctions> mockHttpClientFunctions = new();
-            Mock<IOperationQueueDAL> mockOperationQueueDAL = new();
+            Mock<IOperationQueueRepo> mockOperationQueueDAL = new();
 
             BookSyncService bookSyncBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockOperationQueueDAL.Object);
 

@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace Services.Books.Sync
 {
-    public class BookSyncService(IBookApiService booksApiBLL, IBookRepo bookDAL, IOperationQueueDAL operationQueueDAL) : IBookSyncService
+    public class BookSyncService(IBookApiService booksApiBLL, IBookRepo bookDAL, IOperationQueueRepo operationQueueDAL) : IBookSyncService
     {
         private const int PAGEMAX = 50;
 

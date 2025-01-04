@@ -5,7 +5,7 @@ using Services.Books.Historic.Interfaces;
 
 namespace Services.Books.Historic.Sync
 {
-    public class BookHistoricSyncBLL(IBookHistoricApiServices bookHistoricApiBLL, IBookHistoricDAL bookHistoricDAL) : IBookHistoricSyncBLL
+    public class BookHistoricSyncBLL(IBookHistoricApiServices bookHistoricApiBLL, IBookHistoricRepo bookHistoricDAL) : IBookHistoricSyncBLL
     {
         private const int PAGEMAX = 50;
 

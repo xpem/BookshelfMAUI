@@ -16,7 +16,7 @@ namespace Services.Books
         Task<bool> CheckIfHasPendingOperation();
     }
 
-    public class BooksOperationService(IOperationQueueDAL operationQueueDAL) : ApiOperationBaseService(operationQueueDAL), IBooksOperationService
+    public class BooksOperationService(IOperationQueueRepo operationQueueDAL) : ApiOperationBaseService(operationQueueDAL), IBooksOperationService
     {
         public async Task InsertOperationInsertBookAsync(Book book) =>
             await InsertOperationAsync(JsonSerializer.Serialize(book), book.LocalId.ToString(), ExecutionType.Insert);

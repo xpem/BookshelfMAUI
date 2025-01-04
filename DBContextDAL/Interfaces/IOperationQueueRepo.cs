@@ -2,7 +2,7 @@
 
 namespace Repositories.Interfaces
 {
-    public interface IOperationQueueDAL
+    public interface IOperationQueueRepo
     {
         Task<List<ApiOperation>> GetPendingOperationsByStatusAsync(OperationStatus operationStatus);
 

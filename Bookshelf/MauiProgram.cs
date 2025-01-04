@@ -66,6 +66,9 @@ public static class MauiProgram
         builder.Services.AddBLLServices();
 
         builder.Services.AddDbContext<BookshelfDbContext>(ServiceLifetime.Transient);
+
+        builder.Services.AddDbContextFactory<BookshelfDbContext>();
+
         //builder.Services.AddDbContextFactory<BookshelfDbContext>();
         builder.Services.ApiDALServices();
 
@@ -139,7 +142,7 @@ public static class MauiProgram
         services.AddScoped<IUserApiDAL, UserApiDAL>();
         services.AddScoped<IBookHistoricApiRepo, BookHistoricApiRepo>();
         services.AddScoped<IBookApiRepo, BookApiRepo>();
-        services.AddScoped<IOperationQueueDAL, OperationQueueDAL>();
+        services.AddScoped<IOperationQueueRepo, OperationQueueRepo>();
 
         return services;
     }
@@ -147,7 +150,7 @@ public static class MauiProgram
     public static IServiceCollection DALServices(this IServiceCollection services)
     {
         services.AddScoped<IBookRepo, BookRepo>();
-        services.AddScoped<IBookHistoricDAL, BookHistoricDAL>();
+        services.AddScoped<IBookHistoricRepo, BookHistoricRepo>();
         services.AddScoped<IUserRepo, UserRepo>();
 
         return services;

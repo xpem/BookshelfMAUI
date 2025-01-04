@@ -7,7 +7,7 @@ using Services.Books.Historic.Interfaces;
 
 namespace Services.Books.Historic
 {
-    public class BookHistoricBLL(IBookHistoricDAL bookHistoricDAL) : IBookHistoricService
+    public class BookHistoricBLL(IBookHistoricRepo bookHistoricDAL) : IBookHistoricService
     {
         public async Task<List<UIBookHistoric>> GetByBookIdAsync(int uid, int page, int bookId)
         {
