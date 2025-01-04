@@ -8,7 +8,7 @@ namespace Services
         Task InsertOperationAsync(string jsonContent, string objectId, ExecutionType executionType);
     }
 
-    public class ApiOperationBaseService(IOperationQueueDAL operationQueueDAL)
+    public class ApiOperationBaseService(IOperationQueueRepo operationQueueDAL)
     {
         protected async Task InsertOperationAsync(string jsonContent, string objectId, ExecutionType executionType)
         {

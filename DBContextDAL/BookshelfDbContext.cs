@@ -4,7 +4,7 @@ using Models.DTOs.OperationQueue;
 
 namespace Repositories
 {
-    public class BookshelfDbContext : DbContext
+    public class BookshelfDbContext(DbContextOptions<BookshelfDbContext> options) : DbContext(options)
     {
         public virtual required DbSet<VersionDbTables> VersionDbTables { get; set; }
 

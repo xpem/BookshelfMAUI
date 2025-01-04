@@ -108,7 +108,7 @@ namespace BLLTests.Books.Historic
                 },
             };
 
-            Mock<IBookHistoricDAL> mockBH = new();
+            Mock<IBookHistoricRepo> mockBH = new();
 
             mockBH.Setup(x => x.GetBookHistoricByBookIdAsync(1, 1, 1)).ReturnsAsync(mockBookHistorics);
 

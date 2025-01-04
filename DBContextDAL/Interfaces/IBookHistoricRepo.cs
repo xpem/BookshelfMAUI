@@ -2,7 +2,7 @@
 
 namespace Repositories.Interfaces
 {
-    public interface IBookHistoricDAL
+    public interface IBookHistoricRepo
     {
         Task<int> ExecuteAddBookHistoricAsync(BookHistoric bookHistoric, int uid);
 
