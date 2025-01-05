@@ -65,11 +65,8 @@ public static class MauiProgram
 
         builder.Services.AddBLLServices();
 
-        builder.Services.AddDbContext<BookshelfDbContext>(ServiceLifetime.Transient);
-
         builder.Services.AddDbContextFactory<BookshelfDbContext>();
 
-        //builder.Services.AddDbContextFactory<BookshelfDbContext>();
         builder.Services.ApiDALServices();
 
         builder.Services.DALServices();
