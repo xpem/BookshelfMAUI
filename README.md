@@ -1,4 +1,4 @@
-Caso o projeto dê erro ao baixar, rode um <dotnet restore> 
+Caso o projeto dê o erro "Arquivo de ativo está faltando no destino" ao baixar, rode o comando no cmd: dotnet restore
 
 O arquivo com as chaves do gitignore:
 
