@@ -23,9 +23,9 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <ScrollView HorizontalOptions="CenterAndExpand">
-            <Frame
+            <Border
                 IsEnabled="{Binding IsNotBusy}"
-                Style="{StaticResource FramePrimary}"
+                Style="{StaticResource BorderPrimary}"
                 VerticalOptions="Center">
                 <VerticalStackLayout>
                     <Label
@@ -129,7 +129,7 @@
                             VerticalOptions="End" />
                     </Grid>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
         </ScrollView>
     </ContentPage.Content>
 </ContentPage>

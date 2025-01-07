@@ -78,6 +78,7 @@ public static class MauiProgram
 
     public static IServiceCollection AddUIServices(this IServiceCollection services)
     {
+
         services.AddTransient<AppShell>();
         services.AddTransient<AppShellVM>();
 
