@@ -21,17 +21,11 @@ namespace Bookshelf.ViewModels
 
         public IUserService UserService { get; set; }
 
-        public AppShellVM(User user, ISyncService syncService, IBuildDbService buildDbBLL, IUserService userService)
+        public AppShellVM(ISyncService syncService, IBuildDbService buildDbBLL, IUserService userService)
         {
             SyncService = syncService;
             BuildDbBLL = buildDbBLL;
             UserService = userService;
-
-            if (user is not null)
-            {
-                Name = user.Name;
-                Email = user.Email;
-            }
         }
 
         public async void AtualizaUser()

@@ -20,13 +20,16 @@ namespace Bookshelf.ViewModels
         public IBookHistoricSyncBLL BookHistoricSyncBLL { get; }
         public IBuildDbService BuildDbBLL { get; }
 
-        public FirstSyncProcessVM(IUserService userBLL, IBookSyncService booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL, ISyncService syncServices, IBuildDbService buildDbBLL)
+        private readonly AppShellVM AppShellVM;
+
+        public FirstSyncProcessVM(IUserService userBLL, IBookSyncService booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL, ISyncService syncServices, IBuildDbService buildDbBLL, AppShellVM appShellVM)
         {
             UserBLL = userBLL;
             BooksSyncBLL = booksSyncBLL;
             BookHistoricSyncBLL = bookHistoricSyncBLL;
             this.SyncServices = syncServices;
             BuildDbBLL = buildDbBLL;
+            AppShellVM = appShellVM;
             _ = SynchronizingProcess();
         }
 
@@ -58,6 +61,8 @@ namespace Bookshelf.ViewModels
                         Progress = 1;
 
                         _ = Task.Run(() => { Task.Delay(5000); SyncServices.StartThread(); });
+
+                        AppShellVM.AtualizaUser();
 
                         _ = Shell.Current.GoToAsync($"//{nameof(Main)}");
 

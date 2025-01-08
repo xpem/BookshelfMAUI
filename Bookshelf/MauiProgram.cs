@@ -79,41 +79,23 @@ public static class MauiProgram
     public static IServiceCollection AddUIServices(this IServiceCollection services)
     {
 
-        services.AddTransient<AppShell>();
-        services.AddTransient<AppShellVM>();
+        services.AddTransient<AppShell, AppShellVM>();
+        services.AddTransientWithShellRoute<Main, MainVM>(nameof(Main));
+        services.AddTransientWithShellRoute<SignIn, SignInVM>(nameof(SignIn));
+        services.AddTransientWithShellRoute<SignUp, SignUpVM>(nameof(SignUp));
+        services.AddTransientWithShellRoute<UpdatePassword, UpdatePasswordVM>(nameof(UpdatePassword));
+        services.AddTransientWithShellRoute<AddBook, AddBookVM>(nameof(AddBook));
+        services.AddTransientWithShellRoute<BookList, BookListVM>(nameof(BookList));
+        services.AddTransientWithShellRoute<BookDetail, BookDetailVM>(nameof(BookDetail));
+        services.AddTransientWithShellRoute<GoogleBooksResults, GoogleBooksResultsVM>(nameof(GoogleBooksResults));
+        services.AddTransientWithShellRoute<BookHistoric, BookHistoricVM>(nameof(BookHistoric));
+        services.AddTransientWithShellRoute<Historic, HistoricVM>(nameof(Historic));
+        services.AddTransientWithShellRoute<FirstSyncProcess, FirstSyncProcessVM>(nameof(FirstSyncProcess));
 
-        services.AddTransient<Main>();
-        services.AddTransient<MainVM>();
 
-        services.AddTransient<SignIn>();
-        services.AddTransient<SignInVM>();
 
-        services.AddTransient<SignUp>();
-        services.AddTransient<SignUpVM>();
 
-        services.AddTransient<UpdatePassword>();
-        services.AddTransient<UpdatePasswordVM>();
-
-        services.AddTransient<AddBook>();
-        services.AddTransient<AddBookVM>();
-
-        services.AddTransient<BookList>();
-        services.AddTransient<BookListVM>();
-
-        services.AddTransient<BookDetail>();
-        services.AddTransient<BookDetailVM>();
-
-        services.AddTransient<GoogleBooksResults>();
-        services.AddTransient<GoogleBooksResultsVM>();
-
-        services.AddTransient<BookHistoric>();
-        services.AddTransient<BookHistoricVM>();
-
-        services.AddTransient<Historic>();
-        services.AddTransient<HistoricVM>();
-
-        services.AddTransient<FirstSyncProcess>();
-        services.AddTransient<FirstSyncProcessVM>();
+        
         return services;
     }
 
