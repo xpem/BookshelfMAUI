@@ -1,4 +1,5 @@
 ﻿using Bookshelf.Services.Sync;
+using Bookshelf.ViewModels;
 using Bookshelf.Views;
 using Models.DTOs;
 using Services;
@@ -22,7 +23,11 @@ public partial class App : Application
 
             User user = userBLL.GetUserLocal().Result;
 
-            MainPage = new AppShell(new ViewModels.AppShellVM(user, syncServices, buildDbBLL, userBLL));
+            var appShellVM = new AppShellVM(syncServices, buildDbBLL, userBLL);
+
+            MainPage = new AppShell(appShellVM);
+
+            appShellVM.AtualizaUser();
 
             if (user != null)
             {
