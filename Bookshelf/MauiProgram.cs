@@ -26,10 +26,6 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
-        //todo
-        //criar uma branch para o desenvolvimento da timeline
-        //criar branch para o desenvolvimento da abstração da camada dal.
-
         MauiAppBuilder builder = MauiApp.CreateBuilder();
 
         builder.UseMauiApp<App>().UseMauiCommunityToolkit();
@@ -91,10 +87,6 @@ public static class MauiProgram
         services.AddTransientWithShellRoute<BookHistoric, BookHistoricVM>(nameof(BookHistoric));
         services.AddTransientWithShellRoute<Historic, HistoricVM>(nameof(Historic));
         services.AddTransientWithShellRoute<FirstSyncProcess, FirstSyncProcessVM>(nameof(FirstSyncProcess));
-
-
-
-
         
         return services;
     }

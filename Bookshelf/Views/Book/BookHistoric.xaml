@@ -12,7 +12,7 @@
     x:DataType="vm:BookHistoricVM"
     Style="{StaticResource ContentPage}">
     <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior Command="{Binding OnAppearingCommand}" EventName="Appearing" />
+        <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
         <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">

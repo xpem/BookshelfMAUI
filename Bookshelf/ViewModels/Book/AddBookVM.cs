@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using CommunityToolkit.Mvvm.Input;
+using Models;
 using Models.Books.GoogleApi;
 using Models.DTOs;
 using Services.Books.Interfaces;
@@ -12,7 +13,13 @@ namespace Bookshelf.ViewModels.Book
     {
         private int? rate;
 
-        public int? Rate { get => rate; set { rate = value; OnPropertyChanged(nameof(Rate)); } }
+        public int? Rate
+        {
+            get => rate; set
+            {
+                SetProperty(ref (rate), value);
+            }
+        }
 
         private UIGoogleBook UIGoogleBook { get; set; }
 
@@ -23,26 +30,125 @@ namespace Bookshelf.ViewModels.Book
 
         private string title, subTitle, volume, authors, year, isbn, pages, genre, comment, situation, cover;
 
-        public string Cover { get => cover; set { if (value != cover) { cover = value; OnPropertyChanged(nameof(Cover)); } } }
-        public string Title { get => title; set { if (value != title) { title = value; OnPropertyChanged(nameof(Title)); } } }
+        public string Cover
+        {
+            get => cover; set
+            {
+                if (value != cover)
+                {
+                    SetProperty(ref (cover), value);
+                }
+            }
+        }
+        public string Title
+        {
+            get => title; set
+            {
+                if (value != title)
+                {
+                    SetProperty(ref (title), value);
+                }
+            }
+        }
 
-        public string SubTitle { get => subTitle; set { if (value != subTitle) { subTitle = value; OnPropertyChanged(nameof(SubTitle)); } } }
+        public string SubTitle
+        {
+            get => subTitle; set
+            {
+                if (value != subTitle)
+                {
+                    SetProperty(ref (subTitle), value);
+                }
+            }
+        }
 
-        public string Volume { get => volume; set { if (value != volume) { volume = value; OnPropertyChanged(nameof(Volume)); } } }
+        public string Volume
+        {
+            get => volume; set
+            {
+                if (value != volume)
+                {
+                    SetProperty(ref (volume), value);
+                }
+            }
+        }
 
-        public string Authors { get => authors; set { if (value != authors) { authors = value; OnPropertyChanged(nameof(Authors)); } } }
+        public string Authors
+        {
+            get => authors; set
+            {
+                if (value != authors)
+                {
+                    SetProperty(ref (authors), value);
+                }
+            }
+        }
 
-        public string Year { get => year; set { if (value != year) { year = value; OnPropertyChanged(nameof(Year)); } } }
+        public string Year
+        {
+            get => year; set
+            {
+                if (value != year)
+                {
+                    SetProperty(ref (year), value);
+                }
+            }
+        }
 
-        public string Isbn { get => isbn; set { if (value != isbn) { isbn = value; OnPropertyChanged(nameof(Isbn)); } } }
+        public string Isbn
+        {
+            get => isbn; set
+            {
+                if (value != isbn)
+                {
+                    SetProperty(ref (isbn), value);
+                }
+            }
+        }
 
-        public string Pages { get => pages; set { if (value != pages) { pages = value; OnPropertyChanged(nameof(Pages)); } } }
+        public string Pages
+        {
+            get => pages; set
+            {
+                if (value != pages)
+                {
+                    SetProperty(ref (pages), value);
+                }
+            }
+        }
 
-        public string Genre { get => genre; set { if (value != genre) { genre = value; OnPropertyChanged(nameof(Genre)); } } }
+        public string Genre
+        {
+            get => genre; set
+            {
+                if (value != genre)
+                {
+                    SetProperty(ref (genre), value);
+                }
+            }
+        }
 
-        public string Comment { get => comment; set { if (value != comment) { comment = value; OnPropertyChanged(nameof(Comment)); } } }
+        public string Comment
+        {
+            get => comment; set
+            {
+                if (value != comment)
+                {
+                    SetProperty(ref (comment), value);
+                }
+            }
+        }
 
-        public string Situation { get => situation; set { if (value != situation) { situation = value; OnPropertyChanged(nameof(Situation)); } } }
+        public string Situation
+        {
+            get => situation; set
+            {
+                if (value != situation)
+                {
+                    SetProperty(ref (situation), value);
+                }
+            }
+        }
 
         #endregion
 
@@ -50,17 +156,62 @@ namespace Bookshelf.ViewModels.Book
 
         private ObservableCollection<string> statusList = ["Nenhuma", "Vou ler", "Lendo", "Lido", "Interrompido"];
 
-        public ObservableCollection<string> StatusList { get => statusList; set { if (value != statusList) { statusList = value; OnPropertyChanged(nameof(StatusList)); } } }
+        public ObservableCollection<string> StatusList
+        {
+            get => statusList; set
+            {
+                if (value != statusList)
+                {
+                    SetProperty(ref (statusList), value);
+                }
+            }
+        }
 
         private bool ratingBarIsVisible, lblRatingBarIsVisible, edtCommentIsVisible, imgCoverIsVisible = false;
 
-        public bool RatingBarIsVisible { get => ratingBarIsVisible; set { if (value != ratingBarIsVisible) { ratingBarIsVisible = value; OnPropertyChanged(nameof(RatingBarIsVisible)); } } }
+        public bool RatingBarIsVisible
+        {
+            get => ratingBarIsVisible; set
+            {
+                if (value != ratingBarIsVisible)
+                {
+                    SetProperty(ref (ratingBarIsVisible), value);
+                }
+            }
+        }
 
-        public bool LblRatingBarIsVisible { get => lblRatingBarIsVisible; set { if (value != lblRatingBarIsVisible) { lblRatingBarIsVisible = value; OnPropertyChanged(nameof(LblRatingBarIsVisible)); } } }
+        public bool LblRatingBarIsVisible
+        {
+            get => lblRatingBarIsVisible; set
+            {
+                if (value != lblRatingBarIsVisible)
+                {
+                    SetProperty(ref (lblRatingBarIsVisible), value);
+                }
+            }
+        }
 
-        public bool EdtCommentIsVisible { get => edtCommentIsVisible; set { if (value != edtCommentIsVisible) { edtCommentIsVisible = value; OnPropertyChanged(nameof(EdtCommentIsVisible)); } } }
+        public bool EdtCommentIsVisible
+        {
+            get => edtCommentIsVisible; set
+            {
+                if (value != edtCommentIsVisible)
+                {
+                    SetProperty(ref (edtCommentIsVisible), value);
+                }
+            }
+        }
 
-        public bool ImgCoverIsVisible { get => imgCoverIsVisible; set { if (value != imgCoverIsVisible) { imgCoverIsVisible = value; OnPropertyChanged(nameof(ImgCoverIsVisible)); } } }
+        public bool ImgCoverIsVisible
+        {
+            get => imgCoverIsVisible; set
+            {
+                if (value != imgCoverIsVisible)
+                {
+                    SetProperty(ref (imgCoverIsVisible), value);
+                }
+            }
+        }
 
         private int pkrStatusSelectedIndex = 1;
 
@@ -71,12 +222,10 @@ namespace Bookshelf.ViewModels.Book
             {
                 if (value != pkrStatusSelectedIndex)
                 {
-                    pkrStatusSelectedIndex = value;
+                    SetProperty(ref (pkrStatusSelectedIndex), value);
 
                     //fields visibilities conditions acoording selected situation reading
                     RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = pkrStatusSelectedIndex == 3;
-
-                    OnPropertyChanged(nameof(PkrStatusSelectedIndex));
                 }
             }
         }
@@ -86,20 +235,157 @@ namespace Bookshelf.ViewModels.Book
         private bool btnInsertIsVisible = true, btnInsertIsEnabled = true, lblTitleIsEnabled = true;
         private string btnInsertText, btnAddBookImageSourceGlyph;
 
-        public bool BtnInsertIsVisible { get => btnInsertIsVisible; set { if (value != btnInsertIsVisible) { btnInsertIsVisible = value; OnPropertyChanged(nameof(BtnInsertIsVisible)); } } }
+        public bool BtnInsertIsVisible
+        {
+            get => btnInsertIsVisible; set
+            {
+                if (value != btnInsertIsVisible)
+                {
+                    SetProperty(ref (btnInsertIsVisible), value);
+                }
+            }
+        }
 
-        public bool BtnInsertIsEnabled { get => btnInsertIsEnabled; set { if (value != btnInsertIsEnabled) { btnInsertIsEnabled = value; OnPropertyChanged(nameof(BtnInsertIsEnabled)); } } }
+        public bool BtnInsertIsEnabled
+        {
+            get => btnInsertIsEnabled; set
+            {
+                if (value != btnInsertIsEnabled)
+                {
+                    SetProperty(ref (btnInsertIsEnabled), value);
+                }
+            }
+        }
 
-        public bool LblTitleIsEnabled { get => lblTitleIsEnabled; set { if (value != lblTitleIsEnabled) { lblTitleIsEnabled = value; OnPropertyChanged(nameof(LblTitleIsEnabled)); } } }
+        public bool LblTitleIsEnabled
+        {
+            get => lblTitleIsEnabled; set
+            {
+                if (value != lblTitleIsEnabled)
+                {
+                    SetProperty(ref (lblTitleIsEnabled), value);
+                }
+            }
+        }
 
-        public string BtnInsertText { get => btnInsertText; set { if (value != btnInsertText) { btnInsertText = value; OnPropertyChanged(nameof(BtnInsertText)); } } }
+        public string BtnInsertText
+        {
+            get => btnInsertText; set
+            {
+                if (value != btnInsertText)
+                {
+                    SetProperty(ref (btnInsertText), value);
+                }
+            }
+        }
 
-        public string BtnAddBookImageSourceGlyph { get => btnAddBookImageSourceGlyph; set { if (value != btnAddBookImageSourceGlyph) { btnAddBookImageSourceGlyph = value; OnPropertyChanged(nameof(BtnAddBookImageSourceGlyph)); } } }
+        public string BtnAddBookImageSourceGlyph
+        {
+            get => btnAddBookImageSourceGlyph; set
+            {
+                if (value != btnAddBookImageSourceGlyph)
+                {
+                    SetProperty(ref (btnAddBookImageSourceGlyph), value);
+                }
+            }
+        }
 
-        /// <summary>
-        /// btn insert book command
-        /// </summary>
-        public ICommand InsertBookCommand => new Command(async (e) => { await InsertBook(); });
+        [RelayCommand]
+        public async Task InsertBook()
+        {
+            try
+            {
+                if (await VerrifyFields())
+                {
+                    BtnInsertIsEnabled = false;
+
+                    int? _year = !string.IsNullOrEmpty(Year) ? Convert.ToInt32(Year) : null;
+                    int? _volume = !string.IsNullOrEmpty(Volume) ? Convert.ToInt32(Volume) : null;
+
+                    if (Cover?.Length > 2000) Cover = null;
+
+                    Models.DTOs.Book book = new()
+                    {
+                        Title = Title.Truncate(100),
+                        SubTitle = SubTitle.Truncate(100),
+                        Authors = Authors.Truncate(150),
+                        Year = _year,
+                        Isbn = Isbn.Truncate(100),
+                        Pages = Convert.ToInt32(Pages),
+                        Genre = Genre.Truncate(50),
+                        Volume = _volume,
+                        Cover = Cover,
+                        GoogleId = GoogleKey,
+                    };
+
+                    //cadastra o livro 
+                    string mensagem;
+
+                    //caso tenha avaliação
+                    if (pkrStatusSelectedIndex > 0)
+                    {
+                        int rate = 0;
+                        if (pkrStatusSelectedIndex == 3)
+                            rate = Convert.ToInt32(Math.Round(Convert.ToDecimal(Rate), MidpointRounding.AwayFromZero));
+
+
+                        book.Status = (Status)pkrStatusSelectedIndex;
+
+                        book.Score = rate;
+                        book.Comment = comment.Truncate(350);
+
+                        mensagem = "Livro e avaliação";
+                    }
+                    else
+                    {
+                        book.Status = 0;
+                        book.Score = 0;
+                        book.Comment = "";
+                        mensagem = "Livro";
+                    }
+
+                    if (!string.IsNullOrEmpty(LocalId))
+                    {
+                        book.LocalId = Convert.ToInt32(LocalId);
+
+                        if (!string.IsNullOrEmpty(BookId))
+                            book.Id = Convert.ToInt32(BookId);
+
+                        Models.Responses.BLLResponse uptRes = await bookBLL.UpdateAsync(((App)Application.Current).Uid, IsOn, book);
+
+                        if (!uptRes.Success)
+                        {
+                            if (uptRes.Content is not null)
+                                mensagem = uptRes.Content as string;
+                            else mensagem = "Ocorreu um erro ao atualizar o livro";
+                        }
+                        else
+                            mensagem += " atualizados";
+                    }
+                    else
+                    {
+                        Models.Responses.BLLResponse addRes = await bookBLL.AddAsync(((App)Application.Current).Uid, IsOn, book);
+
+                        if (!addRes.Success)
+                        {
+                            if (addRes.Content is not null)
+                                mensagem = addRes.Content as string;
+                            else mensagem = "Ocorreu um erro ao cadastrar o livro";
+                        }
+                        else
+                            mensagem += " cadastrados";
+                    }
+
+                    bool resposta = await Application.Current.MainPage.DisplayAlert("Aviso", mensagem, null, "Ok");
+
+                    if (!resposta)
+                    {
+                        await Shell.Current.GoToAsync("..");
+                    }
+                }
+            }
+            catch (Exception) { throw; }
+        }
 
         #endregion
         #endregion
@@ -217,102 +503,6 @@ namespace Bookshelf.ViewModels.Book
         /// get book by book key
         /// </summary>
         protected async Task GetBookAsync(int localId) => BuildBook(await bookBLL.GetAsync(((App)Application.Current).Uid, localId));
-
-        private async Task InsertBook()
-        {
-            try
-            {
-                if (await VerrifyFields())
-                {
-                    BtnInsertIsEnabled = false;
-
-                    int? _year = !string.IsNullOrEmpty(Year) ? Convert.ToInt32(Year) : null;
-                    int? _volume = !string.IsNullOrEmpty(Volume) ? Convert.ToInt32(Volume) : null;
-
-                    if (Cover?.Length > 2000) Cover = null;
-
-                    Models.DTOs.Book book = new()
-                    {
-                        Title = Title.Truncate(100),
-                        SubTitle = SubTitle.Truncate(100),
-                        Authors = Authors.Truncate(150),
-                        Year = _year,
-                        Isbn = Isbn.Truncate(100),
-                        Pages = Convert.ToInt32(Pages),
-                        Genre = Genre.Truncate(50),
-                        Volume = _volume,
-                        Cover = Cover,
-                        GoogleId = GoogleKey,
-                    };
-
-                    //cadastra o livro 
-                    string mensagem;
-
-                    //caso tenha avaliação
-                    if (pkrStatusSelectedIndex > 0)
-                    {
-                        int rate = 0;
-                        if (pkrStatusSelectedIndex == 3)
-                            rate = Convert.ToInt32(Math.Round(Convert.ToDecimal(Rate), MidpointRounding.AwayFromZero));
-
-
-                        book.Status = (Status)pkrStatusSelectedIndex;
-
-                        book.Score = rate;
-                        book.Comment = comment.Truncate(350);
-
-                        mensagem = "Livro e avaliação";
-                    }
-                    else
-                    {
-                        book.Status = 0;
-                        book.Score = 0;
-                        book.Comment = "";
-                        mensagem = "Livro";
-                    }
-
-                    if (!string.IsNullOrEmpty(LocalId))
-                    {
-                        book.LocalId = Convert.ToInt32(LocalId);
-
-                        if (!string.IsNullOrEmpty(BookId))
-                            book.Id = Convert.ToInt32(BookId);
-
-                        Models.Responses.BLLResponse uptRes = await bookBLL.UpdateAsync(((App)Application.Current).Uid, IsOn, book);
-
-                        if (!uptRes.Success)
-                        {
-                            if (uptRes.Content is not null)
-                                mensagem = uptRes.Content as string;
-                            else mensagem = "Ocorreu um erro ao atualizar o livro";
-                        }
-                        else
-                            mensagem += " atualizados";
-                    }
-                    else
-                    {
-                        Models.Responses.BLLResponse addRes = await bookBLL.AddAsync(((App)Application.Current).Uid, IsOn, book);
-
-                        if (!addRes.Success)
-                        {
-                            if (addRes.Content is not null)
-                                mensagem = addRes.Content as string;
-                            else mensagem = "Ocorreu um erro ao cadastrar o livro";
-                        }
-                        else
-                            mensagem += " cadastrados";
-                    }
-
-                    bool resposta = await Application.Current.MainPage.DisplayAlert("Aviso", mensagem, null, "Ok");
-
-                    if (!resposta)
-                    {
-                        await Shell.Current.GoToAsync("..");
-                    }
-                }
-            }
-            catch (Exception) { throw; }
-        }
 
         private async Task<bool> VerrifyFields()
         {

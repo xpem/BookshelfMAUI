@@ -1,5 +1,7 @@
 ﻿using Bookshelf.Services.Sync;
 using Bookshelf.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Models.DTOs;
 using Services;
 using Services.User;
@@ -7,30 +9,18 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public partial class AppShellVM : BindableObject
+    public partial class AppShellVM(ISyncService syncService, IBuildDbService buildDbBLL, IUserService userService) : ObservableObject
     {
         string email, name;
 
-        public string Email { get => email; set { if (email != value) { email = value; OnPropertyChanged(nameof(Email)); } } }
+        public string Email { get => email; set { if (email != value) { SetProperty(ref (email), value); } } }
 
-        public string Name { get => name; set { if (name != value) { name = value; OnPropertyChanged(nameof(Name)); } } }
+        public string Name { get => name; set { if (name != value) { SetProperty(ref (name), value); } } }
 
-        public ISyncService SyncService { get; set; }
 
-        public IBuildDbService BuildDbBLL { get; set; }
-
-        public IUserService UserService { get; set; }
-
-        public AppShellVM(ISyncService syncService, IBuildDbService buildDbBLL, IUserService userService)
+        public async Task AtualizaUser()
         {
-            SyncService = syncService;
-            BuildDbBLL = buildDbBLL;
-            UserService = userService;
-        }
-
-        public async void AtualizaUser()
-        {
-            User user = await UserService.GetUserLocal();
+            User user = await userService.GetUserLocal();
 
             if (user is not null)
             {
@@ -39,23 +29,24 @@ namespace Bookshelf.ViewModels
             }
         }
 
-        public ICommand SignOutCommand => new Command(async (e) =>
+        [RelayCommand]
+        private async Task SignOut()
         {
             bool resp = await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja sair e retornar a tela inicial?", "Sim", "Cancelar");
 
             if (resp)
             {
                 //finalize sync thread process
-                SyncService.ThreadIsRunning = false;
+                syncService.ThreadIsRunning = false;
 
-                SyncService.Timer?.Dispose();
+                syncService.Timer?.Dispose();
 
-                ((App)App.Current).Uid = 0;
+                (App.Current as App).Uid = 0;
 
-                await BuildDbBLL.CleanLocalDatabase();
+                await buildDbBLL.CleanLocalDatabase();
 
                 _ = Shell.Current.GoToAsync($"//{nameof(SignIn)}");
             }
-        });
+        }
     }
 }

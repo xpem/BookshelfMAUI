@@ -1,13 +1,12 @@
 ﻿using Bookshelf.Views;
-using Bookshelf.Views.Book;
+using CommunityToolkit.Mvvm.Input;
 using Models.DTOs;
 using Services.Books.Interfaces;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.Book
 {
-    public class BookDetailVM(IBookService _booksServices) : ViewModelBase, IQueryAttributable
+    public partial class BookDetailVM(IBookService _booksServices) : ViewModelBase, IQueryAttributable
     {
 
         #region bind variables.
@@ -15,25 +14,100 @@ namespace Bookshelf.ViewModels.Book
         public string title, authors, pages, genre, situation, bookKey, comment, subtitleAndVol, volume, cover;
         private int? rate;
 
-        public int? Rate { get => rate; set { rate = value; OnPropertyChanged(nameof(Rate)); } }
+        public int? Rate
+        {
+            get => rate; set
+            {
+                SetProperty(ref (rate), value);
+            }
+        }
 
-        public string Cover { get => cover; set { if (value != cover) { cover = value; OnPropertyChanged(); } } }
+        public string Cover
+        {
+            get => cover; set
+            {
+                if (value != cover)
+                {
+                    SetProperty(ref (cover), value);
+                }
+            }
+        }
 
-        public string Title { get => title; set { if (title != value) { title = value; OnPropertyChanged(); } } }
+        public string Title
+        {
+            get => title; set
+            {
+                if (title != value)
+                {
+                    SetProperty(ref (title), value);
+                }
+            }
+        }
 
-        public string Authors { get => authors; set { if (authors != value) { authors = value; OnPropertyChanged(); } } }
+        public string Authors
+        {
+            get => authors; set
+            {
+                if (authors != value)
+                {
+                    SetProperty(ref (authors), value);
+                }
+            }
+        }
 
-        public string Pages { get => pages; set { if (pages != value) { pages = value; OnPropertyChanged(); } } }
+        public string Pages
+        {
+            get => pages; set
+            {
+                if (pages != value)
+                {
+                    SetProperty(ref (pages), value);
+                }
+            }
+        }
 
-        public string Genre { get => genre; set { if (genre != value) { genre = value; OnPropertyChanged(); } } }
+        public string Genre
+        {
+            get => genre; set
+            {
+                if (genre != value)
+                {
+                    SetProperty(ref (genre), value);
+                }
+            }
+        }
 
-        public string Situation { get => situation; set { if (situation != value) { situation = value; OnPropertyChanged(); } } }
+        public string Situation
+        {
+            get => situation; set
+            {
+                if (situation != value)
+                {
+                    SetProperty(ref (situation), value);
+                }
+            }
+        }
 
-        public string SubtitleAndVol { get => subtitleAndVol; set { if (subtitleAndVol != value) { subtitleAndVol = value; OnPropertyChanged(); } } }
-
-        //public int Rate { get => rate; set { rate = value; OnPropertyChanged(); } }
-
-        public string Comment { get => comment; set { if (comment != value) { comment = value; OnPropertyChanged(); } } }
+        public string SubtitleAndVol
+        {
+            get => subtitleAndVol; set
+            {
+                if (subtitleAndVol != value)
+                {
+                    SetProperty(ref (subtitleAndVol), value);
+                }
+            }
+        }
+        public string Comment
+        {
+            get => comment; set
+            {
+                if (comment != value)
+                {
+                    SetProperty(ref (comment), value);
+                }
+            }
+        }
 
         #endregion
 
@@ -51,25 +125,88 @@ namespace Bookshelf.ViewModels.Book
 
         #region Ui properties
 
-        private ObservableCollection<string> statusList = new() { "Nenhuma", "Vou ler", "Lendo", "Lido", "Interrompido" };
+        private ObservableCollection<string> statusList = ["Nenhuma", "Vou ler", "Lendo", "Lido", "Interrompido"];
 
-        public ObservableCollection<string> StatusList { get => statusList; set { if (statusList != value) { statusList = value; OnPropertyChanged(); } } }
+        public ObservableCollection<string> StatusList
+        {
+            get => statusList; set
+            {
+                if (statusList != value)
+                {
+                    SetProperty(ref (statusList), value);
+                }
+            }
+        }
 
         private bool ratingBarIsVisible, lblRatingBarIsVisible, edtCommentIsVisible, lblHSituationIsVisible, btnConfIsEnabled, imgCoverIsVisible = false;
 
-        public bool RatingBarIsVisible { get => ratingBarIsVisible; set { if (ratingBarIsVisible != value) { ratingBarIsVisible = value; OnPropertyChanged(); } } }
+        public bool RatingBarIsVisible
+        {
+            get => ratingBarIsVisible; set
+            {
+                if (ratingBarIsVisible != value)
+                {
+                    SetProperty(ref (ratingBarIsVisible), value);
+                }
+            }
+        }
 
-        public bool LblRatingBarIsVisible { get => lblRatingBarIsVisible; set { if (lblRatingBarIsVisible != value) { lblRatingBarIsVisible = value; OnPropertyChanged(); } } }
+        public bool LblRatingBarIsVisible
+        {
+            get => lblRatingBarIsVisible; set
+            {
+                if (lblRatingBarIsVisible != value)
+                {
+                    SetProperty(ref (lblRatingBarIsVisible), value);
+                }
+            }
+        }
 
-        public bool EdtCommentIsVisible { get => edtCommentIsVisible; set { if (edtCommentIsVisible != value) { edtCommentIsVisible = value; OnPropertyChanged(); } } }
+        public bool EdtCommentIsVisible
+        {
+            get => edtCommentIsVisible; set
+            {
+                if (edtCommentIsVisible != value)
+                {
+                    SetProperty(ref (edtCommentIsVisible), value);
+                }
+            }
+        }
 
-        public bool LblHSituationIsVisible { get => lblHSituationIsVisible; set { if (lblHSituationIsVisible != value) { lblHSituationIsVisible = value; OnPropertyChanged(); } } }
+        public bool LblHSituationIsVisible
+        {
+            get => lblHSituationIsVisible; set
+            {
+                if (lblHSituationIsVisible != value)
+                {
+                    SetProperty(ref (lblHSituationIsVisible), value);
+                }
+            }
+        }
 
-        public bool BtnConfIsEnabled { get => btnConfIsEnabled; set { if (btnConfIsEnabled != value) { btnConfIsEnabled = value; OnPropertyChanged(); } } }
+        public bool BtnConfIsEnabled
+        {
+            get => btnConfIsEnabled; set
+            {
+                if (btnConfIsEnabled != value)
+                {
+                    SetProperty(ref (btnConfIsEnabled), value);
+                }
+            }
+        }
 
         private string btnConfText = "Confirmar";
 
-        public string BtnConfText { get => btnConfText; set { if (btnConfText != value) { btnConfText = value; OnPropertyChanged(); } } }
+        public string BtnConfText
+        {
+            get => btnConfText; set
+            {
+                if (btnConfText != value)
+                {
+                    SetProperty(ref (btnConfText), value);
+                }
+            }
+        }
 
         private int pkrStatusSelectedIndex = 0, pkrStatusSelectedIndexOri;
 
@@ -78,64 +215,70 @@ namespace Bookshelf.ViewModels.Book
             get => pkrStatusSelectedIndex;
             set
             {
-
-                pkrStatusSelectedIndex = value;
-
-                //if (pkrStatusSelectedIndexOri != pkrStatusSelectedIndex)
-                //{
-                //    BtnConfIsVisible = true;
-                //}
-
-                switch ((Status)pkrStatusSelectedIndex)
+                if (pkrStatusSelectedIndex != value)
                 {
-                    case Status.None:
-                        RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
-                        break;
-                    case Status.Reading:
-                    case Status.Interrupted:
-                    case Status.IllRead:
-                        RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
-                        break;
-                    case Status.Read:
-                        EdtCommentIsVisible = RatingBarIsVisible = LblRatingBarIsVisible = true;
-                        break;
-                    default:
-                        break;
-                }
+                    SetProperty(ref (pkrStatusSelectedIndex), value);
 
-                OnPropertyChanged(nameof(PkrStatusSelectedIndex));
+                    //if (pkrStatusSelectedIndexOri != pkrStatusSelectedIndex)
+                    //{
+                    //    BtnConfIsVisible = true;
+                    //}
+
+                    switch ((Status)pkrStatusSelectedIndex)
+                    {
+                        case Status.None:
+                            RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
+                            break;
+                        case Status.Reading:
+                        case Status.Interrupted:
+                        case Status.IllRead:
+                            RatingBarIsVisible = LblRatingBarIsVisible = EdtCommentIsVisible = false;
+                            break;
+                        case Status.Read:
+                            EdtCommentIsVisible = RatingBarIsVisible = LblRatingBarIsVisible = true;
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
         }
 
-        public bool ImgCoverIsVisible { get => imgCoverIsVisible; set { if (value != imgCoverIsVisible) { imgCoverIsVisible = value; OnPropertyChanged(); } } }
+        public bool ImgCoverIsVisible
+        {
+            get => imgCoverIsVisible; set
+            {
+                if (value != imgCoverIsVisible)
+                {
+                    SetProperty(ref imgCoverIsVisible, value);
+                }
+            }
+        }
 
         #endregion
 
-        public ICommand ConfirmCommand => new Command(async (e) => { await UpdateBookSituation(); });
+        [RelayCommand]
+        public async Task Confirm() => await UpdateBookSituation();
 
-        public ICommand CallHistoricCommand => new Command(async (e) => await Shell.Current.GoToAsync($"{nameof(Models.DTOs.BookHistoric)}?BookId={ExternalId}"));
+        [RelayCommand]
+        public async Task CallHistoric() => await Shell.Current.GoToAsync($"{nameof(Models.DTOs.BookHistoric)}?BookId={ExternalId}");
 
-        /// <summary>
-        /// navigate to update book
-        /// </summary>
-        public ICommand NavToUpdateBookCommand => new Command(async (e) => { await Shell.Current.GoToAsync($"{nameof(AddBook)}?Id={LocalId}", true); });
+        [RelayCommand]
+        public async Task NavToUpdateBook() => await Shell.Current.GoToAsync($"{nameof(AddBook)}?Id={LocalId}", true);
 
-        /// <summary>
-        /// inactivate book
-        /// </summary>
-        public ICommand InactivateBookCommand =>
-            new Command(async (e) =>
+        [RelayCommand]
+        public async Task InactivateBook()
+        {
+            if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir este livro?", "Sim", "Cancelar"))
             {
-                if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir este livro?", "Sim", "Cancelar"))
-                {
-                    _ = _booksServices.InactivateBookAsync(((App)Application.Current).Uid, Connectivity.NetworkAccess == NetworkAccess.Internet, LocalId);
+                _ = _booksServices.InactivateBookAsync(((App)Application.Current).Uid, Connectivity.NetworkAccess == NetworkAccess.Internet, LocalId);
 
-                    if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
-                    {
-                        await Shell.Current.GoToAsync("..");
-                    }
+                if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
+                {
+                    await Shell.Current.GoToAsync("..");
                 }
-            });
+            }
+        }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
@@ -263,7 +406,6 @@ namespace Bookshelf.ViewModels.Book
                 _ = Application.Current.MainPage.DisplayAlert("Aviso", "Sem alterações", null, "Ok");
                 BtnConfIsEnabled = true;
             }
-
         }
     }
 }

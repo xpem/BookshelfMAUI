@@ -1,4 +1,6 @@
-﻿using Models.Books.Historic;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Models.Books.Historic;
 using Services.Books;
 using Services.Books.Historic.Interfaces;
 using System.Collections.ObjectModel;
@@ -6,7 +8,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public class HistoricVM(IBookHistoricService bookHistoricService, IBooksOperationService booksOperationService) : ViewModelBase
+    public partial class HistoricVM(IBookHistoricService bookHistoricService, IBooksOperationService booksOperationService) : ViewModelBase
     {
         public ObservableCollection<UIBookHistoric> UIBookHistoricList { get; } = [];
 
@@ -16,14 +18,14 @@ namespace Bookshelf.ViewModels
 
         public bool IsConnected
         {
-            get => isConnected; set { if (isConnected != value) { isConnected = value; OnPropertyChanged(nameof(IsConnected)); } }
+            get => isConnected; set { if (isConnected != value) { SetProperty(ref (isConnected), value); } }
         }
 
         bool isNotSyncUpdates;
 
         public bool IsNotSyncUpdates
         {
-            get => isNotSyncUpdates; set { if (isNotSyncUpdates != value) { isNotSyncUpdates = value; OnPropertyChanged(nameof(IsNotSyncUpdates)); } }
+            get => isNotSyncUpdates; set { if (isNotSyncUpdates != value) { SetProperty(ref (isNotSyncUpdates), value); } }
         }
 
         Color syncProcessingColor;
@@ -35,7 +37,7 @@ namespace Bookshelf.ViewModels
                 if (syncProcessingColor != value)
                 {
                     syncProcessingColor = value;
-                    OnPropertyChanged(nameof(SyncProcessingColor));
+                    SetProperty(ref (syncProcessingColor), value);
                 }
             }
         }
@@ -48,8 +50,7 @@ namespace Bookshelf.ViewModels
             {
                 if (syncOptionIsVisible != value)
                 {
-                    syncOptionIsVisible = value;
-                    OnPropertyChanged(nameof(SyncOptionIsVisible));
+                    SetProperty(ref (syncOptionIsVisible), value);
                 }
             }
         }
@@ -62,18 +63,20 @@ namespace Bookshelf.ViewModels
             {
                 if (syncOptionIsProcessing != value)
                 {
-                    syncOptionIsProcessing = value; OnPropertyChanged(nameof(SyncOptionIsProcessing));
+                    SetProperty(ref (syncOptionIsProcessing), value);
                 }
             }
         }
 
-        public ICommand LoadMoreCommand => new Command(() =>
+        [RelayCommand]
+        public Task LoadMore()
         {
             CurrentPage++;
-            Task.Run(() => LoadListAsync(CurrentPage));
-        });
+            return LoadListAsync(CurrentPage);
+        }
 
-        public ICommand OnAppearingCommand => new Command((e) =>
+        [RelayCommand]
+        public Task Appearing()
         {
             if (UIBookHistoricList.Count > 0)
                 UIBookHistoricList.Clear();
@@ -83,7 +86,9 @@ namespace Bookshelf.ViewModels
             _ = CheckIfHasPendingOperationWithBookId();
 
             _ = LoadListAsync(CurrentPage);
-        });
+
+            return Task.CompletedTask;
+        }
 
         private async Task LoadListAsync(int pageNumber)
         {

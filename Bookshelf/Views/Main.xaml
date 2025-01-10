@@ -66,7 +66,7 @@
         </Style>
     </ContentPage.Resources>
     <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior Command="{Binding OnAppearingCommand}" EventName="Appearing" />
+        <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
         <ScrollView>
@@ -81,7 +81,7 @@
                     <VerticalStackLayout Spacing="2">
                         <Border Margin="0,5,0,5" Style="{StaticResource BorderCardItem}">
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding IllReadCommand}" />
+                                <TapGestureRecognizer Command="{Binding ListIllReadCommand}" />
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                             </Border.GestureRecognizers>
                             <Grid Style="{StaticResource GridCardItem}">
@@ -120,7 +120,7 @@
                         </Border>
                         <Border Margin="0,0,0,5" Style="{StaticResource BorderCardItem}">
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ReadingCommand}" />
+                                <TapGestureRecognizer Command="{Binding ListReadingCommand}" />
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                             </Border.GestureRecognizers>
                             <Grid Style="{StaticResource GridCardItem}">
@@ -159,7 +159,7 @@
                         </Border>
                         <Border Margin="0,0,0,5" Style="{StaticResource BorderCardItem}">
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ReadCommand}" />
+                                <TapGestureRecognizer Command="{Binding ListReadCommand}" />
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                             </Border.GestureRecognizers>
                             <Grid Style="{StaticResource GridCardItem}">
@@ -198,7 +198,7 @@
                         </Border>
                         <Border Margin="0,0,0,5" Style="{StaticResource BorderCardItem}">
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding InterruptedCommand}" />
+                                <TapGestureRecognizer Command="{Binding ListInterruptedCommand}" />
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                             </Border.GestureRecognizers>
                             <Grid Style="{StaticResource GridCardItem}">

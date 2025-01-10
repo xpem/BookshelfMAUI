@@ -13,7 +13,7 @@ namespace Bookshelf.ViewModels
         private decimal progress;
         private readonly ISyncService SyncServices;
 
-        public decimal Progress { get => progress; set { if (progress != value) { progress = value; OnPropertyChanged(nameof(Progress)); } } }
+        public decimal Progress { get => progress; set { if (progress != value) { SetProperty(ref (progress), value); } } }
 
         public IUserService UserBLL { get; }
         public IBookSyncService BooksSyncBLL { get; }
