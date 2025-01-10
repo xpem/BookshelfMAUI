@@ -1,4 +1,5 @@
 ﻿using Bookshelf.Views;
+using CommunityToolkit.Mvvm.Input;
 using Models.Books;
 using Services.Books.Interfaces;
 using System.Collections.ObjectModel;
@@ -11,19 +12,31 @@ namespace Bookshelf.ViewModels
 
         #region Vars
 
-        public ObservableCollection<UIBookItem> BooksList { get; } = [];
+        private ObservableCollection<UIBookItem> booksList = [];
+
+        public ObservableCollection<UIBookItem> BooksList
+        {
+            get => booksList;
+            set
+            {
+                if (booksList != value)
+                {
+                    SetProperty(ref (booksList), value);
+                }
+            }
+        }
 
 
         string pageTitle;
 
         public string PageTitle
         {
-            get => pageTitle; set { if (pageTitle != value) { pageTitle = value; OnPropertyChanged(nameof(PageTitle)); } }
+            get => pageTitle; set { if (pageTitle != value) { SetProperty(ref (pageTitle), value); } }
         }
 
         int totalBooksItens;
 
-        public int TotalBooksItens { get => totalBooksItens; set { if (totalBooksItens != value) { totalBooksItens = value; OnPropertyChanged(nameof(TotalBooksItens)); } } }
+        public int TotalBooksItens { get => totalBooksItens; set { if (totalBooksItens != value) { SetProperty(ref (totalBooksItens), value); } } }
 
         string searchTitle;
 
@@ -34,9 +47,8 @@ namespace Bookshelf.ViewModels
             {
                 if (searchTitle != value)
                 {
-                    searchTitle = value;
-                    SearchBookList();
-                    OnPropertyChanged(nameof(SearchTitle));
+                    SetProperty(ref (searchTitle), value);
+                    _ = SearchBookList();
                 }
             }
         }
@@ -61,31 +73,27 @@ namespace Bookshelf.ViewModels
             CurrentPage = 1;
 
             LoadBooks(CurrentPage).ConfigureAwait(false);
-            //Task.Run(() => LoadBooks(CurrentPage)).ConfigureAwait(false);
         }
 
-
-        public ICommand LoadMoreCommand => new Command((e) =>
+        [RelayCommand]
+        public Task LoadMore()
         {
             CurrentPage++;
-            LoadBooks(CurrentPage).ConfigureAwait(false);
-        });
+            return LoadBooks(CurrentPage);
+        }
 
-        /// <summary>
-        /// vindo do FlyoutItem, direto da side bar
-        /// </summary>
-        public ICommand OnAppearingCommand => new Command(async (e) =>
+        [RelayCommand]
+        public Task Appearing()
         {
-            if (SituationIndex is null)
-                SituationIndex = 0;
+            SituationIndex ??= 0;
 
             if (BooksList.Count > 0)
                 BooksList.Clear();
 
             CurrentPage = 1;
-            _ = LoadBooks(CurrentPage);
+            return LoadBooks(CurrentPage);
 
-        });
+        }
 
 
         /// <summary>
@@ -130,7 +138,7 @@ namespace Bookshelf.ViewModels
         /// <summary>
         /// Filtra a lista pela busca por texto
         /// </summary>
-        private async void SearchBookList()
+        private async Task SearchBookList()
         {
             //
             if (!SearchingBookList)

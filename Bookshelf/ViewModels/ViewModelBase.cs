@@ -1,13 +1,15 @@
-﻿namespace Bookshelf.ViewModels
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace Bookshelf.ViewModels
 {
-    public partial class ViewModelBase : BindableObject
+    public partial class ViewModelBase : ObservableObject
     {
 
         bool isBusy;
 
         public bool IsBusy
         {
-            get => isBusy; set { if (isBusy != value) { isBusy = value; OnPropertyChanged(nameof(IsBusy)); } }
+            get => isBusy; set { if (isBusy != value) { isBusy = value; SetProperty(ref (isBusy), value); } }
         }
 
         public bool IsNotBusy => !isBusy;

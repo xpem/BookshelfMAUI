@@ -1,4 +1,6 @@
 ﻿using Bookshelf.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Models.Books.GoogleApi;
 using Services.Books;
 using Services.Utils;
@@ -7,43 +9,54 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.GoogleSearch
 {
-    public class GoogleBooksResultsVM : ViewModelBase
+    public partial class GoogleBooksResultsVM : ViewModelBase
     {
 
         string pageTitle = "Busca";
 
         public string PageTitle
         {
-            get => pageTitle; set { if (pageTitle != value) { pageTitle = value; OnPropertyChanged(); } }
+            get => pageTitle; set { if (pageTitle != value) { SetProperty(ref (pageTitle), value); } }
         }
 
         bool isNotConnected, isConnected;
 
         public bool IsNotConnected
         {
-            get => isNotConnected; set { if (IsNotConnected != value) { isNotConnected = value; OnPropertyChanged(nameof(IsNotConnected)); } }
+            get => isNotConnected; set { if (IsNotConnected != value) { SetProperty(ref (isNotConnected), value); } }
         }
 
         public bool IsConnected
         {
-            get => isConnected; set { if (IsConnected != value) { isConnected = value; OnPropertyChanged(nameof(IsConnected)); } }
+            get => isConnected; set { if (IsConnected != value) { SetProperty(ref (isConnected), value); } }
         }
 
         private int CurrentPage;
         private int TotalItems;
 
-        public ObservableCollection<UIGoogleBook> GoogleBooksList { get; } = [];
+        private ObservableCollection<UIGoogleBook> googleBooksList = [];
 
-        public ICommand OnAppearingCommand => new Command((e) =>
+        public ObservableCollection<UIGoogleBook> GoogleBooksList
+        {
+            get => googleBooksList;
+            set
+            {
+                if (googleBooksList != value)
+                {
+                    SetProperty(ref (googleBooksList), value);
+                }
+            }
+        }
+
+        [RelayCommand]
+        public Task Appearing()
         {
             IsConnected = IsOn;
             IsNotConnected = !IsOn;
-        });
+            return Task.CompletedTask;
+        }
 
         public bool SearchingBookList { get; set; }
-
-        //private ObservableCollection<string> parametersList = new() { "Título", "Autor" };
-        //public ObservableCollection<string> ParametersList { get => parametersList; set { if (parametersList != value) { parametersList = value; OnPropertyChanged(); } } }
 
         string searchText;
 
@@ -54,18 +67,20 @@ namespace Bookshelf.ViewModels.GoogleSearch
             {
                 if (searchText != value)
                 {
-                    searchText = value;
+                    SetProperty(ref (searchText), value);
                     _ = SearchBookList();
-                    OnPropertyChanged();
                 }
             }
         }
 
-        public ICommand LoadMoreCommand => new Command(() =>
+        [RelayCommand]
+        public Task LoadMore()
         {
             CurrentPage++;
             _ = LoadGoogleBooksAsync(CurrentPage);
-        });
+
+            return Task.CompletedTask;
+        }
 
         /// <summary>
         /// is necessary the config: android:usesCleartextTraffic="true"
@@ -98,11 +113,13 @@ namespace Bookshelf.ViewModels.GoogleSearch
                         GoogleBooksList.Add(googleBookItem);
                     }
                 }
+
                 IsBusy = false;
             }
         }
 
-        public ICommand CreateBookCommand => new Command(async (e) => { await Shell.Current.GoToAsync($"{nameof(AddBook)}"); });
+        [RelayCommand]
+        public async Task CreateBook() => await Shell.Current.GoToAsync($"{nameof(AddBook)}");
 
         private async Task SearchBookList()
         {
@@ -129,7 +146,6 @@ namespace Bookshelf.ViewModels.GoogleSearch
                     catch { throw; }
                 }
             }
-            OnPropertyChanged();
         }
     }
 }
