@@ -13,7 +13,7 @@ public partial class Main : ContentPage
 
     private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
-        var cell = sender as Frame;
+        var cell = sender as Border;
         cell.Opacity = 0.5;
         _ = cell.FadeTo(1, 1000);
     }

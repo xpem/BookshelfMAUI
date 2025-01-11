@@ -9,18 +9,22 @@
     xmlns:model="clr-namespace:Models.Books.GoogleApi;assembly=Models"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:Bookshelf.ViewModels.GoogleSearch"
+    x:Name="this"
     Title="{Binding PageTitle}"
     x:DataType="vm:GoogleBooksResultsVM"
     Style="{StaticResource ContentPage}">
     <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior Command="{Binding OnAppearingCommand}" EventName="Appearing" />
+        <toolkit:EventToCommandBehavior
+            BindingContext="{Binding BindingContext, Source={x:Reference this}, x:DataType=GoogleBooksResultsVM}"
+            Command="{Binding AppearingCommand}"
+            EventName="Appearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
         <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
-            <Frame
+            <Border
                 Padding="10,0,10,5"
                 HorizontalOptions="FillAndExpand"
-                Style="{StaticResource FramePrimary}">
+                Style="{StaticResource BorderPrimary}">
                 <StackLayout Margin="0" IsEnabled="{Binding IsConnected}">
                     <components:BorderedEntry
                         LabelText="Digite o título do livro"
@@ -28,12 +32,12 @@
                         Text="{Binding SearchText}" />
                     <!--  TextTransformValue="Uppercase"  -->
                 </StackLayout>
-            </Frame>
-            <Frame
+            </Border>
+            <Border
                 Margin="5"
                 Padding="5"
                 BackgroundColor="Transparent"
-                CornerRadius="10"
+                StrokeShape="RoundRectangle 10"
                 VerticalOptions="FillAndExpand">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -63,11 +67,12 @@
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="model:UIGoogleBook">
                                 <ViewCell>
-                                    <Frame
+                                    <Border
                                         Margin="0,0,0,5"
+                                        Padding="10"
                                         BackgroundColor="#101923"
-                                        BorderColor="#2B659B"
-                                        CornerRadius="10">
+                                        Stroke="#2B659B"
+                                        StrokeShape="RoundRectangle 10">
                                         <StackLayout HorizontalOptions="FillAndExpand" Orientation="Vertical">
                                             <Label
                                                 FontFamily="EBGaramondSemiBold"
@@ -134,7 +139,7 @@
                                                     />-->
                                             </Grid>
                                         </StackLayout>
-                                    </Frame>
+                                    </Border>
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -173,7 +178,7 @@
                         </Button.ImageSource>
                     </Button>
                 </Grid>
-            </Frame>
+            </Border>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

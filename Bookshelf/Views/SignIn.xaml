@@ -12,6 +12,9 @@
     Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False"
     Style="{StaticResource ContentPage}">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+    </Shell.BackButtonBehavior>
     <ContentPage.Resources>
         <Style x:Key="Icon" TargetType="Label">
             <Setter Property="TextColor" Value="White" />
@@ -23,9 +26,9 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <ScrollView HorizontalOptions="CenterAndExpand">
-            <Frame
+            <Border
                 IsEnabled="{Binding IsNotBusy}"
-                Style="{StaticResource FramePrimary}"
+                Style="{StaticResource BorderPrimary}"
                 VerticalOptions="Center">
                 <VerticalStackLayout>
                     <Label
@@ -129,7 +132,7 @@
                             VerticalOptions="End" />
                     </Grid>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
         </ScrollView>
     </ContentPage.Content>
 </ContentPage>

@@ -26,18 +26,13 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
-        //todo
-        //criar uma branch para o desenvolvimento da timeline
-        //criar branch para o desenvolvimento da abstração da camada dal.
-
         MauiAppBuilder builder = MauiApp.CreateBuilder();
 
         builder.UseMauiApp<App>().UseMauiCommunityToolkit();
 
         //fonts: https://fonts.google.com/specimen/Playfair+Display
         //icons: https://fontawesome.com/icons/right-to-bracket?s=solid
-        builder
-            .UseMauiApp<App>()
+        builder.UseMauiApp<App>().ConfigureMauiHandlers(handlers => { })
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -78,41 +73,20 @@ public static class MauiProgram
 
     public static IServiceCollection AddUIServices(this IServiceCollection services)
     {
-        services.AddTransient<AppShell>();
-        services.AddTransient<AppShellVM>();
 
-        services.AddTransient<Main>();
-        services.AddTransient<MainVM>();
+        services.AddTransient<AppShell, AppShellVM>();
+        services.AddTransientWithShellRoute<Main, MainVM>(nameof(Main));
+        services.AddTransientWithShellRoute<SignIn, SignInVM>(nameof(SignIn));
+        services.AddTransientWithShellRoute<SignUp, SignUpVM>(nameof(SignUp));
+        services.AddTransientWithShellRoute<UpdatePassword, UpdatePasswordVM>(nameof(UpdatePassword));
+        services.AddTransientWithShellRoute<AddBook, AddBookVM>(nameof(AddBook));
+        services.AddTransientWithShellRoute<BookList, BookListVM>(nameof(BookList));
+        services.AddTransientWithShellRoute<BookDetail, BookDetailVM>(nameof(BookDetail));
+        services.AddTransientWithShellRoute<GoogleBooksResults, GoogleBooksResultsVM>(nameof(GoogleBooksResults));
+        services.AddTransientWithShellRoute<BookHistoric, BookHistoricVM>(nameof(BookHistoric));
+        services.AddTransientWithShellRoute<Historic, HistoricVM>(nameof(Historic));
+        services.AddTransientWithShellRoute<FirstSyncProcess, FirstSyncProcessVM>(nameof(FirstSyncProcess));
 
-        services.AddTransient<SignIn>();
-        services.AddTransient<SignInVM>();
-
-        services.AddTransient<SignUp>();
-        services.AddTransient<SignUpVM>();
-
-        services.AddTransient<UpdatePassword>();
-        services.AddTransient<UpdatePasswordVM>();
-
-        services.AddTransient<AddBook>();
-        services.AddTransient<AddBookVM>();
-
-        services.AddTransient<BookList>();
-        services.AddTransient<BookListVM>();
-
-        services.AddTransient<BookDetail>();
-        services.AddTransient<BookDetailVM>();
-
-        services.AddTransient<GoogleBooksResults>();
-        services.AddTransient<GoogleBooksResultsVM>();
-
-        services.AddTransient<BookHistoric>();
-        services.AddTransient<BookHistoricVM>();
-
-        services.AddTransient<Historic>();
-        services.AddTransient<HistoricVM>();
-
-        services.AddTransient<FirstSyncProcess>();
-        services.AddTransient<FirstSyncProcessVM>();
         return services;
     }
 

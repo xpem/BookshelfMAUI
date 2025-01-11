@@ -8,11 +8,15 @@
     xmlns:model="clr-namespace:Models.Books.Historic;assembly=Models"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:Bookshelf.ViewModels.Book"
+    x:Name="this"
     Title="Histórico"
     x:DataType="vm:BookHistoricVM"
     Style="{StaticResource ContentPage}">
     <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior Command="{Binding OnAppearingCommand}" EventName="Appearing" />
+        <toolkit:EventToCommandBehavior
+            BindingContext="{Binding BindingContext, Source={x:Reference this}, x:DataType=BookHistoricVM}"
+            Command="{Binding AppearingCommand}"
+            EventName="Appearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
         <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
@@ -40,11 +44,11 @@
                         Color="Black" />
                 </Button.ImageSource>
             </Button>
-            <Frame
+            <Border
                 Margin="5"
                 Padding="5"
                 BackgroundColor="Transparent"
-                CornerRadius="10"
+                StrokeShape="RoundRectangle 10"
                 VerticalOptions="FillAndExpand">
                 <ListView
                     Margin="0"
@@ -58,7 +62,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="model:UIBookHistoric">
                             <ViewCell>
-                                <Frame Margin="0,0,0,5" BackgroundColor="Transparent">
+                                <Border Margin="0,0,0,5" BackgroundColor="Transparent">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -111,7 +115,7 @@
                                                 TextType="Html" />
                                         </Border>
                                     </Grid>
-                                </Frame>
+                                </Border>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -131,7 +135,7 @@
                         </Grid>
                     </ListView.Footer>
                 </ListView>
-            </Frame>
+            </Border>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

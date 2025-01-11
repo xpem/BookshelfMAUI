@@ -8,31 +8,34 @@
     xmlns:model="clr-namespace:Models.Books;assembly=Models"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:Bookshelf.ViewModels"
+    x:Name="this"
     Title="{Binding PageTitle}"
     x:DataType="vm:BookListVM"
     Style="{StaticResource ContentPage}">
     <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior Command="{Binding OnAppearingCommand}" EventName="Appearing" />
+        <toolkit:EventToCommandBehavior
+            BindingContext="{Binding BindingContext, Source={x:Reference this}, x:DataType=BookListVM}"
+            Command="{Binding AppearingCommand}"
+            EventName="Appearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
-
         <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
-            <Frame
+            <Border
                 Padding="10,0,10,5"
                 HorizontalOptions="FillAndExpand"
-                Style="{StaticResource FramePrimary}">
+                Style="{StaticResource BorderPrimary}">
                 <StackLayout Margin="0">
                     <components:BorderedEntry
                         LabelText="Digite o título do livro"
                         MaxLength="100"
                         Text="{Binding SearchTitle}" />
                 </StackLayout>
-            </Frame>
-            <Frame
+            </Border>
+            <Border
                 Margin="5"
                 Padding="5"
                 BackgroundColor="Transparent"
-                CornerRadius="10"
+                StrokeShape="RoundRectangle 10"
                 VerticalOptions="FillAndExpand">
                 <ListView
                     CachingStrategy="RecycleElement"
@@ -46,11 +49,12 @@
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="model:UIBookItem">
                             <ViewCell Tapped="ViewCell_Tapped">
-                                <Frame
+                                <Border
                                     Margin="0,0,0,5"
+                                    Padding="10"
                                     BackgroundColor="#101923"
-                                    BorderColor="{StaticResource ActiveColor}"
-                                    CornerRadius="10">
+                                    Stroke="{StaticResource ActiveColor}"
+                                    StrokeShape="RoundRectangle 10">
                                     <StackLayout HorizontalOptions="FillAndExpand" Orientation="Vertical">
                                         <Label
                                             Padding="0,0,0,10"
@@ -128,7 +132,7 @@
                                                 VerticalOptions="End" />-->
                                         </Grid>
                                     </StackLayout>
-                                </Frame>
+                                </Border>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -148,7 +152,7 @@
                         </Grid>
                     </ListView.Footer>
                 </ListView>
-            </Frame>
+            </Border>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

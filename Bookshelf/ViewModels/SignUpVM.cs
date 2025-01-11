@@ -1,4 +1,5 @@
 ﻿using Bookshelf.Utils;
+using CommunityToolkit.Mvvm.Input;
 using Services.User;
 using System.Windows.Input;
 
@@ -9,21 +10,21 @@ namespace Bookshelf.ViewModels
 
         string name, email;
 
-        public string Name { get => name; set { if (name != value) { name = value; OnPropertyChanged(); } } }
+        public string Name { get => name; set { if (name != value) { SetProperty(ref (name), value); } } }
 
-        public string Email { get => email; set { if (email != value) { email = value; OnPropertyChanged(); } } }
+        public string Email { get => email; set { if (email != value) { SetProperty(ref (email), value); } } }
 
         string password;
 
-        public string Password { get => password; set { if (password != value) { password = value; OnPropertyChanged(); } } }
+        public string Password { get => password; set { if (password != value) { SetProperty(ref (password), value); } } }
 
         string confirmPassword;
 
-        public string ConfirmPassword { get => confirmPassword; set { if (confirmPassword != value) { confirmPassword = value; OnPropertyChanged(); } } }
+        public string ConfirmPassword { get => confirmPassword; set { if (confirmPassword != value) { SetProperty(ref (confirmPassword), value); } } }
 
         bool btnCreateUserIsEnabled = true;
 
-        public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { btnCreateUserIsEnabled = value; OnPropertyChanged(); } } }
+        public bool BtnCreateUserIsEnabled { get => btnCreateUserIsEnabled; set { if (btnCreateUserIsEnabled != value) { SetProperty(ref (btnCreateUserIsEnabled), value); } } }
 
         private bool VerifyFileds()
         {
@@ -53,11 +54,12 @@ namespace Bookshelf.ViewModels
             return validInformation;
         }
 
-        public ICommand SignUpCommand => new Command(async () =>
+        [RelayCommand]
+        private async Task SignUp()
         {
             if (!(Connectivity.NetworkAccess == NetworkAccess.Internet))
             {
-                _ = await Application.Current.MainPage.DisplayAlert("Aviso", "Sem conexão com a internet", null, "Ok");
+                _ = await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Sem conexão com a internet", null, "Ok");
                 return;
             }
 
@@ -69,16 +71,15 @@ namespace Bookshelf.ViewModels
                 Models.Responses.BLLResponse resp = await userBLL.AddUser(name, email, password);
 
                 if (!resp.Success)
-                    await Application.Current.MainPage.DisplayAlert("Erro", "Não foi possível cadastrar o usuário!", null, "Ok");
+                    await Application.Current.Windows[0].Page.DisplayAlert("Erro", "Não foi possível cadastrar o usuário!", null, "Ok");
                 else
                 {
-                    bool res = await Application.Current.MainPage.DisplayAlert("Aviso", "Usuário cadastrado!", null, "Ok");
+                    bool res = await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Usuário cadastrado!", null, "Ok");
 
                     if (!res)
                         await Shell.Current.GoToAsync("..");
                 }
-
             }
-        });
+        }
     }
 }

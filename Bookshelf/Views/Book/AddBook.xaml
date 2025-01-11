@@ -13,7 +13,7 @@
     <ContentPage.Content>
         <ScrollView>
             <!--<StackLayout VerticalOptions="Center" Style="{StaticResource MainStackLayout}" >-->
-            <Frame Style="{StaticResource FramePrimary}">
+            <Border Style="{StaticResource BorderPrimary}">
                 <VerticalStackLayout>
                     <Image
                         Margin="0,0,0,10"
@@ -111,15 +111,15 @@
                             Text="Situação"
                             TextColor="{StaticResource White}"
                             VerticalOptions="Fill" />
-                        <Frame
+                        <Border
                             Margin="0,5,0,5"
                             Padding="0"
                             BackgroundColor="#101923"
-                            BorderColor="{StaticResource ActiveColor}"
-                            CornerRadius="5"
-                            HorizontalOptions="CenterAndExpand">
+                            HorizontalOptions="CenterAndExpand"
+                            Stroke="{StaticResource ActiveColor}"
+                            StrokeShape="RoundRectangle 5">
                             <Picker ItemsSource="{Binding StatusList}" SelectedIndex="{Binding PkrStatusSelectedIndex}" />
-                        </Frame>
+                        </Border>
                     </VerticalStackLayout>
                     <components:RatingBar Rate="{Binding Rate}" RatingBarIsVisible="{Binding RatingBarIsVisible}" />
 
@@ -144,7 +144,7 @@
                         </Button.ImageSource>
                     </Button>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
             <!--</StackLayout>-->
         </ScrollView>
     </ContentPage.Content>

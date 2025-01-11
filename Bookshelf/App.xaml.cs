@@ -1,4 +1,5 @@
 ﻿using Bookshelf.Services.Sync;
+using Bookshelf.ViewModels;
 using Bookshelf.Views;
 using Models.DTOs;
 using Services;
@@ -8,29 +9,41 @@ namespace Bookshelf;
 
 public partial class App : Application
 {
-    public int Uid { get; set; }
+    public int? Uid { get; set; }
 
-    public readonly string Version = "@0.1.5";
+    public readonly string Version = "@0.2.5";
+
+    private ISyncService SyncServices { get; set; }
+
+    private IUserService UserBLL { get; set; }
+
+    private IBuildDbService BuildDbBLL { get; set; }
+
+    protected override Window CreateWindow(IActivationState? activationState)
+    {
+        var appShellVM = new AppShellVM(SyncServices, BuildDbBLL, UserBLL);
+
+        BuildDbBLL.Init();
+
+        _ = appShellVM.AtualizaUserShowData();
+
+        User user = UserBLL.GetUserLocal().Result;
+
+        if (user != null)
+        {
+            Uid = user.Id;
+            SyncServices.StartThread();
+        }
+
+        return new Window(new AppShell(appShellVM));
+    }
 
     public App(ISyncService syncServices, IUserService userBLL, IBuildDbService buildDbBLL)
     {
-        try
-        {
-            buildDbBLL.Init();
+        SyncServices = syncServices;
+        UserBLL = userBLL;
+        BuildDbBLL = buildDbBLL;
 
-            InitializeComponent();
-
-            User user = userBLL.GetUserLocal().Result;
-
-            MainPage = new AppShell(new ViewModels.AppShellVM(user, syncServices, buildDbBLL, userBLL));
-
-            if (user != null)
-            {
-                Uid = user.Id;
-                syncServices.StartThread();
-                Shell.Current.GoToAsync($"//{nameof(Main)}");
-            }
-        }
-        catch (Exception ex) { throw; }
+        InitializeComponent();
     }
 }

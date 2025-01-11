@@ -15,17 +15,9 @@
         <Setter Property="VerticalOptions" Value="FillAndExpand" />
     </Style>
 
-    <Style x:Key="MainFrame" TargetType="Frame">
-        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
-        <Setter Property="VerticalOptions" Value="Center" />
-        <Setter Property="BackgroundColor" Value="#BDBDBD" />
-        <Setter Property="Margin" Value="5" />
-        <Setter Property="CornerRadius" Value="10" />
-    </Style>
-
-    <Style x:Key="FramePrimary" TargetType="Frame">
-        <Setter Property="HasShadow" Value="False" />
+    <Style x:Key="BorderPrimary" TargetType="Border">
         <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="Padding" Value="10" />
     </Style>
 
     <Style x:Key="Entry" TargetType="Entry">
@@ -100,19 +92,19 @@
         </Setter>
     </Style>
 
-    <Style x:Key="EntryBorders" TargetType="Frame">
+    <Style x:Key="EntryBorders" TargetType="Border">
         <Setter Property="Padding" Value="-5,0,0,0" />
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
         <Setter Property="BackgroundColor" Value="#101923" />
-        <Setter Property="BorderColor" Value="{StaticResource ActiveColor}" />
-        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="Stroke" Value="{StaticResource ActiveColor}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 5" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
                     <VisualState x:Name="Normal" />
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="BorderColor" Value="#2B659B" />
+                            <Setter Property="Stroke" Value="#2B659B" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>

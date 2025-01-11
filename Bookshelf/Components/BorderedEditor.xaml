@@ -7,7 +7,7 @@
     x:DataType="{Binding Source={x:Reference this}}"
     IsVisible="{Binding Source={x:Reference this}, Path=EditorIsVisible}">
     <Label Style="{StaticResource LblHEntry}" Text="{Binding Source={x:Reference this}, Path=LabelText}" />
-    <Frame Style="{StaticResource EntryBorders}">
+    <Border Style="{StaticResource EntryBorders}">
         <Editor
             HeightRequest="70"
             HorizontalOptions="FillAndExpand"
@@ -16,5 +16,5 @@
             MinimumWidthRequest="250"
             Style="{StaticResource Entry}"
             Text="{Binding Source={x:Reference this}, Path=Text}" />
-    </Frame>
+    </Border>
 </VerticalStackLayout>

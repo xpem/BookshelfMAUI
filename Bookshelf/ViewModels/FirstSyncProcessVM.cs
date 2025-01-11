@@ -13,20 +13,23 @@ namespace Bookshelf.ViewModels
         private decimal progress;
         private readonly ISyncService SyncServices;
 
-        public decimal Progress { get => progress; set { if (progress != value) { progress = value; OnPropertyChanged(nameof(Progress)); } } }
+        public decimal Progress { get => progress; set { if (progress != value) { SetProperty(ref (progress), value); } } }
 
         public IUserService UserBLL { get; }
         public IBookSyncService BooksSyncBLL { get; }
         public IBookHistoricSyncBLL BookHistoricSyncBLL { get; }
         public IBuildDbService BuildDbBLL { get; }
 
-        public FirstSyncProcessVM(IUserService userBLL, IBookSyncService booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL, ISyncService syncServices, IBuildDbService buildDbBLL)
+        private readonly AppShellVM AppShellVM;
+
+        public FirstSyncProcessVM(IUserService userBLL, IBookSyncService booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL, ISyncService syncServices, IBuildDbService buildDbBLL, AppShellVM appShellVM)
         {
             UserBLL = userBLL;
             BooksSyncBLL = booksSyncBLL;
             BookHistoricSyncBLL = bookHistoricSyncBLL;
             this.SyncServices = syncServices;
             BuildDbBLL = buildDbBLL;
+            AppShellVM = appShellVM;
             _ = SynchronizingProcess();
         }
 
@@ -41,7 +44,7 @@ namespace Bookshelf.ViewModels
                 {
                     if (Connectivity.NetworkAccess == NetworkAccess.Internet)
                     {
-                        await BooksSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);                       
+                        await BooksSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
 
                         Progress = 0.25M;
 
@@ -58,6 +61,8 @@ namespace Bookshelf.ViewModels
                         Progress = 1;
 
                         _ = Task.Run(() => { Task.Delay(5000); SyncServices.StartThread(); });
+
+                        _ = AppShellVM.AtualizaUserShowData();
 
                         _ = Shell.Current.GoToAsync($"//{nameof(Main)}");
 

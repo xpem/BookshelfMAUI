@@ -6,16 +6,18 @@
     xmlns:Icons="clr-namespace:Models;assembly=Models"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels"
+    x:Name="this"
     x:DataType="viewmodels:MainVM"
     Style="{StaticResource ContentPage}">
     <ContentPage.Resources>
         <!--  carditens  -->
-        <Style x:Key="FrameCardItem" TargetType="Frame">
+        <Style x:Key="BorderCardItem" TargetType="Border">
             <Setter Property="BackgroundColor" Value="{StaticResource SecondaryBGColor}" />
-            <Setter Property="BorderColor" Value="{StaticResource ActiveColor}" />
-            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Stroke" Value="{StaticResource ActiveColor}" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            <Setter Property="Padding" Value="10" />
         </Style>
-        <Style x:Key="GridCardItem" TargetType="Frame">
+        <Style x:Key="GridCardItem" TargetType="Grid">
             <Setter Property="VerticalOptions" Value="Start" />
             <Setter Property="HorizontalOptions" Value="FillAndExpand" />
         </Style>
@@ -65,7 +67,10 @@
         </Style>
     </ContentPage.Resources>
     <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior Command="{Binding OnAppearingCommand}" EventName="Appearing" />
+        <toolkit:EventToCommandBehavior
+            BindingContext="{Binding BindingContext, Source={x:Reference this}, x:DataType=MainVM}"
+            Command="{Binding AppearingCommand}"
+            EventName="Appearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
         <ScrollView>
@@ -73,17 +78,16 @@
                 Padding="1"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand">
-                <Frame
+                <Border
                     Margin="5"
-                    Padding="5"
-                    CornerRadius="10"
-                    Style="{StaticResource FramePrimary}">
+                    StrokeShape="RoundRectangle 10"
+                    Style="{StaticResource BorderPrimary}">
                     <VerticalStackLayout Spacing="2">
-                        <Frame Margin="0,5,0,5" Style="{StaticResource FrameCardItem}">
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding IllReadCommand}" />
+                        <Border Margin="0,5,0,5" Style="{StaticResource BorderCardItem}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ListIllReadCommand}" />
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
-                            </Frame.GestureRecognizers>
+                            </Border.GestureRecognizers>
                             <Grid Style="{StaticResource GridCardItem}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50" />
@@ -117,12 +121,12 @@
                                     SemanticProperties.Description="Acessar lista de livros que vou ler"
                                     Style="{StaticResource ImgAngleRight}" />
                             </Grid>
-                        </Frame>
-                        <Frame Margin="0,0,0,5" Style="{StaticResource FrameCardItem}">
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ReadingCommand}" />
+                        </Border>
+                        <Border Margin="0,0,0,5" Style="{StaticResource BorderCardItem}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ListReadingCommand}" />
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
-                            </Frame.GestureRecognizers>
+                            </Border.GestureRecognizers>
                             <Grid Style="{StaticResource GridCardItem}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50" />
@@ -156,12 +160,12 @@
                                     SemanticProperties.Description="Acessar lista de livros que estou lendo"
                                     Style="{StaticResource ImgAngleRight}" />
                             </Grid>
-                        </Frame>
-                        <Frame Margin="0,0,0,5" Style="{StaticResource FrameCardItem}">
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ReadCommand}" />
+                        </Border>
+                        <Border Margin="0,0,0,5" Style="{StaticResource BorderCardItem}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ListReadCommand}" />
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
-                            </Frame.GestureRecognizers>
+                            </Border.GestureRecognizers>
                             <Grid Style="{StaticResource GridCardItem}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50" />
@@ -195,12 +199,12 @@
                                     SemanticProperties.Description="Acessar lista de livros que já li"
                                     Style="{StaticResource ImgAngleRight}" />
                             </Grid>
-                        </Frame>
-                        <Frame Margin="0,0,0,5" Style="{StaticResource FrameCardItem}">
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding InterruptedCommand}" />
+                        </Border>
+                        <Border Margin="0,0,0,5" Style="{StaticResource BorderCardItem}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ListInterruptedCommand}" />
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
-                            </Frame.GestureRecognizers>
+                            </Border.GestureRecognizers>
                             <Grid Style="{StaticResource GridCardItem}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50" />
@@ -234,14 +238,14 @@
                                     SemanticProperties.Description="Acessar lista de livros que interrompi a leitura"
                                     Style="{StaticResource ImgAngleRight}" />
                             </Grid>
-                        </Frame>
+                        </Border>
                     </VerticalStackLayout>
-                </Frame>
-                <Frame
+                </Border>
+                <Border
                     Margin="5,0,5,5"
                     Padding="5"
                     BackgroundColor="Transparent"
-                    CornerRadius="10"
+                    StrokeShape="RoundRectangle 10"
                     VerticalOptions="FillAndExpand">
                     <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                         <Button
@@ -302,7 +306,7 @@
                                 VerticalOptions="End" />
                         </Grid>
                     </StackLayout>
-                </Frame>
+                </Border>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

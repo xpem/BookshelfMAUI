@@ -21,7 +21,7 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <ScrollView HorizontalOptions="CenterAndExpand">
-            <Frame IsEnabled="{Binding IsNotBusy}" Style="{StaticResource FramePrimary}">
+            <Border IsEnabled="{Binding IsNotBusy}" Style="{StaticResource BorderPrimary}">
                 <VerticalStackLayout>
                     <Label
                         SemanticProperties.Description="Imagem da tela de usuários"
@@ -63,7 +63,7 @@
                         </Button.ImageSource>
                     </Button>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
         </ScrollView>
     </ContentPage.Content>
 </ContentPage>

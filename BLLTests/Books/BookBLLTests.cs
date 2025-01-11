@@ -50,9 +50,6 @@ namespace BLLTests.Books
             ];
 
             Mock<IBookApiService> bookApiBLL = new();
-
-            IBookRepo bookDAL = new BookRepo(mockContext.Object);
-
             Mock<IBookRepo> mockBookDAL = new();
 
             mockBookDAL.Setup(x => x.GetTotalBooksGroupedByStatusAsync(1)).ReturnsAsync(totalBooksGroupedByStatuses);

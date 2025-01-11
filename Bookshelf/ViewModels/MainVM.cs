@@ -1,7 +1,9 @@
 ﻿using Bookshelf.Services.Sync;
 using Bookshelf.Views;
 using Bookshelf.Views.GoogleSearch;
+using CommunityToolkit.Mvvm.Input;
 using Models;
+using Models.DTOs;
 using Services.Books.Interfaces;
 using System.Windows.Input;
 
@@ -17,17 +19,17 @@ namespace Bookshelf.ViewModels
 
         private Color isSync, isConnected;
 
-        public string Version { get => version; set { if (version != value) { version = value; OnPropertyChanged(nameof(Version)); } } }
+        public string Version { get => version; set { if (version != value) { SetProperty(ref (version), value); } } }
 
-        public string IllRead { get => illRead; set { if (illRead != value) { illRead = value; OnPropertyChanged(nameof(IllRead)); } } }
+        public string IllRead { get => illRead; set { if (illRead != value) { SetProperty(ref (illRead), value); } } }
 
-        public string Reading { get => reading; set { if (reading != value) { reading = value; OnPropertyChanged(nameof(Reading)); } } }
+        public string Reading { get => reading; set { if (reading != value) { SetProperty(ref (reading), value); } } }
 
-        public string Read { get => read; set { if (read != value) { read = value; OnPropertyChanged(nameof(Read)); } } }
+        public string Read { get => read; set { if (read != value) { SetProperty(ref (read), value); } } }
 
-        public string Interrupted { get => interrupted; set { if (interrupted != value) { interrupted = value; OnPropertyChanged(nameof(Interrupted)); } } }
+        public string Interrupted { get => interrupted; set { if (interrupted != value) { SetProperty(ref (interrupted), value); } } }
 
-        public Color IsSync { get => isSync; set { if (value != isSync) { isSync = value; OnPropertyChanged(nameof(IsSync)); } } }
+        public Color IsSync { get => isSync; set { if (value != isSync) { SetProperty(ref (isSync), value); } } }
 
         /// <summary>
         /// var that defines if the function that verify the synchronization is running  or not
@@ -48,18 +50,26 @@ namespace Bookshelf.ViewModels
 
         private int Interval = 3000;
 
-        public ICommand OnAppearingCommand => new Command((e) =>
+        [RelayCommand]
+        private async Task Appearing()
         {
-            IsSync = Colors.Gray;
+            if (((App)Application.Current).Uid is null)
+            {
+                _ = Shell.Current.GoToAsync($"{nameof(SignIn)}");
+            }
+            else
+            {
+                IsSync = Colors.Gray;
 
-            IllRead = Reading = Read = Interrupted = "...";
+                IllRead = Reading = Read = Interrupted = "...";
 
-            Task.Run(GetBookshelfTotalsAsync).Wait();
+                await GetBookshelfTotalsAsync();
 
-            SetTimer();
-        });
+                SetTimer();
+            }
+        }
 
-        public void SetTimer()
+        private void SetTimer()
         {
             if (_Timer == null)
             {
@@ -137,7 +147,7 @@ namespace Bookshelf.ViewModels
         public async Task GetBookshelfTotalsAsync()
         {
             //
-            Models.Books.Totals totals = await _booksServices.GetBookshelfTotalsAsync(((App)Application.Current).Uid);
+            Models.Books.Totals totals = await _booksServices.GetBookshelfTotalsAsync(((App)Application.Current).Uid.Value);
             //
             if (totals.IllRead.ToString() != IllRead) { IllRead = totals.IllRead.ToString(); }
             if (totals.Reading.ToString() != Reading) { Reading = totals.Reading.ToString(); }
@@ -146,25 +156,30 @@ namespace Bookshelf.ViewModels
             //
         }
 
-        public ICommand GoogleSearchCommand => new Command(async (e) => { await Shell.Current.GoToAsync($"{nameof(GoogleBooksResults)}"); });
+        [RelayCommand]
+        private Task GoogleSearch() => Shell.Current.GoToAsync($"{nameof(GoogleBooksResults)}");
 
-        public ICommand ReadCommand => new Command((e) => { _ = CallBookList(3); });
+        [RelayCommand]
+        private Task ListRead() => CallBookList(3);
 
-        public ICommand InterruptedCommand => new Command((e) => _ = CallBookList(4));
+        [RelayCommand]
+        private Task ListInterrupted() => CallBookList(4);
 
-        public ICommand ReadingCommand => new Command((e) => _ = CallBookList(2));
+        [RelayCommand]
+        private Task ListReading() => CallBookList(2);
 
-        public ICommand IllReadCommand => new Command((e) => _ = CallBookList(1));
+        [RelayCommand]
+        private Task ListIllRead() => CallBookList(1);
 
         //public ICommand ArchiveCommand => new Command((e) => _ = CallBookList(0));
 
-        private async Task CallBookList(int BookSituation) => await GoToAsync($"{nameof(BookList)}?Situation={BookSituation}");// await Shell.Current.GoToAsync($"{nameof(BookList)}?Situation={BookSituation}", true);
+        private Task CallBookList(int BookSituation) => GoToAsync($"{nameof(BookList)}?Situation={BookSituation}");// await Shell.Current.GoToAsync($"{nameof(BookList)}?Situation={BookSituation}", true);
 
-        private async Task GoToAsync(string state)
+        private static Task GoToAsync(string state)
         {
             _Timer = null;
             //_Timer.Dispose();
-            await Shell.Current.GoToAsync(state, true);
+            return Shell.Current.GoToAsync(state, true);
         }
     }
 }

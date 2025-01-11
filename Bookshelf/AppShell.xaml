@@ -10,14 +10,15 @@
     BackgroundColor="{StaticResource MainBackgroundColor}"
     FlyoutBackgroundColor="{StaticResource MainBackgroundColor}">
 
-    <ShellItem FlyoutItemIsVisible="False" Route="SignIn">
-        <ShellContent ContentTemplate="{DataTemplate local:SignIn}" />
-    </ShellItem>
-
+    
     <ShellItem FlyoutItemIsVisible="False" Route="Main">
         <ShellContent ContentTemplate="{DataTemplate local:Main}" />
     </ShellItem>
 
+    <ShellItem FlyoutItemIsVisible="False" Route="SignIn">
+        <ShellContent ContentTemplate="{DataTemplate local:SignIn}" />
+    </ShellItem>
+    
     <ShellItem FlyoutItemIsVisible="False" Route="FirstSyncProcess">
         <ShellContent ContentTemplate="{DataTemplate local:FirstSyncProcess}" />
     </ShellItem>
