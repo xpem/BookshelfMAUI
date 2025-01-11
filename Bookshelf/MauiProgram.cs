@@ -32,8 +32,7 @@ public static class MauiProgram
 
         //fonts: https://fonts.google.com/specimen/Playfair+Display
         //icons: https://fontawesome.com/icons/right-to-bracket?s=solid
-        builder
-            .UseMauiApp<App>()
+        builder.UseMauiApp<App>().ConfigureMauiHandlers(handlers => { })
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -87,7 +86,7 @@ public static class MauiProgram
         services.AddTransientWithShellRoute<BookHistoric, BookHistoricVM>(nameof(BookHistoric));
         services.AddTransientWithShellRoute<Historic, HistoricVM>(nameof(Historic));
         services.AddTransientWithShellRoute<FirstSyncProcess, FirstSyncProcessVM>(nameof(FirstSyncProcess));
-        
+
         return services;
     }
 

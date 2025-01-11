@@ -18,7 +18,7 @@ namespace Bookshelf.ViewModels
         public string Name { get => name; set { if (name != value) { SetProperty(ref (name), value); } } }
 
 
-        public async Task AtualizaUser()
+        public async Task AtualizaUserShowData()
         {
             User user = await userService.GetUserLocal();
 
