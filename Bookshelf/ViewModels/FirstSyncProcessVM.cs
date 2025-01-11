@@ -44,7 +44,7 @@ namespace Bookshelf.ViewModels
                 {
                     if (Connectivity.NetworkAccess == NetworkAccess.Internet)
                     {
-                        await BooksSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);                       
+                        await BooksSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
 
                         Progress = 0.25M;
 
@@ -62,7 +62,7 @@ namespace Bookshelf.ViewModels
 
                         _ = Task.Run(() => { Task.Delay(5000); SyncServices.StartThread(); });
 
-                        AppShellVM.AtualizaUser();
+                        _ = AppShellVM.AtualizaUserShowData();
 
                         _ = Shell.Current.GoToAsync($"//{nameof(Main)}");
 

@@ -147,7 +147,7 @@ namespace Bookshelf.ViewModels.Book
         {
             IsBusy = true;
 
-            List<Models.Books.Historic.UIBookHistoric> bookHistoricList = await bookHistoricBLL.GetByBookIdAsync(((App)App.Current).Uid, pageNumber, BookId);
+            List<Models.Books.Historic.UIBookHistoric> bookHistoricList = await bookHistoricBLL.GetByBookIdAsync(((App)App.Current).Uid.Value, pageNumber, BookId);
 
             if (bookHistoricList.Count > 0)
                 foreach (var item in bookHistoricList)

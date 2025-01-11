@@ -74,22 +74,22 @@ namespace Bookshelf.ViewModels
                                     errorMessage = "Servidor indisponível, favor entrar em contato com o desenvolvedor.";
                                 else errorMessage = "Erro não mapeado, favor entrar em contato com o desenvolvedor.";
 
-                                await Application.Current.MainPage.DisplayAlert("Aviso", errorMessage, null, "Ok");
+                                await Application.Current.Windows[0].Page.DisplayAlert("Aviso", errorMessage, null, "Ok");
                             }
                             BtnSignEnabled = true;
                             SignInText = "Acessar";
                             IsBusy = false;
                         }
                         else
-                            await Application.Current.MainPage.DisplayAlert("Aviso", "Digite sua senha", null, "Ok");
+                            await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Digite sua senha", null, "Ok");
 
                     }
                     else
-                        await Application.Current.MainPage.DisplayAlert("Aviso", "É necessário ter acesso a internet para efetuar o primeiro acesso.", null, "Ok");
+                        await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "É necessário ter acesso a internet para efetuar o primeiro acesso.", null, "Ok");
 
                 }
                 else
-                    await Application.Current.MainPage.DisplayAlert("Aviso", "Insira seu email e senha.", null, "Ok");
+                    await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Insira seu email e senha.", null, "Ok");
             }
             catch { throw; }
 

@@ -113,7 +113,7 @@ namespace Bookshelf.ViewModels
             if (!string.IsNullOrEmpty(SearchTitle))
                 _searchText = SearchTitle.ToLower();
 
-            List<UIBookItem> _booksList = await _booksServices.GetByStatusAsync(((App)App.Current).Uid, pageNumber, SituationIndex.Value, _searchText);
+            List<UIBookItem> _booksList = await _booksServices.GetByStatusAsync(((App)App.Current).Uid.Value, pageNumber, SituationIndex.Value, _searchText);
 
             foreach (UIBookItem bookItem in _booksList)
             {

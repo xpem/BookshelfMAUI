@@ -59,7 +59,7 @@ namespace Bookshelf.ViewModels
         {
             if (!(Connectivity.NetworkAccess == NetworkAccess.Internet))
             {
-                _ = await Application.Current.MainPage.DisplayAlert("Aviso", "Sem conexão com a internet", null, "Ok");
+                _ = await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Sem conexão com a internet", null, "Ok");
                 return;
             }
 
@@ -71,10 +71,10 @@ namespace Bookshelf.ViewModels
                 Models.Responses.BLLResponse resp = await userBLL.AddUser(name, email, password);
 
                 if (!resp.Success)
-                    await Application.Current.MainPage.DisplayAlert("Erro", "Não foi possível cadastrar o usuário!", null, "Ok");
+                    await Application.Current.Windows[0].Page.DisplayAlert("Erro", "Não foi possível cadastrar o usuário!", null, "Ok");
                 else
                 {
-                    bool res = await Application.Current.MainPage.DisplayAlert("Aviso", "Usuário cadastrado!", null, "Ok");
+                    bool res = await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Usuário cadastrado!", null, "Ok");
 
                     if (!res)
                         await Shell.Current.GoToAsync("..");

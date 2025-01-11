@@ -3,6 +3,7 @@ using Bookshelf.Views;
 using Bookshelf.Views.GoogleSearch;
 using CommunityToolkit.Mvvm.Input;
 using Models;
+using Models.DTOs;
 using Services.Books.Interfaces;
 using System.Windows.Input;
 
@@ -52,13 +53,20 @@ namespace Bookshelf.ViewModels
         [RelayCommand]
         private async Task Appearing()
         {
-            IsSync = Colors.Gray;
+            if (((App)Application.Current).Uid is null)
+            {
+                _ = Shell.Current.GoToAsync($"{nameof(SignIn)}");
+            }
+            else
+            {
+                IsSync = Colors.Gray;
 
-            IllRead = Reading = Read = Interrupted = "...";
+                IllRead = Reading = Read = Interrupted = "...";
 
-            await GetBookshelfTotalsAsync();
+                await GetBookshelfTotalsAsync();
 
-            SetTimer();
+                SetTimer();
+            }
         }
 
         private void SetTimer()
@@ -139,7 +147,7 @@ namespace Bookshelf.ViewModels
         public async Task GetBookshelfTotalsAsync()
         {
             //
-            Models.Books.Totals totals = await _booksServices.GetBookshelfTotalsAsync(((App)Application.Current).Uid);
+            Models.Books.Totals totals = await _booksServices.GetBookshelfTotalsAsync(((App)Application.Current).Uid.Value);
             //
             if (totals.IllRead.ToString() != IllRead) { IllRead = totals.IllRead.ToString(); }
             if (totals.Reading.ToString() != Reading) { Reading = totals.Reading.ToString(); }

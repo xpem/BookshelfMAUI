@@ -6,6 +6,7 @@
     xmlns:Icons="clr-namespace:Models;assembly=Models"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels"
+    x:Name="this"
     x:DataType="viewmodels:MainVM"
     Style="{StaticResource ContentPage}">
     <ContentPage.Resources>
@@ -66,7 +67,10 @@
         </Style>
     </ContentPage.Resources>
     <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+        <toolkit:EventToCommandBehavior
+            BindingContext="{Binding BindingContext, Source={x:Reference this}, x:DataType=MainVM}"
+            Command="{Binding AppearingCommand}"
+            EventName="Appearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
         <ScrollView>

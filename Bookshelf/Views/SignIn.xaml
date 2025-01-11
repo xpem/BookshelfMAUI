@@ -12,6 +12,9 @@
     Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False"
     Style="{StaticResource ContentPage}">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False" />
+    </Shell.BackButtonBehavior>
     <ContentPage.Resources>
         <Style x:Key="Icon" TargetType="Label">
             <Setter Property="TextColor" Value="White" />

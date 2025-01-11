@@ -9,11 +9,15 @@
     xmlns:model="clr-namespace:Models.Books.GoogleApi;assembly=Models"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:Bookshelf.ViewModels.GoogleSearch"
+    x:Name="this"
     Title="{Binding PageTitle}"
     x:DataType="vm:GoogleBooksResultsVM"
     Style="{StaticResource ContentPage}">
     <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+        <toolkit:EventToCommandBehavior
+            BindingContext="{Binding BindingContext, Source={x:Reference this}, x:DataType=GoogleBooksResultsVM}"
+            Command="{Binding AppearingCommand}"
+            EventName="Appearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
         <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">

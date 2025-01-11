@@ -351,7 +351,7 @@ namespace Bookshelf.ViewModels.Book
                         if (!string.IsNullOrEmpty(BookId))
                             book.Id = Convert.ToInt32(BookId);
 
-                        Models.Responses.BLLResponse uptRes = await bookBLL.UpdateAsync(((App)Application.Current).Uid, IsOn, book);
+                        Models.Responses.BLLResponse uptRes = await bookBLL.UpdateAsync(((App)Application.Current).Uid.Value, IsOn, book);
 
                         if (!uptRes.Success)
                         {
@@ -364,7 +364,7 @@ namespace Bookshelf.ViewModels.Book
                     }
                     else
                     {
-                        Models.Responses.BLLResponse addRes = await bookBLL.AddAsync(((App)Application.Current).Uid, IsOn, book);
+                        Models.Responses.BLLResponse addRes = await bookBLL.AddAsync(((App)Application.Current).Uid.Value, IsOn, book);
 
                         if (!addRes.Success)
                         {
@@ -376,7 +376,7 @@ namespace Bookshelf.ViewModels.Book
                             mensagem += " cadastrados";
                     }
 
-                    bool resposta = await Application.Current.MainPage.DisplayAlert("Aviso", mensagem, null, "Ok");
+                    bool resposta = await Application.Current.Windows[0].Page.DisplayAlert("Aviso", mensagem, null, "Ok");
 
                     if (!resposta)
                     {
@@ -414,7 +414,7 @@ namespace Bookshelf.ViewModels.Book
 
                 if (!string.IsNullOrEmpty(Title) || UIGoogleBook is not null)
                 {
-                    Models.DTOs.Book _book = await bookBLL.GetbyTitleOrGoogleIdAsync(((App)Application.Current).Uid, Title, UIGoogleBook.Id);
+                    Models.DTOs.Book _book = await bookBLL.GetbyTitleOrGoogleIdAsync(((App)Application.Current).Uid.Value, Title, UIGoogleBook.Id);
 
                     if (_book is not null)
                     {
@@ -502,7 +502,7 @@ namespace Bookshelf.ViewModels.Book
         /// <summary>
         /// get book by book key
         /// </summary>
-        protected async Task GetBookAsync(int localId) => BuildBook(await bookBLL.GetAsync(((App)Application.Current).Uid, localId));
+        protected async Task GetBookAsync(int localId) => BuildBook(await bookBLL.GetAsync(((App)Application.Current).Uid.Value, localId));
 
         private async Task<bool> VerrifyFields()
         {
@@ -526,7 +526,7 @@ namespace Bookshelf.ViewModels.Book
             }
 
             if (!ValidInfo)
-                await Application.Current.MainPage.DisplayAlert("Aviso", "Preencha os campos obrigatórios", null, "Ok");
+                await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Preencha os campos obrigatórios", null, "Ok");
 
             return ValidInfo;
         }

@@ -1,5 +1,6 @@
 ﻿using Bookshelf.Views;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Controls.PlatformConfiguration;
 using Models.DTOs;
 using Services.Books.Interfaces;
 using System.Collections.ObjectModel;
@@ -269,11 +270,11 @@ namespace Bookshelf.ViewModels.Book
         [RelayCommand]
         public async Task InactivateBook()
         {
-            if (await Application.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir este livro?", "Sim", "Cancelar"))
+            if (await Application.Current.Windows[0].Page.DisplayAlert("Confirmação", "Deseja excluir este livro?", "Sim", "Cancelar"))
             {
-                _ = _booksServices.InactivateBookAsync(((App)Application.Current).Uid, Connectivity.NetworkAccess == NetworkAccess.Internet, LocalId);
+                _ = _booksServices.InactivateBookAsync(((App)Application.Current).Uid.Value, Connectivity.NetworkAccess == NetworkAccess.Internet, LocalId);
 
-                if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
+                if (!await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Livro excluído!", null, "Ok"))
                 {
                     await Shell.Current.GoToAsync("..");
                 }
@@ -291,7 +292,7 @@ namespace Bookshelf.ViewModels.Book
 
         private async Task GetBook(int bookId)
         {
-            Models.DTOs.Book book = await _booksServices.GetAsync(((App)Application.Current).Uid, bookId);
+            Models.DTOs.Book book = await _booksServices.GetAsync(((App)Application.Current).Uid.Value, bookId);
 
             if (book.Id > 0)
                 ExternalId = book.Id.Value;
@@ -394,16 +395,16 @@ namespace Bookshelf.ViewModels.Book
 
             if (alterou)
             {
-                _ = _booksServices.UpdateBookSituationAsync(((App)Application.Current).Uid, Connectivity.NetworkAccess == NetworkAccess.Internet, LocalId, (Status)PkrStatusSelectedIndex, rate, Comment);
+                _ = _booksServices.UpdateBookSituationAsync(((App)Application.Current).Uid.Value, Connectivity.NetworkAccess == NetworkAccess.Internet, LocalId, (Status)PkrStatusSelectedIndex, rate, Comment);
 
-                if (!await Application.Current.MainPage.DisplayAlert("Aviso", "Situação alterada", null, "Ok"))
+                if (!await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Situação alterada", null, "Ok"))
                 {
                     await Shell.Current.GoToAsync("..");
                 }
             }
             else
             {
-                _ = Application.Current.MainPage.DisplayAlert("Aviso", "Sem alterações", null, "Ok");
+                _ = Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Sem alterações", null, "Ok");
                 BtnConfIsEnabled = true;
             }
         }
