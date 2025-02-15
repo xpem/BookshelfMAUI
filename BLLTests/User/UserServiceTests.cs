@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Models.Responses;
 using Moq;
-using Repositories.Interfaces;
+using Repos.Interfaces;
 using Services;
 using Services.User;
 

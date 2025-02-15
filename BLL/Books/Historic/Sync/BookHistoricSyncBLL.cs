@@ -1,7 +1,7 @@
-﻿using Repositories.Interfaces;
-using Models.Exceptions;
+﻿using Models.Exceptions;
 using Models.DTOs;
 using Services.Books.Historic.Interfaces;
+using Repos.Interfaces;
 
 namespace Services.Books.Historic.Sync
 {

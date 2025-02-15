@@ -3,8 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Models.Books.Historic;
 using Models.DTOs;
 using Moq;
-using Repositories;
-using Repositories.Interfaces;
+using Repos;
+using Repos.Interfaces;
 using Services.Books.Historic;
 
 namespace BLLTests.Books.Historic

@@ -1,7 +1,7 @@
 ﻿using ApiDAL.Handlers;
 using ApiDAL.Interfaces;
 using Models.Responses;
-using Repositories.Interfaces;
+using Repos.Interfaces;
 using System.Text.Json.Nodes;
 
 namespace Services.User

@@ -6,7 +6,7 @@ namespace Bookshelf.Utils.Behaviors
     /// <summary>
     /// <see cref="https://www.sandeshkarki.com/infinite-scrolling-in-xamarin-forms/"/>
     /// </summary>
-    public class InfiniteScrollBehavior : Behavior<ListView>
+    public partial class InfiniteScrollBehavior : Behavior<ListView>
     {
         public static readonly BindableProperty LoadMoreCommandProperty =
                                BindableProperty.Create(nameof(LoadMoreCommand), typeof(ICommand), typeof(InfiniteScrollBehavior), null);

@@ -2,7 +2,7 @@
 using ApiDAL.Interfaces;
 using Models.DTOs;
 using Models.Responses;
-using Repositories;
+using Repos;
 using System.Net;
 using System.Text;
 

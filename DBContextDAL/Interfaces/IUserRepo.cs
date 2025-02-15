@@ -1,6 +1,6 @@
 ﻿using Models.DTOs;
 
-namespace Repositories.Interfaces
+namespace Repos.Interfaces
 {
     public interface IUserRepo
     {

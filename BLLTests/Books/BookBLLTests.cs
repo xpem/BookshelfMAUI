@@ -4,8 +4,8 @@ using Models.Books;
 using Models.DTOs;
 using Models.Responses;
 using Moq;
-using Repositories;
-using Repositories.Interfaces;
+using Repos;
+using Repos.Interfaces;
 using Services.Books;
 using Services.Books.Interfaces;
 using Xunit;
@@ -141,7 +141,7 @@ namespace BLLTests.Books
             BLLResponse bLLResponse = new() { Success = true, Content = 2 };
 
             mockBookDAL.Setup(x => x.GetByTitleOrGoogleIdAsync(1, "Teste de Título Insert", null)).ReturnsAsync(returnBook);
-            mockBookDAL.Setup(x => x.CreateAsyn(It.IsAny<Book>())).ReturnsAsync(1);
+            mockBookDAL.Setup(x => x.CreateAsync(It.IsAny<Book>())).ReturnsAsync(1);
 
             Mock<BookService> booksBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockBooksOperationBLL.Object);
 

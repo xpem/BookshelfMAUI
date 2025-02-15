@@ -12,7 +12,7 @@ namespace Bookshelf.Services.Sync
 
         public Timer Timer { get; set; }
 
-        //40 secs
+        //30 secs
         readonly int Interval = 30000;
 
         public bool ThreadIsRunning { get; set; } = false;
@@ -56,7 +56,7 @@ namespace Bookshelf.Services.Sync
 
                         await booksSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
 
-                        await booksSyncBLL.LocalToApiSync(user.Id, user.LastUpdate);
+                        await booksSyncBLL.LocalToApiSync();
 
                         await bookHistoricSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
 

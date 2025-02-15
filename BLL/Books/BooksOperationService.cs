@@ -1,6 +1,6 @@
 ﻿using Models.DTOs;
 using Models.DTOs.OperationQueue;
-using Repositories.Interfaces;
+using Repos.Interfaces;
 using System.Text.Json;
 
 namespace Services.Books

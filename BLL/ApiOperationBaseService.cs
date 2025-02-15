@@ -1,5 +1,5 @@
 ﻿using Models.DTOs.OperationQueue;
-using Repositories.Interfaces;
+using Repos.Interfaces;
 
 namespace Services
 {
@@ -18,7 +18,7 @@ namespace Services
             {
                 CreatedAt = dateTimeNow,
                 ObjectType = ObjectType.Book,
-                Status = OperationStatus.Pending,
+                Status = ApiOperationStatus.Pending,
                 UpdatedAt = dateTimeNow,
                 Content = jsonContent,
                 ObjectId = objectId,

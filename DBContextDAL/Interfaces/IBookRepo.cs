@@ -1,11 +1,11 @@
 ﻿using Models.Books;
 using Models.DTOs;
 
-namespace Repositories.Interfaces
+namespace Repos.Interfaces
 {
     public interface IBookRepo
     {
-        Task<int> CreateAsyn(Book book);
+        Task<int> CreateAsync(Book book);
 
         Task<int> ExecuteInactivateBookAsync(int localId, int userId);
 
@@ -17,7 +17,7 @@ namespace Repositories.Interfaces
 
         Task<Book?> GetBookByLocalIdAsync(int uid, int localId);
 
-        Task<Book?> GetBookByLocalTempIdAsync(int uid, string localTempId);
+        //Task<Book?> GetBookByLocalTempIdAsync(int uid, string localTempId);
 
         Task<Book?> GetByTitleAsync(int uid, string title);
 

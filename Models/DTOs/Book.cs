@@ -20,7 +20,7 @@ namespace Models.DTOs
         [Index("IX_LocalIdAndUid", 1)]
         public int UserId { get; set; }
 
-        public string? LocalTempId { get; set; }
+        //public string? LocalTempId { get; set; }
 
         public required string Title { get; set; }
 

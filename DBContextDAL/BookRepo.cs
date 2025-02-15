@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models.Books;
 using Models.DTOs;
-using Repositories.Interfaces;
+using Repos.Interfaces;
 
-namespace Repositories
+namespace Repos
 {
     public class BookRepo(IDbContextFactory<BookshelfDbContext> bookshelfDbContext) : IBookRepo
     {
@@ -16,7 +16,7 @@ namespace Repositories
                 .ExecuteUpdateAsync(y => y
             .SetProperty(z => z.Isbn, book.Isbn)
             .SetProperty(z => z.Id, book.Id)
-            .SetProperty(z => z.LocalTempId, book.LocalTempId)
+            //.SetProperty(z => z.LocalTempId, book.LocalTempId)
             .SetProperty(z => z.Title, book.Title)
             .SetProperty(z => z.SubTitle, book.SubTitle)
             .SetProperty(z => z.Authors, book.Authors)
@@ -51,13 +51,13 @@ namespace Repositories
         {
             using var context = bookshelfDbContext.CreateDbContext();
             return await context.Book.Where(x => x.UserId == uid && x.LocalId == localId).FirstOrDefaultAsync();
+        }
 
-        }
-        public async Task<Book?> GetBookByLocalTempIdAsync(int uid, string localTempId)
-        {
-            using var context = bookshelfDbContext.CreateDbContext();
-            return await context.Book.Where(x => x.UserId == uid && x.LocalTempId == localTempId).FirstOrDefaultAsync();
-        }
+        //public async Task<Book?> GetBookByLocalTempIdAsync(int uid, string localTempId)
+        //{
+        //    using var context = bookshelfDbContext.CreateDbContext();
+        //    return await context.Book.Where(x => x.UserId == uid && x.LocalTempId == localTempId).FirstOrDefaultAsync();
+        //}
 
         public async Task<Book?> GetByTitleAsync(int uid, string title)
         {
@@ -74,7 +74,7 @@ namespace Repositories
         //public async Task<List<Book>> GetBookByAfterUpdatedAtAsync(int uid, DateTime lastUpdate)
         //    => await bookshelfDbContext.Book.Where(x => x.UserId == uid && x.UpdatedAt > lastUpdate).ToListAsync();
 
-        public async Task<int> CreateAsyn(Book book)
+        public async Task<int> CreateAsync(Book book)
         {
             using var context = bookshelfDbContext.CreateDbContext();
             context.Book.Add(book);
@@ -94,8 +94,8 @@ namespace Repositories
         public async Task<Book?> GetByTitleOrGoogleIdAsync(int uid, string title, string? googleId)
         {
             using var context = bookshelfDbContext.CreateDbContext();
-            return await context.Book.Where(x => x.UserId == uid && ((x.Title != null && EF.Functions.Like(x.Title, $"%{title}%"))
-            || (x.GoogleId != null && x.GoogleId.Equals(googleId)))).FirstOrDefaultAsync();
+            return await context.Book.Where(x => x.UserId == uid && (x.Title != null && EF.Functions.Like(x.Title, $"%{title}%")
+            || x.GoogleId != null && x.GoogleId.Equals(googleId))).FirstOrDefaultAsync();
         }
 
         public async Task<List<Book>> GetByStatusAsync(int uid, Status status, int page, string? searchTitle)

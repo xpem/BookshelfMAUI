@@ -8,8 +8,6 @@ using Bookshelf.Views;
 using Bookshelf.Views.Book;
 using Bookshelf.Views.GoogleSearch;
 using CommunityToolkit.Maui;
-using Repositories;
-using Repositories.Interfaces;
 using System.Net;
 using Services.Books.Historic.Sync;
 using Services.Books.Historic;
@@ -19,6 +17,8 @@ using Services.Books;
 using Services;
 using Services.User;
 using Services.Books.Historic.Interfaces;
+using Repos;
+using Repos.Interfaces;
 
 namespace Bookshelf;
 

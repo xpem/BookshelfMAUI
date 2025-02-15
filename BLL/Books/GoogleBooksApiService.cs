@@ -16,7 +16,7 @@ namespace Services.Books
             {
                 Models.Responses.ApiResponse apiResponse = await GoogleBooksApiDAL.GetBooks(search, startIndex);
                 if (apiResponse.Success && apiResponse.Content is not null)
-                    return BuildListBooksResult(apiResponse.Content);
+                     return BuildListBooksResult(apiResponse.Content);
                 else throw new Exception($"Erro não mapeado na resposta da api do google, content: {apiResponse.Content}");
             }
             catch (Exception ex)

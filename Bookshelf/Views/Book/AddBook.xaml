@@ -30,7 +30,6 @@
                         LabelText="*Subtítulo"
                         MaxLength="100"
                         Text="{Binding SubTitle}" />
-
                     <Grid HorizontalOptions="FillAndExpand">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />

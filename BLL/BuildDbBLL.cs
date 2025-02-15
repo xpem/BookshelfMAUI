@@ -1,15 +1,17 @@
-﻿using Models.DTOs;
-using Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using Models.DTOs;
+using Repos;
 
 namespace Services
 {
-    public class BuildDbBLL(BookshelfDbContext bookshelfDBContext) : IBuildDbService
+    public class BuildDbBLL(IDbContextFactory<BookshelfDbContext> DbCtx) : IBuildDbService
     {
         public void Init()
         {
-            bookshelfDBContext.Database.EnsureCreated();
+            using var context = DbCtx.CreateDbContext();
+            context.Database.EnsureCreated();
 
-            VersionDbTables? actualVesionDbTables = bookshelfDBContext.VersionDbTables.FirstOrDefault();
+            VersionDbTables? actualVesionDbTables = context.VersionDbTables.FirstOrDefault();
 
             VersionDbTables newVersionDbTables = new() { Id = 0, VERSION = 18 };
 
@@ -17,29 +19,37 @@ namespace Services
             {
                 if (actualVesionDbTables.VERSION != newVersionDbTables.VERSION)
                 {
-                    bookshelfDBContext.Database.EnsureDeleted();
-                    bookshelfDBContext.Database.EnsureCreated();
+                    context.Database.EnsureDeleted();
+                    context.Database.EnsureCreated();
 
-                    bookshelfDBContext.VersionDbTables.Update(newVersionDbTables);
+                    actualVesionDbTables.VERSION = newVersionDbTables.VERSION;
+
+                    context.VersionDbTables.Add(actualVesionDbTables);
+
+                    context.SaveChanges();
                 }
             }
             else
             {
-                bookshelfDBContext.VersionDbTables.Add(newVersionDbTables);
+                context.VersionDbTables.Add(newVersionDbTables);
+
+                context.SaveChanges();
             }
 
-            bookshelfDBContext.SaveChanges();
+
         }
 
         public async Task CleanLocalDatabase()
         {
-            bookshelfDBContext.Book.RemoveRange(bookshelfDBContext.Book);
-            bookshelfDBContext.User.RemoveRange(bookshelfDBContext.User);
-            bookshelfDBContext.BookHistoric.RemoveRange(bookshelfDBContext.BookHistoric);
-            bookshelfDBContext.BookHistoricItem.RemoveRange(bookshelfDBContext.BookHistoricItem);
-            bookshelfDBContext.ApiOperationQueue.RemoveRange(bookshelfDBContext.ApiOperationQueue);
+            using var context = DbCtx.CreateDbContext();
 
-            await bookshelfDBContext.SaveChangesAsync();
+            context.Book.RemoveRange(context.Book);
+            context.User.RemoveRange(context.User);
+            context.BookHistoric.RemoveRange(context.BookHistoric);
+            context.BookHistoricItem.RemoveRange(context.BookHistoricItem);
+            context.ApiOperationQueue.RemoveRange(context.ApiOperationQueue);
+
+            await context.SaveChangesAsync();
         }
     }
 }

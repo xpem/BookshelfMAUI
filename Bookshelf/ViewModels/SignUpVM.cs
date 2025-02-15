@@ -38,7 +38,7 @@ namespace Bookshelf.ViewModels
                 validInformation = false;
             else if (!Validations.ValidateEmail(Email))
             {
-                _ = Application.Current.MainPage.DisplayAlert("Aviso", "Digite um email válido", null, "Ok");
+                _ = Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Digite um email válido", null, "Ok");
                 return false;
             }
 
@@ -49,7 +49,7 @@ namespace Bookshelf.ViewModels
             else if (!ConfirmPassword.Equals(Password, StringComparison.CurrentCultureIgnoreCase)) validInformation = false;
 
             if (!validInformation)
-                _ = Application.Current.MainPage.DisplayAlert("Aviso", "Preencha os campos e confirme a senha corretamente", null, "Ok");
+                _ = Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Preencha os campos e confirme a senha corretamente", null, "Ok");
 
             return validInformation;
         }

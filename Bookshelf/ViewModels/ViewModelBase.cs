@@ -9,7 +9,14 @@ namespace Bookshelf.ViewModels
 
         public bool IsBusy
         {
-            get => isBusy; set { if (isBusy != value) { isBusy = value; SetProperty(ref (isBusy), value); } }
+            get => isBusy; set
+            {
+                if (isBusy != value)
+                {
+                    isBusy = value;
+                    SetProperty(ref (isBusy), value);
+                }
+            }
         }
 
         public bool IsNotBusy => !isBusy;

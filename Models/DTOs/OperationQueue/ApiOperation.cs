@@ -17,12 +17,12 @@ namespace Models.DTOs.OperationQueue
 
         public DateTime UpdatedAt { get; set; }
 
-        public OperationStatus Status { get; set; }
+        public ApiOperationStatus Status { get; set; }
 
         public required string ObjectId { get; set; }
     }
 
-    public enum OperationStatus { Pending, Processing, Success, Failure }
+    public enum ApiOperationStatus { Pending, Processing, Success, Failure }
 
     public enum ObjectType
     {

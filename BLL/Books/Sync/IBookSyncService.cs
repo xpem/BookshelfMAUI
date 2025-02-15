@@ -2,7 +2,7 @@
 {
     public interface IBookSyncService
     {
-        Task LocalToApiSync(int uid, DateTime lastUpdate);
+        Task LocalToApiSync();
 
         Task ApiToLocalSync(int uid, DateTime lastUpdate);
     }

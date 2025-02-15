@@ -48,7 +48,7 @@ namespace Bookshelf.ViewModels
 
                         Progress = 0.25M;
 
-                        await BooksSyncBLL.LocalToApiSync(user.Id, user.LastUpdate);
+                        await BooksSyncBLL.LocalToApiSync();
 
                         Progress = 0.5M;
 

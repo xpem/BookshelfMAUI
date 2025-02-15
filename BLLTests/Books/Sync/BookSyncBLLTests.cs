@@ -1,6 +1,4 @@
 ﻿using ApiDAL.Interfaces;
-using Repositories;
-using Repositories.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Models.Responses;
 using Moq;
@@ -9,6 +7,8 @@ using Models.DTOs;
 using Models.DTOs.OperationQueue;
 using Services.Books.Interfaces;
 using Services.Books.Sync;
+using Repos;
+using Repos.Interfaces;
 
 namespace BLLTests.Books.Sync
 {
@@ -139,13 +139,13 @@ namespace BLLTests.Books.Sync
 
             bookApiBLL.Setup(x => x.GetByLastUpdateAsync(lastUpdate, 1)).ReturnsAsync(() => bLLResponse);
             mockBookDAL.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(bookLastUpdate);
-            mockBookDAL.Setup(x => x.CreateAsyn(It.IsAny<Book>())).ReturnsAsync(1);
+            mockBookDAL.Setup(x => x.CreateAsync(It.IsAny<Book>())).ReturnsAsync(1);
 
             BookSyncService bookSyncBLL = new(bookApiBLL.Object, mockBookDAL.Object, mockOperationQueueDAL.Object);
 
             await bookSyncBLL.ApiToLocalSync(1, lastUpdate);
 
-            mockBookDAL.Verify(x => x.CreateAsyn(It.IsAny<Book>()), Times.Exactly(5));
+            mockBookDAL.Verify(x => x.CreateAsync(It.IsAny<Book>()), Times.Exactly(5));
             mockBookDAL.Verify(x => x.UpdateAsync(It.IsAny<Book>()), Times.Exactly(0));
 
             //if (added == 5 && updated == 0)
@@ -299,7 +299,7 @@ namespace BLLTests.Books.Sync
 
             await bookSyncBLL.ApiToLocalSync(1, lastUpdate);
 
-            mockBookDAL.Verify(x => x.CreateAsyn(It.IsAny<Book>()), Times.Exactly(3));
+            mockBookDAL.Verify(x => x.CreateAsync(It.IsAny<Book>()), Times.Exactly(3));
             mockBookDAL.Verify(x => x.UpdateAsync(It.IsAny<Book>()), Times.Exactly(2));
 
             //if (added == 3 && updated == 2)
@@ -322,7 +322,7 @@ namespace BLLTests.Books.Sync
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 ObjectId = "2",
-                Status = OperationStatus.Pending
+                Status = ApiOperationStatus.Pending
             };
 
             ApiOperation insertBook2Op = new()
@@ -334,7 +334,7 @@ namespace BLLTests.Books.Sync
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 ObjectId = "3",
-                Status = OperationStatus.Pending
+                Status = ApiOperationStatus.Pending
             };
 
             List<ApiOperation> PendingOperations =
@@ -386,18 +386,18 @@ namespace BLLTests.Books.Sync
             BLLResponse bLL1Response = new() { Success = true, Content = 10 };
             BLLResponse bLL2Response = new() { Success = true, Content = 20 };
 
-            mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(OperationStatus.Pending)).ReturnsAsync(PendingOperations);
+            mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(ApiOperationStatus.Pending)).ReturnsAsync(PendingOperations);
             mockBookApiBLL.Setup(x => x.CreateAsync(It.IsAny<Book>())).ReturnsAsync(bLL1Response);
             mockBookDAL.Setup(x => x.UpdateAsync(It.IsAny<Book>()));
-            mockOperationQueueDAL.Setup(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook1Op.Id));
+            mockOperationQueueDAL.Setup(x => x.UpdateOperationStatusAsync(ApiOperationStatus.Success, insertBook1Op.Id));
 
             BookSyncService bookSyncBLL = new(mockBookApiBLL.Object, mockBookDAL.Object, mockOperationQueueDAL.Object);
 
             await bookSyncBLL.LocalToApiSync(1, lastUpdate);
 
             mockBookDAL.Verify(x => x.UpdateAsync(It.IsAny<Book>()), Times.Exactly(2));
-            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook1Op.Id), Times.Once());
-            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook2Op.Id), Times.Once());
+            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(ApiOperationStatus.Success, insertBook1Op.Id), Times.Once());
+            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(ApiOperationStatus.Success, insertBook2Op.Id), Times.Once());
 
             //if (added == 2)
             //    Assert.IsTrue(true);
@@ -422,7 +422,7 @@ namespace BLLTests.Books.Sync
                 ObjectId = "36",
                 CreatedAt = new DateTime(2024, 03, 06, 07, 50, 14),
                 UpdatedAt = new DateTime(2024, 03, 06, 07, 50, 14),
-                Status = OperationStatus.Pending,
+                Status = ApiOperationStatus.Pending,
             };
 
             ApiOperation updateBookOp = new()
@@ -435,7 +435,7 @@ namespace BLLTests.Books.Sync
                 ObjectId = "36",
                 CreatedAt = new DateTime(2024, 03, 06, 07, 50, 38),
                 UpdatedAt = new DateTime(2024, 03, 06, 07, 50, 38),
-                Status = OperationStatus.Pending,
+                Status = ApiOperationStatus.Pending,
             };
 
             Book insertBook1Local = new()
@@ -481,7 +481,7 @@ namespace BLLTests.Books.Sync
             var pendingOperations = new List<ApiOperation>() { insertBookOp, updateBookOp };
 
 
-            mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(OperationStatus.Pending))
+            mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(ApiOperationStatus.Pending))
                 .ReturnsAsync(pendingOperations);
             mockBookApiBLL.Setup(x => x.CreateAsync(It.IsAny<Book>())).ReturnsAsync(insertBook1Response);
             mockBookApiBLL.Setup(c => c.UpdateAsync(It.IsAny<Book>())).ReturnsAsync(uptBook1Response);
@@ -493,8 +493,8 @@ namespace BLLTests.Books.Sync
             mockBookApiBLL.Verify(x => x.CreateAsync(It.IsAny<Book>()), Times.Once());
             mockBookApiBLL.Verify(x => x.UpdateAsync(It.IsAny<Book>()), Times.Once());
             mockBookDAL.Verify(x => x.UpdateAsync(It.IsAny<Book>()), Times.Exactly(1));
-            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(OperationStatus.Success, 1), Times.Once);
-            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(OperationStatus.Success, 2), Times.Once);
+            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(ApiOperationStatus.Success, 1), Times.Once);
+            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(ApiOperationStatus.Success, 2), Times.Once);
         }
 
         [Fact(DisplayName = "Adiciona um livro e atualiza outro")]
@@ -511,7 +511,7 @@ namespace BLLTests.Books.Sync
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 ObjectId = "2",
-                Status = OperationStatus.Pending
+                Status = ApiOperationStatus.Pending
             };
 
             ApiOperation uptBook1Op = new()
@@ -523,7 +523,7 @@ namespace BLLTests.Books.Sync
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 ObjectId = "3",
-                Status = OperationStatus.Pending
+                Status = ApiOperationStatus.Pending
             };
 
             List<ApiOperation> PendingOperations =
@@ -556,11 +556,11 @@ namespace BLLTests.Books.Sync
                 UserId = 0
             };
 
-            mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(OperationStatus.Pending)).ReturnsAsync(PendingOperations);
+            mockOperationQueueDAL.Setup(x => x.GetPendingOperationsByStatusAsync(ApiOperationStatus.Pending)).ReturnsAsync(PendingOperations);
             mockBookApiBLL.Setup(x => x.CreateAsync(It.IsAny<Book>())).ReturnsAsync(insertBook1Response);
             mockBookApiBLL.Setup(c => c.UpdateAsync(It.IsAny<Book>())).ReturnsAsync(uptBook2Response);
             mockBookDAL.Setup(x => x.GetBookByLocalIdAsync(0, 3)).ReturnsAsync(insertBook1Local);
-            mockOperationQueueDAL.Setup(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook1Op.Id));
+            mockOperationQueueDAL.Setup(x => x.UpdateOperationStatusAsync(ApiOperationStatus.Success, insertBook1Op.Id));
 
             mockBookDAL.Setup(x => x.UpdateAsync(It.IsAny<Book>()));
 
@@ -568,9 +568,9 @@ namespace BLLTests.Books.Sync
 
             await bookSyncBLL.LocalToApiSync(1, lastUpdate);
 
-            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook1Op.Id), Times.Once());
+            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(ApiOperationStatus.Success, insertBook1Op.Id), Times.Once());
             mockBookDAL.Verify(x => x.UpdateAsync(It.IsAny<Book>()), Times.Once);
-            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(OperationStatus.Success, insertBook1Op.Id), Times.Once());
+            mockOperationQueueDAL.Verify(x => x.UpdateOperationStatusAsync(ApiOperationStatus.Success, insertBook1Op.Id), Times.Once());
             mockBookApiBLL.Verify(x => x.CreateAsync(It.IsAny<Book>()), Times.Once);
             mockBookApiBLL.Verify(x => x.UpdateAsync(It.IsAny<Book>()), Times.Once);
 

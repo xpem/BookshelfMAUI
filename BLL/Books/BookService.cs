@@ -1,8 +1,8 @@
-﻿using Repositories.Interfaces;
-using Models.Books;
+﻿using Models.Books;
 using Models.Responses;
 using Models.DTOs;
 using Services.Books.Interfaces;
+using Repos.Interfaces;
 
 namespace Services.Books
 {
@@ -62,7 +62,7 @@ namespace Services.Books
 
             if (bookResponse is null)
             {
-                await bookDAL.CreateAsyn(book);
+                await bookDAL.CreateAsync(book);
 
                 if (isOn)
                 {
@@ -82,7 +82,7 @@ namespace Services.Books
                 }
                 else
                 {
-                    book.LocalTempId = Guid.NewGuid().ToString();
+                    //book.LocalTempId = Guid.NewGuid().ToString();
                     _ = booksOperationBLL.InsertOperationInsertBookAsync(book);
                 }
 

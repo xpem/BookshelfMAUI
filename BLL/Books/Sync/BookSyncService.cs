@@ -2,7 +2,7 @@
 using Models.DTOs.OperationQueue;
 using Models.Exceptions;
 using Models.Responses;
-using Repositories.Interfaces;
+using Repos.Interfaces;
 using Services.Books.Interfaces;
 using System.Text.Json;
 
@@ -44,7 +44,7 @@ namespace Services.Books.Sync
                             else throw new ArgumentNullException(nameof(apiBook.Id));
 
                             if (localBook is null && !apiBook.Inactive)
-                                await bookDAL.CreateAsyn(apiBook);
+                                await bookDAL.CreateAsync(apiBook);
                             else if (apiBook.UpdatedAt > localBook?.UpdatedAt)
                                 await bookDAL.UpdateAsync(apiBook);
                         }
@@ -60,13 +60,13 @@ namespace Services.Books.Sync
             }
         }
 
-        public async Task LocalToApiSync(int uid, DateTime lastUpdate)
+        public async Task LocalToApiSync()
         {
-            List<ApiOperation> pendingOperations = await operationQueueDAL.GetPendingOperationsByStatusAsync(OperationStatus.Pending);
+            List<ApiOperation> pendingOperations = await operationQueueDAL.GetPendingOperationsByStatusAsync(ApiOperationStatus.Pending);
 
             foreach (var pendingOperation in pendingOperations)
             {
-                await operationQueueDAL.UpdateOperationStatusAsync(OperationStatus.Processing, pendingOperation.Id);
+                await operationQueueDAL.UpdateOperationStatusAsync(ApiOperationStatus.Processing, pendingOperation.Id);
 
                 if (pendingOperation.ObjectType == ObjectType.Book)
                 {
@@ -109,7 +109,7 @@ namespace Services.Books.Sync
                 }
                 else throw new ArgumentException("Invalid ObjecType, Op Id: " + pendingOperation.Id);
 
-                await operationQueueDAL.UpdateOperationStatusAsync(OperationStatus.Success, pendingOperation.Id);
+                await operationQueueDAL.UpdateOperationStatusAsync(ApiOperationStatus.Success, pendingOperation.Id);
             }
         }
     }

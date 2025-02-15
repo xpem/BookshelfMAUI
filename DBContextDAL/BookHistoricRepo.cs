@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models.DTOs;
-using Repositories.Interfaces;
+using Repos.Interfaces;
 
-namespace Repositories
+namespace Repos
 {
     public class BookHistoricRepo(IDbContextFactory<BookshelfDbContext> bookshelfDbContext) : IBookHistoricRepo
     {
@@ -50,7 +50,7 @@ namespace Repositories
                     if (bookHistoric.BookHistoricItems is not null)
                         foreach (BookHistoricItem _bookHistoricItem in bookHistoric.BookHistoricItems)
                         {
-                            if (((await context.BookHistoricItem.Where(x => x.Id == _bookHistoricItem.Id).ToListAsync()).Count) == 0)
+                            if ((await context.BookHistoricItem.Where(x => x.Id == _bookHistoricItem.Id).ToListAsync()).Count == 0)
                             {
                                 _bookHistoricItem.Uid = uid;
                                 await context.BookHistoricItem.AddAsync(_bookHistoricItem);

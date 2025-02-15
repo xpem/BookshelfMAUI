@@ -2,7 +2,7 @@
 using Models.DTOs;
 using Models.DTOs.OperationQueue;
 
-namespace Repositories
+namespace Repos
 {
     public class BookshelfDbContext(DbContextOptions<BookshelfDbContext> options) : DbContext(options)
     {

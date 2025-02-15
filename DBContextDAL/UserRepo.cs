@@ -1,9 +1,9 @@
-﻿using Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Models.DTOs;
 using Microsoft.EntityFrameworkCore.Internal;
+using Repos.Interfaces;
 
-namespace Repositories
+namespace Repos
 {
     public class UserRepo(IDbContextFactory<BookshelfDbContext> bookshelfDbContext) : IUserRepo
     {

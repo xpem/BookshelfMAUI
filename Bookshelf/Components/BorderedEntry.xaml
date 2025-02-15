@@ -11,7 +11,6 @@
             IsEnabled="{Binding Source={x:Reference this}, Path=Enabled}"
             IsPassword="{Binding Source={x:Reference this}, Path=IsPassword}"
             MaxLength="{Binding Source={x:Reference this}, Path=MaxLength}"
-            SemanticProperties.Description="{Binding Source={x:Reference this}, Path=LabelText}"
             Style="{StaticResource Entry}"
             Text="{Binding Source={x:Reference this}, Path=Text}" />
         <!--  SemanticProperties.Hint="Campo para inserir {}"  -->
