@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Mvvm.Input;
 using Models;
 using Models.Books.GoogleApi;
 using Models.DTOs;
@@ -376,12 +378,19 @@ namespace Bookshelf.ViewModels.Book
                             mensagem += " cadastrados";
                     }
 
-                    bool resposta = await Application.Current.Windows[0].Page.DisplayAlert("Aviso", mensagem, null, "Ok");
 
-                    if (!resposta)
+                    if (DeviceInfo.Platform == DevicePlatform.iOS || DeviceInfo.Platform == DevicePlatform.Android)
                     {
-                        await Shell.Current.GoToAsync("..");
+                        ToastDuration duration = ToastDuration.Short;
+
+                        var toast = Toast.Make(mensagem, duration, 15);
+                        await toast.Show();
                     }
+                    else
+                        await Application.Current.Windows[0].Page.DisplayAlert("", mensagem, null, "Ok");
+
+                    await Shell.Current.GoToAsync("..");
+
                 }
             }
             catch (Exception) { throw; }

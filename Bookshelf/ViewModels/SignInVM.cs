@@ -14,7 +14,16 @@ namespace Bookshelf.ViewModels
 
         private string version = ((App)Application.Current).Version;
 
-        public string Version { get => version; set { if (version != value) { SetProperty(ref (version), value); } } }
+        public string Version
+        {
+            get => version; set
+            {
+                if (version != value)
+                {
+                    SetProperty(ref (version), value);
+                }
+            }
+        }
 
         public string Email
         {
@@ -40,56 +49,57 @@ namespace Bookshelf.ViewModels
             IsBusy = true;
             try
             {
-                if (!string.IsNullOrEmpty(Email) && !string.IsNullOrEmpty(Password))
+                if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
                 {
-                    if ((Connectivity.NetworkAccess == NetworkAccess.Internet))
-                    {
-                        if (Password.Length > 3)
-                        {
-                            SignInText = "Acessando...";
-                            BtnSignEnabled = false;
+                    await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Insira seu email e senha.", null, "Ok");
+                    return;
+                }
 
-                            //Task.Run(BuildDbBLL.Init).Wait();
+                if (!(Connectivity.NetworkAccess == NetworkAccess.Internet))
+                {
+                    await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "É necessário ter acesso a internet para efetuar o primeiro acesso.", null, "Ok");
+                    return;
+                }
 
-                            Models.Responses.BLLResponse resp = await userBLL.SignIn(Email, Password);
+                if (Password.Length <= 3)
+                {
+                    await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Digite sua senha", null, "Ok");
+                    return;
+                }
+
+                SignInText = "Acessando...";
+                BtnSignEnabled = false;
+
+                //Task.Run(BuildDbBLL.Init).Wait();
+
+                Models.Responses.BLLResponse resp = await userBLL.SignIn(Email, Password);
 
 
-                            if (resp.Success)
-                            {
-                                if (resp.Content is not null and int)
-                                    ((App)App.Current).Uid = (int)resp.Content;
+                if (resp.Success)
+                {
+                    if (resp.Content is not null and int)
+                        ((App)App.Current).Uid = (int)resp.Content;
 
-                                await Shell.Current.GoToAsync($"{nameof(FirstSyncProcess)}", false);
+                    await Shell.Current.GoToAsync($"{nameof(FirstSyncProcess)}", false);
 
-                                //Application.Current.MainPage = new NavigationPage();
-                                //_ = (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<Main>(), true);
-                            }
-                            else
-                            {
-                                string errorMessage = "";
-
-                                if (resp.Error == Models.Responses.ErrorTypes.WrongEmailOrPassword)
-                                    errorMessage = "Email/senha incorretos";
-                                else if (resp.Error == Models.Responses.ErrorTypes.ServerUnavaliable)
-                                    errorMessage = "Servidor indisponível, favor entrar em contato com o desenvolvedor.";
-                                else errorMessage = "Erro não mapeado, favor entrar em contato com o desenvolvedor.";
-
-                                await Application.Current.Windows[0].Page.DisplayAlert("Aviso", errorMessage, null, "Ok");
-                            }
-                            BtnSignEnabled = true;
-                            SignInText = "Acessar";
-                            IsBusy = false;
-                        }
-                        else
-                            await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Digite sua senha", null, "Ok");
-
-                    }
-                    else
-                        await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "É necessário ter acesso a internet para efetuar o primeiro acesso.", null, "Ok");
-
+                    //Application.Current.MainPage = new NavigationPage();
+                    //_ = (Application.Current.MainPage.Navigation).PushAsync(navigation.ResolvePage<Main>(), true);
                 }
                 else
-                    await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Insira seu email e senha.", null, "Ok");
+                {
+                    string errorMessage = "";
+
+                    if (resp.Error == Models.Responses.ErrorTypes.WrongEmailOrPassword)
+                        errorMessage = "Email/senha incorretos";
+                    else if (resp.Error == Models.Responses.ErrorTypes.ServerUnavaliable)
+                        errorMessage = "Servidor indisponível, favor entrar em contato com o desenvolvedor.";
+                    else errorMessage = "Erro não mapeado, favor entrar em contato com o desenvolvedor.";
+
+                    await Application.Current.Windows[0].Page.DisplayAlert("Aviso", errorMessage, null, "Ok");
+                }
+                BtnSignEnabled = true;
+                SignInText = "Acessar";
+                IsBusy = false;
             }
             catch { throw; }
 

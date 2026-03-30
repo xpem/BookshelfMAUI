@@ -91,7 +91,10 @@ namespace Bookshelf.ViewModels
                 BooksList.Clear();
 
             CurrentPage = 1;
-            return LoadBooks(CurrentPage);
+
+            _ = LoadBooks(CurrentPage);
+
+            return Task.CompletedTask;
 
         }
 

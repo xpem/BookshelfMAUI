@@ -35,8 +35,6 @@ namespace Services
 
                 context.SaveChanges();
             }
-
-
         }
 
         public async Task CleanLocalDatabase()

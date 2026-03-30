@@ -81,7 +81,6 @@ namespace BLLTests.Books
                     UpdatedAt = DateTime.Now.AddDays(-2),
                     UserId = 1,
                     Id = 1,
-                    LocalTempId = "Temp1",
                     LocalId = 1,
                 };
 
@@ -98,7 +97,6 @@ namespace BLLTests.Books
                 UpdatedAt = DateTime.Now,
                 UserId = 1,
                 Id = 2,
-                LocalTempId = "Temp1",
                 LocalId = 2
             };
 
@@ -166,7 +164,6 @@ namespace BLLTests.Books
                 UpdatedAt = DateTime.Now,
                 UserId = 1,
                 Id = 2,
-                LocalTempId = "Temp1",
                 LocalId = 2
             };
             mockBookDAL.Setup(x => x.CheckIfExistsWithSameTitleAsync(1, "Teste de Título 6", 2)).ReturnsAsync(false);

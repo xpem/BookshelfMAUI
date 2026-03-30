@@ -37,7 +37,6 @@ namespace Repos
         {
             using var context = bookshelfDbContext.CreateDbContext();
             return context.User.Where(x => x.Id == uid).ExecuteUpdate(y => y.SetProperty(z => z.LastUpdate, lastUpdate));
-
         }
 
     }
