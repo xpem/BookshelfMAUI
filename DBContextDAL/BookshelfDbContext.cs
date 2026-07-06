@@ -18,6 +18,8 @@ namespace Repos
 
         public virtual DbSet<ApiOperation> ApiOperationQueue { get; set; }
 
+        public virtual DbSet<SyncCursor> SyncCursor { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

@@ -6,7 +6,7 @@ using Repos.Interfaces;
 
 namespace Services.Books
 {
-    public class BookService(IBookApiService booksApiBLL, IBookRepo bookDAL, IBooksOperationService booksOperationBLL) : IBookService
+    public class BookService(IBookApiService booksApiBLL, IBookRepo bookDAL) : IBookService
     {
         public async Task<Totals> GetBookshelfTotalsAsync(int uid)
         {
@@ -58,6 +58,9 @@ namespace Services.Books
             book.UpdatedAt = DateTime.Now;
             book.UserId = uid;
 
+            if (!book.BookId.HasValue || book.BookId == Guid.Empty)
+                book.BookId = Guid.NewGuid();
+
             var bookResponse = await bookDAL.GetByTitleOrGoogleIdAsync(uid, book.Title);
 
             if (bookResponse is null)
@@ -71,10 +74,14 @@ namespace Services.Books
                     if (response.Success)
                     {
                         book.Id = Convert.ToInt32(response.Content);
+                        book.SyncStatus = BookSyncStatus.Synced;
                         await bookDAL.UpdateAsync(book);
                     }
                     else
                     {
+                        // Mark as pending for retry
+                        await bookDAL.SetSyncStatusAsync(book.LocalId, BookSyncStatus.Pending);
+
                         if (response.Content is not null)
                             return new BLLResponse() { Success = false, Content = response.Content.ToString() };
                         else return new BLLResponse() { Success = false };
@@ -82,15 +89,12 @@ namespace Services.Books
                 }
                 else
                 {
-                    //book.LocalTempId = Guid.NewGuid().ToString();
-                    _ = booksOperationBLL.InsertOperationInsertBookAsync(book);
+                    await bookDAL.SetSyncStatusAsync(book.LocalId, BookSyncStatus.Pending);
                 }
-
 
                 return new BLLResponse() { Success = true };
             }
             else return new BLLResponse() { Success = false, Content = "Livro com este título já cadastrado." };
-
         }
 
         /// <summary>
@@ -186,9 +190,15 @@ namespace Services.Books
             {
                 BLLResponse resp = await booksApiBLL.UpdateAsync(book);
 
-                if (!resp.Success) throw new Exception($"Could not be possible update book, book id: {book.Id}, Erro: {resp.Content?.ToString()} ");
+                if (resp.Success)
+                    await bookDAL.SetSyncStatusAsync(book.LocalId, BookSyncStatus.Synced);
+                else
+                    await bookDAL.SetSyncStatusAsync(book.LocalId, BookSyncStatus.Pending);
             }
-            else _ = booksOperationBLL.InsertOperationUpdateBookAsync(book);
+            else
+            {
+                await bookDAL.SetSyncStatusAsync(book.LocalId, BookSyncStatus.Pending);
+            }
         }
 
         public async Task<Book?> GetbyTitleOrGoogleIdAsync(int uid, string title, string googleId)

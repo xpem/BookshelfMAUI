@@ -16,7 +16,7 @@ namespace Repos
                 .ExecuteUpdateAsync(y => y
             .SetProperty(z => z.Isbn, book.Isbn)
             .SetProperty(z => z.Id, book.Id)
-            //.SetProperty(z => z.LocalTempId, book.LocalTempId)
+            .SetProperty(z => z.BookId, book.BookId)
             .SetProperty(z => z.Title, book.Title)
             .SetProperty(z => z.SubTitle, book.SubTitle)
             .SetProperty(z => z.Authors, book.Authors)
@@ -25,14 +25,14 @@ namespace Repos
             .SetProperty(z => z.Year, book.Year)
             .SetProperty(z => z.Status, book.Status)
             .SetProperty(z => z.Genre, book.Genre)
-            .SetProperty(z => z.Isbn, book.Isbn)
             .SetProperty(z => z.Cover, book.Cover)
             .SetProperty(z => z.GoogleId, book.GoogleId)
             .SetProperty(z => z.Score, book.Score)
             .SetProperty(z => z.Comment, book.Comment)
             .SetProperty(z => z.CreatedAt, book.CreatedAt)
             .SetProperty(z => z.UpdatedAt, book.UpdatedAt)
-            .SetProperty(z => z.Inactive, book.Inactive));
+            .SetProperty(z => z.Inactive, book.Inactive)
+            .SetProperty(z => z.SyncStatus, book.SyncStatus));
         }
 
         public async Task<List<TotalBooksGroupedByStatus>> GetTotalBooksGroupedByStatusAsync(int uid)
@@ -69,6 +69,37 @@ namespace Repos
         {
             using var context = bookshelfDbContext.CreateDbContext();
             return await context.Book.Where(x => x.Id.Equals(id)).FirstOrDefaultAsync();
+        }
+
+        public async Task<Book?> GetByBookIdAsync(Guid bookId, int uid)
+        {
+            using var context = bookshelfDbContext.CreateDbContext();
+            return await context.Book.Where(x => x.BookId == bookId && x.UserId == uid).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Book>> GetPendingPushAsync(int uid)
+        {
+            using var context = bookshelfDbContext.CreateDbContext();
+            return await context.Book
+                .Where(x => x.UserId == uid && x.SyncStatus == BookSyncStatus.Pending)
+                .OrderBy(x => x.UpdatedAt)
+                .ToListAsync();
+        }
+
+        public async Task SetSyncStatusAsync(int localId, BookSyncStatus status)
+        {
+            using var context = bookshelfDbContext.CreateDbContext();
+            await context.Book.Where(x => x.LocalId == localId)
+                .ExecuteUpdateAsync(y => y.SetProperty(z => z.SyncStatus, status));
+        }
+
+        public async Task SetExternalIdAndSyncedAsync(int localId, int externalId)
+        {
+            using var context = bookshelfDbContext.CreateDbContext();
+            await context.Book.Where(x => x.LocalId == localId)
+                .ExecuteUpdateAsync(y => y
+                    .SetProperty(z => z.Id, externalId)
+                    .SetProperty(z => z.SyncStatus, BookSyncStatus.Synced));
         }
 
         //public async Task<List<Book>> GetBookByAfterUpdatedAtAsync(int uid, DateTime lastUpdate)

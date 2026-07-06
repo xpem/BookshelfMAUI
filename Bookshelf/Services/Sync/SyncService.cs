@@ -53,15 +53,15 @@ namespace Bookshelf.Services.Sync
 
                     if (Connectivity.NetworkAccess == NetworkAccess.Internet)
                     {
-
+                        // Pull: server → local (uses server-anchored cursor)
                         await booksSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
 
-                        await booksSyncBLL.LocalToApiSync();
+                        // Push: local → server (pending books)
+                        await booksSyncBLL.PushPendingAsync(user.Id);
 
                         await bookHistoricSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
 
                         userBLL.UpdateLocalUserLastUpdate(user.Id);
-
                     }
                     
                     Synchronizing = SyncStatus.Sleeping;

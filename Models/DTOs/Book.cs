@@ -11,16 +11,21 @@ namespace Models.DTOs
         public int LocalId { get; set; }
 
         /// <summary>
-        /// external id
+        /// external id (server-assigned int PK)
         /// </summary>
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int? Id { get; set; }
 
+        /// <summary>
+        /// Stable cross-device identifier for GUID-based sync matching.
+        /// Generated at creation time; never overwritten once set.
+        /// Nullable for backward compatibility with server records that don't have a BookId yet.
+        /// </summary>
+        public Guid? BookId { get; set; }
+
         [Index("IX_UserIdAndStatusAndInactive", 1)]
         [Index("IX_LocalIdAndUid", 1)]
         public int UserId { get; set; }
-
-        //public string? LocalTempId { get; set; }
 
         public required string Title { get; set; }
 
@@ -55,7 +60,27 @@ namespace Models.DTOs
 
         [Index("IX_UserIdAndStatusAndInactive", 3)]
         public bool Inactive { get; set; }
+
+        /// <summary>
+        /// Synchronization state: controls push/pull lifecycle.
+        /// </summary>
+        public BookSyncStatus SyncStatus { get; set; }
     }
 
     public enum Status { None, IllRead, Reading, Read, Interrupted }
+
+    /// <summary>
+    /// Controls the synchronization lifecycle of a book record.
+    /// </summary>
+    public enum BookSyncStatus
+    {
+        /// <summary>Already synced or pulled from server.</summary>
+        Synced = 0,
+
+        /// <summary>Needs to be pushed to the server (created/updated locally).</summary>
+        Pending = 1,
+
+        /// <summary>Push is currently in-flight — pull must not overwrite.</summary>
+        Pushing = 2,
+    }
 }
