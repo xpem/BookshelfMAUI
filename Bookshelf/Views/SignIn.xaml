@@ -131,6 +131,21 @@
                             TextColor="{StaticResource Gray100}"
                             VerticalOptions="End" />
                     </Grid>
+                    <Label
+                        x:Name="CrashLogLabel"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        FontSize="10"
+                        HorizontalOptions="Center"
+                        IsVisible="False"
+                        Text="⚠ Ver log de erros"
+                        TextColor="{StaticResource WarningColor}"
+                        TextDecorations="Underline">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnViewCrashLogTapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
                 </VerticalStackLayout>
             </Border>
         </ScrollView>

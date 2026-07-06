@@ -8,6 +8,7 @@
     xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels"
     x:Name="this"
     x:DataType="viewmodels:MainVM"
+    Shell.FlyoutBehavior="Flyout"
     Style="{StaticResource ContentPage}">
     <ContentPage.Resources>
         <!--  carditens  -->

@@ -8,9 +8,10 @@
     xmlns:local="clr-namespace:Bookshelf.Views"
     xmlns:vm="clr-namespace:Bookshelf.ViewModels"
     BackgroundColor="{StaticResource MainBackgroundColor}"
-    FlyoutBackgroundColor="{StaticResource MainBackgroundColor}">
+    FlyoutBackgroundColor="{StaticResource MainBackgroundColor}"
+    FlyoutHeaderBehavior="CollapseOnScroll">
 
-    
+
     <ShellItem FlyoutItemIsVisible="False" Route="Main">
         <ShellContent ContentTemplate="{DataTemplate local:Main}" />
     </ShellItem>
@@ -18,7 +19,7 @@
     <ShellItem FlyoutItemIsVisible="False" Route="SignIn">
         <ShellContent ContentTemplate="{DataTemplate local:SignIn}" />
     </ShellItem>
-    
+
     <ShellItem FlyoutItemIsVisible="False" Route="FirstSyncProcess">
         <ShellContent ContentTemplate="{DataTemplate local:FirstSyncProcess}" />
     </ShellItem>
@@ -42,7 +43,10 @@
     </FlyoutItem>
 
     <Shell.FlyoutHeader>
-        <Components:FlyoutHeader Name="{Binding Name, Source={RelativeSource AncestorType={x:Type vm:AppShellVM}}}" Email="{Binding Email, Source={RelativeSource AncestorType={x:Type vm:AppShellVM}}}" />
+        <Components:FlyoutHeader
+            Name="{Binding Name, Source={RelativeSource AncestorType={x:Type vm:AppShellVM}}}"
+            Margin="0,40,0,0"
+            Email="{Binding Email, Source={RelativeSource AncestorType={x:Type vm:AppShellVM}}}" />
     </Shell.FlyoutHeader>
 
     <Shell.ItemTemplate>
