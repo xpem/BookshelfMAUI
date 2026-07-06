@@ -137,19 +137,12 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.Footer>
-                        <Grid Padding="6" IsVisible="{Binding IsBusy}">
-                            <Grid.Triggers>
-                                <Trigger TargetType="Grid" Property="IsVisible" Value="False">
-                                    <Setter Property="HeightRequest" Value="0" />
-                                </Trigger>
-                            </Grid.Triggers>
-                            <ActivityIndicator
-                                HorizontalOptions="Center"
-                                IsRunning="{Binding IsBusy}"
-                                IsVisible="{Binding IsBusy}"
-                                VerticalOptions="Center"
-                                Color="{StaticResource ActiveColor}" />
-                        </Grid>
+                        <ActivityIndicator
+                            HorizontalOptions="Center"
+                            IsRunning="{Binding IsBusy}"
+                            IsVisible="{Binding IsBusy}"
+                            VerticalOptions="Center"
+                            Color="{StaticResource ActiveColor}" />
                     </ListView.Footer>
                 </ListView>
             </Border>

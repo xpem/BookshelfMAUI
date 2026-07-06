@@ -8,6 +8,7 @@
     xmlns:viewmodels="clr-namespace:Bookshelf.ViewModels"
     x:Name="this"
     x:DataType="viewmodels:MainVM"
+    Shell.FlyoutBehavior="Flyout"
     Style="{StaticResource ContentPage}">
     <ContentPage.Resources>
         <!--  carditens  -->
@@ -78,169 +79,164 @@
                 Padding="1"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand">
-                <Border
-                    Margin="5"
-                    StrokeShape="RoundRectangle 10"
-                    Style="{StaticResource BorderPrimary}">
-                    <VerticalStackLayout Spacing="2">
-                        <Border Margin="0,5,0,5" Style="{StaticResource BorderCardItem}">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ListIllReadCommand}" />
-                                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
-                            </Border.GestureRecognizers>
-                            <Grid Style="{StaticResource GridCardItem}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50" />
-                                    <RowDefinition Height="17" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="75" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="40" />
-                                </Grid.ColumnDefinitions>
-                                <Label
-                                    Grid.Row="0"
-                                    Grid.Column="0"
-                                    SemanticProperties.Description="Vou ler"
-                                    Style="{StaticResource LblCardImgIcon}"
-                                    Text="{x:Static Icons:IconFont.List}" />
-                                <Label
-                                    Grid.Row="0"
-                                    Grid.RowSpan="2"
-                                    Grid.Column="1"
-                                    Style="{StaticResource LblQuantity}"
-                                    Text="{Binding IllRead}" />
-                                <Label
-                                    Grid.Row="1"
-                                    Grid.Column="0"
-                                    Style="{StaticResource LblText}"
-                                    Text="Vou ler" />
-                                <Label
-                                    Grid.RowSpan="2"
-                                    Grid.Column="3"
-                                    SemanticProperties.Description="Acessar lista de livros que vou ler"
-                                    Style="{StaticResource ImgAngleRight}" />
-                            </Grid>
-                        </Border>
-                        <Border Margin="0,0,0,5" Style="{StaticResource BorderCardItem}">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ListReadingCommand}" />
-                                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
-                            </Border.GestureRecognizers>
-                            <Grid Style="{StaticResource GridCardItem}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50" />
-                                    <RowDefinition Height="17" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="75" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="70" />
-                                </Grid.ColumnDefinitions>
-                                <Label
-                                    Grid.Row="0"
-                                    Grid.Column="0"
-                                    SemanticProperties.Description="Lendo"
-                                    Style="{StaticResource LblCardImgIcon}"
-                                    Text="{x:Static Icons:IconFont.BookReader}" />
-                                <Label
-                                    Grid.Row="0"
-                                    Grid.RowSpan="2"
-                                    Grid.Column="1"
-                                    Style="{StaticResource LblQuantity}"
-                                    Text="{Binding Reading}" />
-                                <Label
-                                    Grid.Row="1"
-                                    Grid.Column="0"
-                                    Style="{StaticResource LblText}"
-                                    Text="Lendo" />
-                                <Label
-                                    Grid.RowSpan="2"
-                                    Grid.Column="3"
-                                    SemanticProperties.Description="Acessar lista de livros que estou lendo"
-                                    Style="{StaticResource ImgAngleRight}" />
-                            </Grid>
-                        </Border>
-                        <Border Margin="0,0,0,5" Style="{StaticResource BorderCardItem}">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ListReadCommand}" />
-                                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
-                            </Border.GestureRecognizers>
-                            <Grid Style="{StaticResource GridCardItem}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50" />
-                                    <RowDefinition Height="17" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="75" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="70" />
-                                </Grid.ColumnDefinitions>
-                                <Label
-                                    Grid.Row="0"
-                                    Grid.Column="0"
-                                    SemanticProperties.Description="Lidos"
-                                    Style="{StaticResource LblCardImgIcon}"
-                                    Text="{x:Static Icons:IconFont.Check}" />
-                                <Label
-                                    Grid.Row="0"
-                                    Grid.RowSpan="2"
-                                    Grid.Column="1"
-                                    Style="{StaticResource LblQuantity}"
-                                    Text="{Binding Read}" />
-                                <Label
-                                    Grid.Row="1"
-                                    Grid.Column="0"
-                                    Style="{StaticResource LblText}"
-                                    Text="Lidos" />
-                                <Label
-                                    Grid.RowSpan="2"
-                                    Grid.Column="3"
-                                    SemanticProperties.Description="Acessar lista de livros que já li"
-                                    Style="{StaticResource ImgAngleRight}" />
-                            </Grid>
-                        </Border>
-                        <Border Margin="0,0,0,5" Style="{StaticResource BorderCardItem}">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ListInterruptedCommand}" />
-                                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
-                            </Border.GestureRecognizers>
-                            <Grid Style="{StaticResource GridCardItem}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50" />
-                                    <RowDefinition Height="17" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="75" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="70" />
-                                </Grid.ColumnDefinitions>
-                                <Label
-                                    Grid.Row="0"
-                                    Grid.Column="0"
-                                    SemanticProperties.Description="Interrompidos"
-                                    Style="{StaticResource LblCardImgIcon}"
-                                    Text="{x:Static Icons:IconFont.Pause}" />
-                                <Label
-                                    Grid.Row="0"
-                                    Grid.RowSpan="2"
-                                    Grid.Column="1"
-                                    Style="{StaticResource LblQuantity}"
-                                    Text="{Binding Interrupted}" />
-                                <Label
-                                    Grid.Row="1"
-                                    Grid.Column="0"
-                                    Style="{StaticResource LblText}"
-                                    Text="Suspensos" />
-                                <Label
-                                    Grid.RowSpan="2"
-                                    Grid.Column="3"
-                                    SemanticProperties.Description="Acessar lista de livros que interrompi a leitura"
-                                    Style="{StaticResource ImgAngleRight}" />
-                            </Grid>
-                        </Border>
-                    </VerticalStackLayout>
-                </Border>
+                <VerticalStackLayout Spacing="2">
+                    <Border Margin="0,5,0,5" Style="{StaticResource BorderCardItem}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ListIllReadCommand}" />
+                            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                        </Border.GestureRecognizers>
+                        <Grid Style="{StaticResource GridCardItem}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                                <RowDefinition Height="17" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="75" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="40" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                SemanticProperties.Description="Vou ler"
+                                Style="{StaticResource LblCardImgIcon}"
+                                Text="{x:Static Icons:IconFont.List}" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Style="{StaticResource LblQuantity}"
+                                Text="{Binding IllRead}" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Style="{StaticResource LblText}"
+                                Text="Vou ler" />
+                            <Label
+                                Grid.RowSpan="2"
+                                Grid.Column="3"
+                                SemanticProperties.Description="Acessar lista de livros que vou ler"
+                                Style="{StaticResource ImgAngleRight}" />
+                        </Grid>
+                    </Border>
+                    <Border Margin="0,0,0,5" Style="{StaticResource BorderCardItem}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ListReadingCommand}" />
+                            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                        </Border.GestureRecognizers>
+                        <Grid Style="{StaticResource GridCardItem}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                                <RowDefinition Height="17" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="75" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="70" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                SemanticProperties.Description="Lendo"
+                                Style="{StaticResource LblCardImgIcon}"
+                                Text="{x:Static Icons:IconFont.BookReader}" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Style="{StaticResource LblQuantity}"
+                                Text="{Binding Reading}" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Style="{StaticResource LblText}"
+                                Text="Lendo" />
+                            <Label
+                                Grid.RowSpan="2"
+                                Grid.Column="3"
+                                SemanticProperties.Description="Acessar lista de livros que estou lendo"
+                                Style="{StaticResource ImgAngleRight}" />
+                        </Grid>
+                    </Border>
+                    <Border Margin="0,0,0,5" Style="{StaticResource BorderCardItem}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ListReadCommand}" />
+                            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                        </Border.GestureRecognizers>
+                        <Grid Style="{StaticResource GridCardItem}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                                <RowDefinition Height="17" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="75" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="70" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                SemanticProperties.Description="Lidos"
+                                Style="{StaticResource LblCardImgIcon}"
+                                Text="{x:Static Icons:IconFont.Check}" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Style="{StaticResource LblQuantity}"
+                                Text="{Binding Read}" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Style="{StaticResource LblText}"
+                                Text="Lidos" />
+                            <Label
+                                Grid.RowSpan="2"
+                                Grid.Column="3"
+                                SemanticProperties.Description="Acessar lista de livros que já li"
+                                Style="{StaticResource ImgAngleRight}" />
+                        </Grid>
+                    </Border>
+                    <Border Margin="0,0,0,5" Style="{StaticResource BorderCardItem}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ListInterruptedCommand}" />
+                            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                        </Border.GestureRecognizers>
+                        <Grid Style="{StaticResource GridCardItem}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                                <RowDefinition Height="17" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="75" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="70" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                SemanticProperties.Description="Interrompidos"
+                                Style="{StaticResource LblCardImgIcon}"
+                                Text="{x:Static Icons:IconFont.Pause}" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Style="{StaticResource LblQuantity}"
+                                Text="{Binding Interrupted}" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Style="{StaticResource LblText}"
+                                Text="Suspensos" />
+                            <Label
+                                Grid.RowSpan="2"
+                                Grid.Column="3"
+                                SemanticProperties.Description="Acessar lista de livros que interrompi a leitura"
+                                Style="{StaticResource ImgAngleRight}" />
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
                 <Border
                     Margin="5,0,5,5"
                     Padding="5"
@@ -310,5 +306,4 @@
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
-
 </ContentPage>

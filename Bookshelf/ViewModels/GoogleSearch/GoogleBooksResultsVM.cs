@@ -7,6 +7,7 @@ using Services.Utils;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
+
 namespace Bookshelf.ViewModels.GoogleSearch
 {
     public partial class GoogleBooksResultsVM : ViewModelBase
@@ -99,14 +100,14 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
                 string _searchText = SearchText.RemoveDiacritics().ToUpper();
 
-                int startIndex = 0;
+                // Open Library uses 1-based pages
+                int page = pageNumber + 1;
 
-                if (pageNumber > 0)
-                    startIndex = pageNumber * 10;
+                int loadedCount = (pageNumber) * 10;
 
-                if (startIndex == 0 || startIndex < TotalItems)
+                if (loadedCount == 0 || loadedCount < TotalItems)
                 {
-                    (List<UIGoogleBook> googleBooksListResult, TotalItems) = await GoogleBooksApiService.GetBooks(_searchText, startIndex);
+                   (List<UIGoogleBook> googleBooksListResult, TotalItems) = await OpenLibraryApiService.GetBooks(_searchText, page);
 
                     foreach (UIGoogleBook googleBookItem in googleBooksListResult)
                     {

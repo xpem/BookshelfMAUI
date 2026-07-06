@@ -1,7 +1,14 @@
 ﻿namespace Models.Books.GoogleApi
 {
+    /// <summary>
+    /// UI model for book search results (previously Google Books, now Open Library).
+    /// Namespace and class name preserved to avoid breaking existing Views and ViewModels.
+    /// </summary>
     public class UIGoogleBook
     {
+        /// <summary>
+        /// Open Library Work key, e.g. "OL27448W"
+        /// </summary>
         public string Id { get; set; }
 
         public string Title { get; set; }

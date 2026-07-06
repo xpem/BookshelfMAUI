@@ -13,7 +13,7 @@ namespace Services
 
             VersionDbTables? actualVesionDbTables = context.VersionDbTables.FirstOrDefault();
 
-            VersionDbTables newVersionDbTables = new() { Id = 0, VERSION = 18 };
+            VersionDbTables newVersionDbTables = new() { Id = 0, VERSION = 19 };
 
             if (actualVesionDbTables != null)
             {
@@ -35,8 +35,6 @@ namespace Services
 
                 context.SaveChanges();
             }
-
-
         }
 
         public async Task CleanLocalDatabase()

@@ -9,7 +9,6 @@ public partial class RatingBar : VerticalStackLayout
         InitializeComponent();
     }
 
-
     public static readonly BindableProperty HeightIconsProperty = BindableProperty.Create(
         propertyName: nameof(HeightIcons), returnType: typeof(int), declaringType: typeof(BorderedEntry), defaultValue: 30, defaultBindingMode: BindingMode.TwoWay);
 

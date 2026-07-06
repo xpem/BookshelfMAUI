@@ -123,6 +123,7 @@ public static class MauiProgram
         services.AddScoped<IBookRepo, BookRepo>();
         services.AddScoped<IBookHistoricRepo, BookHistoricRepo>();
         services.AddScoped<IUserRepo, UserRepo>();
+        services.AddScoped<ISyncCursorRepo, SyncCursorRepo>();
 
         return services;
     }

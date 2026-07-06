@@ -6,7 +6,6 @@
         x:Key="ContentPage"
         ApplyToDerivedTypes="True"
         TargetType="ContentPage">
-        <Setter Property="Padding" Value="0" />
         <Setter Property="BackgroundColor" Value="{StaticResource MainBackgroundColor}" />
     </Style>
 

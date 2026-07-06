@@ -1,55 +1,56 @@
 ﻿using Models.DTOs;
-using Models.DTOs.OperationQueue;
 using Models.Exceptions;
 using Models.Responses;
+using Repos;
 using Repos.Interfaces;
 using Services.Books.Interfaces;
-using System.Text.Json;
 
 namespace Services.Books.Sync
 {
-    public class BookSyncService(IBookApiService booksApiBLL, IBookRepo bookDAL, IOperationQueueRepo operationQueueDAL) : IBookSyncService
+    public class BookSyncService(IBookApiService booksApiBLL, IBookRepo bookDAL, ISyncCursorRepo syncCursorRepo) : IBookSyncService
     {
         private const int PAGEMAX = 50;
 
+        public async Task<DateTime> GetLastUpdatedAtAsync()
+        {
+            return await syncCursorRepo.GetAsync(SyncCursorKeys.Book);
+        }
+
         public async Task ApiToLocalSync(int uid, DateTime lastUpdate)
         {
+            // Use server-anchored cursor instead of device-clock based lastUpdate
+            DateTime cursor = await syncCursorRepo.GetAsync(SyncCursorKeys.Book);
+
+            // If cursor has a value, use it; otherwise fall back to the legacy lastUpdate
+            DateTime effectiveLastUpdate = cursor > DateTime.MinValue ? cursor : lastUpdate;
+
             int page = 1;
+            DateTime maxServerTs = effectiveLastUpdate;
 
             while (true)
             {
-                //update local database
-                BLLResponse respGetBooksByLastUpdate = await booksApiBLL.GetByLastUpdateAsync(lastUpdate, page);
+                BLLResponse respGetBooksByLastUpdate = await booksApiBLL.GetByLastUpdateAsync(effectiveLastUpdate, page);
 
                 if (respGetBooksByLastUpdate != null && respGetBooksByLastUpdate.Success && respGetBooksByLastUpdate.Content is not null)
                 {
-                    List<Book>? BooksByLastUpdate = respGetBooksByLastUpdate.Content as List<Book>;
+                    List<Book>? booksByLastUpdate = respGetBooksByLastUpdate.Content as List<Book>;
 
-                    if (BooksByLastUpdate is not null)
+                    if (booksByLastUpdate is not null)
                     {
-                        //bookshelfDbContext.ChangeTracker.Clear();
-
-                        foreach (Book apiBook in BooksByLastUpdate)
+                        foreach (Book apiBook in booksByLastUpdate)
                         {
                             if (apiBook is null) throw new ArgumentNullException(nameof(apiBook));
 
                             apiBook.UserId = uid;
-                            Book? localBook = null;
 
-                            if (apiBook.Id is not null)
-                            {
-                                localBook = await bookDAL.GetByIdAsync(apiBook.Id.Value);
-                                apiBook.LocalId = localBook?.LocalId ?? 0;
-                            }
-                            else throw new ArgumentNullException(nameof(apiBook.Id));
+                            await ApplyFromApiAsync(apiBook, uid);
 
-                            if (localBook is null && !apiBook.Inactive)
-                                await bookDAL.CreateAsync(apiBook);
-                            else if (apiBook.UpdatedAt > localBook?.UpdatedAt)
-                                await bookDAL.UpdateAsync(apiBook);
+                            // Track highest server timestamp
+                            if (apiBook.UpdatedAt > maxServerTs)
+                                maxServerTs = apiBook.UpdatedAt;
                         }
 
-                        if (BooksByLastUpdate.Count < PAGEMAX)
+                        if (booksByLastUpdate.Count < PAGEMAX)
                             break;
                     }
                     else break;
@@ -58,58 +59,158 @@ namespace Services.Books.Sync
 
                 page++;
             }
+
+            // Advance cursor to highest server-side UpdatedAt
+            if (maxServerTs > effectiveLastUpdate)
+                await syncCursorRepo.SaveAsync(SyncCursorKeys.Book, maxServerTs);
+        }
+
+        /// <summary>
+        /// Applies a book received from the API to the local database using GUID-based matching.
+        /// </summary>
+        private async Task ApplyFromApiAsync(Book apiBook, int uid)
+        {
+            Book? localBook = null;
+
+            // 1. Try to match by BookId (GUID) first
+            if (apiBook.BookId is not null && apiBook.BookId != Guid.Empty)
+            {
+                localBook = await bookDAL.GetByBookIdAsync(apiBook.BookId.Value, uid);
+            }
+
+            // 2. Fall back to ExternalId (int Id) lookup
+            if (localBook is null && apiBook.Id is not null)
+            {
+                localBook = await bookDAL.GetByIdAsync(apiBook.Id.Value);
+            }
+
+            if (localBook is not null)
+            {
+                // Skip if currently being pushed (prevent race condition)
+                if (localBook.SyncStatus == BookSyncStatus.Pushing)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[BookSyncService] Skipping pull of book {localBook.LocalId}: currently being pushed.");
+                    return;
+                }
+
+                // Last-writer-wins: update only if server UpdatedAt > local UpdatedAt
+                if (apiBook.UpdatedAt > localBook.UpdatedAt)
+                {
+                    apiBook.LocalId = localBook.LocalId;
+                    apiBook.SyncStatus = BookSyncStatus.Synced;
+
+                    // Preserve BookId from server if local is empty
+                    if ((!localBook.BookId.HasValue || localBook.BookId == Guid.Empty) && apiBook.BookId.HasValue && apiBook.BookId != Guid.Empty)
+                        apiBook.BookId = apiBook.BookId;
+                    else if (!apiBook.BookId.HasValue || apiBook.BookId == Guid.Empty)
+                        apiBook.BookId = localBook.BookId;
+
+                    await bookDAL.UpdateAsync(apiBook);
+                }
+                else
+                {
+                    // Even if not updating, persist BookId from server if local is missing
+                    if ((!localBook.BookId.HasValue || localBook.BookId == Guid.Empty) && apiBook.BookId.HasValue && apiBook.BookId != Guid.Empty)
+                    {
+                        localBook.BookId = apiBook.BookId;
+                        localBook.Id = apiBook.Id;
+                        await bookDAL.UpdateAsync(localBook);
+                    }
+                }
+            }
+            else
+            {
+                // No match — insert new record
+                if (!apiBook.Inactive)
+                {
+                    apiBook.SyncStatus = BookSyncStatus.Synced;
+                    if (!apiBook.BookId.HasValue || apiBook.BookId == Guid.Empty)
+                        apiBook.BookId = Guid.NewGuid();
+
+                    await bookDAL.CreateAsync(apiBook);
+                }
+            }
         }
 
         public async Task LocalToApiSync()
         {
-            List<ApiOperation> pendingOperations = await operationQueueDAL.GetPendingOperationsByStatusAsync(ApiOperationStatus.Pending);
+            // Legacy: now handled by PushPendingAsync(uid) called from SyncService.
+            // Kept for interface backward compatibility.
+            // No-op: the SyncService now calls PushPendingAsync(uid) directly.
+        }
 
-            foreach (var pendingOperation in pendingOperations)
+        /// <summary>
+        /// Pushes all pending books for a specific user.
+        /// </summary>
+        public async Task PushPendingAsync(int uid)
+        {
+            var pending = await bookDAL.GetPendingPushAsync(uid);
+
+            foreach (var book in pending)
             {
-                await operationQueueDAL.UpdateOperationStatusAsync(ApiOperationStatus.Processing, pendingOperation.Id);
-
-                if (pendingOperation.ObjectType == ObjectType.Book)
+                try
                 {
-                    Book? book = JsonSerializer.Deserialize<Book>(pendingOperation.Content);
+                    await PushAsync(book);
+                }
+                catch
+                {
+                    // Individual push failed — keep as Pending, retry next cycle
+                    continue;
+                }
+            }
+        }
 
-                    if (book is null) throw new ArgumentNullException(nameof(book));
+        private async Task PushAsync(Book book)
+        {
+            // Skip if already has ExternalId and is not really pending
+            // (edge case protection)
+            if (book.SyncStatus != BookSyncStatus.Pending)
+                return;
 
-                    BLLResponse? bLLResponse = null;
+            // Mark as Pushing — pull must not overwrite during this window
+            await bookDAL.SetSyncStatusAsync(book.LocalId, BookSyncStatus.Pushing);
 
-                    switch (pendingOperation.ExecutionType)
+            try
+            {
+                BLLResponse response;
+
+                if (book.Id is not null && book.Id > 0)
+                {
+                    // Already has server ID — PUT to update
+                    response = await booksApiBLL.UpdateAsync(book);
+
+                    if (response.Success)
                     {
-                        case ExecutionType.Insert:
-
-                            bLLResponse = await booksApiBLL.CreateAsync(book);
-
-                            if (bLLResponse.Success)
-                            {
-                                book.Id = Convert.ToInt32(bLLResponse.Content);
-                                await bookDAL.UpdateAsync(book);
-                            }
-                            else throw new Exception($"Não foi possivel sincronizar o livro {pendingOperation.ObjectId}, res: {bLLResponse.Error}");
-                            break;
-                        case ExecutionType.Update:
-
-                            if (book.Id is null)
-                            {
-                                Book? insertedBook = await bookDAL.GetBookByLocalIdAsync(book.UserId, book.LocalId);
-
-                                if (insertedBook is not null)
-                                    bLLResponse = await booksApiBLL.UpdateAsync(insertedBook);
-                                else throw new NullReferenceException("Livro inserido não encontrado " + book.LocalId);
-                            }
-                            else
-                                bLLResponse = await booksApiBLL.UpdateAsync(book);
-
-                            if (!bLLResponse.Success) throw new Exception($"Não foi possivel sincronizar o livro {pendingOperation.ObjectId}, res: {bLLResponse.Error}");
-
-                            break;
+                        await bookDAL.SetSyncStatusAsync(book.LocalId, BookSyncStatus.Synced);
+                    }
+                    else
+                    {
+                        await bookDAL.SetSyncStatusAsync(book.LocalId, BookSyncStatus.Pending);
+                        throw new Exception($"Failed to update book {book.LocalId}: {response.Content}");
                     }
                 }
-                else throw new ArgumentException("Invalid ObjecType, Op Id: " + pendingOperation.Id);
+                else
+                {
+                    // No server ID — POST (server does GUID-based upsert)
+                    response = await booksApiBLL.CreateAsync(book);
 
-                await operationQueueDAL.UpdateOperationStatusAsync(ApiOperationStatus.Success, pendingOperation.Id);
+                    if (response.Success && response.Content is not null)
+                    {
+                        int serverId = Convert.ToInt32(response.Content);
+                        await bookDAL.SetExternalIdAndSyncedAsync(book.LocalId, serverId);
+                    }
+                    else
+                    {
+                        await bookDAL.SetSyncStatusAsync(book.LocalId, BookSyncStatus.Pending);
+                        throw new Exception($"Failed to push book {book.LocalId}: {response.Content}");
+                    }
+                }
+            }
+            catch
+            {
+                // Ensure we revert to Pending on any failure
+                await bookDAL.SetSyncStatusAsync(book.LocalId, BookSyncStatus.Pending);
+                throw;
             }
         }
     }

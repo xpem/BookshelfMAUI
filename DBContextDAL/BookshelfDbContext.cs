@@ -18,9 +18,14 @@ namespace Repos
 
         public virtual DbSet<ApiOperation> ApiOperationQueue { get; set; }
 
+        public virtual DbSet<SyncCursor> SyncCursor { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite($"Filename={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Bookshelf.db")}").UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlite($"Filename={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Bookshelf.db")}").UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            }
         }
     }
 }
