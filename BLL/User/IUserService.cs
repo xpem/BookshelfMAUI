@@ -8,8 +8,6 @@ namespace Services.User
 
         Task<string?> RecoverPassword(string email);
 
-        Task<(bool, string?)> GetUserToken(string email, string password);
-
         Task<Models.DTOs.User?> GetUserLocal();
 
         Task<BLLResponse> SignIn(string email, string password);

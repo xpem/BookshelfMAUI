@@ -25,7 +25,7 @@
         </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <ScrollView HorizontalOptions="CenterAndExpand">
+        <ScrollView HorizontalOptions="Center">
             <Border
                 IsEnabled="{Binding IsNotBusy}"
                 Style="{StaticResource BorderPrimary}"
@@ -103,8 +103,8 @@
                     </HorizontalStackLayout>
                     <Grid
                         Margin="0,5,0,0"
-                        HorizontalOptions="FillAndExpand"
-                        VerticalOptions="EndAndExpand">
+                        HorizontalOptions="Fill"
+                        VerticalOptions="End">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>

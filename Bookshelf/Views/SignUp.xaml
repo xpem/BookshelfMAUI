@@ -20,7 +20,7 @@
         </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <ScrollView HorizontalOptions="CenterAndExpand">
+        <ScrollView HorizontalOptions="Center">
             <Border IsEnabled="{Binding IsNotBusy}" Style="{StaticResource BorderPrimary}">
                 <VerticalStackLayout>
                     <Label

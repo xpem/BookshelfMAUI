@@ -9,9 +9,24 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:Bookshelf.ViewModels"
     x:Name="this"
-    Title="Histórico"
     x:DataType="vm:HistoricVM"
     Style="{StaticResource ContentPage}">
+
+    <Shell.TitleView>
+        <HorizontalStackLayout Margin="10,0,0,0" Spacing="8" VerticalOptions="Center">
+            <Label
+                FontFamily="FontAwesome"
+                FontSize="17"
+                Text="{x:Static Icons:IconFont.History}"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+            <Label
+                FontSize="17"
+                Text="Histórico"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+        </HorizontalStackLayout>
+    </Shell.TitleView>
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
             BindingContext="{Binding BindingContext, Source={x:Reference this}, x:DataType=HistoricVM}"
@@ -19,7 +34,7 @@
             EventName="Appearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
+        <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="Fill">
             <Label
                 FontFamily="EBGaramondSemiBold"
                 FontSize="15"
@@ -49,7 +64,7 @@
                 Padding="5"
                 BackgroundColor="Transparent"
                 StrokeShape="RoundRectangle 10"
-                VerticalOptions="FillAndExpand">
+                VerticalOptions="Fill">
                 <ListView
                     Margin="0"
                     CachingStrategy="RecycleElement"
@@ -105,7 +120,7 @@
                                             Margin="0,10,0,0"
                                             Padding="20,10"
                                             BackgroundColor="#101923"
-                                            HorizontalOptions="FillAndExpand"
+                                            HorizontalOptions="Fill"
                                             Stroke="#51555B"
                                             StrokeShape="RoundRectangle 20,20,0,20"
                                             VerticalOptions="Start">

@@ -6,7 +6,6 @@
     xmlns:Components="clr-namespace:Bookshelf.Components"
     xmlns:Icons="clr-namespace:Models;assembly=Models"
     xmlns:local="clr-namespace:Bookshelf.Views"
-    xmlns:vm="clr-namespace:Bookshelf.ViewModels"
     BackgroundColor="{StaticResource MainBackgroundColor}"
     FlyoutBackgroundColor="{StaticResource MainBackgroundColor}"
     FlyoutHeaderBehavior="CollapseOnScroll">
@@ -44,9 +43,9 @@
 
     <Shell.FlyoutHeader>
         <Components:FlyoutHeader
-            Name="{Binding Name, Source={RelativeSource AncestorType={x:Type vm:AppShellVM}}}"
             Margin="0,40,0,0"
-            Email="{Binding Email, Source={RelativeSource AncestorType={x:Type vm:AppShellVM}}}" />
+            Name="{Binding Name}"
+            Email="{Binding Email}" />
     </Shell.FlyoutHeader>
 
     <Shell.ItemTemplate>
@@ -54,7 +53,7 @@
             <Grid
                 ColumnDefinitions="0.2*,0.8*"
                 HeightRequest="50"
-                HorizontalOptions="StartAndExpand">
+                HorizontalOptions="Start">
                 <Label
                     Margin="10,5,10,5"
                     FontFamily="FontAwesome"

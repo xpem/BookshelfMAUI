@@ -1,5 +1,4 @@
-﻿using ApiDAL.Handlers;
-using ApiDAL.Interfaces;
+﻿using ApiDAL.Interfaces;
 using Models.Responses;
 using Repos.Interfaces;
 using System.Text.Json.Nodes;
@@ -48,8 +47,6 @@ namespace Services.User
             return null;
         }
 
-        public async Task<(bool, string?)> GetUserToken(string email, string password) => await userApiDAL.GetUserTokenAsync(email.ToLower(), password);
-
         public Task<Models.DTOs.User?> GetUserLocal() => userRepo.GetUserLocalAsync();
 
         public async Task<BLLResponse> SignIn(string email, string password)
@@ -58,59 +55,67 @@ namespace Services.User
             {
                 email = email.ToLower();
 
-                (bool success, string? userTokenRes) = await GetUserToken(email, password);
+                ApiResponse tokenResp = await userApiDAL.GetTokenAsync(email, password);
 
-                if (success && userTokenRes != null)
+                if (tokenResp.Success && tokenResp.Content is not null)
                 {
-                    ApiResponse resp = await userApiDAL.GetUserAsync(userTokenRes);
+                    JsonNode? tokenJson = JsonNode.Parse(tokenResp.Content);
+                    string? userToken = tokenJson?["token"]?.GetValue<string>();
+                    string? refreshToken = tokenJson?["refreshToken"]?.GetValue<string>();
 
-                    if (resp.Success && resp.Content != null)
+                    if (userToken is not null)
                     {
-                        JsonNode? userResponse = JsonNode.Parse(resp.Content);
-                        Models.DTOs.User? user;
+                        ApiResponse resp = await userApiDAL.GetUserAsync(userToken);
 
-                        if (userResponse is not null)
+                        if (resp.Success && resp.Content != null)
                         {
-                            user = new()
-                            {
-                                Id = userResponse["id"]?.GetValue<int>() ?? 0,
-                                Name = userResponse["name"]?.GetValue<string>(),
-                                Email = userResponse["email"]?.GetValue<string>(),
-                                Token = userTokenRes,
-                                Password = EncryptionService.Encrypt(password)
-                            };
+                            JsonNode? userResponse = JsonNode.Parse(resp.Content);
+                            Models.DTOs.User? user;
 
-                            Models.DTOs.User? actualUser = await userRepo.GetUserLocalAsync();
-
-                            //resign 
-                            if (actualUser != null)
+                            if (userResponse is not null)
                             {
-                                //with the same user
-                                if (actualUser.Id == user.Id)
-                                    await userRepo.UpdateAsync(user);
-                                else
+                                user = new()
                                 {
-                                    await buildDbBLL.CleanLocalDatabase();
-                                    await userRepo.CreateAsync(user);
-                                }
-                            }
-                            else
-                                await userRepo.CreateAsync(user);
+                                    Id = userResponse["id"]?.GetValue<int>() ?? 0,
+                                    Name = userResponse["name"]?.GetValue<string>(),
+                                    Email = userResponse["email"]?.GetValue<string>(),
+                                    Token = userToken,
+                                    RefreshToken = refreshToken
+                                };
 
-                            return new BLLResponse() { Success = true, Content = user.Id };
+                                Models.DTOs.User? actualUser = await userRepo.GetUserLocalAsync();
+
+                                if (actualUser != null)
+                                {
+                                    if (actualUser.Id == user.Id)
+                                        await userRepo.UpdateAsync(user);
+                                    else
+                                    {
+                                        await buildDbBLL.CleanLocalDatabase();
+                                        await userRepo.CreateAsync(user);
+                                    }
+                                }
+                                else
+                                    await userRepo.CreateAsync(user);
+
+                                return new BLLResponse() { Success = true, Content = user.Id };
+                            }
                         }
                     }
                 }
-                //maybe use a errorcodes instead a message?
-                else if (!success && userTokenRes is not null && userTokenRes is "User/Password incorrect" or "Invalid Email")
+                else if (!tokenResp.Success && tokenResp.Error == ErrorTypes.WrongEmailOrPassword)
                     return new BLLResponse() { Success = false, Error = ErrorTypes.WrongEmailOrPassword };
-                else return new BLLResponse() { Success = false, Error = ErrorTypes.ServerUnavaliable }; ;
+                else
+                    return new BLLResponse() { Success = false, Error = ErrorTypes.ServerUnavaliable };
 
                 return new BLLResponse() { Success = false, Error = ErrorTypes.Unknown };
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception ex) { throw; }
         }
 
-        public void UpdateLocalUserLastUpdate(int uid) => userRepo.UpdateLastUpdate(DateTime.Now, uid);
+        public void UpdateLocalUserLastUpdate(int uid)
+        {
+            userRepo.UpdateLastUpdate(DateTime.Now, uid);
+        }
     }
 }

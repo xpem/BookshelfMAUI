@@ -1,20 +1,23 @@
-﻿using ApiDAL.Handlers;
-using ApiDAL.Interfaces;
+﻿using ApiDAL.Interfaces;
 using Models.DTOs;
 using Models.Responses;
 using Repos;
 using System.Net;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace ApiDAL
 {
     public class HttpClientFunctions(BookshelfDbContext bookshelfDbContext) : HttpClient, IHttpClientFunctions
     {
+        private static readonly TimeSpan RequestTimeout = TimeSpan.FromSeconds(20);
+
         public async Task<bool> CheckServer()
         {
             try
             {
-                HttpClient httpClient = new();
+                HttpClient httpClient = new() { Timeout = RequestTimeout };
 
                 HttpResponseMessage httpResponse = await httpClient.GetAsync(ApiKeys.ApiAddress + "/imalive");
 
@@ -22,17 +25,20 @@ namespace ApiDAL
 
                 return false;
             }
-            catch (Exception ex) { throw ex; }// return false; }
+            catch (Exception ex) { throw ex; }
         }
 
-        public async Task<ApiResponse> Request(RequestsTypes requestsType, string url, string? userToken = null, string? jsonContent = null)
+        public static async Task<ApiResponse> Request(RequestsTypes requestsType, string url, string? userToken = null, string? jsonContent = null)
         {
             try
             {
                 HttpClient httpClient = new(new HttpClientHandler
                 {
                     SslProtocols = System.Security.Authentication.SslProtocols.Tls12
-                });
+                })
+                {
+                    Timeout = RequestTimeout
+                };
 
                 if (userToken is not null)
                     httpClient.DefaultRequestHeaders.Add("authorization", "bearer " + userToken);
@@ -65,7 +71,6 @@ namespace ApiDAL
                         break;
                 }
 
-
                 return new ApiResponse()
                 {
                     Success = httpResponse.IsSuccessStatusCode,
@@ -83,64 +88,58 @@ namespace ApiDAL
             }
         }
 
+        Task<ApiResponse> IHttpClientFunctions.Request(RequestsTypes requestsType, string url, string? userToken, string? jsonContent)
+            => Request(requestsType, url, userToken, jsonContent);
+
         public async Task<ApiResponse> AuthRequestAsync(RequestsTypes requestsType, string url, string? jsonContent = null)
         {
-            bool retry = true;
-            ApiResponse? resp = null;
+            User? user = bookshelfDbContext.User.FirstOrDefault();
+            string? userToken = user?.Token;
 
-            while (retry)
-            {
-                string? userToken;
+            if (userToken is null) throw new ArgumentNullException(nameof(userToken));
 
-                if (resp is not null && resp.TryRefreshToken)
-                {
-                    retry = false;
+            ApiResponse resp = await Request(requestsType, url, userToken, jsonContent);
 
-                    (bool refreshTokenSuccess, userToken) = await RefreshToken();
+            if (!resp.TryRefreshToken)
+                return resp;
 
-                    if (!refreshTokenSuccess || userToken is null)
-                        return resp;
-                }
-                else
-                {
-                    userToken = bookshelfDbContext.User.FirstOrDefault()?.Token;
+            (bool refreshTokenSuccess, string? newToken) = await RefreshToken();
 
-                    if (userToken is null) throw new ArgumentNullException(nameof(userToken));
-                }
+            if (!refreshTokenSuccess || string.IsNullOrWhiteSpace(newToken))
+                return resp;
 
-                resp = await Request(requestsType, url, userToken, jsonContent);
-
-                if (!resp.TryRefreshToken || !retry) return resp;
-            }
-
-            throw new Exception($"Erro ao tentar AuthRequest de tipo {requestsType} na url: {url}");
+            return await Request(requestsType, url, newToken, jsonContent);
         }
 
         private async Task<(bool success, string? newToken)> RefreshToken()
         {
             User? user = bookshelfDbContext.User.FirstOrDefault();
 
-            if (user is not null && user.Email is not null && user.Password is not null)
-            {        
-                string password = EncryptionService.Decrypt(user.Password);
+            if (user is null || string.IsNullOrWhiteSpace(user.RefreshToken))
+                return (false, null);
 
-                UsersManagement.Model.ApiResponse resp = await new UsersManagement.UserService(ApiKeys.ApiAddress).GetUserTokenAsync(user.Email, password);
+            string json = JsonSerializer.Serialize(new { refreshToken = user.RefreshToken });
 
-                if (resp.Success && resp.Content is not null)
-                {
-                    string newToken = resp.Content;
+            ApiResponse resp = await Request(RequestsTypes.Post, ApiKeys.ApiAddress + "/user/session/refresh", jsonContent: json);
 
-                    user.Token = newToken;
+            if (!resp.Success || string.IsNullOrWhiteSpace(resp.Content))
+                return (false, null);
 
-                    bookshelfDbContext.Update(user);
-                    await bookshelfDbContext.SaveChangesAsync();
+            JsonNode? jResp = JsonNode.Parse(resp.Content);
+            string? newToken = jResp?["token"]?.GetValue<string>();
 
-                    return (true, newToken);
-                }
-                else throw new UnauthorizedAccessException("Falha ao tentar recuperar token do usuario");
-            }
+            if (string.IsNullOrWhiteSpace(newToken))
+                return (false, null);
 
-            return (false, null);
+            string? newRefreshToken = jResp?["refreshToken"]?.GetValue<string>();
+
+            user.Token = newToken;
+            user.RefreshToken = newRefreshToken;
+
+            bookshelfDbContext.Update(user);
+            await bookshelfDbContext.SaveChangesAsync();
+
+            return (true, newToken);
         }
     }
 }

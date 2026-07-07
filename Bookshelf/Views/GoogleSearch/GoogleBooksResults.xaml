@@ -10,9 +10,24 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:Bookshelf.ViewModels.GoogleSearch"
     x:Name="this"
-    Title="{Binding PageTitle}"
     x:DataType="vm:GoogleBooksResultsVM"
     Style="{StaticResource ContentPage}">
+
+    <Shell.TitleView>
+        <HorizontalStackLayout Margin="10,0,0,0" Spacing="8" VerticalOptions="Center">
+            <Label
+                FontFamily="FontAwesome"
+                FontSize="17"
+                Text="{x:Static Icons:IconFont.Search}"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+            <Label
+                FontSize="17"
+                Text="{Binding PageTitle}"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+        </HorizontalStackLayout>
+    </Shell.TitleView>
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
             BindingContext="{Binding BindingContext, Source={x:Reference this}, x:DataType=GoogleBooksResultsVM}"
@@ -20,10 +35,10 @@
             EventName="Appearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
+        <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="Fill">
             <Border
                 Padding="10,0,10,5"
-                HorizontalOptions="FillAndExpand"
+                HorizontalOptions="Fill"
                 Style="{StaticResource BorderPrimary}">
                 <StackLayout Margin="0" IsEnabled="{Binding IsConnected}">
                     <components:BorderedEntry
@@ -38,7 +53,7 @@
                 Padding="5"
                 BackgroundColor="Transparent"
                 StrokeShape="RoundRectangle 10"
-                VerticalOptions="FillAndExpand">
+                VerticalOptions="Fill">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -73,7 +88,7 @@
                                         BackgroundColor="#101923"
                                         Stroke="#2B659B"
                                         StrokeShape="RoundRectangle 10">
-                                        <StackLayout HorizontalOptions="FillAndExpand" Orientation="Vertical">
+                                        <StackLayout HorizontalOptions="Fill" Orientation="Vertical">
                                             <Label
                                                 FontFamily="EBGaramondSemiBold"
                                                 FontSize="20"
@@ -81,7 +96,7 @@
                                                 MaxLines="1"
                                                 Text="{Binding Title}"
                                                 TextColor="#98BDD3" />
-                                            <Grid HeightRequest="150" HorizontalOptions="FillAndExpand">
+                                            <Grid HeightRequest="150" HorizontalOptions="Fill">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="20" />
                                                     <RowDefinition Height="*" />

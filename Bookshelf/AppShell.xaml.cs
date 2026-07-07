@@ -10,6 +10,11 @@ public partial class AppShell : Shell
         InitializeComponent();
 
         BindingContext = appShellVM;
+
+        if (this.FlyoutHeader is BindableObject flyoutHeader)
+        {
+            flyoutHeader.BindingContext = appShellVM;
+        }
     }
 
 }

@@ -29,8 +29,8 @@ namespace Repos
             await context.User.Where(x => x.Id == user.Id).ExecuteUpdateAsync(y => y
             .SetProperty(z => z.Email, user.Email)
             .SetProperty(z => z.Name, user.Name)
-            .SetProperty(z => z.Password, user.Password)
-            .SetProperty(z => z.Token, user.Token));
+            .SetProperty(z => z.Token, user.Token)
+            .SetProperty(z => z.RefreshToken, user.RefreshToken));
         }
 
         public int UpdateLastUpdate(DateTime lastUpdate, int uid)

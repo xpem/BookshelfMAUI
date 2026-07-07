@@ -5,6 +5,7 @@ using Moq;
 using Repos.Interfaces;
 using Services;
 using Services.User;
+using System.Text.Json;
 
 namespace BLLTests.User
 {
@@ -22,15 +23,15 @@ namespace BLLTests.User
             string email = "emanuel_teste@email.com";
             string password = "121212";
 
-            (bool, string?) respToken = (true, "test");
+            string tokenContent = JsonSerializer.Serialize(new { token = "test", refreshToken = "refresh_test" });
+            ApiResponse tokenResponse = new() { Success = true, Content = tokenContent };
 
-            ApiResponse apiResponse = new ApiResponse() { Content = "{\"id\":1,\"name\":\"Emanuel Martins\",\"email\":\"emanuel.teste@email.com\",\"createdAt\":\"2023-08-12T12:43:22.24644\"}", Success = true };
+            ApiResponse apiResponse = new() { Content = "{\"id\":1,\"name\":\"Emanuel Martins\",\"email\":\"emanuel.teste@email.com\",\"createdAt\":\"2023-08-12T12:43:22.24644\"}", Success = true };
             Models.DTOs.User? actualUser = null;
-            BLLResponse respSuccess = new() { Success = true, Content = 1 };
 
 
-            userApiDAL.Setup(x => x.GetUserTokenAsync(email, password)).ReturnsAsync(respToken);
-            userApiDAL.Setup(x => x.GetUserAsync(respToken.Item2)).ReturnsAsync(apiResponse);
+            userApiDAL.Setup(x => x.GetTokenAsync(email, password)).ReturnsAsync(tokenResponse);
+            userApiDAL.Setup(x => x.GetUserAsync("test")).ReturnsAsync(apiResponse);
             userRepo.Setup(x => x.GetUserLocalAsync()).ReturnsAsync(actualUser);
             userRepo.Setup(x => x.CreateAsync(It.IsAny<Models.DTOs.User?>())).ReturnsAsync(1);
 
@@ -52,11 +53,9 @@ namespace BLLTests.User
             string email = "emanuel_teste@email.com";
             string password = "111212";
 
-            (bool, string?) respToken = (false, "User/Password incorrect");
+            ApiResponse tokenResponse = new() { Success = false, Content = "User/Password incorrect", Error = ErrorTypes.WrongEmailOrPassword };
 
-            BLLResponse respSuccess = new() { Success = false, Error = ErrorTypes.WrongEmailOrPassword };
-
-            userApiDAL.Setup(x => x.GetUserTokenAsync(email, password)).ReturnsAsync(respToken);
+            userApiDAL.Setup(x => x.GetTokenAsync(email, password)).ReturnsAsync(tokenResponse);
 
             UserService userService = new(userApiDAL.Object, userRepo.Object, buildDbBLL.Object);
 
@@ -76,15 +75,17 @@ namespace BLLTests.User
             string email = "emanuel_teste@email.com";
             string password = "121212";
 
-            (bool, string?) respToken = (true, "test");
+            string tokenContent = JsonSerializer.Serialize(new { token = "test", refreshToken = "refresh_test" });
+            ApiResponse tokenResponse = new() { Success = true, Content = tokenContent };
 
-            ApiResponse apiResponse = new ApiResponse() { Content = "{\"id\":1,\"name\":\"Emanuel Martins\",\"email\":\"emanuel.teste@email.com\",\"createdAt\":\"2023-08-12T12:43:22.24644\"}", Success = true };
-            Models.DTOs.User? actualUser = new Models.DTOs.User() { Id = 1, Email = "emanuel.teste@email.com", LastUpdate = DateTime.Now, Name = "Emanuel Martins", Password = "121212", Token = "test" };
-            BLLResponse respSuccess = new() { Success = true, Content = 1 };
+            ApiResponse apiResponse = new() { Content = "{\"id\":1,\"name\":\"Emanuel Martins\",\"email\":\"emanuel.teste@email.com\",\"createdAt\":\"2023-08-12T12:43:22.24644\"}", Success = true };
+#pragma warning disable CS0612
+            Models.DTOs.User? actualUser = new() { Id = 1, Email = "emanuel.teste@email.com", LastUpdate = DateTime.Now, Name = "Emanuel Martins", Token = "test", RefreshToken = "old_refresh" };
+#pragma warning restore CS0612
 
 
-            userApiDAL.Setup(x => x.GetUserTokenAsync(email, password)).ReturnsAsync(respToken);
-            userApiDAL.Setup(x => x.GetUserAsync(respToken.Item2)).ReturnsAsync(apiResponse);
+            userApiDAL.Setup(x => x.GetTokenAsync(email, password)).ReturnsAsync(tokenResponse);
+            userApiDAL.Setup(x => x.GetUserAsync("test")).ReturnsAsync(apiResponse);
             userRepo.Setup(x => x.GetUserLocalAsync()).ReturnsAsync(actualUser);
             userRepo.Setup(x => x.UpdateAsync(It.IsAny<Models.DTOs.User>()));
 
@@ -107,16 +108,16 @@ namespace BLLTests.User
             string email = "emanuel_teste@email.com";
             string password = "121212";
 
-            (bool, string?) respToken = (true, "test");
+            string tokenContent = JsonSerializer.Serialize(new { token = "test", refreshToken = "refresh_test" });
+            ApiResponse tokenResponse = new() { Success = true, Content = tokenContent };
 
-            ApiResponse apiResponse = new ApiResponse() { Content = "{\"id\":1,\"name\":\"Emanuel Martins\",\"email\":\"emanuel.teste@email.com\",\"createdAt\":\"2023-08-12T12:43:22.24644\"}", Success = true };
-            Models.DTOs.User? actualUser = new Models.DTOs.User() { Id = 2, Email = "emanuel.teste@email.com", LastUpdate = DateTime.Now, Name = "Emanuel Martins", Password = "121212", Token = "test" };
+            ApiResponse apiResponse = new() { Content = "{\"id\":1,\"name\":\"Emanuel Martins\",\"email\":\"emanuel.teste@email.com\",\"createdAt\":\"2023-08-12T12:43:22.24644\"}", Success = true };
+#pragma warning disable CS0612
+            Models.DTOs.User? actualUser = new() { Id = 2, Email = "emanuel.teste@email.com", LastUpdate = DateTime.Now, Name = "Emanuel Martins", Token = "test", RefreshToken = "old_refresh" };
+#pragma warning restore CS0612
 
-            BLLResponse respSuccess = new() { Success = true, Content = 1 };
-
-
-            userApiDAL.Setup(x => x.GetUserTokenAsync(email, password)).ReturnsAsync(respToken);
-            userApiDAL.Setup(x => x.GetUserAsync(respToken.Item2)).ReturnsAsync(apiResponse);
+            userApiDAL.Setup(x => x.GetTokenAsync(email, password)).ReturnsAsync(tokenResponse);
+            userApiDAL.Setup(x => x.GetUserAsync("test")).ReturnsAsync(apiResponse);
             userRepo.Setup(x => x.GetUserLocalAsync()).ReturnsAsync(actualUser);
             userRepo.Setup(x => x.CreateAsync(It.IsAny<Models.DTOs.User?>())).ReturnsAsync(1);
 
