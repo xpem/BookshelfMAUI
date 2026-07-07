@@ -1,5 +1,5 @@
-﻿using ApiDAL;
-using ApiDAL.Interfaces;
+using ApiRepo;
+using ApiRepo.Interfaces;
 using Bookshelf.Services.Sync;
 using Bookshelf.ViewModels;
 using Bookshelf.ViewModels.Book;
@@ -58,13 +58,13 @@ public static class MauiProgram
 
         #endregion;
 
-        builder.Services.AddBLLServices();
+        builder.Services.AddService();
 
         builder.Services.AddDbContextFactory<BookshelfDbContext>();
 
-        builder.Services.ApiDALServices();
+        builder.Services.AddApiRepo();
 
-        builder.Services.DALServices();
+        builder.Services.AddRepo();
 
         #endregion
 
@@ -90,27 +90,27 @@ public static class MauiProgram
         return services;
     }
 
-    public static IServiceCollection AddBLLServices(this IServiceCollection services)
+    public static IServiceCollection AddService(this IServiceCollection services)
     {
         services.AddScoped<IBookHistoricApiServices, BookHistoricApiServices>();
-        services.AddScoped<IBookHistoricService, BookHistoricBLL>();
+        services.AddScoped<IBookHistoricService, BookHistoricService>();
         services.AddScoped<IBookService, BookService>();
         services.AddScoped<IBookApiService, BooksApiService>();
         services.AddScoped<IUserService, UserService>();
 
-        services.AddScoped<IBookHistoricSyncBLL, BookHistoricSyncBLL>();
+        services.AddScoped<IBookHistoricSyncService, BookHistoricSyncService>();
 
-        services.AddScoped<IBuildDbService, BuildDbBLL>();
+        services.AddScoped<IBuildDbService, BuildDbService>();
         services.AddScoped<IBookSyncService, BookSyncService>();
         services.AddScoped<IBooksOperationService, BooksOperationService>();
 
         return services;
     }
 
-    public static IServiceCollection ApiDALServices(this IServiceCollection services)
+    public static IServiceCollection AddApiRepo(this IServiceCollection services)
     {
         services.AddScoped<IHttpClientFunctions, HttpClientFunctions>();
-        services.AddScoped<IUserApiDAL, UserApiDAL>();
+        services.AddScoped<IUserApiRepo, UserApiRepo>();
         services.AddScoped<IBookHistoricApiRepo, BookHistoricApiRepo>();
         services.AddScoped<IBookApiRepo, BookApiRepo>();
         services.AddScoped<IOperationQueueRepo, OperationQueueRepo>();
@@ -118,7 +118,7 @@ public static class MauiProgram
         return services;
     }
 
-    public static IServiceCollection DALServices(this IServiceCollection services)
+    public static IServiceCollection AddRepo(this IServiceCollection services)
     {
         services.AddScoped<IBookRepo, BookRepo>();
         services.AddScoped<IBookHistoricRepo, BookHistoricRepo>();

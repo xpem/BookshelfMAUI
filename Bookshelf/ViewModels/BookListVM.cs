@@ -125,7 +125,7 @@ namespace Bookshelf.ViewModels
             }
 
             //Definição do título da interface
-            PageTitle = "Livros ";
+            PageTitle = "Livros";
             switch (SituationIndex)
             {
                 case 0: break;

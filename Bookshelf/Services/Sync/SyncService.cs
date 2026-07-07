@@ -1,4 +1,4 @@
-﻿using Models;
+using Models;
 using Models.DTOs;
 using Services.Books.Historic.Sync;
 using Services.Books.Sync;
@@ -6,7 +6,7 @@ using Services.User;
 
 namespace Bookshelf.Services.Sync
 {
-    public class SyncService(IUserService userBLL, IBookSyncService booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL) : ISyncService
+    public class SyncService(IUserService userBLL, IBookSyncService booksSyncBLL, IBookHistoricSyncService BookHistoricSyncService) : ISyncService
     {
         public static SyncStatus Synchronizing { get; set; }
 
@@ -53,13 +53,13 @@ namespace Bookshelf.Services.Sync
 
                     if (Connectivity.NetworkAccess == NetworkAccess.Internet)
                     {
-                        // Pull: server → local (uses server-anchored cursor)
+                        // Pull: server ? local (uses server-anchored cursor)
                         await booksSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
 
-                        // Push: local → server (pending books)
+                        // Push: local ? server (pending books)
                         await booksSyncBLL.PushPendingAsync(user.Id);
 
-                        await bookHistoricSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
+                        await BookHistoricSyncService.ApiToLocalSync(user.Id, user.LastUpdate);
 
                         userBLL.UpdateLocalUserLastUpdate(user.Id);
                     }

@@ -1,4 +1,4 @@
-Ôªøusing Bookshelf.Utils;
+using Bookshelf.Utils;
 using CommunityToolkit.Mvvm.Input;
 using Services.User;
 using System.Windows.Input;
@@ -38,7 +38,7 @@ namespace Bookshelf.ViewModels
                 validInformation = false;
             else if (!Validations.ValidateEmail(Email))
             {
-                _ = Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Digite um email v√°lido", null, "Ok");
+                _ = Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Digite um email v·lido", null, "Ok");
                 return false;
             }
 
@@ -59,7 +59,7 @@ namespace Bookshelf.ViewModels
         {
             if (!(Connectivity.NetworkAccess == NetworkAccess.Internet))
             {
-                _ = await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Sem conex√£o com a internet", null, "Ok");
+                _ = await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Sem conex„o com a internet", null, "Ok");
                 return;
             }
 
@@ -68,13 +68,13 @@ namespace Bookshelf.ViewModels
                 BtnCreateUserIsEnabled = false;
 
                 //
-                Models.Responses.BLLResponse resp = await userBLL.AddUser(name, email, password);
+                Models.Responses.ServiceResponse resp = await userBLL.AddUser(name, email, password);
 
                 if (!resp.Success)
-                    await Application.Current.Windows[0].Page.DisplayAlert("Erro", "N√£o foi poss√≠vel cadastrar o usu√°rio!", null, "Ok");
+                    await Application.Current.Windows[0].Page.DisplayAlert("Erro", "N„o foi possÌvel cadastrar o usu·rio!", null, "Ok");
                 else
                 {
-                    bool res = await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Usu√°rio cadastrado!", null, "Ok");
+                    bool res = await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Usu·rio cadastrado!", null, "Ok");
 
                     if (!res)
                         await Shell.Current.GoToAsync("..");

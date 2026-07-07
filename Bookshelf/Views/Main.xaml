@@ -10,6 +10,24 @@
     x:DataType="viewmodels:MainVM"
     Shell.FlyoutBehavior="Flyout"
     Style="{StaticResource ContentPage}">
+    <Shell.TitleView>
+        <HorizontalStackLayout
+            Margin="10,0,0,0"
+            Spacing="8"
+            VerticalOptions="Center">
+            <Label
+                FontFamily="FontAwesome"
+                FontSize="17"
+                Text="{x:Static Icons:IconFont.House}"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+            <Label
+                FontSize="17"
+                Text="Home"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+        </HorizontalStackLayout>
+    </Shell.TitleView>
     <ContentPage.Resources>
         <!--  carditens  -->
         <Style x:Key="BorderCardItem" TargetType="Border">
@@ -20,14 +38,14 @@
         </Style>
         <Style x:Key="GridCardItem" TargetType="Grid">
             <Setter Property="VerticalOptions" Value="Start" />
-            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="HorizontalOptions" Value="Fill" />
         </Style>
         <Style x:Key="LblQuantity" TargetType="Label">
             <Setter Property="VerticalTextAlignment" Value="Center" />
             <Setter Property="FontSize" Value="50" />
-            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+            <Setter Property="VerticalOptions" Value="Center" />
             <Setter Property="TextColor" Value="{StaticResource White}" />
-            <Setter Property="HorizontalOptions" Value="StartAndExpand" />
+            <Setter Property="HorizontalOptions" Value="Start" />
             <Setter Property="FontFamily" Value="EBGaramondSemiBold" />
             <Setter Property="Padding" Value="0,0,0,0" />
         </Style>
@@ -77,8 +95,8 @@
         <ScrollView>
             <StackLayout
                 Padding="1"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand">
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill">
                 <VerticalStackLayout Spacing="2">
                     <Border Margin="0,5,0,5" Style="{StaticResource BorderCardItem}">
                         <Border.GestureRecognizers>
@@ -242,13 +260,12 @@
                     Padding="5"
                     BackgroundColor="Transparent"
                     StrokeShape="RoundRectangle 10"
-                    VerticalOptions="FillAndExpand">
-                    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    VerticalOptions="Fill">
+                    <StackLayout HorizontalOptions="Fill" VerticalOptions="Fill">
                         <Button
                             Command="{Binding GoogleSearchCommand}"
-                            ContentLayout="top, 10"
+                            ContentLayout="left, 10"
                             FontSize="15"
-                            HorizontalOptions="FillAndExpand"
                             Style="{StaticResource BtnPrimary}"
                             Text="Adicionar">
                             <Button.ImageSource>
@@ -261,8 +278,8 @@
                         </Button>
                         <Grid
                             Margin="0,5,0,0"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="EndAndExpand">
+                            HorizontalOptions="Fill"
+                            VerticalOptions="End">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>

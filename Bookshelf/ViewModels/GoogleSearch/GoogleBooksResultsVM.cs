@@ -5,7 +5,6 @@ using Models.Books.GoogleApi;
 using Services.Books;
 using Services.Utils;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 
 namespace Bookshelf.ViewModels.GoogleSearch
@@ -34,6 +33,7 @@ namespace Bookshelf.ViewModels.GoogleSearch
 
         private int CurrentPage;
         private int TotalItems;
+        private CancellationTokenSource _searchCts;
 
         private ObservableCollection<UIGoogleBook> googleBooksList = [];
 
@@ -57,8 +57,6 @@ namespace Bookshelf.ViewModels.GoogleSearch
             return Task.CompletedTask;
         }
 
-        public bool SearchingBookList { get; set; }
-
         string searchText;
 
         public string SearchText
@@ -69,18 +67,16 @@ namespace Bookshelf.ViewModels.GoogleSearch
                 if (searchText != value)
                 {
                     SetProperty(ref (searchText), value);
-                    _ = SearchBookList();
+                    DebounceSearch();
                 }
             }
         }
 
         [RelayCommand]
-        public Task LoadMore()
+        public async Task LoadMore()
         {
             CurrentPage++;
-            _ = LoadGoogleBooksAsync(CurrentPage);
-
-            return Task.CompletedTask;
+            await LoadGoogleBooksAsync(CurrentPage);
         }
 
         /// <summary>
@@ -122,30 +118,29 @@ namespace Bookshelf.ViewModels.GoogleSearch
         [RelayCommand]
         public async Task CreateBook() => await Shell.Current.GoToAsync($"{nameof(AddBook)}");
 
-        private async Task SearchBookList()
+        private async void DebounceSearch()
         {
-            //
-            if (!SearchingBookList)
+            _searchCts?.Cancel();
+            _searchCts = new CancellationTokenSource();
+            var token = _searchCts.Token;
+
+            try
             {
-                SearchingBookList = true;
+                await Task.Delay(800, token);
 
-                while (SearchingBookList)
-                {
-                    try
-                    {
-                        //
-                        await Task.Delay(2000);
+                if (token.IsCancellationRequested) return;
 
-                        if (GoogleBooksList.Count > 0)
-                            GoogleBooksList.Clear();
-
-                        CurrentPage = 0;
-                        await LoadGoogleBooksAsync(CurrentPage);
-
-                        SearchingBookList = false;
-                    }
-                    catch { throw; }
-                }
+                GoogleBooksList.Clear();
+                CurrentPage = 0;
+                await LoadGoogleBooksAsync(CurrentPage);
+            }
+            catch (TaskCanceledException)
+            {
+                // esperado quando o usuário continua digitando
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Search error: {ex.Message}");
             }
         }
     }

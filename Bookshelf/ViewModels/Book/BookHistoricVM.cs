@@ -1,4 +1,4 @@
-﻿using Bookshelf.Services.Sync;
+using Bookshelf.Services.Sync;
 using CommunityToolkit.Mvvm.Input;
 using Models.Books.Historic;
 using Services.Books;
@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels.Book
 {
-    public partial class BookHistoricVM(IBookHistoricService bookHistoricBLL, IBooksOperationService booksOperationBLL, ISyncService syncServices) : ViewModelBase, IQueryAttributable
+    public partial class BookHistoricVM(IBookHistoricService BookHistoricService, IBooksOperationService booksOperationBLL, ISyncService syncServices) : ViewModelBase, IQueryAttributable
     {
 
         #region Vars
@@ -147,7 +147,7 @@ namespace Bookshelf.ViewModels.Book
         {
             IsBusy = true;
 
-            List<Models.Books.Historic.UIBookHistoric> bookHistoricList = await bookHistoricBLL.GetByBookIdAsync(((App)App.Current).Uid.Value, pageNumber, BookId);
+            List<Models.Books.Historic.UIBookHistoric> bookHistoricList = await BookHistoricService.GetByBookIdAsync(((App)App.Current).Uid.Value, pageNumber, BookId);
 
             if (bookHistoricList.Count > 0)
                 foreach (var item in bookHistoricList)

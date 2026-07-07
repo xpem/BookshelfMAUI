@@ -9,7 +9,7 @@
     <Label Style="{StaticResource LblHEntry}" Text="{Binding Source={x:Reference this}, Path=LabelText}" />
     <Border Style="{StaticResource EntryBorders}">
         <Entry
-            HorizontalOptions="FillAndExpand"
+            HorizontalOptions="Fill"
             Keyboard="Numeric"
             MaxLength="{Binding Source={x:Reference this}, Path=MaxLength}"
             Style="{StaticResource Entry}"

@@ -5,14 +5,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Icons="clr-namespace:Models;assembly=Models"
     x:Name="this">
-    <FlexLayout HorizontalOptions="FillAndExpand">
+    <FlexLayout HorizontalOptions="Fill">
         <FlexLayout.Background>
             <LinearGradientBrush>
                 <GradientStop Offset="0.1" Color="{StaticResource SecondaryBGColor}" />
                 <GradientStop Offset="1.0" Color="{StaticResource TitleBarSecondaryBGColor}" />
             </LinearGradientBrush>
         </FlexLayout.Background>
-        <Grid HorizontalOptions="FillAndExpand">
+        <Grid HorizontalOptions="Fill">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
                 <RowDefinition Height="40" />

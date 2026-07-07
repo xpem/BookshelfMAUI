@@ -6,12 +6,28 @@
     xmlns:behaviors="clr-namespace:Bookshelf.Utils.Behaviors"
     xmlns:components="clr-namespace:Bookshelf.Components"
     xmlns:model="clr-namespace:Models.Books;assembly=Models"
+    xmlns:Icons="clr-namespace:Models;assembly=Models"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:Bookshelf.ViewModels"
     x:Name="this"
-    Title="{Binding PageTitle}"
     x:DataType="vm:BookListVM"
     Style="{StaticResource ContentPage}">
+
+    <Shell.TitleView>
+        <HorizontalStackLayout Margin="10,0,0,0" Spacing="8" VerticalOptions="Center">
+            <Label
+                FontFamily="FontAwesome"
+                FontSize="17"
+                Text="{x:Static Icons:IconFont.Swatchbook}"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+            <Label
+                FontSize="17"
+                Text="{Binding PageTitle}"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+        </HorizontalStackLayout>
+    </Shell.TitleView>
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
             BindingContext="{Binding BindingContext, Source={x:Reference this}, x:DataType=BookListVM}"
@@ -19,10 +35,10 @@
             EventName="Appearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="FillAndExpand">
+        <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="Fill">
             <Border
                 Padding="10,0,10,5"
-                HorizontalOptions="FillAndExpand"
+                HorizontalOptions="Fill"
                 Style="{StaticResource BorderPrimary}">
                 <StackLayout Margin="0">
                     <components:BorderedEntry
@@ -36,7 +52,7 @@
                 Padding="5"
                 BackgroundColor="Transparent"
                 StrokeShape="RoundRectangle 10"
-                VerticalOptions="FillAndExpand">
+                VerticalOptions="Fill">
                 <ListView
                     CachingStrategy="RecycleElement"
                     HasUnevenRows="True"
@@ -55,7 +71,7 @@
                                     BackgroundColor="#101923"
                                     Stroke="{StaticResource ActiveColor}"
                                     StrokeShape="RoundRectangle 10">
-                                    <StackLayout HorizontalOptions="FillAndExpand" Orientation="Vertical">
+                                    <StackLayout HorizontalOptions="Fill" Orientation="Vertical">
                                         <Label
                                             Padding="0,0,0,10"
                                             FontFamily="EBGaramondSemiBold"
@@ -64,7 +80,7 @@
                                             MaxLines="1"
                                             Text="{Binding Title}"
                                             TextColor="White"
-                                            VerticalOptions="StartAndExpand"
+                                            VerticalOptions="Start"
                                             VerticalTextAlignment="Start" />
                                         <Label
                                             FontFamily="EBGaramondItalic"
@@ -73,9 +89,9 @@
                                             MaxLines="2"
                                             Text="{Binding SubtitleAndVol, StringFormat='{0}'}"
                                             TextColor="White"
-                                            VerticalOptions="StartAndExpand"
+                                            VerticalOptions="Start"
                                             VerticalTextAlignment="Start" />
-                                        <Grid HeightRequest="150" HorizontalOptions="FillAndExpand">
+                                        <Grid HeightRequest="150" HorizontalOptions="Fill">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="20" />
                                                 <RowDefinition Height="20" />
