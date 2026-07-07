@@ -1,4 +1,4 @@
-﻿using Bookshelf.Services.Sync;
+using Bookshelf.Services.Sync;
 using Bookshelf.Views;
 using Models.DTOs;
 using Services;
@@ -17,18 +17,18 @@ namespace Bookshelf.ViewModels
 
         public IUserService UserBLL { get; }
         public IBookSyncService BooksSyncBLL { get; }
-        public IBookHistoricSyncBLL BookHistoricSyncBLL { get; }
-        public IBuildDbService BuildDbBLL { get; }
+        public IBookHistoricSyncService BookHistoricSyncService { get; }
+        public IBuildDbService BuildDbService { get; }
 
         private readonly AppShellVM AppShellVM;
 
-        public FirstSyncProcessVM(IUserService userBLL, IBookSyncService booksSyncBLL, IBookHistoricSyncBLL bookHistoricSyncBLL, ISyncService syncServices, IBuildDbService buildDbBLL, AppShellVM appShellVM)
+        public FirstSyncProcessVM(IUserService userBLL, IBookSyncService booksSyncBLL, IBookHistoricSyncService BookHistoricSyncService, ISyncService syncServices, IBuildDbService BuildDbService, AppShellVM appShellVM)
         {
             UserBLL = userBLL;
             BooksSyncBLL = booksSyncBLL;
-            BookHistoricSyncBLL = bookHistoricSyncBLL;
+            BookHistoricSyncService = BookHistoricSyncService;
             this.SyncServices = syncServices;
-            BuildDbBLL = buildDbBLL;
+            BuildDbService = BuildDbService;
             AppShellVM = appShellVM;
             _ = SynchronizingProcess();
         }
@@ -52,7 +52,7 @@ namespace Bookshelf.ViewModels
 
                         Progress = 0.5M;
 
-                        await BookHistoricSyncBLL.ApiToLocalSync(user.Id, user.LastUpdate);
+                        await BookHistoricSyncService.ApiToLocalSync(user.Id, user.LastUpdate);
 
                         Progress = 0.75M;
 

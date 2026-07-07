@@ -1,4 +1,4 @@
-ï»¿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.Input;
 using Models;
@@ -323,7 +323,7 @@ namespace Bookshelf.ViewModels.Book
                     //cadastra o livro 
                     string mensagem;
 
-                    //caso tenha avaliaÃ§Ã£o
+                    //caso tenha avaliação
                     if (pkrStatusSelectedIndex > 0)
                     {
                         int rate = 0;
@@ -336,7 +336,7 @@ namespace Bookshelf.ViewModels.Book
                         book.Score = rate;
                         book.Comment = comment.Truncate(350);
 
-                        mensagem = "Livro e avaliaÃ§Ã£o";
+                        mensagem = "Livro e avaliação";
                     }
                     else
                     {
@@ -353,7 +353,7 @@ namespace Bookshelf.ViewModels.Book
                         if (!string.IsNullOrEmpty(BookId))
                             book.Id = Convert.ToInt32(BookId);
 
-                        Models.Responses.BLLResponse uptRes = await bookBLL.UpdateAsync(((App)Application.Current).Uid.Value, IsOn, book);
+                        Models.Responses.ServiceResponse uptRes = await bookBLL.UpdateAsync(((App)Application.Current).Uid.Value, IsOn, book);
 
                         if (!uptRes.Success)
                         {
@@ -366,7 +366,7 @@ namespace Bookshelf.ViewModels.Book
                     }
                     else
                     {
-                        Models.Responses.BLLResponse addRes = await bookBLL.AddAsync(((App)Application.Current).Uid.Value, IsOn, book);
+                        Models.Responses.ServiceResponse addRes = await bookBLL.AddAsync(((App)Application.Current).Uid.Value, IsOn, book);
 
                         if (!addRes.Success)
                         {
@@ -535,7 +535,7 @@ namespace Bookshelf.ViewModels.Book
             }
 
             if (!ValidInfo)
-                await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Preencha os campos obrigatÃ³rios", null, "Ok");
+                await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "Preencha os campos obrigatórios", null, "Ok");
 
             return ValidInfo;
         }

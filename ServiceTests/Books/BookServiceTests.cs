@@ -1,0 +1,180 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Models.Books;
+using Models.DTOs;
+using Models.Responses;
+using Moq;
+using Repos;
+using Repos.Interfaces;
+using Services.Books;
+using Services.Books.Interfaces;
+using Xunit;
+
+namespace ServiceTests.Books
+{
+    [TestClass()]
+    public class BookServiceTests
+    {
+        Mock<IBookApiService> bookApiBLL = new();
+        Mock<IBookRepo> mockBookRepo = new();
+
+        [TestMethod()]
+        public void GetBookshelfTotalsTest()
+        {
+            Mock<DbSet<Book>> mockSetBook = new();
+            Mock<BookshelfDbContext> mockContext = new();
+
+            List<TotalBooksGroupedByStatus> totalBooksGroupedByStatuses =
+            [
+                new TotalBooksGroupedByStatus
+                {
+                    Count = 1,
+                    Status = Status.IllRead
+                },
+                new TotalBooksGroupedByStatus
+                {
+                    Count = 3,
+                    Status = Status.Read
+                },
+                new TotalBooksGroupedByStatus
+                {
+                    Count = 2,
+                    Status = Status.Reading
+                },
+                new TotalBooksGroupedByStatus
+                {
+                    Count = 0,
+                    Status = Status.Interrupted
+                },
+            ];
+
+            Mock<IBookApiService> bookApiBLL = new();
+            Mock<IBookRepo> mockBookRepo = new();
+
+            mockBookRepo.Setup(x => x.GetTotalBooksGroupedByStatusAsync(1)).ReturnsAsync(totalBooksGroupedByStatuses);
+
+            Mock<IUserRepo> mockUserDAL = new();
+
+            BookService booksBLL = new(bookApiBLL.Object, mockBookRepo.Object);
+
+            Totals? result = booksBLL.GetBookshelfTotalsAsync(1).Result;
+
+            if (result is not null && result.IllRead == 1 && result.Reading == 2 && result.Read == 3 && result.Interrupted == 0)
+                Assert.IsTrue(true);
+            else
+                Assert.Fail();
+        }
+
+        [Fact(DisplayName = "Retorna resultado de livro já criado com este mesmo id no bd local")]
+        [TestMethod()]
+        public void UpdateBook_FaiL_Validation_Unique_Title_Test()
+        {
+            Book book =
+                new()
+                {
+                    Title = "Teste de Título 6",
+                    Authors = "Emanuel Teste",
+                    Status = Status.IllRead,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now.AddDays(-2),
+                    UserId = 1,
+                    Id = 1,
+                    LocalId = 1,
+                };
+
+            Mock<IBookApiService> bookApiBLL = new();
+            Mock<IBookRepo> mockBookRepo = new();
+
+            Book UptBook = new()
+            {
+                Title = "Teste de Título 6",
+                Authors = "Emanuel Teste",
+                Status = Status.IllRead,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                UserId = 1,
+                Id = 2,
+                LocalId = 2
+            };
+
+            mockBookRepo.Setup(x => x.CheckIfExistsWithSameTitleAsync(1, "Teste de Título 6", 2)).ReturnsAsync(true);
+            mockBookRepo.Setup(x => x.UpdateAsync(It.IsAny<Book>())).ReturnsAsync(1);
+
+            ServiceResponse ServiceResponse = new() { Success = true };
+
+            bookApiBLL.Setup(x => x.UpdateAsync(It.IsAny<Book>())).ReturnsAsync(ServiceResponse);
+
+            BookService booksBLL = new(bookApiBLL.Object, mockBookRepo.Object);
+
+            ServiceResponse? result = booksBLL.UpdateAsync(1, true, UptBook).Result;
+
+            if (result is not null && result.Success == false && result.Content is not null && (string)result.Content == "Livro com este título já cadastrado.")
+                Assert.IsTrue(true);
+            else
+                Assert.Fail();
+        }
+
+
+        [Fact(DisplayName = "Cria um livro local e marca como pending quando offline")]
+        [TestMethod()]
+        public void AddBookAsync_NoConnection_SetsPending_Test()
+        {
+            Book insBook = new()
+            {
+                Title = "Teste de Título Insert",
+                Authors = "Emanuel Teste Insert",
+                Status = Status.IllRead,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                UserId = 1,
+                Id = 2,
+                LocalId = 2
+            };
+
+            Book? returnBook = null;
+            ServiceResponse ServiceResponse = new() { Success = true, Content = 2 };
+
+            mockBookRepo.Setup(x => x.GetByTitleOrGoogleIdAsync(1, "Teste de Título Insert", null)).ReturnsAsync(returnBook);
+            mockBookRepo.Setup(x => x.CreateAsync(It.IsAny<Book>())).ReturnsAsync(1);
+
+            BookService booksBLL = new(bookApiBLL.Object, mockBookRepo.Object);
+
+            ServiceResponse? result = booksBLL.AddAsync(1, false, insBook).Result;
+
+            mockBookRepo.Verify(x => x.SetSyncStatusAsync(It.IsAny<int>(), BookSyncStatus.Pending), Times.Once());
+
+            Assert.IsTrue(result?.Success);
+        }
+
+        [Fact(DisplayName = "Atualiza um livro local e marca como pending quando offline")]
+        [TestMethod()]
+        public void UpdateBookAsync_NoConnection_SetsPending_Test()
+        {
+            Book UptBook = new()
+            {
+                Title = "Teste de Título 6",
+                Authors = "Emanuel Teste",
+                Status = Status.IllRead,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                UserId = 1,
+                Id = 2,
+                LocalId = 2
+            };
+            mockBookRepo.Setup(x => x.CheckIfExistsWithSameTitleAsync(1, "Teste de Título 6", 2)).ReturnsAsync(false);
+            mockBookRepo.Setup(x => x.UpdateAsync(It.IsAny<Book>())).ReturnsAsync(1);
+
+            ServiceResponse ServiceResponse = new() { Success = true };
+
+            bookApiBLL.Setup(x => x.UpdateAsync(It.IsAny<Book>())).ReturnsAsync(ServiceResponse);
+
+            BookService booksBLL = new(bookApiBLL.Object, mockBookRepo.Object);
+
+            ServiceResponse? result = booksBLL.UpdateAsync(1, false, UptBook).Result;
+
+            mockBookRepo.Verify(x => x.SetSyncStatusAsync(It.IsAny<int>(), BookSyncStatus.Pending), Times.Once());
+
+            Assert.IsTrue(result?.Success);
+        }
+    }
+}

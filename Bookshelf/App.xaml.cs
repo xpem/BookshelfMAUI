@@ -1,4 +1,4 @@
-﻿using Bookshelf.Services.Sync;
+using Bookshelf.Services.Sync;
 using Bookshelf.ViewModels;
 using Bookshelf.Views;
 using Models.DTOs;
@@ -19,13 +19,13 @@ public partial class App : Application
 
     private IUserService UserBLL { get; set; }
 
-    private IBuildDbService BuildDbBLL { get; set; }
+    private IBuildDbService BuildDbService { get; set; }
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        var appShellVM = new AppShellVM(SyncServices, BuildDbBLL, UserBLL);
+        var appShellVM = new AppShellVM(SyncServices, BuildDbService, UserBLL);
 
-        BuildDbBLL.Init();
+        BuildDbService.Init();
 
         _ = appShellVM.AtualizaUserShowData();
 
@@ -40,13 +40,13 @@ public partial class App : Application
         return new Window(new AppShell(appShellVM));
     }
 
-    public App(ISyncService syncServices, IUserService userBLL, IBuildDbService buildDbBLL)
+    public App(ISyncService syncServices, IUserService userBLL, IBuildDbService buildDbService)
     {
         RegisterCrashHandlers();
 
         SyncServices = syncServices;
         UserBLL = userBLL;
-        BuildDbBLL = buildDbBLL;
+        BuildDbService = buildDbService;
 
         InitializeComponent();
     }
@@ -58,7 +58,7 @@ public partial class App : Application
             string entry = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [{source}]{Environment.NewLine}{content}{Environment.NewLine}{new string('-', 80)}{Environment.NewLine}";
             File.AppendAllText(CrashLogPath, entry);
         }
-        catch { /* não pode crashar o crash handler */ }
+        catch { /* n�o pode crashar o crash handler */ }
     }
 
     private static void RegisterCrashHandlers()

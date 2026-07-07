@@ -1,4 +1,4 @@
-Ôªøusing Bookshelf.Views;
+using Bookshelf.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Services.User;
@@ -57,7 +57,7 @@ namespace Bookshelf.ViewModels
 
                 if (!(Connectivity.NetworkAccess == NetworkAccess.Internet))
                 {
-                    await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "√â necess√°rio ter acesso a internet para efetuar o primeiro acesso.", null, "Ok");
+                    await Application.Current.Windows[0].Page.DisplayAlert("Aviso", "… necess·rio ter acesso a internet para efetuar o primeiro acesso.", null, "Ok");
                     return;
                 }
 
@@ -70,9 +70,9 @@ namespace Bookshelf.ViewModels
                 SignInText = "Acessando...";
                 BtnSignEnabled = false;
 
-                //Task.Run(BuildDbBLL.Init).Wait();
+                //Task.Run(BuildDbService.Init).Wait();
 
-                Models.Responses.BLLResponse resp = await userBLL.SignIn(Email, Password);
+                Models.Responses.ServiceResponse resp = await userBLL.SignIn(Email, Password);
 
 
                 if (resp.Success)
@@ -92,8 +92,8 @@ namespace Bookshelf.ViewModels
                     if (resp.Error == Models.Responses.ErrorTypes.WrongEmailOrPassword)
                         errorMessage = "Email/senha incorretos";
                     else if (resp.Error == Models.Responses.ErrorTypes.ServerUnavaliable)
-                        errorMessage = "Servidor indispon√≠vel, favor entrar em contato com o desenvolvedor.";
-                    else errorMessage = "Erro n√£o mapeado, favor entrar em contato com o desenvolvedor.";
+                        errorMessage = "Servidor indisponÌvel, favor entrar em contato com o desenvolvedor.";
+                    else errorMessage = "Erro n„o mapeado, favor entrar em contato com o desenvolvedor.";
 
                     await Application.Current.Windows[0].Page.DisplayAlert("Aviso", errorMessage, null, "Ok");
                 }

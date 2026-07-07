@@ -1,4 +1,4 @@
-ï»¿using Bookshelf.Services.Sync;
+using Bookshelf.Services.Sync;
 using Bookshelf.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace Bookshelf.ViewModels
 {
-    public partial class AppShellVM(ISyncService syncService, IBuildDbService buildDbBLL, IUserService userService) : ObservableObject
+    public partial class AppShellVM(ISyncService syncService, IBuildDbService BuildDbService, IUserService userService) : ObservableObject
     {
         string email, name;
 
@@ -32,7 +32,7 @@ namespace Bookshelf.ViewModels
         [RelayCommand]
         private async Task SignOut()
         {
-            bool resp = await Application.Current.Windows[0].Page.DisplayAlert("ConfirmaÃ§Ã£o", "Deseja sair e retornar a tela inicial?", "Sim", "Cancelar");
+            bool resp = await Application.Current.Windows[0].Page.DisplayAlert("Confirmação", "Deseja sair e retornar a tela inicial?", "Sim", "Cancelar");
 
             if (resp)
             {
@@ -43,7 +43,7 @@ namespace Bookshelf.ViewModels
 
                 (App.Current as App).Uid = 0;
 
-                await buildDbBLL.CleanLocalDatabase();
+                await BuildDbService.CleanLocalDatabase();
 
                 _ = Shell.Current.GoToAsync($"//{nameof(SignIn)}");
             }
