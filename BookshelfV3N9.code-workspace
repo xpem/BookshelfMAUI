@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../UniqueServer/UniqueServer"
+		},
+		{
+			"path": "../../XpemFinancial"
+		}
+	],
+	"settings": {}
+}

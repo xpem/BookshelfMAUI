@@ -11,7 +11,7 @@
 
     <!--  Main StackLayout  -->
     <Style x:Key="MainStackLayout" TargetType="StackLayout">
-        <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="VerticalOptions" Value="Start" />
     </Style>
 
     <Style x:Key="BorderPrimary" TargetType="Border">

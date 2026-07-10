@@ -29,7 +29,7 @@
             <Border
                 IsEnabled="{Binding IsNotBusy}"
                 Style="{StaticResource BorderPrimary}"
-                VerticalOptions="Center">
+                VerticalOptions="Start">
                 <VerticalStackLayout>
                     <Label
                         SemanticProperties.Description="Imagem da tela inicial do sistema"

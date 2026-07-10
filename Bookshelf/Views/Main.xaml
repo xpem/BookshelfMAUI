@@ -96,7 +96,7 @@
             <StackLayout
                 Padding="1"
                 HorizontalOptions="Fill"
-                VerticalOptions="Fill">
+                VerticalOptions="Start">
                 <VerticalStackLayout Spacing="2">
                     <Border Margin="0,5,0,5" Style="{StaticResource BorderCardItem}">
                         <Border.GestureRecognizers>

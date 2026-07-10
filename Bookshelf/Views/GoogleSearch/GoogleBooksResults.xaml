@@ -14,10 +14,13 @@
     Style="{StaticResource ContentPage}">
 
     <Shell.TitleView>
-        <HorizontalStackLayout Margin="10,0,0,0" Spacing="8" VerticalOptions="Center">
+        <HorizontalStackLayout
+            Margin="10,0,0,0"
+            Spacing="8"
+            VerticalOptions="Center">
             <Label
                 FontFamily="FontAwesome"
-                FontSize="17"
+                FontSize="20"
                 Text="{x:Static Icons:IconFont.Search}"
                 TextColor="{StaticResource White}"
                 VerticalOptions="Center" />
