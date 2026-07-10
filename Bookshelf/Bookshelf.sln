@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31611.283
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11925.98 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bookshelf", "Bookshelf.csproj", "{B732726A-BDB4-47DC-BCEC-16F3218821E0}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceTests", "..\ServiceTests\ServiceTests.csproj", "{83748606-0D35-4E7A-A84A-0E28B0EE9B46}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repos", "..\Repo\Repos.csproj", "{1824F776-1F60-4C2D-A996-9613B3BE5D57}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra", "Infra", "{1CBCB12B-DB41-4C0E-A889-317EDA2ED535}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +52,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5DFD887F-65B6-4E16-83B9-B161E73A4FC6} = {1CBCB12B-DB41-4C0E-A889-317EDA2ED535}
+		{05C7BFE3-AAFC-45DD-9476-04C7C19D592E} = {1CBCB12B-DB41-4C0E-A889-317EDA2ED535}
+		{06BA5B4D-6A34-4EC6-B78F-5DE4C76914CD} = {1CBCB12B-DB41-4C0E-A889-317EDA2ED535}
+		{83748606-0D35-4E7A-A84A-0E28B0EE9B46} = {1CBCB12B-DB41-4C0E-A889-317EDA2ED535}
+		{1824F776-1F60-4C2D-A996-9613B3BE5D57} = {1CBCB12B-DB41-4C0E-A889-317EDA2ED535}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
