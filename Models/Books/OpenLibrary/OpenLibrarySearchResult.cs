@@ -57,5 +57,32 @@ namespace Models.Books.OpenLibrary
 
         [JsonPropertyName("isbn")]
         public List<string>? Isbn { get; set; }
+
+        [JsonPropertyName("editions")]
+        public OpenLibraryEditions? Editions { get; set; }
+    }
+
+    /// <summary>
+    /// Container for edition documents nested inside a work.
+    /// </summary>
+    public class OpenLibraryEditions
+    {
+        [JsonPropertyName("docs")]
+        public List<OpenLibraryEditionDoc>? Docs { get; set; }
+    }
+
+    /// <summary>
+    /// A single edition entry (localized title, subtitle, cover).
+    /// </summary>
+    public class OpenLibraryEditionDoc
+    {
+        [JsonPropertyName("title")]
+        public string? Title { get; set; }
+
+        [JsonPropertyName("subtitle")]
+        public string? Subtitle { get; set; }
+
+        [JsonPropertyName("cover_i")]
+        public int? CoverId { get; set; }
     }
 }

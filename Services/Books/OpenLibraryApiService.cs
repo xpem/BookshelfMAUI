@@ -59,8 +59,15 @@ namespace Services.Books
                 ? string.Join("; ", doc.AuthorName)
                 : string.Empty;
 
-            string thumbnail = doc.CoverId.HasValue
-                ? string.Format(CoverBaseUrl, doc.CoverId.Value)
+            // Prefer edition data (Portuguese) over work-level data (English)
+            OpenLibraryEditionDoc? edition = doc.Editions?.Docs?.FirstOrDefault();
+
+            string title = edition?.Title ?? doc.Title ?? string.Empty;
+            string subtitle = edition?.Subtitle ?? doc.Subtitle ?? string.Empty;
+
+            int? coverId = edition?.CoverId ?? doc.CoverId;
+            string thumbnail = coverId.HasValue
+                ? string.Format(CoverBaseUrl, coverId.Value)
                 : string.Empty;
 
             string publisher = doc.Publisher is { Count: > 0 }
@@ -70,8 +77,8 @@ namespace Services.Books
             return new UIGoogleBook
             {
                 Id = id,
-                Title = doc.Title ?? string.Empty,
-                Subtitle = doc.Subtitle ?? string.Empty,
+                Title = title,
+                Subtitle = subtitle,
                 Authors = authors,
                 PublishedDate = doc.FirstPublishYear?.ToString() ?? string.Empty,
                 PageCount = doc.NumberOfPagesMedian ?? 0,

@@ -20,8 +20,8 @@
         </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <ScrollView HorizontalOptions="Center">
-            <Border IsEnabled="{Binding IsNotBusy}" Style="{StaticResource BorderPrimary}">
+        <ScrollView>
+            <Border HorizontalOptions="Center" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource BorderPrimary}">
                 <VerticalStackLayout>
                     <Label
                         SemanticProperties.Description="Imagem da tela de usuários"

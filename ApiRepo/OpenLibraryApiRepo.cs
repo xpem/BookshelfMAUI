@@ -15,7 +15,7 @@ namespace ApiRepo
         /// <summary>
         /// Fields requested from the API — keeps response payload small.
         /// </summary>
-        private const string Fields = "key,title,subtitle,author_name,first_publish_year,cover_i,number_of_pages_median,publisher,isbn";
+        private const string Fields = "key,title,subtitle,author_name,first_publish_year,cover_i,number_of_pages_median,publisher,isbn,language,editions,editions.title,editions.subtitle,editions.cover_i";
 
         private static readonly HttpClient _httpClient = new();
 
@@ -34,11 +34,14 @@ namespace ApiRepo
         public static async Task<ApiResponse> GetBooksByTitleAsync(string search, int page, int limit = 10)
         {
             StringBuilder url = new();
-            url.Append($"{BaseUrl}?title={Uri.EscapeDataString(search)}");
+            url.Append($"{BaseUrl}?q={Uri.EscapeDataString(search)}");
             url.Append($"&fields={Fields}");
             url.Append($"&page={page}");
             url.Append($"&limit={limit}");
-            url.Append($"&lang=pt");
+            url.Append($"&_spellcheck_count=0");
+            url.Append($"&language=por");
+            //url.Append($"&has_fulltext=true");
+            url.Append($"&mode=everything");
 
             try
             {
