@@ -64,8 +64,8 @@
         </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <ScrollView Padding="0" VerticalOptions="Start">
-            <Grid BackgroundColor="Transparent" VerticalOptions="Fill">
+        <ScrollView Padding="0">
+            <Grid BackgroundColor="Transparent">
                 <toolkit:Expander
                     Margin="20"
                     BackgroundColor="Transparent"

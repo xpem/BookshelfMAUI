@@ -25,8 +25,9 @@
         </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <ScrollView HorizontalOptions="Center">
+        <ScrollView>
             <Border
+                HorizontalOptions="Center"
                 IsEnabled="{Binding IsNotBusy}"
                 Style="{StaticResource BorderPrimary}"
                 VerticalOptions="Start">

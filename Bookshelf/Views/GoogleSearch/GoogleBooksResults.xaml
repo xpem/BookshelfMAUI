@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Icons="clr-namespace:Models;assembly=Models"
-    xmlns:behaviors="clr-namespace:Bookshelf.Utils.Behaviors"
     xmlns:components="clr-namespace:Bookshelf.Components"
     xmlns:model="clr-namespace:Models.Books.GoogleApi;assembly=Models"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
@@ -38,8 +37,13 @@
             EventName="Appearing" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        <StackLayout Style="{StaticResource MainStackLayout}" VerticalOptions="Fill">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <Border
+                Grid.Row="0"
                 Padding="10,0,10,5"
                 HorizontalOptions="Fill"
                 Style="{StaticResource BorderPrimary}">
@@ -48,21 +52,16 @@
                         LabelText="Digite o título do livro"
                         MaxLength="100"
                         Text="{Binding SearchText}" />
-                    <!--  TextTransformValue="Uppercase"  -->
                 </StackLayout>
             </Border>
             <Border
+                Grid.Row="1"
                 Margin="5"
                 Padding="5"
                 BackgroundColor="Transparent"
-                StrokeShape="RoundRectangle 10"
-                VerticalOptions="Fill">
+                StrokeShape="RoundRectangle 10">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
                     <Label
-                        Grid.Row="0"
                         Margin="0,0,0,10"
                         FontFamily="FontAwesome"
                         FontSize="40"
@@ -72,96 +71,68 @@
                         Text="{x:Static Icons:IconFont.Wifi}"
                         TextColor="{x:Static Colors.Red}"
                         VerticalOptions="Center" />
-                    <ListView
-                        CachingStrategy="RecycleElement"
-                        HasUnevenRows="True"
+                    <CollectionView
                         IsVisible="{Binding IsConnected}"
-                        ItemTapped="ListView_ItemTapped"
                         ItemsSource="{Binding GoogleBooksList}"
-                        SelectionMode="None">
-                        <ListView.Behaviors>
-                            <behaviors:InfiniteScrollBehavior LoadMoreCommand="{Binding LoadMoreCommand}" />
-                        </ListView.Behaviors>
-                        <ListView.ItemTemplate>
+                        RemainingItemsThreshold="2"
+                        RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
+                        SelectionChanged="CollectionView_SelectionChanged"
+                        SelectionMode="Single">
+                        <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:UIGoogleBook">
-                                <ViewCell>
-                                    <Border
-                                        Margin="0,0,0,5"
-                                        Padding="10"
-                                        BackgroundColor="#101923"
-                                        Stroke="#2B659B"
-                                        StrokeShape="RoundRectangle 10">
-                                        <StackLayout HorizontalOptions="Fill" Orientation="Vertical">
+                                <Border
+                                    Margin="0,0,0,5"
+                                    Padding="10"
+                                    BackgroundColor="#101923"
+                                    Stroke="#2B659B"
+                                    StrokeShape="RoundRectangle 10">
+                                    <StackLayout HorizontalOptions="Fill" Orientation="Vertical">
+                                        <Label
+                                            FontFamily="EBGaramondSemiBold"
+                                            FontSize="20"
+                                            LineBreakMode="TailTruncation"
+                                            MaxLines="1"
+                                            Text="{Binding Title}"
+                                            TextColor="#98BDD3" />
+                                        <Grid HeightRequest="150" HorizontalOptions="Fill">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="20" />
+                                                <RowDefinition Height="*" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3*" />
+                                                <ColumnDefinition Width="6*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Image
+                                                Grid.RowSpan="4"
+                                                Grid.Column="1"
+                                                Aspect="AspectFit"
+                                                HorizontalOptions="End"
+                                                Source="{Binding Thumbnail}" />
                                             <Label
-                                                FontFamily="EBGaramondSemiBold"
-                                                FontSize="20"
+                                                FontFamily="EBGaramondRegular"
+                                                FontSize="15"
+                                                HorizontalTextAlignment="Start"
                                                 LineBreakMode="TailTruncation"
-                                                MaxLines="1"
-                                                Text="{Binding Title}"
-                                                TextColor="#98BDD3" />
-                                            <Grid HeightRequest="150" HorizontalOptions="Fill">
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="20" />
-                                                    <RowDefinition Height="*" />
-                                                    <!--<RowDefinition Height="12"/>
-                                                    <RowDefinition Height="*"/>-->
-                                                </Grid.RowDefinitions>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="3*" />
-                                                    <ColumnDefinition Width="6*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Image
-                                                    Grid.RowSpan="4"
-                                                    Grid.Column="1"
-                                                    Aspect="AspectFit"
-                                                    HorizontalOptions="End"
-                                                    Source="{Binding Thumbnail}" />
-                                                <Label
-                                                    FontFamily="EBGaramondRegular"
-                                                    FontSize="15"
-                                                    HorizontalTextAlignment="Start"
-                                                    LineBreakMode="TailTruncation"
-                                                    Text="{Binding Authors}"
-                                                    TextColor="#98BDD3"
-                                                    VerticalTextAlignment="Start" />
-                                                <Label
-                                                    Grid.Row="1"
-                                                    Grid.Column="0"
-                                                    FontFamily="EBGaramondRegular"
-                                                    FontSize="15"
-                                                    HorizontalTextAlignment="Start"
-                                                    LineBreakMode="TailTruncation"
-                                                    Text="{Binding PageCount, StringFormat='Páginas: {0:F0}'}"
-                                                    TextColor="White"
-                                                    VerticalTextAlignment="Start" />
-                                                <!--<Label
-                                                    Text="Ano:"
-                                                    Grid.Row="2"
-                                                    Grid.Column="0"
-                                                    HorizontalTextAlignment="Start"
-                                                    VerticalTextAlignment="Start"
-                                                    TextColor="Black"
-                                                    FontAttributes="Italic"
-                                                    FontSize="10"
-                                                    />
-                                                <Label
-                                                    Text="{Binding PublishedDate}"
-                                                    Grid.Row="3"
-                                                    Grid.Column="0"
-                                                    VerticalTextAlignment="Start"
-                                                    HorizontalTextAlignment="Start"
-                                                    FontSize="15"
-                                                    LineBreakMode="TailTruncation"
-                                                    FontFamily="EBGaramondRegular"
-                                                    TextColor="#4e4e4e"
-                                                    />-->
-                                            </Grid>
-                                        </StackLayout>
-                                    </Border>
-                                </ViewCell>
+                                                Text="{Binding Authors}"
+                                                TextColor="#98BDD3"
+                                                VerticalTextAlignment="Start" />
+                                            <Label
+                                                Grid.Row="1"
+                                                Grid.Column="0"
+                                                FontFamily="EBGaramondRegular"
+                                                FontSize="15"
+                                                HorizontalTextAlignment="Start"
+                                                LineBreakMode="TailTruncation"
+                                                Text="{Binding PageCount, StringFormat='Páginas: {0:F0}'}"
+                                                TextColor="White"
+                                                VerticalTextAlignment="Start" />
+                                        </Grid>
+                                    </StackLayout>
+                                </Border>
                             </DataTemplate>
-                        </ListView.ItemTemplate>
-                        <ListView.Footer>
+                        </CollectionView.ItemTemplate>
+                        <CollectionView.Footer>
                             <Grid Padding="6" IsVisible="{Binding IsBusy}">
                                 <Grid.Triggers>
                                     <Trigger TargetType="Grid" Property="IsVisible" Value="False">
@@ -175,10 +146,9 @@
                                     VerticalOptions="Center"
                                     Color="#2196F3" />
                             </Grid>
-                        </ListView.Footer>
-                    </ListView>
+                        </CollectionView.Footer>
+                    </CollectionView>
                     <Button
-                        Grid.Row="0"
                         Command="{Binding CreateBookCommand}"
                         ContentLayout="Top,0"
                         CornerRadius="50"
@@ -197,6 +167,6 @@
                     </Button>
                 </Grid>
             </Border>
-        </StackLayout>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

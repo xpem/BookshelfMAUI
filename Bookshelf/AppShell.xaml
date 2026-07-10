@@ -6,7 +6,7 @@
     xmlns:Components="clr-namespace:Bookshelf.Components"
     xmlns:Icons="clr-namespace:Models;assembly=Models"
     xmlns:local="clr-namespace:Bookshelf.Views"
-    BackgroundColor="{StaticResource MainBackgroundColor}"
+    BackgroundColor="{StaticResource SecondaryBGColor}"
     FlyoutBackgroundColor="{StaticResource MainBackgroundColor}"
     FlyoutHeaderBehavior="CollapseOnScroll">
 
