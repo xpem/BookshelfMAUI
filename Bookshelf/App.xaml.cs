@@ -13,7 +13,7 @@ public partial class App : Application
 
     public int? Uid { get; set; }
 
-    public readonly string Version = "@0.2.5";
+    public readonly string Version = "@0.3.5";
 
     private ISyncService SyncServices { get; set; }
 
