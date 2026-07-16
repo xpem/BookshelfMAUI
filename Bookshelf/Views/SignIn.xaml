@@ -25,7 +25,7 @@
         </Style>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <ScrollView>
+        <VerticalStackLayout Margin="10" VerticalOptions="Center">
             <Border
                 HorizontalOptions="Center"
                 IsEnabled="{Binding IsNotBusy}"
@@ -149,6 +149,6 @@
                     </Label>
                 </VerticalStackLayout>
             </Border>
-        </ScrollView>
+        </VerticalStackLayout>
     </ContentPage.Content>
 </ContentPage>
