@@ -12,7 +12,7 @@ namespace ApiRepo
             PropertyNameCaseInsensitive = true
         };
 
-        public async Task<ApiResponse> CreateAsync(Book book)
+        public async Task<ApiResp> CreateAsync(Book book)
         {
             try
             {
@@ -24,7 +24,7 @@ namespace ApiRepo
             catch { throw; }
         }
 
-        public async Task<ApiResponse> UpdateAsync(Book book)
+        public async Task<ApiResp> UpdateAsync(Book book)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace ApiRepo
             catch { throw; }
         }
 
-        public async Task<ApiResponse> GetByLastUpdateAsync(DateTime lastUpdate, int page) =>
+        public async Task<ApiResp> GetByLastUpdateAsync(DateTime lastUpdate, int page) =>
             await httpClientFunctions.AuthRequestAsync(RequestsTypes.Get, $"{ApiKeys.ApiAddress}/bookshelf/book/byupdatedat/{lastUpdate:yyyy-MM-ddTHH:mm:ss.fff}/{page}");
 
         private static object BuildRequest(Book book) => new

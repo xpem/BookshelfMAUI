@@ -18,18 +18,13 @@ namespace Services.Books.Sync
 
         public async Task ApiToLocalSync(int uid, DateTime lastUpdate)
         {
-            // Use server-anchored cursor instead of device-clock based lastUpdate
-            DateTime cursor = await syncCursorRepo.GetAsync(SyncCursorKeys.Book);
-
-            // If cursor has a value, use it; otherwise fall back to the legacy lastUpdate
-            DateTime effectiveLastUpdate = cursor > DateTime.MinValue ? cursor : lastUpdate;
 
             int page = 1;
-            DateTime maxServerTs = effectiveLastUpdate;
+            DateTime maxServerTs = lastUpdate;
 
             while (true)
             {
-                ServiceResponse respGetBooksByLastUpdate = await booksApiBLL.GetByLastUpdateAsync(effectiveLastUpdate, page);
+                ServiceResponse respGetBooksByLastUpdate = await booksApiBLL.GetByLastUpdateAsync(lastUpdate, page);
 
                 if (respGetBooksByLastUpdate != null && respGetBooksByLastUpdate.Success && respGetBooksByLastUpdate.Content is not null)
                 {
@@ -61,7 +56,7 @@ namespace Services.Books.Sync
             }
 
             // Advance cursor to highest server-side UpdatedAt
-            if (maxServerTs > effectiveLastUpdate)
+            if (maxServerTs > lastUpdate)
                 await syncCursorRepo.SaveAsync(SyncCursorKeys.Book, maxServerTs);
         }
 

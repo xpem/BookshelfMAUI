@@ -4,6 +4,6 @@ namespace ApiRepo.Interfaces
 {
     public interface IBookHistoricApiRepo
     {
-        Task<ApiResponse> GetByLastCreatedAtAsync(DateTime lastUpdate, int page);
+        Task<ApiResp> GetByLastCreatedAtAsync(DateTime lastUpdate, int page);
     }
 }

@@ -8,12 +8,12 @@ namespace Models.Responses
 
         public bool TryRefreshToken { get; set; } = false;
 
-        public ErrorTypes? Error { get; set; }
+        public ErrorCodeTypes? ErrorCode { get; set; }
 
-        public string ErrorMessage => Error switch
+        public string ErrorMessage => ErrorCode switch
         {
-            ErrorTypes.ServerUnavaliable => "Servidor indisponível",
-            ErrorTypes.WrongEmailOrPassword => "Senha ou email inválidos",
+            ErrorCodeTypes.ServerUnavaliable => "Servidor indisponível",
+            ErrorCodeTypes.InvalidUserPasswordLogin => "Senha ou email inválidos",
             null => string.Empty,
             _ => throw new NotImplementedException("Erro não mapeado")
         };

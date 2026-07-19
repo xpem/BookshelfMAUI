@@ -6,7 +6,7 @@ namespace Services
 {
     public class BuildDbService(IDbContextFactory<BookshelfDbContext> DbCtx) : IBuildDbService
     {
-        public void Init()
+        public async Task Init()
         {
             using var context = DbCtx.CreateDbContext();
             context.Database.EnsureCreated();

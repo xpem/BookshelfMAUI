@@ -4,12 +4,12 @@ namespace Repos.Interfaces
 {
     public interface IUserRepo
     {
-        Task<int> CreateAsync(User user);
+        Task<int> CreateAsync(UserDTO user);
 
-        Task UpdateAsync(User user);
+        Task UpdateAsync(UserDTO user);
 
         int UpdateLastUpdate(DateTime lastUpdate, int uid);
         //Task<int> GetUidAsync();
-        Task<User?> GetUserLocalAsync();
+        Task<UserDTO?> GetUserLocalAsync();
     }
 }

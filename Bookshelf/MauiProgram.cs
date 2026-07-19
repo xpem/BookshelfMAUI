@@ -97,12 +97,14 @@ public static class MauiProgram
         services.AddScoped<IBookService, BookService>();
         services.AddScoped<IBookApiService, BooksApiService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IUserSessionService, UserSessionService>();
 
         services.AddScoped<IBookHistoricSyncService, BookHistoricSyncService>();
 
         services.AddScoped<IBuildDbService, BuildDbService>();
         services.AddScoped<IBookSyncService, BookSyncService>();
         services.AddScoped<IBooksOperationService, BooksOperationService>();
+
 
         return services;
     }

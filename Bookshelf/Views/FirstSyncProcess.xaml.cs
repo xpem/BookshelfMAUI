@@ -10,4 +10,13 @@ public partial class FirstSyncProcess : ContentPage
 
         BindingContext = firstSyncProcessVM;
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        if (BindingContext is FirstSyncProcessVM vm)
+        {
+            _ = vm.SynchronizingProcess();
+        }
+    }
 }

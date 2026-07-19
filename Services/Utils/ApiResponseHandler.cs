@@ -5,7 +5,7 @@ namespace Services.Handlers
 {
     public static class ApiResponseHandler
     {
-        public static ServiceResponse Handler<TModel>(ApiResponse apiResponse)
+        public static ServiceResponse Handler<TModel>(ApiResp apiResponse)
         {
             try
             {
@@ -14,7 +14,7 @@ namespace Services.Handlers
                     if (!apiResponse.Success)
                     {
                         if (apiResponse.Error != null)
-                            return new ServiceResponse() { Success = false, TryRefreshToken = apiResponse.TryRefreshToken, Error = apiResponse.Error };
+                            return new ServiceResponse() { Success = false, TryRefreshToken = apiResponse.TryRefreshToken, ErrorCode = apiResponse.ErrorCode };
                         else if (apiResponse.Content != null)
                             return new ServiceResponse() { Success = false, TryRefreshToken = apiResponse.TryRefreshToken, Content = apiResponse.Content };
                     }

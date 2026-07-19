@@ -11,7 +11,7 @@ namespace Services.Books
     {
         public async Task<ServiceResponse> CreateAsync(Book book)
         {
-            ApiResponse? resp = await bookApiRepo.CreateAsync(book);
+            ApiResp? resp = await bookApiRepo.CreateAsync(book);
 
             if (resp is not null)
             {
@@ -47,7 +47,7 @@ namespace Services.Books
 
         public async Task<ServiceResponse> UpdateAsync(Book book)
         {
-            ApiResponse? resp = await bookApiRepo.UpdateAsync(book);
+            ApiResp? resp = await bookApiRepo.UpdateAsync(book);
 
             if (resp is not null && resp.Content is not null)
             {
@@ -70,7 +70,7 @@ namespace Services.Books
 
         public async Task<ServiceResponse> GetByLastUpdateAsync(DateTime lastUpdate, int page)
         {
-            ApiResponse resp = await bookApiRepo.GetByLastUpdateAsync(lastUpdate, page);
+            ApiResp resp = await bookApiRepo.GetByLastUpdateAsync(lastUpdate, page);
 
             return ApiResponseHandler.Handler<List<Book>>(resp);
         }

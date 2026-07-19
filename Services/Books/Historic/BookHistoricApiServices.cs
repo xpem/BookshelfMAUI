@@ -10,7 +10,7 @@ namespace Services.Books.Historic
     {
         public async Task<ServiceResponse> GetByLastCreatedAtAsync(DateTime lastCreatedAt, int page)
         {
-            ApiResponse resp = await bookHistoricApiDAL.GetByLastCreatedAtAsync(lastCreatedAt, page);
+            ApiResp resp = await bookHistoricApiDAL.GetByLastCreatedAtAsync(lastCreatedAt, page);
 
             return ApiResponseHandler.Handler<List<BookHistoric>>(resp);
         }

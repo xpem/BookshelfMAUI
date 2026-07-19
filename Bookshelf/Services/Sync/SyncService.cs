@@ -45,7 +45,7 @@ namespace Bookshelf.Services.Sync
         {
             try
             {
-                User user = userBLL.GetUserLocal().Result;
+                UserDTO user = userBLL.GetAsync().Result;
 
                 if (user != null && Synchronizing != SyncStatus.Processing)
                 {
