@@ -8,7 +8,7 @@ namespace Services.User
 
         Task<string?> RecoverPassword(string email);
 
-        Task<Models.DTOs.User?> GetUserLocal();
+        Task<Models.DTOs.UserDTO?> GetAsync();
 
         Task<ServiceResponse> SignIn(string email, string password);
 

@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApiRepo\ApiRepo.csproj" />
-    <ProjectReference Include="..\Repos\Repos.csproj" />
+    <ProjectReference Include="..\Repos\Repo.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 

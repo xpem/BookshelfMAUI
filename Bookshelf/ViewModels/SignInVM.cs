@@ -70,8 +70,6 @@ namespace Bookshelf.ViewModels
                 SignInText = "Acessando...";
                 BtnSignEnabled = false;
 
-                //Task.Run(BuildDbService.Init).Wait();
-
                 Models.Responses.ServiceResponse resp = await userBLL.SignIn(Email, Password);
 
 
@@ -89,9 +87,9 @@ namespace Bookshelf.ViewModels
                 {
                     string errorMessage = "";
 
-                    if (resp.Error == Models.Responses.ErrorTypes.WrongEmailOrPassword)
+                    if (resp.ErrorCode == Models.Responses.ErrorCodeTypes.InvalidUserPasswordLogin)
                         errorMessage = "Email/senha incorretos";
-                    else if (resp.Error == Models.Responses.ErrorTypes.ServerUnavaliable)
+                    else if (resp.ErrorCode == Models.Responses.ErrorCodeTypes.ServerUnavaliable)
                         errorMessage = "Servidor indisponível, favor entrar em contato com o desenvolvedor.";
                     else errorMessage = "Erro não mapeado, favor entrar em contato com o desenvolvedor.";
 

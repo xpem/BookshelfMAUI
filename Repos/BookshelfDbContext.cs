@@ -8,7 +8,7 @@ namespace Repos
     {
         public virtual required DbSet<VersionDbTables> VersionDbTables { get; set; }
 
-        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<UserDTO> User { get; set; }
 
         public virtual DbSet<Book> Book { get; set; }
 

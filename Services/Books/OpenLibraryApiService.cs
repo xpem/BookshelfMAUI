@@ -28,7 +28,7 @@ namespace Services.Books
         {
             try
             {
-                Models.Responses.ApiResponse apiResponse = await OpenLibraryApiRepo.GetBooksByTitleAsync(search, page);
+                Models.Responses.ApiResp apiResponse = await OpenLibraryApiRepo.GetBooksByTitleAsync(search, page);
 
                 if (apiResponse.Success && apiResponse.Content is not null)
                     return BuildListBooksResult(apiResponse.Content);

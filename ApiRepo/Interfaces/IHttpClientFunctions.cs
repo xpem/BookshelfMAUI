@@ -6,9 +6,9 @@ namespace ApiRepo.Interfaces
     {
         Task<bool> CheckServer();
 
-        Task<ApiResponse> Request(RequestsTypes requestsType, string url, string? userToken = null, string? jsonContent = null);
+        Task<ApiResp> Request(RequestsTypes requestsType, string url, string? userToken = null, string? jsonContent = null);
 
-        Task<ApiResponse> AuthRequestAsync(RequestsTypes requestsType, string url, string? jsonContent = null);
+        Task<ApiResp> AuthRequestAsync(RequestsTypes requestsType, string url, string? jsonContent = null);
 
     }
 }

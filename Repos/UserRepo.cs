@@ -7,7 +7,7 @@ namespace Repos
 {
     public class UserRepo(IDbContextFactory<BookshelfDbContext> bookshelfDbContext) : IUserRepo
     {
-        public async Task<User?> GetUserLocalAsync()
+        public async Task<UserDTO?> GetUserLocalAsync()
         {
             using var context = bookshelfDbContext.CreateDbContext();
             return await context.User.FirstOrDefaultAsync();
@@ -15,14 +15,14 @@ namespace Repos
 
         //public Task<int> GetUidAsync() => bookshelfDbContext.User.Select(x => x.Id).FirstAsync();
 
-        public async Task<int> CreateAsync(User user)
+        public async Task<int> CreateAsync(UserDTO user)
         {
             using var context = bookshelfDbContext.CreateDbContext();
             await context.User.AddAsync(user);
             return await context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(User user)
+        public async Task UpdateAsync(UserDTO user)
         {
             using var context = bookshelfDbContext.CreateDbContext();
 

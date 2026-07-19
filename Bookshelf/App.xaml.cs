@@ -15,39 +15,55 @@ public partial class App : Application
 
     public readonly string Version = "@0.3.5";
 
-    private ISyncService SyncServices { get; set; }
+    private ISyncService _syncService { get; set; }
 
-    private IUserService UserBLL { get; set; }
+    private IUserService _userService { get; set; }
 
-    private IBuildDbService BuildDbService { get; set; }
+    public IUserSessionService _userSessionService { get; set; }
 
+    private IBuildDbService _buildDbService { get; set; }
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        var appShellVM = new AppShellVM(SyncServices, BuildDbService, UserBLL);
-
-        BuildDbService.Init();
-
-        _ = appShellVM.AtualizaUserShowData();
-
-        User user = UserBLL.GetUserLocal().Result;
-
-        if (user != null)
+        // Exibe loading enquanto inicializa
+        var loadingPage = new ContentPage
         {
-            Uid = user.Id;
-            SyncServices.StartThread();
-        }
+            Content = new ActivityIndicator { IsRunning = true, HorizontalOptions = LayoutOptions.Center, VerticalOptions = LayoutOptions.Center }
+        };
 
-        return new Window(new AppShell(appShellVM));
+        var window = new Window(loadingPage);
+
+        _ = InitializeAndNavigateAsync(window);
+
+        return window;
     }
 
-    public App(ISyncService syncServices, IUserService userBLL, IBuildDbService buildDbService)
+    private async Task InitializeAndNavigateAsync(Window window)
+    {
+        await _buildDbService.Init();
+        //await _userService.GetMockUserAsync();
+        //await _accountService.MockAccount(1);
+        //await _categoryService.MockCategories(1);
+
+        var appShellVM = new AppShellVM(_syncService, _buildDbService, _userService, _userSessionService);
+        await appShellVM.UserFlyoutAsync();
+
+        // Se o usuário já está logado, inicia o sync em background
+        var user = await _userSessionService.GetCurrentUserAsync();
+        if (user != null)
+            _syncService.StartThread();
+
+        // Só navega para o Shell após tudo pronto
+        window.Page = new AppShell(appShellVM);
+    }
+
+    public App(ISyncService syncServices, IUserService userService, IBuildDbService buildDbService, IUserSessionService userSessionService)
     {
         RegisterCrashHandlers();
 
-        SyncServices = syncServices;
-        UserBLL = userBLL;
-        BuildDbService = buildDbService;
-
+        _syncService = syncServices;
+        _userService = userService;
+        _buildDbService = buildDbService;
+        _userSessionService = userSessionService;
         InitializeComponent();
     }
 

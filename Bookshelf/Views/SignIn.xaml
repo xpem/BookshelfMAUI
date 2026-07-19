@@ -27,7 +27,6 @@
     <ContentPage.Content>
         <VerticalStackLayout Margin="10" VerticalOptions="Center">
             <Border
-                HorizontalOptions="Center"
                 IsEnabled="{Binding IsNotBusy}"
                 Style="{StaticResource BorderPrimary}"
                 VerticalOptions="Start">

@@ -5,10 +5,10 @@ namespace ApiRepo.Interfaces
 {
     public interface IBookApiRepo
     {
-        Task<ApiResponse> CreateAsync(Book book);
+        Task<ApiResp> CreateAsync(Book book);
 
-        Task<ApiResponse> UpdateAsync(Book book);
+        Task<ApiResp> UpdateAsync(Book book);
 
-        Task<ApiResponse> GetByLastUpdateAsync(DateTime lastUpdate, int page);
+        Task<ApiResp> GetByLastUpdateAsync(DateTime lastUpdate, int page);
     }
 }

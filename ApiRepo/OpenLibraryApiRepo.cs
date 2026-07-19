@@ -31,7 +31,7 @@ namespace ApiRepo
         /// <param name="search">Title query string.</param>
         /// <param name="page">1-based page number.</param>
         /// <param name="limit">Results per page (default 10).</param>
-        public static async Task<ApiResponse> GetBooksByTitleAsync(string search, int page, int limit = 10)
+        public static async Task<ApiResp> GetBooksByTitleAsync(string search, int page, int limit = 10)
         {
             StringBuilder url = new();
             url.Append($"{BaseUrl}?q={Uri.EscapeDataString(search)}");
@@ -47,10 +47,10 @@ namespace ApiRepo
             {
                 HttpResponseMessage httpResponse = await _httpClient.GetAsync(url.ToString());
 
-                return new ApiResponse()
+                return new ApiResp()
                 {
                     Success = httpResponse.IsSuccessStatusCode,
-                    Error = httpResponse.StatusCode == HttpStatusCode.Unauthorized ? ErrorTypes.Unauthorized : null,
+                    ErrorCode = httpResponse.StatusCode == HttpStatusCode.Unauthorized ? ErrorCodeTypes.Unauthorized : ErrorCodeTypes.Unknown,
                     Content = await httpResponse.Content.ReadAsStringAsync()
                 };
             }

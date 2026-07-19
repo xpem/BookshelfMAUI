@@ -10,14 +10,14 @@ namespace Services.User
         public async Task<ServiceResponse> AddUser(string name, string email, string password)
         {
             email = email.ToLower();
-            ApiResponse? resp = await UserApiRepo.AddUserAsync(name, email, password);
+            ApiResp? resp = await UserApiRepo.AddUserAsync(name, email, password);
 
             if (resp is not null && resp.Success && resp.Content is not null)
             {
                 JsonNode? jResp = JsonNode.Parse(resp.Content);
                 if (jResp is not null)
                 {
-                    Models.DTOs.User user = new()
+                    Models.DTOs.UserDTO user = new()
                     {
                         Id = jResp["id"]?.GetValue<int>() ?? 0,
                         Name = jResp["name"]?.GetValue<string>(),
@@ -35,7 +35,7 @@ namespace Services.User
         public async Task<string?> RecoverPassword(string email)
         {
             email = email.ToLower();
-            ApiResponse? resp = await UserApiRepo.RecoverPasswordAsync(email);
+            ApiResp? resp = await UserApiRepo.RecoverPasswordAsync(email);
 
             if (resp is not null && resp.Content is not null)
             {
@@ -47,7 +47,7 @@ namespace Services.User
             return null;
         }
 
-        public Task<Models.DTOs.User?> GetUserLocal() => userRepo.GetUserLocalAsync();
+        public Task<Models.DTOs.UserDTO?> GetAsync() => userRepo.GetUserLocalAsync();
 
         public async Task<ServiceResponse> SignIn(string email, string password)
         {
@@ -55,7 +55,7 @@ namespace Services.User
             {
                 email = email.ToLower();
 
-                ApiResponse tokenResp = await UserApiRepo.GetTokenAsync(email, password);
+                ApiResp tokenResp = await UserApiRepo.GetTokenAsync(email, password);
 
                 if (tokenResp.Success && tokenResp.Content is not null)
                 {
@@ -65,12 +65,12 @@ namespace Services.User
 
                     if (userToken is not null)
                     {
-                        ApiResponse resp = await UserApiRepo.GetUserAsync(userToken);
+                        ApiResp resp = await UserApiRepo.GetUserAsync(userToken);
 
                         if (resp.Success && resp.Content != null)
                         {
                             JsonNode? userResponse = JsonNode.Parse(resp.Content);
-                            Models.DTOs.User? user;
+                            Models.DTOs.UserDTO? user;
 
                             if (userResponse is not null)
                             {
@@ -83,7 +83,7 @@ namespace Services.User
                                     RefreshToken = refreshToken
                                 };
 
-                                Models.DTOs.User? actualUser = await userRepo.GetUserLocalAsync();
+                                Models.DTOs.UserDTO? actualUser = await userRepo.GetUserLocalAsync();
 
                                 if (actualUser != null)
                                 {
@@ -103,12 +103,12 @@ namespace Services.User
                         }
                     }
                 }
-                else if (!tokenResp.Success && tokenResp.Error == ErrorTypes.WrongEmailOrPassword)
-                    return new ServiceResponse() { Success = false, Error = ErrorTypes.WrongEmailOrPassword };
+                else if (!tokenResp.Success && tokenResp.ErrorCode == ErrorCodeTypes.InvalidUserPasswordLogin)
+                    return new ServiceResponse() { Success = false, ErrorCode = ErrorCodeTypes.InvalidUserPasswordLogin };
                 else
-                    return new ServiceResponse() { Success = false, Error = ErrorTypes.ServerUnavaliable };
+                    return new ServiceResponse() { Success = false, ErrorCode = ErrorCodeTypes.ServerUnavaliable };
 
-                return new ServiceResponse() { Success = false, Error = ErrorTypes.Unknown };
+                return new ServiceResponse() { Success = false, ErrorCode = ErrorCodeTypes.Unknown };
             }
             catch (Exception ex) { throw; }
         }

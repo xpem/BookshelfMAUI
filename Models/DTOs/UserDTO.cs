@@ -1,6 +1,6 @@
 ﻿namespace Models.DTOs
 {
-    public class User
+    public class UserDTO
     {
         public required int Id { get; set; }
 

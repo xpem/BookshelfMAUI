@@ -9,7 +9,7 @@ namespace ApiRepo
         private const string BASEURL = "https://www.googleapis.com/books/v1/volumes";
 
         /// <see cref="https://developers.google.com/books/docs/v1/reference#resource_volumes"/>
-        public async static Task<ApiResponse> GetBooks(string search, int startIndex)
+        public async static Task<ApiResp> GetBooks(string search, int startIndex)
         {
             StringBuilder url = new();
 
@@ -36,10 +36,10 @@ namespace ApiRepo
             {
                  HttpResponseMessage httpResponse = await new HttpClient().GetAsync(url.ToString());
 
-                return new ApiResponse()
+                return new ApiResp()
                 {
                     Success = httpResponse.IsSuccessStatusCode,
-                    Error = httpResponse.StatusCode == HttpStatusCode.Unauthorized ? ErrorTypes.Unauthorized : null,
+                    ErrorCode = httpResponse.StatusCode == HttpStatusCode.Unauthorized ? ErrorCodeTypes.Unauthorized : ErrorCodeTypes.Unknown,
                     Content = await httpResponse.Content.ReadAsStringAsync()
                 };
             }

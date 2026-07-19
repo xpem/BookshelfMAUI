@@ -28,7 +28,7 @@ namespace ApiRepo
             catch (Exception ex) { throw ex; }
         }
 
-        public static async Task<ApiResponse> Request(RequestsTypes requestsType, string url, string? userToken = null, string? jsonContent = null)
+        public static async Task<ApiResp> Request(RequestsTypes requestsType, string url, string? userToken = null, string? jsonContent = null)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace ApiRepo
                             StringContent bodyContent = new(jsonContent, Encoding.UTF8, "application/json");
                             httpResponse = await httpClient.PostAsync(url, bodyContent);
                         }
-                        else return new ApiResponse() { Success = false, Content = null, Error = ErrorTypes.BodyContentNull };
+                        else return new ApiResp() { Success = false, Content = null, ErrorCode = ErrorCodeTypes.Unknown };
                         break;
                     case RequestsTypes.Put:
                         if (jsonContent is not null)
@@ -64,17 +64,17 @@ namespace ApiRepo
                             StringContent bodyContent = new(jsonContent, Encoding.UTF8, "application/json");
                             httpResponse = await httpClient.PutAsync(url, bodyContent);
                         }
-                        else return new ApiResponse() { Success = false, Content = null, Error = ErrorTypes.BodyContentNull };
+                        else return new ApiResp() { Success = false, Content = null, ErrorCode = ErrorCodeTypes.Unknown };
                         break;
                     case RequestsTypes.Delete:
                         httpResponse = await httpClient.DeleteAsync(url);
                         break;
                 }
 
-                return new ApiResponse()
+                return new ApiResp()
                 {
                     Success = httpResponse.IsSuccessStatusCode,
-                    Error = httpResponse.StatusCode == HttpStatusCode.Unauthorized ? ErrorTypes.Unauthorized : null,
+                    ErrorCode = httpResponse.StatusCode == HttpStatusCode.Unauthorized ? ErrorCodeTypes.Unauthorized : ErrorCodeTypes.Unknown,
                     TryRefreshToken = httpResponse.StatusCode == HttpStatusCode.Unauthorized,
                     Content = await httpResponse.Content.ReadAsStringAsync()
                 };
@@ -82,23 +82,23 @@ namespace ApiRepo
             catch (Exception ex)
             {
                 if (ex.InnerException is not null && (ex.InnerException.Message == "Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente." || ex.InnerException.Message.Contains("Este host não é conhecido.")))
-                    return new ApiResponse() { Success = false, Content = null, Error = ErrorTypes.ServerUnavaliable };
+                    return new ApiResp() { Success = false, Content = null, ErrorCode = ErrorCodeTypes.ServerUnavaliable };
 
                 throw ex;
             }
         }
 
-        Task<ApiResponse> IHttpClientFunctions.Request(RequestsTypes requestsType, string url, string? userToken, string? jsonContent)
+        Task<ApiResp> IHttpClientFunctions.Request(RequestsTypes requestsType, string url, string? userToken, string? jsonContent)
             => Request(requestsType, url, userToken, jsonContent);
 
-        public async Task<ApiResponse> AuthRequestAsync(RequestsTypes requestsType, string url, string? jsonContent = null)
+        public async Task<ApiResp> AuthRequestAsync(RequestsTypes requestsType, string url, string? jsonContent = null)
         {
-            User? user = bookshelfDbContext.User.FirstOrDefault();
+            UserDTO? user = bookshelfDbContext.User.FirstOrDefault();
             string? userToken = user?.Token;
 
             if (userToken is null) throw new ArgumentNullException(nameof(userToken));
 
-            ApiResponse resp = await Request(requestsType, url, userToken, jsonContent);
+            ApiResp resp = await Request(requestsType, url, userToken, jsonContent);
 
             if (!resp.TryRefreshToken)
                 return resp;
@@ -113,14 +113,14 @@ namespace ApiRepo
 
         private async Task<(bool success, string? newToken)> RefreshToken()
         {
-            User? user = bookshelfDbContext.User.FirstOrDefault();
+            UserDTO? user = bookshelfDbContext.User.FirstOrDefault();
 
             if (user is null || string.IsNullOrWhiteSpace(user.RefreshToken))
                 return (false, null);
 
             string json = JsonSerializer.Serialize(new { refreshToken = user.RefreshToken });
 
-            ApiResponse resp = await Request(RequestsTypes.Post, ApiKeys.ApiAddress + "/user/session/refresh", jsonContent: json);
+            ApiResp resp = await Request(RequestsTypes.Post, ApiKeys.ApiAddress + "/user/session/refresh", jsonContent: json);
 
             if (!resp.Success || string.IsNullOrWhiteSpace(resp.Content))
                 return (false, null);

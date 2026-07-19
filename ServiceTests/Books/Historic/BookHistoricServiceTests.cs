@@ -17,9 +17,9 @@ namespace ServiceTests.Books.Historic
         {
             Mock<BookshelfDbContext> mockContext = new();
 
-            Mock<DbSet<Models.DTOs.User>> mockSetUser = new();
+            Mock<DbSet<Models.DTOs.UserDTO>> mockSetUser = new();
 
-            IQueryable<Models.DTOs.User> mockUsers = new List<Models.DTOs.User>() {
+            IQueryable<Models.DTOs.UserDTO> mockUsers = new List<Models.DTOs.UserDTO>() {
                 new()
                 {
                     Id = 1,
@@ -28,10 +28,10 @@ namespace ServiceTests.Books.Historic
                 }
             }.AsQueryable();
 
-            mockSetUser.As<IQueryable<Models.DTOs.User>>().Setup(m => m.Provider).Returns(mockUsers.Provider);
-            mockSetUser.As<IQueryable<Models.DTOs.User>>().Setup(m => m.Expression).Returns(mockUsers.Expression);
-            mockSetUser.As<IQueryable<Models.DTOs.User>>().Setup(m => m.ElementType).Returns(mockUsers.ElementType);
-            mockSetUser.As<IQueryable<Models.DTOs.User>>().Setup(m => m.GetEnumerator()).Returns(() => mockUsers.GetEnumerator());
+            mockSetUser.As<IQueryable<Models.DTOs.UserDTO>>().Setup(m => m.Provider).Returns(mockUsers.Provider);
+            mockSetUser.As<IQueryable<Models.DTOs.UserDTO>>().Setup(m => m.Expression).Returns(mockUsers.Expression);
+            mockSetUser.As<IQueryable<Models.DTOs.UserDTO>>().Setup(m => m.ElementType).Returns(mockUsers.ElementType);
+            mockSetUser.As<IQueryable<Models.DTOs.UserDTO>>().Setup(m => m.GetEnumerator()).Returns(() => mockUsers.GetEnumerator());
 
 
             List<BookHistoric> mockBookHistorics = new List<BookHistoric>() {
